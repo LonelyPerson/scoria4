@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="L2scoria_mmo" default="dist" basedir=".">
+    <description>
+        This script will build the L2J-Scoria mmocore. Thanks for Using our Pack.
+        
+        This program is comerical   
+    </description>
+    
+    <property name="src" location="java"/>
+    <property name="lib" location="lib"/>
+    <property name="build" location="build"/>
+    <property name="build.classes" location="${build}/classes"/>
+    <property name="build.dist" location="${build}/dist"/>
+    <property name="build.dist.mmo" location="${build.dist}/L2Jscoria-mmo"/>
+    <property name="build.dist.mmo.lib" location="${build.dist}/L2Jscoria-mmo/lib"/>
+    
+    <path id="classpath">
+        <fileset dir="${lib}">
+            <include name="javolution.jar"/>
+            <include name="c3p0-0.9.1.2.jar"/>
+        </fileset>
+    </path>   
+    
+    
+    <target name="compile" description="Compile the source.">
+
+        <delete dir="${build}"/>
+        <mkdir dir="${build}"/>
+        <mkdir dir="${build.classes}"/>
+        <mkdir dir="${build.dist}" />
+        <mkdir dir="${build.dist.mmo}" />
+        <mkdir dir="${build.dist.mmo.lib}" />
+
+        <javac destdir="${build.classes}"
+               optimize="on"
+               debug="on"
+               source="1.6"
+               target="1.6"
+               nowarn="off"
+               includeantruntime="false">
+            <src path="${src}"/>
+            <classpath refid="classpath"/>   
+        </javac>
+    </target>
+    
+    <target name="jar"
+            depends="compile"
+            description="Create the jar file">
+
+        <jar destfile="${build}/l2scoria-mmocore-2.jar">
+            <fileset dir="${build.classes}"/>
+            <manifest>
+                <attribute name="Main-Class" value="mmo"/>
+                <attribute name="Class-Path" value=". javolution.jar l2scoria-core-3.jar"/>
+            </manifest>
+        </jar>
+        
+        <copy todir="${build.dist.mmo}">
+            <fileset dir="${build}">
+                <include name="l2scoria-mmocore-2.jar"/>
+            </fileset>
+        </copy>
+        
+    </target>
+    
+    <target name="compile.gcj"
+            depends="jar"
+            description="Build machine executable binary">  
+            
+        <exec dir="." executable="gcj" failifexecutionfails="false" os="linux:Linux:freebsd:FreeBSD" >
+            <arg line="-O3 ${build.dist}/l2scoria-mmocore-2.jar  -o ${build.dist}/l2scoria-mmocore-2.jar --main=mmo"/>
+        </exec>
+    </target>
+ 
+    <target name="dist" depends="jar">
+
+        <zip destfile="${build}/L2Jscoria_mmocore.zip"
+             basedir="${build.dist}" />
+    </target>   
+    
+</project>

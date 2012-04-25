@@ -1,0 +1,5 @@
+﻿### L2J scoria ###
+Официальный сайт: http://scoria.ru
+Official English site: http://scoria.eu
+Ваши объявления в файле:
+gameserver\data\announcements.txt

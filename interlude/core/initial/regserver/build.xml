@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Scoria_Register" default="dist" basedir=".">
+    <description>
+    	for scoria 3.*
+        
+    </description>
+    
+    <property name="src" location="java"/>
+    <property name="lib" location="lib"/>
+    <property name="build" location="build"/>
+    <property name="build.classes" location="${build}/classes"/>
+    <property name="build.dist" location="${build}/dist"/>
+	<property name="build.dist.reg" location="${build.dist}/register"/>
+    
+    <path id="classpath">
+        <fileset dir="${lib}">
+            <include name="c3p0-0.9.1.2.jar"/>
+        	<include name="javolution.jar"/>
+        </fileset>
+    </path>   
+    
+    <target name="init"
+    	depends="clean"
+        description="Create the output directories.">
+
+        <mkdir dir="${build}"/>
+        <mkdir dir="${build.classes}"/>
+        <mkdir dir="${build.dist}" />
+    	<mkdir dir="${build.dist.reg}" />
+    	<mkdir dir="${build.dist.reg}/lib" />
+    </target>
+    
+    
+    <target name="compile"
+            depends="init"
+            description="Compile the source.">
+
+        <javac destdir="${build.classes}"
+               optimize="on"
+               debug="on"
+               source="1.5"
+               target="1.5"
+               nowarn="off">
+            <src path="${src}"/>
+            <classpath refid="classpath"/>   
+        </javac>
+    </target>
+    
+    
+    <target name="jar"
+            depends="compile"
+            description="Create the jar file">
+
+        <jar destfile="${build}/l2scoria-register-0.2.jar">
+            <fileset dir="${build.classes}"/>
+            <manifest>
+                <attribute name="Main-Class" value="ru.sword.gsregistering.GameServerRegister"/>
+                <attribute name="Class-Path" value=". c3p0-0.9.1.2.jar javolution.jar"/>
+            </manifest>
+        </jar>
+        
+    	<copy todir="${build.dist.reg}/lib">
+            <fileset dir="${build}">
+                <include name="l2scoria-register-0.2.jar"/>
+			</fileset>
+        </copy>
+        
+	</target>
+    
+
+    <target name="compile.gcj"
+            depends="jar"
+            description="Build machine executable binary">  
+            
+        <exec dir="." executable="gcj" failifexecutionfails="false" os="linux:Linux:freebsd:FreeBSD" >
+            <arg line="-O3 ${build.dist}/l2scoria-register-0.2.jar  -o ${build.dist}/l2scoria-register-0.2 --main=ru.sword.gsregistering.GameServerRegister"/>
+        </exec>
+    </target>
+ 
+ 
+    <target name="dist" depends="jar">
+    	
+    	<copy todir="${build.dist.reg}">
+            <fileset dir="${src}">
+            	<include name="*.*"/>
+			</fileset>
+        </copy>
+    	
+    	<copy todir="${build.dist.reg}/lib">
+			<fileset dir="${src}/../lib">
+				<include name="*"/>
+			</fileset>
+		</copy>
+        
+        <copy todir="${build.dist.reg}">
+            <fileset dir="dist">
+                <include name="*"/>
+            </fileset>
+        </copy>
+    	
+		<fixcrlf 	srcdir="${build.dist.reg}"
+					eol="lf"
+					eof="remove"
+					includes="**/*.sh">
+		</fixcrlf>
+		<fixcrlf 	srcdir="${build.dist.reg}"
+					eol="crlf"
+					eof="remove"
+					includes="**/*.bat">
+		</fixcrlf>
+
+        
+        <mkdir dir="${build.dist.reg}/config" />
+    	
+    	<copy todir="${build.dist.reg}/config">
+			<fileset dir="config">
+				<include name="*.properties"/>
+			</fileset>
+        </copy>
+    	
+        <zip destfile="${build}/l2scoria-register.zip"
+             basedir="${build.dist}" />
+    </target>
+    
+    <target name="clean"
+            description="Remove the output directories">
+
+        <delete dir="${build}"/>
+    </target>
+</project>
