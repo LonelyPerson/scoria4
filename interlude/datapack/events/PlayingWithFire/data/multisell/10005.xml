@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding="UTF-8"?>
+<!-- Playing with fire Event -->
+<list>
+  <!-- [Firework] -->
+  <item id="1">
+    <ingredient id="6403" count="2"/>
+    <ingredient id="6404" count="2"/>
+    <production id="6406" count="1"/>
+  </item>
+  <!-- [Large Firework] -->
+  <item id="2">
+    <ingredient id="6403" count="4"/>
+    <ingredient id="6404" count="4"/>
+    <ingredient id="6405" count="1"/>
+    <production id="6407" count="1"/>
+  </item>
+</list>

@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='utf-8'?>
+<list>
+
+  <!-- Greater Swift Attack Potion-->
+  <item id="1">
+    <ingredient id="4209" count="1" enchant="0"/>
+    <ingredient id="4210" count="1" enchant="0"/>
+    <ingredient id="4211" count="1" enchant="0"/>
+    <ingredient id="4212" count="1" enchant="0"/>
+    <ingredient id="4213" count="1" enchant="0"/>
+    <ingredient id="4214" count="1" enchant="0"/>
+    <ingredient id="4215" count="1" enchant="0"/>
+    <ingredient id="4216" count="1" enchant="0"/>
+    <ingredient id="4217" count="1" enchant="0"/>
+    <production id="1375" count="5" enchant="0"/>
+  </item>
+
+  <!-- Quick Healing Potion -->
+  <item id="2">
+    <ingredient id="4209" count="1" enchant="0"/>
+    <ingredient id="4210" count="1" enchant="0"/>
+    <ingredient id="4211" count="1" enchant="0"/>
+    <ingredient id="4212" count="1" enchant="0"/>
+    <ingredient id="4213" count="1" enchant="0"/>
+    <ingredient id="4214" count="1" enchant="0"/>
+    <ingredient id="4215" count="1" enchant="0"/>
+    <ingredient id="4216" count="1" enchant="0"/>
+    <ingredient id="4217" count="1" enchant="0"/>
+    <production id="1540" count="10" enchant="0"/>
+  </item>
+
+  <!-- Mana Potion -->
+  <item id="3">
+    <ingredient id="4209" count="1" enchant="0"/>
+    <ingredient id="4210" count="1" enchant="0"/>
+    <ingredient id="4211" count="1" enchant="0"/>
+    <ingredient id="4212" count="1" enchant="0"/>
+    <ingredient id="4213" count="1" enchant="0"/>
+    <ingredient id="4214" count="1" enchant="0"/>
+    <ingredient id="4215" count="1" enchant="0"/>
+    <ingredient id="4216" count="1" enchant="0"/>
+    <ingredient id="4217" count="1" enchant="0"/>
+    <production id="728" count="10" enchant="0"/>
+  </item>
+
+</list>

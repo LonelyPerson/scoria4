@@ -1,0 +1,4 @@
+CREATE TABLE `accounts_activator` (
+`id` INT( 24 ) NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`ip` VARCHAR( 20 ) NOT NULL
+);

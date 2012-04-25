@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+<!-- For Medal event -->
+
+<list>
+
+  <!-- [Event Glittering Medal] -->
+  <item id="1">
+    <ingredient id="6393" count="10" enchant="0"/>
+    <production id="6392" count="100" enchant="0"/>
+  </item>
+
+</list>
+
