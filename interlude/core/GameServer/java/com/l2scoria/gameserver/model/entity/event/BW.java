@@ -188,6 +188,7 @@ public class BW extends FunEvent
 			player.broadcastUserInfo();
 			player.teleToLocation(team._teamX, team._teamY, team._teamZ);
 			player._eventTeleported = true;
+                        player.atEvent = true;
 		}
 	}
 
@@ -247,40 +248,40 @@ public class BW extends FunEvent
 		int topteams = 0;
 
 		for (FunEvent.Team teams : (FunEvent.Team[])_teams.getValues(new FunEvent.Team[_teams.size()]))
-	{
+                {
 			BWTeam team = (BWTeam)teams;
 			if (team._teamBases > topteambases)
-	{
+                        {
 				topteambases = team._teamBases;
 			}
 		}
 		for (FunEvent.Team teams : (FunEvent.Team[])_teams.getValues(new FunEvent.Team[_teams.size()]))
-	{
+                {
 			BWTeam team = (BWTeam)teams;
 			if (team._teamBases == topteambases)
-	{
+                        {
 				topteamId = team._teamId;
 				topteams++;
 			}
 		}
 
 		if (topteambases == 0)
-	{
+                {
 			AnnounceToPlayers(true, new Messages(35, true));
 		} else if (topteams > 1)
-	{
+                {
 			AnnounceToPlayers(true, new Messages(35, true));
 		} else
-	{
+                {
 			for (L2PcInstance player : (L2PcInstance[])_players.getValues(new L2PcInstance[_players.size()]))
 			{
 				if (player._eventTeamId == topteamId)
-	{
+                                    {
 					player.sendMessage(Localization.getInstance().getString(player.getLang(), 36));
 					if ((Config.BW_PRICE_NO_KILLS) || (player._eventCountKills > 0))
-	{
+                                    {
 						for (String reward : Config.BW_REWARD)
-	{
+                                                {
 							String[] rew = reward.split(":");
 							player.addItem("BW Event", 
 								Integer.parseInt(rew[0]), 
@@ -288,6 +289,7 @@ public class BW extends FunEvent
 						}
 					}
 				}
+                                player.atEvent = false;
 			}
 			Messages msg = new Messages(37, true);
 			msg.add(((FunEvent.Team)_teams.get(topteamId))._teamName);

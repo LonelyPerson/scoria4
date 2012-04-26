@@ -296,9 +296,10 @@ public abstract class FunEvent
 			}
 			else
 			{
-				player.sendMessage(Localization.getInstance().getString(lang, Integer.valueOf(4)));
+				player.sendMessage(Localization.getInstance().getString(lang, 4));
 			}
 		}
+                player.atEvent = true;
 	}
 
 	public void removePlayer(L2PcInstance player)
@@ -317,6 +318,7 @@ public abstract class FunEvent
 			player._eventTeamId = 0;
 			_players.remove(player.getObjectId());
 		}
+                player.atEvent = false;
 	}
 
 	protected void sheduleNext(long delay)
@@ -419,14 +421,14 @@ public abstract class FunEvent
 		{
 			if (EVENT_TEAMS_TYPE.equals("BALANCE"))
 			{
-				teamsInfo = teamsInfo + "<br>" + Localization.getInstance().getString(lang, Integer.valueOf(11)) + 	":<br>";
+				teamsInfo = teamsInfo + "<br>" + Localization.getInstance().getString(lang, 11) + 	":<br>";
 				for (Team team : getAllTeams())
 				{ 
 					teamsInfo = teamsInfo + "<font color=" + team._teamColor + ">" + team._teamName + "</font>: " + team._playersCount + "<br>";
 				}
 			}
 			Team team = _teams.get(player._eventTeamId);
-			String playerTeamName = team == null ? Localization.getInstance().getString(lang, Integer.valueOf(13)) : team._teamName;
+			String playerTeamName = team == null ? Localization.getInstance().getString(lang, 13) : team._teamName;
 			String playerTeamColor = team == null ? "LEVEL" : team._teamColor;
 
 			npcHtmlMessage.setFile("data/html/mods/joined.htm");
@@ -445,7 +447,7 @@ public abstract class FunEvent
 
 	public String getInfo(String lang)
 	{
-		String name = EVENT_NAME + " (" + Localization.getInstance().getString(lang, Integer.valueOf(EVENT_FULL_NAME)) + ")";
+		String name = EVENT_NAME + " (" + Localization.getInstance().getString(lang, EVENT_FULL_NAME) + ")";
 		String info = "";
 		String state = null;
 		int timer = 0;
@@ -575,6 +577,7 @@ public abstract class FunEvent
 			player.broadcastUserInfo();
 			_players.remove(player.getObjectId());
 			player._eventTeleported = false;
+                        player.atEvent = false;
 		}
 		else
 		{

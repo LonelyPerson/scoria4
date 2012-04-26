@@ -198,6 +198,7 @@ public class CTF extends FunEvent
 			player.broadcastUserInfo();
 			player.teleToLocation(team._teamX, team._teamY, team._teamZ);
 			player._eventTeleported = true;
+                        player.atEvent = true;
 		}
 	}
 
@@ -368,18 +369,18 @@ public class CTF extends FunEvent
 
 		if (topteamflags == 0)
 		{
-			AnnounceToPlayers(Boolean.valueOf(true), new Messages(Integer.valueOf(42), true));
+			AnnounceToPlayers(true, new Messages(42, true));
 		}
 		else if (topteams > 1)
 		{
-			AnnounceToPlayers(Boolean.valueOf(true), new Messages(Integer.valueOf(43), true));
+			AnnounceToPlayers(true, new Messages(43, true));
 		}
 		else
 		{
-			Messages msg = new Messages(Integer.valueOf(44), true);
+			Messages msg = new Messages(44, true);
 			msg.add(((FunEvent.Team)_teams.get(topteamId))._teamName);
 			msg.add(Integer.valueOf(topteamflags));
-			AnnounceToPlayers(Boolean.valueOf(true), msg);
+			AnnounceToPlayers(true, msg);
 			for (L2PcInstance player : getAllPlayers())
 			{
 				if (player._eventTeamId == topteamId)
@@ -408,6 +409,7 @@ public class CTF extends FunEvent
 						}
 					}
 				}
+                             player.atEvent = false;
 			}
 		}
 	}
@@ -589,7 +591,7 @@ public class CTF extends FunEvent
 		if (player._CTFHaveFlagOfTeam != 0)
 		{
 			spawnFlag(player._CTFHaveFlagOfTeam);
-			Messages msg = new Messages(Integer.valueOf(47), true);
+			Messages msg = new Messages(47, true);
 			msg.add(getTeam(player._CTFHaveFlagOfTeam)._teamName);
 			AnnounceToPlayers(Boolean.valueOf(false), msg);
 
@@ -612,11 +614,11 @@ public class CTF extends FunEvent
 		giveFlag(player, teamId);
 		if (player.getAppearance().getInvisible())
 		{
-			player.sendMessage(Localization.getInstance().getString(player.getLang(), Integer.valueOf(49)));
+			player.sendMessage(Localization.getInstance().getString(player.getLang(), 49));
 			player.getAppearance().setVisible();
 		}
 
-		Messages msg = new Messages(Integer.valueOf(50), true);
+		Messages msg = new Messages(50, true);
 		msg.add(getTeam(teamId)._teamName);
 		AnnounceToPlayers(Boolean.valueOf(false), msg);
 
@@ -624,7 +626,7 @@ public class CTF extends FunEvent
 		{
 			if (plr._eventTeamId == teamId)
 			{
-				CreatureSay cs = new CreatureSay(plr.getObjectId(), 15, ":", Localization.getInstance().getString(plr.getLang(), Integer.valueOf(51)));
+				CreatureSay cs = new CreatureSay(plr.getObjectId(), 15, ":", Localization.getInstance().getString(plr.getLang(), 51));
 				plr.sendPacket(cs);
 			}
 		}
@@ -632,7 +634,7 @@ public class CTF extends FunEvent
 
 	public void onPlayerBringFlag(L2PcInstance player)
 	{
-		Messages msg = new Messages(Integer.valueOf(52), true);
+		Messages msg = new Messages(52, true);
 		msg.add(getTeam(player._eventTeamId)._teamName);
 		msg.add(getTeam(player._CTFHaveFlagOfTeam)._teamName);
 		AnnounceToPlayers(Boolean.valueOf(false), msg);
@@ -662,7 +664,7 @@ public class CTF extends FunEvent
 		if (player._CTFHaveFlagOfTeam != 0)
 		{
 			spawnFlag(player._CTFHaveFlagOfTeam);
-			Messages msg = new Messages(Integer.valueOf(54), true);
+			Messages msg = new Messages(54, true);
 			msg.add(getTeam(player._CTFHaveFlagOfTeam)._teamName);
 			AnnounceToPlayers(Boolean.valueOf(false), msg);
 

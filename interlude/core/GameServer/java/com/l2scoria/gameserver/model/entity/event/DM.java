@@ -111,6 +111,7 @@ public class DM extends FunEvent
 			player.broadcastUserInfo();
 			player.teleToLocation(team._teamX, team._teamY, team._teamZ);
 			player._eventTeleported = true;
+                        player.atEvent = true;
 		}
 	}
 
@@ -145,6 +146,7 @@ public class DM extends FunEvent
 		{
 			AnnounceToPlayers(true, new Messages(59, true));
 		}
+                winner.atEvent = false;
 	}
 
 	private void teleportPlayersBack()
