@@ -2380,7 +2380,7 @@
   <set name="mpInitialConsume" val="50"/>
   <set name="mpConsume" val="200"/>
   <set name="magicLvl" val="68"/>
-  <set name="power" val="515"/>
+  <set name="power" val="350"/>
   <set name="target" val="TARGET_ONE"/>
   <set name="hitTime" val="7000"/>
   <set name="skillType" val="MDAM"/>

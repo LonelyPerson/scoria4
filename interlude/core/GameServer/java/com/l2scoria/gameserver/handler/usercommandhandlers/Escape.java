@@ -23,6 +23,8 @@ import com.l2scoria.gameserver.GameTimeController;
 import com.l2scoria.gameserver.ai.CtrlIntention;
 import com.l2scoria.gameserver.datatables.csv.MapRegionTable;
 import com.l2scoria.gameserver.handler.IUserCommandHandler;
+import com.l2scoria.gameserver.model.L2Effect;
+import com.l2scoria.gameserver.model.L2Skill;
 //import com.l2scoria.gameserver.managers.GrandBossManager;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.entity.event.TvTEvent;
@@ -90,6 +92,21 @@ public class Escape implements IUserCommandHandler
 		{
 			return false;
 		}
+                
+                if(activeChar.isSitting()) 
+                {
+                        activeChar.sendMessage("You can not escape when you sitting.");
+			return false;
+                }
+                
+                for(L2Effect currenteffect : activeChar.getAllEffects())
+		{
+                    L2Skill effectSkill = currenteffect.getSkill();
+                    if(effectSkill.getSkillType() == L2Skill.SkillType.FEAR) {
+                        activeChar.sendMessage("You can not escape on Fear effect");
+                        return false;
+                    }
+                }
 
 		if(activeChar.getAccessLevel().isGm())
 		{
