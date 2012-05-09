@@ -75,6 +75,11 @@ public final class RequestBypassToServer extends L2GameClientPacket
 			activeChar.sendPacket(new ActionFailed());
 			return;
 		}
+                
+                if(activeChar.isDead()) {
+                    activeChar.sendPacket(new ActionFailed());
+                    return;
+                }
 
 		try
 		{

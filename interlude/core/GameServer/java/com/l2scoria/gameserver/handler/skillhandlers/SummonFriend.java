@@ -240,6 +240,8 @@ public class SummonFriend implements ISkillHandler
 					teleToTarget(target, activePlayer, skill);
 					target.teleportRequest(null, null);
 				}
+                                // remove ressurection
+                                target.removeReviving();
 
 			}
 

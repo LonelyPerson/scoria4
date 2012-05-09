@@ -828,6 +828,7 @@ public final class Config
 	public static boolean CANNOT_HEAL_RBGB;
         public static boolean CANNOT_BUFF_RBGB;
         public static boolean ANTI_HEAVY_SYSTEM;
+        public static boolean MOUNT_PROHIBIT;
 	public static int CHRISTMAS_TREE_PRESENTS_TIME;
 	public static FastMap<Integer, Integer> CHRISTMAS_PRESENTS_LIST;
 
@@ -1027,6 +1028,7 @@ public final class Config
 			CANNOT_HEAL_RBGB = Boolean.parseBoolean(otherSettings.getProperty("NotHealRbGb", "false"));
                         CANNOT_BUFF_RBGB = Boolean.parseBoolean(otherSettings.getProperty("NotBuffRbGb", "false"));
                         ANTI_HEAVY_SYSTEM = Boolean.parseBoolean(otherSettings.getProperty("AntiHeavySystem", "false"));
+                        MOUNT_PROHIBIT = Boolean.parseBoolean(otherSettings.getProperty("AllowUseItemOnMount", "false"));
 			if(CHRISTMAS_TREE_PRESENTS)
 			{
 				CHRISTMAS_PRESENTS_LIST = new FastMap<Integer, Integer>();
@@ -2333,6 +2335,7 @@ public final class Config
 	public static boolean RESTORE_OFFLINERS;
  	public static int OFFLINE_MAX_DAYS;
  	public static boolean OFFLINE_DISCONNECT_FINISHED;
+        public static int OFFLINE_MIN_LEVEL;
 	//============================================================
 	public static void loadOfflineConfig()
 	{
@@ -2353,7 +2356,8 @@ public final class Config
 
 			RESTORE_OFFLINERS = Boolean.parseBoolean(OfflineSettings.getProperty("RestoreOffliners", "false")); 
 			OFFLINE_MAX_DAYS = Integer.parseInt(OfflineSettings.getProperty("OfflineMaxDays", "10")); 
-			OFFLINE_DISCONNECT_FINISHED = Boolean.parseBoolean(OfflineSettings.getProperty("OfflineDisconnectFinished", "true")); 
+			OFFLINE_DISCONNECT_FINISHED = Boolean.parseBoolean(OfflineSettings.getProperty("OfflineDisconnectFinished", "true"));
+                        OFFLINE_MIN_LEVEL = Integer.parseInt(OfflineSettings.getProperty("OfflineMinLevel", "1"));
 
 		}
 		catch(Exception e)

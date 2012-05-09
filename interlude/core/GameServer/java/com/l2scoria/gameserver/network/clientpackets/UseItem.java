@@ -300,7 +300,7 @@ public final class UseItem extends L2GameClientPacket
 			sm = null;
 			return;
 		}
-		if(activeChar.isMounted()) 
+		if(activeChar.isMounted() && !Config.MOUNT_PROHIBIT) 
 		{
 			SystemMessage sm = new SystemMessage(SystemMessageId.S1_CANNOT_BE_USED);
 			sm.addItemName(itemId);
