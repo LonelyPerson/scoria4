@@ -56,6 +56,7 @@ public class AccessLevel
 	private boolean _canDisableGmStatus = false;
 	private boolean _HeroVoise = false;
 	private boolean _SeeAllChat = false;
+        private boolean _FullClassMaster = false;
 
 	//L2EMU_ ADD
 	/**
@@ -77,7 +78,7 @@ public class AccessLevel
 	 * @param useNameColor as boolean<br>
 	 * @param useTitleColor as boolean<br>
 	 */
-	public AccessLevel(int accessLevel, String name, int nameColor, int titleColor, boolean isGm, boolean allowPeaceAttack, boolean allowFixedRes, boolean allowTransaction, boolean allowAltG, boolean giveDamage, boolean takeAggro, boolean gainExp, boolean useNameColor, boolean useTitleColor, boolean canDisableGmStatus, boolean HeroVoice , boolean SeeAllChat)
+	public AccessLevel(int accessLevel, String name, int nameColor, int titleColor, boolean isGm, boolean allowPeaceAttack, boolean allowFixedRes, boolean allowTransaction, boolean allowAltG, boolean giveDamage, boolean takeAggro, boolean gainExp, boolean useNameColor, boolean useTitleColor, boolean canDisableGmStatus, boolean HeroVoice , boolean SeeAllChat, boolean FullClassMaster)
 	{
 		_accessLevel = accessLevel;
 		_name = name;
@@ -96,6 +97,7 @@ public class AccessLevel
 		_canDisableGmStatus = canDisableGmStatus;
 		_HeroVoise = HeroVoice;
 		_SeeAllChat = SeeAllChat;
+                _FullClassMaster = FullClassMaster;
 	}
 
 	/**
@@ -255,6 +257,10 @@ public class AccessLevel
 	{
 		return _HeroVoise;
 	}
+        
+        public boolean FullClassMaster() {
+                return _FullClassMaster;
+        }
 	
 	public boolean SeeAllChat()
 	{

@@ -14415,6 +14415,10 @@ public final class L2PcInstance extends L2PlayableInstance
 	{
 		return getAccessLevel().SeeAllChat();
 	}
+        
+        public boolean FullClassMaster() {
+                return getAccessLevel().FullClassMaster();
+        }
 
 	public void checkPlayerSkills()
 	{

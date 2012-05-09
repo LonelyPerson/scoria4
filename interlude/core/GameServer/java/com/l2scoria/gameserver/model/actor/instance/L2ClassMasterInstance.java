@@ -123,7 +123,7 @@ public final class L2ClassMasterInstance extends L2FolkInstance
 						jobLevel = 4;
 				}
 
-				if(player.isGM())
+				if(player.isGM() && player.FullClassMaster())
 				{
 					showChatWindowChooseClass(player);
 				}
@@ -207,28 +207,28 @@ public final class L2ClassMasterInstance extends L2FolkInstance
 	{
 		if(command.startsWith("1stClass"))
 		{
-			if(player.isGM())
+			if(player.isGM() && player.FullClassMaster())
 			{
 				showChatWindow1st(player);
 			}
 		}
 		else if(command.startsWith("2ndClass"))
 		{
-			if(player.isGM())
+			if(player.isGM() && player.FullClassMaster())
 			{
 				showChatWindow2nd(player);
 			}
 		}
 		else if(command.startsWith("3rdClass"))
 		{
-			if(player.isGM())
+			if(player.isGM() && player.FullClassMaster())
 			{
 				showChatWindow3rd(player);
 			}
 		}
 		else if(command.startsWith("baseClass"))
 		{
-			if(player.isGM())
+			if(player.isGM() && player.FullClassMaster())
 			{
 				showChatWindowBase(player);
 			}
@@ -247,7 +247,7 @@ public final class L2ClassMasterInstance extends L2FolkInstance
 
 			ClassLevel lvlnow = PlayerClass.values()[classId.getId()].getLevel();
 
-			if(player.isGM())
+			if(player.isGM() && player.FullClassMaster())
 			{
 				changeClass(player, val);
 				player.rewardSkills();

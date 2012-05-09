@@ -65,6 +65,7 @@ CREATE TABLE IF NOT EXISTS `access_levels` (
   `canDisableGmStatus` TINYINT(1) unsigned NOT NULL DEFAULT '0',
   `HeroVoice` TINYINT(1) unsigned NOT NULL DEFAULT '0',
   `SeeAllChat` TINYINT(1) unsigned NOT NULL DEFAULT '0',
+  `FullClassMaster` TINYINT(1) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`accessLevel`)
 ) DEFAULT CHARSET=utf8;
 -- -------------------------------

@@ -935,6 +935,11 @@ public class L2Attackable extends L2NpcInstance
 							exp *= Config.L2JMOD_CHAMPION_REWARDS;
 							sp *= Config.L2JMOD_CHAMPION_REWARDS;
 						}
+                                                
+                                                if(Config.DONATOR_PARTY_REWARD) {
+                                                    exp *= Config.DONATOR_XPSP_RATE;
+                                                    sp *= Config.DONATOR_XPSP_RATE;
+                                                }
 
 						exp *= partyMul;
 						sp *= partyMul;

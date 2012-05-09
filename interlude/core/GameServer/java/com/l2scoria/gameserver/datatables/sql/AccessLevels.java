@@ -42,11 +42,11 @@ public class AccessLevels
 	/** Reserved master access level<br> */
 	public static final int _masterAccessLevelNum = Config.MASTERACCESS_LEVEL;
 	/** The master access level which can use everything<br> */
-	public static AccessLevel _masterAccessLevel = new AccessLevel(_masterAccessLevelNum, "Master Access", Config.MASTERACCESS_NAME_COLOR, Config.MASTERACCESS_TITLE_COLOR, true, true, true, true, true, true, true, true, true, true, true, true, true);
+	public static AccessLevel _masterAccessLevel = new AccessLevel(_masterAccessLevelNum, "Master Access", Config.MASTERACCESS_NAME_COLOR, Config.MASTERACCESS_TITLE_COLOR, true, true, true, true, true, true, true, true, true, true, true, true, true, true);
 	/** Reserved user access level<br> */
 	public static final int _userAccessLevelNum = 0;
 	/** The user access level which can do no administrative tasks<br> */
-	public static AccessLevel _userAccessLevel = new AccessLevel(_userAccessLevelNum, "User", Integer.decode("0xFFFFFF"), Integer.decode("0xFFFFFF"), false, false, false, true, false, true, true, true, true, true, false, false, false);
+	public static AccessLevel _userAccessLevel = new AccessLevel(_userAccessLevelNum, "User", Integer.decode("0xFFFFFF"), Integer.decode("0xFFFFFF"), false, false, false, true, false, true, true, true, true, true, false, false, false, false);
 	/** FastMap of access levels defined in database<br> */
 	private FastMap<Integer, AccessLevel> _accessLevels = new FastMap<Integer, AccessLevel>();
 
@@ -80,6 +80,7 @@ public class AccessLevels
 			boolean canDisableGmStatus = true;
 			boolean HeroVoice = false;
 			boolean SeeAllChat = false;
+                        boolean FullClassMaster = false;
 
 			while(rset.next())
 			{
@@ -142,7 +143,8 @@ public class AccessLevels
 				useNameColor = rset.getBoolean("useNameColor");
 				useTitleColor = rset.getBoolean("useTitleColor");
 				canDisableGmStatus = rset.getBoolean("canDisableGmStatus");
-				_accessLevels.put(accessLevel, new AccessLevel(accessLevel, name, nameColor, titleColor, isGm, allowPeaceAttack, allowFixedRes, allowTransaction, allowAltG, giveDamage, takeAggro, gainExp, useNameColor, useTitleColor, canDisableGmStatus, HeroVoice, SeeAllChat));
+                                FullClassMaster = rset.getBoolean("FullClassMaster");
+				_accessLevels.put(accessLevel, new AccessLevel(accessLevel, name, nameColor, titleColor, isGm, allowPeaceAttack, allowFixedRes, allowTransaction, allowAltG, giveDamage, takeAggro, gainExp, useNameColor, useTitleColor, canDisableGmStatus, HeroVoice, SeeAllChat, FullClassMaster));
 			}
 
 			rset.close();
@@ -197,7 +199,7 @@ public class AccessLevels
 			if(accessLevel > -1)
 				return;
 
-			_accessLevels.put(accessLevel, new AccessLevel(accessLevel, "Banned", Integer.decode("0x000000"), Integer.decode("0x000000"), false, false, false, false, false, false, false, false, false, false, false, false, false));
+			_accessLevels.put(accessLevel, new AccessLevel(accessLevel, "Banned", Integer.decode("0x000000"), Integer.decode("0x000000"), false, false, false, false, false, false, false, false, false, false, false, false, false, false));
 		}
 	}
 }

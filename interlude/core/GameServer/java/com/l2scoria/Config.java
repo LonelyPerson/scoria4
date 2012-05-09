@@ -2415,6 +2415,7 @@ public final class Config
 	public static String ALT_Server_Name;
 	public static int GM_OVER_ENCHANT;
 	public static boolean DONATOR_NAME_COLOR_ENABLED;
+        public static boolean DONATOR_PARTY_REWARD;
 	public static int DONATOR_NAME_COLOR;
 	public static int DONATOR_TITLE_COLOR;
 	public static float DONATOR_XPSP_RATE;
@@ -2541,6 +2542,7 @@ public final class Config
 
 			/** Donator color name **/
 			DONATOR_NAME_COLOR_ENABLED = Boolean.parseBoolean(L2ScoriaSettings.getProperty("DonatorNameColorEnabled", "False"));
+                        DONATOR_PARTY_REWARD = Boolean.parseBoolean(L2ScoriaSettings.getProperty("DonatorPartyRewards", "False"));
 			DONATOR_NAME_COLOR = Integer.decode("0x" + L2ScoriaSettings.getProperty("DonatorColorName", "00FFFF"));
 			DONATOR_TITLE_COLOR = Integer.decode("0x" + L2ScoriaSettings.getProperty("DonatorTitleColor", "00FF00"));
 			DONATOR_XPSP_RATE = Float.parseFloat(L2ScoriaSettings.getProperty("DonatorXpSpRate", "1.5"));
