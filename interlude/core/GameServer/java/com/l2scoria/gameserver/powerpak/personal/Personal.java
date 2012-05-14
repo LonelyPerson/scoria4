@@ -205,11 +205,13 @@ public class Personal implements ICustomByPassHandler
         
         public void bindHWID(L2PcInstance player) {
             String hwid = null;
+            String _storedHwid = player.loadHwid();
+            if(_storedHwid == null || _storedHwid.equals("*") || _storedHwid.length() < 4) {
             if(Config.SERVER_PROTECTION_TYPE.equals("CATS")) {
                 hwid = player.getClient().getHWId();
             }
             if(Config.SERVER_PROTECTION_TYPE.equals("LAME")) {
-                // nuf say, todo, look at com.lameguard.session.clientSession#getHWID()
+                hwid = player.getClient().getHWID();
             }
             // processing save HWID to database
             if(hwid != null && hwid.length() > 0) {
@@ -239,7 +241,9 @@ public class Personal implements ICustomByPassHandler
                 String text = "<html><body>Some error when try get hwid</body></html>";
                 player.sendPacket(new NpcHtmlMessage(5,text));
             }
-            
+          } else {
+                player.sendPacket(new NpcHtmlMessage(5,"<html><body>You HWID allredy binded!</body></html>"));
+          }
         }
 	
 	public void allowIP(L2PcInstance activeChar, String params)

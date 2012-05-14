@@ -419,7 +419,13 @@ public class EnterWorld extends L2GameClientPacket
 		if (Config.ALLOW_BIND_HWID)
 		{
 			String _storeHwid = activeChar.loadHwid();
-			String hwid = activeChar.getClient().getHWID();
+                        String hwid = null;
+                        if(Config.SERVER_PROTECTION_TYPE.equals("CATS")) {
+                            hwid = activeChar.getClient().getHWId();
+                        }
+                        if(Config.SERVER_PROTECTION_TYPE.equals("LAME")) {
+                            hwid = activeChar.getClient().getHWID();
+                        }
 
 			if(_storeHwid != null && hwid != null && hwid.length() > 0)
 			{
