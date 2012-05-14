@@ -3622,12 +3622,20 @@ public final class Config
 			NETMASK_FIST_RULLE = PersonalSettings.getProperty("DynamoIpFistRulle", "0/24");
 			NETMASK_SECOND_RULLE = PersonalSettings.getProperty("DynamoIpSecondRulle", "0/16");
 			ALLOW_SCRIPT = Boolean.parseBoolean(PersonalSettings.getProperty("AllowScripts", "false"));
-                        ALLOW_BIND_HWID = Boolean.parseBoolean(PersonalSettings.getProperty("AllowHwidBind", "false"));
-                        SERVER_PROTECTION_TYPE = PersonalSettings.getProperty("ProtectionTypeHwidBind", "CATS");
+
+			ALLOW_BIND_HWID = Boolean.parseBoolean(PersonalSettings.getProperty("AllowHwidBind", "false"));
+			SERVER_PROTECTION_TYPE = PersonalSettings.getProperty("ProtectionTypeHwidBind", null);
+
+			if(SERVER_PROTECTION_TYPE.equals(""))
+			{
+				SERVER_PROTECTION_TYPE = null;
+			}
+
+
 			if(ALLOW_SCRIPT)
 			{
 				PERSONAL_SCRIPTS = PersonalSettings.getProperty("PersonalScripts", "");
-				if(PERSONAL_SCRIPTS != null && PERSONAL_SCRIPTS != "")
+				if(PERSONAL_SCRIPTS != null && !PERSONAL_SCRIPTS.equals(""))
 				{
 					PERSONAL_SCRIPTS_ID = new FastList<Integer>();
 					for(String id : PERSONAL_SCRIPTS.trim().split(","))

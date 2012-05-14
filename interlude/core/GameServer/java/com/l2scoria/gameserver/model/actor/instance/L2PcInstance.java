@@ -2078,36 +2078,44 @@ public final class L2PcInstance extends L2PlayableInstance
 		return _expBeforeDeath;
 	}
         
-        /**
-         * Loading hwid from table accounts, login server database
-         */
-        public String loadHwid() {
-            String _hwid = null;
-            try {
-              Connection con;
-              String account = getAccountName();
-              if(Config.USE_RL_DATABSE)
-              {
-                con = LoginRemoteDbFactory.getInstance().getConnection();
-              }
-              else
-              {
-                con = L2DatabaseFactory.getInstance().getConnection();
-              }
-              	PreparedStatement statement = con.prepareStatement("SELECT hwid FROM accounts WHERE login=?");
-		statement.setString(1, account);
-		ResultSet rset = statement.executeQuery();
-                if(rset.next()) {
-                    _hwid = rset.getString("hwid");
-                }
-                try {
-                    con.close();
-                } catch(Exception f) {}
-            } catch(Exception e) {
-                
-            }
-            return _hwid;
-        }
+	/**
+	 * Loading hwid from table accounts, login server database
+	 */
+	public String loadHwid()
+	{
+		String _hwid = null;
+		try
+		{
+			Connection con;
+			String account = getAccountName();
+
+			if(Config.USE_RL_DATABSE)
+			{
+				con = LoginRemoteDbFactory.getInstance().getConnection();
+			}
+			else
+			{
+				con = L2DatabaseFactory.getInstance().getConnection();
+			}
+
+			PreparedStatement statement = con.prepareStatement("SELECT hwid FROM accounts WHERE login=?");
+			statement.setString(1, account);
+			ResultSet rset = statement.executeQuery();
+
+			if(rset.next())
+			{
+				_hwid = rset.getString("hwid");
+			}
+
+			try
+			{
+				con.close();
+			} catch(Exception f) {}
+		}
+		catch(Exception e) {}
+
+		return _hwid;
+	}
 
 	/**
 	 * Return the Karma of the L2PcInstance.<BR>

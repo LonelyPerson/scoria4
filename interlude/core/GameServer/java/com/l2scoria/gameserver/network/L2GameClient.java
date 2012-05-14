@@ -17,6 +17,28 @@
  */
 package com.l2scoria.gameserver.network;
 
+import com.l2scoria.Config;
+import com.l2scoria.gameserver.communitybbs.Manager.RegionBBSManager;
+import com.l2scoria.gameserver.datatables.sql.ClanTable;
+import com.l2scoria.gameserver.managers.AwayManager;
+import com.l2scoria.gameserver.model.CharSelectInfoPackage;
+import com.l2scoria.gameserver.model.L2Clan;
+import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
+import com.l2scoria.gameserver.network.serverpackets.L2GameServerPacket;
+import com.l2scoria.gameserver.network.serverpackets.LeaveWorld;
+import com.l2scoria.gameserver.network.serverpackets.ServerClose;
+import com.l2scoria.gameserver.thread.LoginServerThread;
+import com.l2scoria.gameserver.thread.LoginServerThread.SessionKey;
+import com.l2scoria.gameserver.thread.ThreadPoolManager;
+import com.l2scoria.gameserver.util.FloodProtector;
+import com.l2scoria.util.database.L2DatabaseFactory;
+import com.lameguard.session.LameClientV195;
+import javolution.util.FastList;
+import mmo.MMOClient;
+import mmo.MMOConnection;
+import ru.catssoftware.protection.CatsGuard;
+import ru.catssoftware.protection.Restrictions;
+
 import java.net.InetAddress;
 import java.nio.ByteBuffer;
 import java.sql.Connection;
@@ -29,36 +51,11 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javolution.util.FastList;
-
-import com.l2scoria.Config;
-import com.l2scoria.gameserver.communitybbs.Manager.RegionBBSManager;
-import com.l2scoria.gameserver.datatables.sql.ClanTable;
-import com.l2scoria.gameserver.managers.AwayManager;
-import com.l2scoria.gameserver.model.CharSelectInfoPackage;
-import com.l2scoria.gameserver.model.L2Clan;
-import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import com.l2scoria.gameserver.network.serverpackets.L2GameServerPacket;
-import com.l2scoria.gameserver.network.serverpackets.LeaveWorld;
-import com.l2scoria.gameserver.network.serverpackets.ServerClose;
-import com.l2scoria.gameserver.thread.LoginServerThread;
-import com.l2scoria.gameserver.thread.ThreadPoolManager;
-import com.l2scoria.gameserver.thread.LoginServerThread.SessionKey;
-import com.l2scoria.gameserver.util.FloodProtector;
-
-import ru.catssoftware.protection.CatsGuard;
-import ru.catssoftware.protection.Restrictions;
-
-import mmo.MMOClient;
-import mmo.MMOConnection;
-
-import com.l2scoria.util.database.L2DatabaseFactory;
-
 /**
  * @author l2scoria dev
  */
 
-public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>>
+public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>> implements LameClientV195
 {
 	protected static final Logger _log = Logger.getLogger(L2GameClient.class.getName());
 
@@ -73,7 +70,7 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>>
 		CONNECTED,
 		AUTHED,
 		IN_GAME
-	};
+	}
 
 	public GameClientState state;
 
@@ -97,13 +94,14 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>>
 	// Flood protection
 	public byte packetsSentInSec = 0;
 	public int packetsSentStartTick = 0;
-	public long packetsNextSendTick = 0;
+	//public long packetsNextSendTick = 0;
 
 	//unknownPacket protection  
 	private int unknownPacketCount = 0;
 
 	private boolean _closenow = true;
-	public  String lastPacketSent;
+	//public  String lastPacketSent;
+
 	public L2GameClient(MMOConnection<L2GameClient> con)
 	{
 		super(con);
@@ -533,7 +531,7 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>>
 		{
 			int objectId = c.getObjectId();
 
-			_charSlotMapping.add(new Integer(objectId));
+			_charSlotMapping.add(objectId);
 		}
 	}
 
@@ -604,7 +602,7 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>>
 		try
 		{
 			InetAddress address = getConnection().getInetAddress();
-			String ip = "N/A";
+			String ip;
 
 			if(address == null)
 			{
@@ -734,11 +732,8 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>>
 		if(getActiveChar() != null && !FloodProtector.getInstance().tryPerformAction(getActiveChar().getObjectId(), FloodProtector.PROTECTED_UNKNOWNPACKET))
 		{
 			unknownPacketCount++;
-			
-			if(unknownPacketCount >= Config.MAX_UNKNOWN_PACKETS)
-				return true;
-			else
-				return false;
+
+			return unknownPacketCount >= Config.MAX_UNKNOWN_PACKETS;
 		}
 		else
 		{
@@ -747,23 +742,12 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>>
 		}
 	}
 
-	private String _hwid = null;
-
-        // this method is replaced by java.reflect if catsguard is enabled
-	public String getHWId()
+	public interface IExReader
 	{
-		return _hwid;
-	}
-
-	public void setHWID(String value)
-	{
-		_hwid = value;
-	}
-
-	public interface IExReader {
 		public int read(ByteBuffer buf);
 		public void checkChar(L2PcInstance cha);
 	}
+
 	public IExReader _reader;
 	public boolean SPSEnabled = false;
 
@@ -784,5 +768,55 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>>
 				_log.log(Level.SEVERE, "Error on AutoSaveTask.", e);
 			}
 		}
+	}
+
+	private String _hwid = null;
+	/**
+	 * Данный метод используется для эксплуатирования данных об "железе" пользователя.
+	 * Здесь обрабатывается лишь отсутствие защиты на клиент.
+	 * @return String - client's WHID
+	 */
+	public String getHWId()
+	{
+		return _hwid;
+	}
+
+	@Override
+	public String getHWID()
+	{
+		return getHWId();
+	}
+
+	public void setHWID(String value)
+	{
+		_hwid = value;
+	}
+
+	@Override
+	public void setInstanceCount(int i){}
+
+	@Override
+	public int getInstanceCount()
+	{
+		return -1;
+	}
+
+	@Override
+	public void setProtected(boolean b)
+	{}
+
+	@Override
+	public boolean isProtected()
+	{
+		return false;
+	}
+
+	@Override
+	public void setPatchVersion(int i){}
+
+	@Override
+	public int getPatchVersion()
+	{
+		return -1;
 	}
 }

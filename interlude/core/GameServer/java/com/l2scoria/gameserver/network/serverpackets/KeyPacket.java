@@ -26,6 +26,7 @@ package com.l2scoria.gameserver.network.serverpackets;
 public final class KeyPacket extends L2GameServerPacket
 {
 	private static final String _S__01_KEYPACKET = "[S] 01 KeyPacket";
+	public static final KeyPacket UNKNOWN_PROTOCOL_VERSION = new KeyPacket(null);
 
 	private byte[] _key;
 	public KeyPacket(byte[] key)
@@ -48,12 +49,14 @@ public final class KeyPacket extends L2GameServerPacket
 		{
 			writeC(0x00);
 			writeC(_data == null ? 0x00 : 0x01);
+
 			if (_data != null)
 			{
 				writeB(_data);
 				writeD(0x01);
 				writeD(0x01);
 			}
+
 			return;
 		}
 

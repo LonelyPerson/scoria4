@@ -18,13 +18,13 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
+import com.l2scoria.gameserver.network.L2GameClient;
 import com.l2scoria.gameserver.network.serverpackets.KeyPacket;
 import com.l2scoria.gameserver.network.serverpackets.SendStatus;
-
 import ru.catssoftware.protection.LameStub;
+
+import java.util.logging.Logger;
 
 /**
  * This class ...
@@ -63,48 +63,44 @@ public final class ProtocolVersion extends L2GameClientPacket
 	{
 		if(LameStub.ISLAME) 
 		{
+			L2GameClient client = this.getClient();
 			if (_version == -2L)
 			{
-				getClient().closeNow();
+				client.closeNow();
+				return;
 			}
-			else if (_version == -3L) 
-			{ 
-				getClient().close(new SendStatus()); 
-				return; 
-			} 
-			else if (_version != 746) 
-			{ 
-				getClient().close(new KeyPacket(null, true)); 
-			} 
-			else 
-			{ 
-				try 
-				{ 
-					if (com.lameguard.LameGuard.getInstance().checkData(_data, _check)) 
-					{ 
-						if (com.lameguard.LameGuard.getInstance().checkClient(getClient(), _data, _check)) 
-						{ 
-							_data = new byte[0x400 + 1]; 
-							byte[] key = getClient().enableCrypt(); 
-
-							if (com.lameguard.LameGuard.getInstance().assembleAnswer(getClient(), key, _data)) 
-							{ 
-								sendPacket(new KeyPacket(_data, true)); 
-								return; 
-							} 
-						} 
-					} 
-					else 
-					{ 
-						getClient().close(new KeyPacket(null, true)); 
-						return; 
-					} 
-				} 
-				catch (Exception e) 
-				{} 
-
-				getClient().closeNow(); 
+			else if (_version == -3L)
+			{
+				client.close(new SendStatus());
+				//client.closeNow();
+				return;
 			}
+			else if (_version == 746)
+			{
+				try
+				{
+					if(com.lameguard.LameGuard.getInstance().checkData(_data, _check))
+					{
+						com.lameguard.session.ClientSession cs = com.lameguard.LameGuard.getInstance().checkClient(com.lameguard.utils.Utils.findIP(client.toString()), _data);
+						if(cs != null)
+						{
+							client.setHWID(cs.getHWID());
+
+							// prepare answer
+							byte[] key = client.enableCrypt();
+							_data = com.lameguard.LameGuard.getInstance().assembleAnswer(cs, key);
+							sendPacket(new KeyPacket(_data));
+							return;
+						}
+					}
+				}
+				catch (Exception e)
+				{
+
+				}
+			}
+
+			client.close(KeyPacket.UNKNOWN_PROTOCOL_VERSION);
 		}
 		else if(_version == 65534 || _version == -2) //ping
 		{
