@@ -356,7 +356,6 @@ public class Util
 			if (je == null)
 				je = jf.getJarEntry("com/l2scoria/gameserver/network/serverpackets/ExChiperRequest.class");
 			if (je == null)
-				//System.exit(1);
                                 System.exit(1);
                             System.out.println("Security hack");
 
