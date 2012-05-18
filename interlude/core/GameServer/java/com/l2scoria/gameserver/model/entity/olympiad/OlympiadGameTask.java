@@ -66,8 +66,22 @@ class OlympiadGameTask extends Olympiad implements Runnable
 
 		try
 		{
-			if(Config.ALT_OLY_ALLOW_SAME_HWID && _game._playerOne.getClient().getHWId() != null && _game._playerOne.getClient().getHWId().equalsIgnoreCase(_game._playerTwo.getClient().getHWId()))
-				_game._aborted = true;
+			if(Config.ALT_OLY_ALLOW_SAME_HWID) {
+                            // try cats guard check
+                            if(_game._playerOne.getClient().getHWId() != null && _game._playerTwo.getClient().getHWId()!= null) {
+                                if(_game._playerOne.getClient().getHWId().equals(_game._playerTwo.getClient().getHWId())) {
+                                    _game._aborted = true;
+                                }
+                            }
+                            // try lameguard check
+                            if(_game._playerOne.getClient().getHWID() != null && _game._playerTwo.getClient().getHWID()!= null) {
+                               if(_game._playerOne.getClient().getHWID().equals(_game._playerTwo.getClient().getHWID())) {
+                                    _game._aborted = true;
+                                }
+                            }
+
+                        }
+                
 		}
 		catch(Exception e) {}
 
