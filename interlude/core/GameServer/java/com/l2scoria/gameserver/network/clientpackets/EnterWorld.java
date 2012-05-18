@@ -432,8 +432,10 @@ public class EnterWorld extends L2GameClientPacket
 				if(!_storeHwid.equals("*") && !hwid.equalsIgnoreCase(_storeHwid))
 				{
 					activeChar.setIsImobilised(true);
+                                        activeChar.setWrongHwid(true);
 					activeChar.disableAllSkills();
-					ThreadPoolManager.getInstance().scheduleGeneral(new Disconnection(activeChar), 20000);
+                                        activeChar.sendMessage("This HWID not allowed in this account!\n Please, use valid PC!");
+					ThreadPoolManager.getInstance().scheduleGeneral(new Disconnection(activeChar), Config.WRONG_HWID_DISSCONNECT_TIME);
 				}
 			}
 		}

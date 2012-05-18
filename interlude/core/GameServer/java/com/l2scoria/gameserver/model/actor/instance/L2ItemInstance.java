@@ -644,14 +644,14 @@ public final class L2ItemInstance extends L2Object
 	{
 		return !isEquipped() && getItem().getType2() != 3 && (getItem().getType2() != 4 || getItem().getType1() != 1) // TODO: what does this mean?
 				&& (player.getPet() == null || getObjectId() != player.getPet().getControlItemId()) // Not Control item of currently summoned pet
-				&& player.getActiveEnchantItem() != this && (allowAdena || getItemId() != 57) && (player.getCurrentSkill() == null || player.getCurrentSkill().getSkill().getItemConsumeId() != getItemId()) && isTradeable();
+				&& player.getActiveEnchantItem() != this && (allowAdena || getItemId() != 57) && (player.getCurrentSkill() == null || player.getCurrentSkill().getSkill().getItemConsumeId() != getItemId()) && isTradeable() && !player.getWrongHwid();
 	}
 
 	public boolean isAvailable(L2PcInstance player)
 	{
 		return !isEquipped() && getItem().getType2() != 3 && (getItem().getType2() != 4 || getItem().getType1() != 1)
 				&& (player.getPet() == null || getObjectId() != player.getPet().getControlItemId())
-				&& player.getActiveEnchantItem() != this && (player.getCurrentSkill() == null || player.getCurrentSkill().getSkill().getItemConsumeId() != getItemId());
+				&& player.getActiveEnchantItem() != this && (player.getCurrentSkill() == null || player.getCurrentSkill().getSkill().getItemConsumeId() != getItemId()) && !player.getWrongHwid();
 	}
 
 	/* (non-Javadoc)

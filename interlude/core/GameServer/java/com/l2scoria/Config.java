@@ -3584,6 +3584,7 @@ public final class Config
 	public static boolean ALLOW_SCRIPT;
         public static boolean ALLOW_BIND_HWID;
         public static String SERVER_PROTECTION_TYPE;
+        public static int WRONG_HWID_DISSCONNECT_TIME;
 	public static String PERSONAL_SCRIPTS;
 	public static FastList<Integer> PERSONAL_SCRIPTS_ID;
 	public static String NETMASK_FIST_RULLE;
@@ -3625,6 +3626,7 @@ public final class Config
 
 			ALLOW_BIND_HWID = Boolean.parseBoolean(PersonalSettings.getProperty("AllowHwidBind", "false"));
 			SERVER_PROTECTION_TYPE = PersonalSettings.getProperty("ProtectionTypeHwidBind", null);
+                        WRONG_HWID_DISSCONNECT_TIME = Integer.parseInt(PersonalSettings.getProperty("WrongHwidDisconnect", "2000"));
 
 			if(SERVER_PROTECTION_TYPE.equals(""))
 			{

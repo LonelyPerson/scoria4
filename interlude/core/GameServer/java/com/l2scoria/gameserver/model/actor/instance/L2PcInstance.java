@@ -344,11 +344,20 @@ public final class L2PcInstance extends L2PlayableInstance
 	};
 
 	private boolean _sitdowntask;
+        public boolean _WrongHwid = false;
 
 	public void setSitdownTask(boolean act)
 	{
 		_sitdowntask = act;
 	}
+        
+        public void setWrongHwid(boolean val) {
+            _WrongHwid = val;
+        }
+        
+        public boolean getWrongHwid() {
+            return _WrongHwid;
+        }
 
 	public boolean getSitdownTask()
 	{
