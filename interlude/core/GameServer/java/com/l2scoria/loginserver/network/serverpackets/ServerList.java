@@ -76,25 +76,20 @@ public final class ServerList extends L2LoginServerPacket
 
 		for(GameServerInfo gsi : GameServerTable.getInstance().getRegisteredGameServers().values())
 		{
-			if(gsi.getStatus() == ServerStatus.STATUS_GM_ONLY)
+			if(gsi.getStatus() == ServerStatus.STATUS_GM_ONLY && client.getAccessLevel() >= 100)
 			{
-				// Server is GM-Only
-				// кстати не понимаю смысл высылать адрес и порт сервера с флагом DOWN, над этим стоит подумать.
-				addServer(client.usesInternalIP() ? gsi.getInternalHost() : gsi.getExternalHost(),
-						gsi.getPort(),
-						gsi.isPvp(),
-						gsi.isTestServer(),
-						gsi.getCurrentPlayerCount(),
-						gsi.getMaxPlayers(),
-						gsi.isShowingBrackets(),
-						gsi.isShowingClock(),
-						client.getAccessLevel() >= 100 ? gsi.getStatus() : ServerStatus.STATUS_DOWN,
-						gsi.getId());
-
-				continue;
+				addServer(client.usesInternalIP() ? gsi.getInternalHost() : gsi.getExternalHost(), gsi.getPort(), gsi.isPvp(), gsi.isTestServer(), gsi.getCurrentPlayerCount(), gsi.getMaxPlayers(), gsi.isShowingBrackets(), gsi.isShowingClock(), gsi.getStatus(), gsi.getId()); 
 			}
-
-			addServer(client.usesInternalIP() ? gsi.getInternalHost() : gsi.getExternalHost(), gsi.getPort(), gsi.isPvp(), gsi.isTestServer(), gsi.getCurrentPlayerCount(), gsi.getMaxPlayers(), gsi.isShowingBrackets(), gsi.isShowingClock(), ServerStatus.STATUS_DOWN, gsi.getId());
+                        else if(gsi.getStatus() != ServerStatus.STATUS_GM_ONLY) 
+	 	        { 
+	 	                // Server is not GM-Only 
+	 	                addServer(client.usesInternalIP() ? gsi.getInternalHost() : gsi.getExternalHost(), gsi.getPort(), gsi.isPvp(), gsi.isTestServer(), gsi.getCurrentPlayerCount(), gsi.getMaxPlayers(), gsi.isShowingBrackets(), gsi.isShowingClock(), gsi.getStatus(), gsi.getId()); 
+	 	        } 
+	 	        else 
+	 	        { 
+	 	                // Server's GM-Only and you've got no GM-Status 
+	 	                addServer(client.usesInternalIP() ? gsi.getInternalHost() : gsi.getExternalHost(), gsi.getPort(), gsi.isPvp(), gsi.isTestServer(), gsi.getCurrentPlayerCount(), gsi.getMaxPlayers(), gsi.isShowingBrackets(), gsi.isShowingClock(), ServerStatus.STATUS_DOWN, gsi.getId()); 
+	 	        } 
 		}
 	}
 

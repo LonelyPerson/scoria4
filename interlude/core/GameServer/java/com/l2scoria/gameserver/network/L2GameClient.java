@@ -784,7 +784,7 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>> i
 	@Override
 	public String getHWID()
 	{
-		return getHWId();
+		return _hwid;
 	}
 
 	public void setHWID(String value)
