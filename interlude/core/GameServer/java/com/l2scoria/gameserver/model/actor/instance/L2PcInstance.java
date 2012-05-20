@@ -228,7 +228,7 @@ import com.l2scoria.util.random.Rnd;
  * @version $Revision: 1.6.4 $ $Date: 2009/05/12 19:46:09 $
  * @author l2scoria dev
  */
-public final class L2PcInstance extends L2PlayableInstance
+public final class L2PcInstance extends L2PlayableInstance implements scoria.ExtAPI
 {
 	//@SuppressWarnings("hiding")
 	public static final L2PcInstance[] EMPTY_ARRAY = new L2PcInstance[0];
