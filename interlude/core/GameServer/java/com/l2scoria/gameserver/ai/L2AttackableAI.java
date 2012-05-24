@@ -18,40 +18,23 @@
  */
 package com.l2scoria.gameserver.ai;
 
-import static com.l2scoria.gameserver.ai.CtrlIntention.AI_INTENTION_ACTIVE;
-import static com.l2scoria.gameserver.ai.CtrlIntention.AI_INTENTION_ATTACK;
-import static com.l2scoria.gameserver.ai.CtrlIntention.AI_INTENTION_IDLE;
-
-import java.util.concurrent.Future;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.GameTimeController;
 import com.l2scoria.gameserver.datatables.sql.TerritoryTable;
-import com.l2scoria.gameserver.geo.GeoData;
+import com.l2scoria.gameserver.geodata.GeoEngine;
 import com.l2scoria.gameserver.managers.DimensionalRiftManager;
-import com.l2scoria.gameserver.model.L2Attackable;
-import com.l2scoria.gameserver.model.L2Character;
-import com.l2scoria.gameserver.model.L2Object;
-import com.l2scoria.gameserver.model.L2Skill;
-import com.l2scoria.gameserver.model.L2Summon;
-import com.l2scoria.gameserver.model.actor.instance.L2DoorInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2GrandBossInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2FestivalMonsterInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2FolkInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2FriendlyMobInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2GuardInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2MinionInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2MonsterInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2NpcInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2RaidBossInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2RiftInvaderInstance;
+import com.l2scoria.gameserver.model.*;
+import com.l2scoria.gameserver.model.actor.instance.*;
 import com.l2scoria.gameserver.model.actor.position.L2CharPosition;
 import com.l2scoria.gameserver.model.quest.Quest;
 import com.l2scoria.gameserver.taskmanager.DecayTaskManager;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.gameserver.util.Util;
 import com.l2scoria.util.random.Rnd;
+
+import java.util.concurrent.Future;
+
+import static com.l2scoria.gameserver.ai.CtrlIntention.*;
 
 /**
  * This class manages AI of L2Attackable.<BR>
@@ -203,13 +186,13 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable
 			// Check if the L2PcInstance target has karma (=PK)
 			if(target instanceof L2PcInstance && ((L2PcInstance) target).getKarma() > 0)
 				// Los Check
-				return GeoData.getInstance().canSeeTarget(me, target);
+				return GeoEngine.canSeeTarget(me, target, false);
 
 			//if (target instanceof L2Summon)
 			//    return ((L2Summon)target).getKarma() > 0;
 			// Check if the L2MonsterInstance target is aggressive
 			if(target instanceof L2MonsterInstance)
-				return ((L2MonsterInstance) target).isAggressive() && GeoData.getInstance().canSeeTarget(me, target);
+				return ((L2MonsterInstance) target).isAggressive() && GeoEngine.canSeeTarget(me, target, false);
 
 			return false;
 		}
@@ -224,7 +207,7 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable
 			// Check if the L2PcInstance target has karma (=PK)
 			if(target instanceof L2PcInstance && ((L2PcInstance) target).getKarma() > 0)
 				// Los Check
-				return GeoData.getInstance().canSeeTarget(me, target);
+				return GeoEngine.canSeeTarget(me, target, false);
 			else
 				return false;
 		}
@@ -242,7 +225,7 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable
 				return false;
 
 			// Check if the actor is Aggressive
-			return me.isAggressive() && GeoData.getInstance().canSeeTarget(me, target);
+			return me.isAggressive() && GeoEngine.canSeeTarget(me, target, false);
 		}
 	}
 
@@ -725,7 +708,7 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable
 
 					// Check if the L2Object is inside the Faction Range of the actor
 					if(_actor.isInsideRadius(npc, npc.getFactionRange(), true, false) && npc != null && _actor != null && npc.getAI() != null
-						//&& GeoData.getInstance().canSeeTarget(_actor, npc)
+						//&& GeoEngine.canSeeTarget(_actor, npc)
 						&& Math.abs(getAttackTarget().getZ() - npc.getZ()) < 600 && _actor.getAttackByList().contains(getAttackTarget()))
 					{
 						if (_selfAnalysis.hasHealOrResurrect && !_actor.isAttackingDisabled() && npc.getStatus().getCurrentHp() < npc.getMaxHp() * 0.6 && _actor.getStatus().getCurrentHp() > _actor.getMaxHp() / 2 && _actor.getStatus().getCurrentMp() > _actor.getMaxMp() / 2)
@@ -744,7 +727,7 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable
 											continue;
 										if (10 >= Rnd.get(100)) // chance
 											continue;
-										if (!GeoData.getInstance().canSeeTarget(_actor, npc))
+										if (!GeoEngine.canSeeTarget(_actor, npc, false))
 											break;
 
 										L2Object OldTarget = _actor.getTarget();
@@ -783,7 +766,7 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable
 										chance = 6;
 									if (chance >= Rnd.get(100)) // chance
 										continue;
-									if (!GeoData.getInstance().canSeeTarget(_actor, npc))
+									if (!GeoEngine.canSeeTarget(_actor, npc, false))
 										break;
 
 									L2Object OldTarget = _actor.getTarget();
@@ -881,7 +864,7 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable
 		}
 
 		// Considering, if bigger range will be attempted
-		if ((dist2 < 10000 + combinedCollision * combinedCollision) && !_selfAnalysis.isFighter && !_selfAnalysis.isBalanced && (_selfAnalysis.hasLongRangeSkills || _selfAnalysis.isArcher || _selfAnalysis.isHealer) && (_mostHatedAnalysis.isBalanced || _mostHatedAnalysis.isFighter) && (_mostHatedAnalysis.character.isRooted() || _mostHatedAnalysis.isSlower) && (Config.GEODATA == 2 ? 20 : 12) >= Rnd.get(100))
+		if ((dist2 < 10000 + combinedCollision * combinedCollision) && !_selfAnalysis.isFighter && !_selfAnalysis.isBalanced && (_selfAnalysis.hasLongRangeSkills || _selfAnalysis.isArcher || _selfAnalysis.isHealer) && (_mostHatedAnalysis.isBalanced || _mostHatedAnalysis.isFighter) && (_mostHatedAnalysis.character.isRooted() || _mostHatedAnalysis.isSlower) && (Config.GEODATA ? 20 : 12) >= Rnd.get(100))
 		{
 			int posX = _actor.getX();
 			int posY = _actor.getY();
@@ -901,7 +884,7 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable
 		}
 
 		// Cannot see target, needs to go closer, currently just goes to range 300 if mage
-		if ((dist2 > 96100 + combinedCollision * combinedCollision) && _selfAnalysis.hasLongRangeSkills && !GeoData.getInstance().canSeeTarget(_actor, _mostHatedAnalysis.character))
+		if ((dist2 > 96100 + combinedCollision * combinedCollision) && _selfAnalysis.hasLongRangeSkills && !GeoEngine.canSeeTarget(_actor, _mostHatedAnalysis.character, false))
 		{
 			if (!(_selfAnalysis.isMage && _actor.isMuted()))
 			{

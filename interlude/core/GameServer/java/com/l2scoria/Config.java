@@ -18,6 +18,7 @@
  */
 package com.l2scoria;
 
+import com.l2scoria.gameserver.geodata.PathFindBuffers;
 import com.l2scoria.gameserver.services.FService;
 import com.l2scoria.gameserver.services.Instruments;
 import javolution.util.FastList;
@@ -3503,23 +3504,29 @@ public final class Config
 	}
 
 	//============================================================
-	public static int			GEODATA;
-	public static boolean		GEODATA_CELLFINDING;
-	public static boolean		FORCE_GEODATA;
-	public static boolean		CHECK_GEO_HEIGHT;
-	public static enum CorrectSpawnsZ
-	{
-		TOWN, MONSTER, ALL, NONE
-	}
-	public static CorrectSpawnsZ	GEO_CORRECT_Z;
-	
-	public static boolean		ACCEPT_GEOEDITOR_CONN;
-    public static int			GEOEDITOR_PORT;
+	public static boolean GEODATA;
+	public static int GEO_X_FIRST, GEO_Y_FIRST, GEO_X_LAST, GEO_Y_LAST;
+	public static boolean GEODATA_CELLFINDING;
+	/** Force loading GeoData to psychical memory */
+	public static boolean FORCE_GEODATA;
+	public static boolean ACCEPT_GEOEDITOR_CONN;
 
-	public static int WORLD_SIZE_MIN_X;
-	public static int WORLD_SIZE_MAX_X;
-	public static int WORLD_SIZE_MIN_Y;
-	public static int WORLD_SIZE_MAX_Y;
+	public static boolean CONTROL_HEIGHT_DAMAGE;
+
+	public static boolean PATH_CLEAN;
+	public static boolean ALLOW_DOORS;
+	public static boolean SIMPLE_PATHFIND_FOR_MOBS;
+	public static boolean ALLOW_FALL_FROM_WALLS;
+	public static boolean ALLOW_KEYBOARD_MOVE;
+	public static int PATHFIND_BOOST;
+	public static boolean PATHFIND_DIAGONAL;
+	public static int PATHFIND_MAX_Z_DIFF;
+	public static int MAX_Z_DIFF;
+	public static int MIN_LAYER_HEIGHT;
+	public static double WEIGHT0;
+	public static double WEIGHT1;
+	public static double WEIGHT2;
+	public static boolean COMPACT_GEO;
 
 	//============================================================
 	public static void loadgeodataConfig()
@@ -3534,20 +3541,32 @@ public final class Config
 			geodataSetting.load(is);
 			is.close();
 
-			GEODATA					= Integer.parseInt(geodataSetting.getProperty("GeoData", "0"));
-			GEODATA_CELLFINDING		= Boolean.parseBoolean(geodataSetting.getProperty("CellPathFinding", "False"));
-			FORCE_GEODATA			= Boolean.parseBoolean(geodataSetting.getProperty("ForceGeoData", "True"));
-			String correctZ			= geodataSetting.getProperty("GeoCorrectZ", "ALL");
-			GEO_CORRECT_Z			= CorrectSpawnsZ.valueOf(correctZ.toUpperCase());
-			CHECK_GEO_HEIGHT		= Boolean.parseBoolean(geodataSetting.getProperty("CheckGeoHeight", "False"));
+			GEODATA = Boolean.parseBoolean(geodataSetting.getProperty("GeoData", "false"));
+			GEO_X_FIRST = Integer.parseInt(geodataSetting.getProperty("GeoFirstX", "15"));
+			GEO_Y_FIRST = Integer.parseInt(geodataSetting.getProperty("GeoFirstY", "10"));
+			GEO_X_LAST = Integer.parseInt(geodataSetting.getProperty("GeoLastX", "26"));
+			GEO_Y_LAST = Integer.parseInt(geodataSetting.getProperty("GeoLastY", "26"));
+			CONTROL_HEIGHT_DAMAGE       = Boolean.parseBoolean(geodataSetting.getProperty("ControlHeightDamage", "true"));
+			PATH_CLEAN = Boolean.parseBoolean(geodataSetting.getProperty("PathClean", "true"));
+			ALLOW_DOORS = Boolean.parseBoolean(geodataSetting.getProperty("AllowDoors", "false"));
+			SIMPLE_PATHFIND_FOR_MOBS = Boolean.parseBoolean(geodataSetting.getProperty("SimplePathFindForMobs", "true"));
+			ALLOW_FALL_FROM_WALLS = Boolean.parseBoolean(geodataSetting.getProperty("AllowFallFromWalls", "false"));
+			ALLOW_KEYBOARD_MOVE = Boolean.parseBoolean(geodataSetting.getProperty("AllowMoveWithKeyboard", "true"));
+			PATHFIND_BOOST = Integer.parseInt(geodataSetting.getProperty("PathFindBoost", "2"));
+			PATHFIND_DIAGONAL = Boolean.parseBoolean(geodataSetting.getProperty("PathFindDiagonal", "true"));
+			PATHFIND_MAX_Z_DIFF = Integer.parseInt(geodataSetting.getProperty("PathFindMaxZDiff", "32"));
+			MAX_Z_DIFF = Integer.parseInt(geodataSetting.getProperty("MaxZDiff", "64"));
+			MIN_LAYER_HEIGHT = Integer.parseInt(geodataSetting.getProperty("MinLayerHeight", "64"));
+			WEIGHT0 = Double.parseDouble(geodataSetting.getProperty("Weight0", "0.5"));
+			WEIGHT1 = Double.parseDouble(geodataSetting.getProperty("Weight1", "2.0"));
+			WEIGHT2 = Double.parseDouble(geodataSetting.getProperty("Weight2", "1.0"));
+			
+			PathFindBuffers.initBuffers(geodataSetting.getProperty("PathFindBuffers", "8x100;8x128;8x192;4x256;2x320;2x384;1x500"));
 
-			ACCEPT_GEOEDITOR_CONN	= Boolean.parseBoolean(geodataSetting.getProperty("AcceptGeoeditorConn", "False"));
-			GEOEDITOR_PORT			= Integer.parseInt(geodataSetting.getProperty("GeoEditorPort", "9011"));
-
-			WORLD_SIZE_MIN_X = Integer.parseInt(geodataSetting.getProperty("WorldSizeMinX", "-131072"));
-			WORLD_SIZE_MAX_X = Integer.parseInt(geodataSetting.getProperty("WorldSizeMaxX", "228608"));
-			WORLD_SIZE_MIN_Y = Integer.parseInt(geodataSetting.getProperty("WorldSizeMinY", "-262144"));
-			WORLD_SIZE_MAX_Y = Integer.parseInt(geodataSetting.getProperty("WorldSizeMaxY", "262144"));
+			COMPACT_GEO = Boolean.parseBoolean(geodataSetting.getProperty("CompactGeoData", "false"));
+			GRIDS_ALWAYS_ON             = Boolean.parseBoolean(geodataSetting.getProperty("GridsAlwaysOn", "false"));
+			GRID_NEIGHBOR_TURNON_TIME   = Integer.parseInt(geodataSetting.getProperty("GridNeighborTurnOnTime", "30"));
+			GRID_NEIGHBOR_TURNOFF_TIME  = Integer.parseInt(geodataSetting.getProperty("GridNeighborTurnOffTime", "300"));
 		}
 		catch(Exception e)
 		{

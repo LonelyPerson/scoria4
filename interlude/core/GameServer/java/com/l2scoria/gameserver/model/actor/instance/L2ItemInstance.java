@@ -18,41 +18,31 @@
  */
 package com.l2scoria.gameserver.model.actor.instance;
 
+import com.l2scoria.Config;
+import com.l2scoria.gameserver.ai.CtrlIntention;
+import com.l2scoria.gameserver.datatables.sql.ItemTable;
+import com.l2scoria.gameserver.geodata.GeoEngine;
+import com.l2scoria.gameserver.managers.ItemsOnGroundManager;
+import com.l2scoria.gameserver.managers.MercTicketManager;
+import com.l2scoria.gameserver.model.*;
+import com.l2scoria.gameserver.model.actor.knownlist.NullKnownList;
+import com.l2scoria.gameserver.model.extender.BaseExtender.EventType;
+import com.l2scoria.gameserver.network.SystemMessageId;
+import com.l2scoria.gameserver.network.serverpackets.*;
+import com.l2scoria.gameserver.skills.funcs.Func;
+import com.l2scoria.gameserver.templates.L2Armor;
+import com.l2scoria.gameserver.templates.L2EtcItem;
+import com.l2scoria.gameserver.templates.L2Item;
+import com.l2scoria.gameserver.thread.ThreadPoolManager;
+import com.l2scoria.util.database.L2DatabaseFactory;
+
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.concurrent.ScheduledFuture;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
-
-import com.l2scoria.Config;
-import com.l2scoria.gameserver.ai.CtrlIntention;
-import com.l2scoria.gameserver.datatables.sql.ItemTable;
-import com.l2scoria.gameserver.geo.GeoData;
-import com.l2scoria.gameserver.managers.ItemsOnGroundManager;
-import com.l2scoria.gameserver.managers.MercTicketManager;
-import com.l2scoria.gameserver.model.L2Augmentation;
-import com.l2scoria.gameserver.model.L2Character;
-import com.l2scoria.gameserver.model.L2Object;
-import com.l2scoria.gameserver.model.L2World;
-import com.l2scoria.gameserver.model.L2WorldRegion;
-import com.l2scoria.gameserver.model.Location;
-import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
-import com.l2scoria.gameserver.model.actor.knownlist.NullKnownList;
-import com.l2scoria.gameserver.model.extender.BaseExtender.EventType;
-import com.l2scoria.gameserver.network.SystemMessageId;
-import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
-import com.l2scoria.gameserver.network.serverpackets.GetItem;
-import com.l2scoria.gameserver.network.serverpackets.InventoryUpdate;
-import com.l2scoria.gameserver.network.serverpackets.StatusUpdate;
-import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
-import com.l2scoria.gameserver.skills.funcs.Func;
-import com.l2scoria.gameserver.templates.L2Armor;
-import com.l2scoria.gameserver.templates.L2EtcItem;
-import com.l2scoria.gameserver.templates.L2Item;
-import com.l2scoria.gameserver.thread.ThreadPoolManager;
-import java.sql.Connection;
-import com.l2scoria.util.database.L2DatabaseFactory;
 
 /**
  * This class manages items.
@@ -1317,9 +1307,9 @@ public final class L2ItemInstance extends L2Object
 			assert getPosition().getWorldRegion() == null;
 		}
 
-		if(Config.GEODATA > 0 && dropper != null)
+		if(Config.GEODATA && dropper != null)
 		{
-			Location dropDest = GeoData.getInstance().moveCheck(dropper.getX(), dropper.getY(), dropper.getZ(), x, y, z);
+			Location dropDest = GeoEngine.moveCheck(dropper.getX(), dropper.getY(), dropper.getZ(), x, y, dropper.isFlying());
 			x = dropDest.getX();
 			y = dropDest.getY();
 			z = dropDest.getZ();

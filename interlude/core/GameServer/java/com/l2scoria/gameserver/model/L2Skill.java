@@ -18,33 +18,16 @@
  */
 package com.l2scoria.gameserver.model;
 
-import java.lang.reflect.Constructor;
-import java.util.List;
-import java.util.StringTokenizer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javolution.util.FastList;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.HeroSkillTable;
 import com.l2scoria.gameserver.datatables.SkillTable;
 import com.l2scoria.gameserver.datatables.sql.SkillTreeTable;
-import com.l2scoria.gameserver.geo.GeoData;
+import com.l2scoria.gameserver.geodata.GeoEngine;
 import com.l2scoria.gameserver.managers.SiegeManager;
-import com.l2scoria.gameserver.model.actor.instance.L2ArtefactInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2ChestInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2ControlTowerInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2DoorInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2MonsterInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2NpcInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2PetInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2PlayableInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2SummonInstance;
+import com.l2scoria.gameserver.model.actor.instance.*;
 import com.l2scoria.gameserver.model.base.ClassId;
-import com.l2scoria.gameserver.model.entity.siege.Siege;
 import com.l2scoria.gameserver.model.entity.event.TvTEvent;
+import com.l2scoria.gameserver.model.entity.siege.Siege;
 import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.EtcStatusUpdate;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
@@ -56,18 +39,16 @@ import com.l2scoria.gameserver.skills.effects.EffectCharge;
 import com.l2scoria.gameserver.skills.effects.EffectTemplate;
 import com.l2scoria.gameserver.skills.funcs.Func;
 import com.l2scoria.gameserver.skills.funcs.FuncTemplate;
-import com.l2scoria.gameserver.skills.l2skills.L2SkillCharge;
-import com.l2scoria.gameserver.skills.l2skills.L2SkillChargeDmg;
-import com.l2scoria.gameserver.skills.l2skills.L2SkillChargeEffect;
-import com.l2scoria.gameserver.skills.l2skills.L2SkillCreateItem;
-import com.l2scoria.gameserver.skills.l2skills.L2SkillDefault;
-import com.l2scoria.gameserver.skills.l2skills.L2SkillDrain;
-import com.l2scoria.gameserver.skills.l2skills.L2SkillSeed;
-import com.l2scoria.gameserver.skills.l2skills.L2SkillSignet;
-import com.l2scoria.gameserver.skills.l2skills.L2SkillSignetCasttime;
-import com.l2scoria.gameserver.skills.l2skills.L2SkillSummon;
+import com.l2scoria.gameserver.skills.l2skills.*;
 import com.l2scoria.gameserver.templates.StatsSet;
 import com.l2scoria.gameserver.util.Util;
+import javolution.util.FastList;
+
+import java.lang.reflect.Constructor;
+import java.util.List;
+import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class...
@@ -1345,10 +1326,8 @@ public abstract class L2Skill
 			mask |= activeChar.getSecondaryWeaponItem().getItemType().mask();
 		}
 
-		if((mask & weaponsAllowed) != 0)
-			return true;
+		return (mask & weaponsAllowed) != 0;
 
-		return false;
 	}
 
 	public boolean checkCondition(L2Character activeChar, L2Object target, boolean itemOrWeapon)
@@ -1590,7 +1569,7 @@ public abstract class L2Skill
 								continue;
 
 
-							if(onlyFirst == false)
+							if(!onlyFirst)
 							{
 								targetList.add(obj);
 							}
@@ -1670,7 +1649,7 @@ public abstract class L2Skill
 						if (!checkForAreaOffensiveSkills(activeChar, obj, this, srcInArena))
 							continue;
 
-						targetList.add((L2Character) obj);
+						targetList.add(obj);
 					}
 				}
 
@@ -1795,7 +1774,7 @@ public abstract class L2Skill
 
 					if(targetType != SkillTargetType.TARGET_CORPSE_ALLY)
 					{
-						if(onlyFirst == false)
+						if(!onlyFirst)
 						{
 							targetList.add(player);
 						}
@@ -1858,7 +1837,7 @@ public abstract class L2Skill
 								continue;
 							}
 
-							if(onlyFirst == false)
+							if(!onlyFirst)
 							{
 								targetList.add((L2Character) newTarget);
 							}
@@ -1893,7 +1872,7 @@ public abstract class L2Skill
 
 					if(targetType != SkillTargetType.TARGET_CORPSE_CLAN)
 					{
-						if(onlyFirst == false)
+						if(!onlyFirst)
 						{
 							targetList.add(player);
 						}
@@ -1992,7 +1971,7 @@ public abstract class L2Skill
 
 					for (L2Object newTarget : activeChar.getKnownList().getKnownObjects().values())
 					{
-						if (newTarget instanceof L2NpcInstance && ((L2NpcInstance) newTarget).getFactionId() == npc.getFactionId())
+						if (newTarget instanceof L2NpcInstance && ((L2NpcInstance) newTarget).getFactionId().equals(npc.getFactionId()))
 						{
 							if (!Util.checkIfInRange(getSkillRadius(), activeChar, newTarget, true))
 								continue;
@@ -2071,7 +2050,7 @@ public abstract class L2Skill
 
 						if(condGood)
 						{
-							if(onlyFirst == false)
+							if(!onlyFirst)
 							{
 								targetList.add(target);
 								return targetList.toArray(new L2Object[targetList.size()]);
@@ -2101,7 +2080,7 @@ public abstract class L2Skill
 					return null;
 				}
 
-				if(onlyFirst == false)
+				if(!onlyFirst)
 				{
 					targetList.add(target);
 					return targetList.toArray(new L2Object[targetList.size()]);
@@ -2121,7 +2100,7 @@ public abstract class L2Skill
 					return null;
 				}
 
-				if(onlyFirst == false)
+				if(!onlyFirst)
 				{
 					targetList.add(target);
 				}
@@ -2152,7 +2131,7 @@ public abstract class L2Skill
 							continue;
 						}
 
-						if(!(obj instanceof L2Attackable || obj instanceof L2PlayableInstance) || ((L2Character) obj).isDead() || (L2Character) obj == activeChar)
+						if(!(obj instanceof L2Attackable || obj instanceof L2PlayableInstance) || ((L2Character) obj).isDead() || obj == activeChar)
 						{
 							continue;
 						}
@@ -2162,7 +2141,7 @@ public abstract class L2Skill
 							continue;
 						}
 
-						if(!GeoData.getInstance().canSeeTarget(activeChar, obj))
+						if(!GeoEngine.canSeeTarget(activeChar, obj, activeChar.isFlying()))
 						{
 							continue;
 						}
@@ -2256,7 +2235,7 @@ public abstract class L2Skill
 					//activeChar.sendPacket(new SystemMessage(SystemMessage.TARGET_IS_INCORRECT));
 					return null;
 
-				if(onlyFirst == false)
+				if(!onlyFirst)
 				{
 					targetList.add(target);
 					return targetList.toArray(new L2Object[targetList.size()]);
@@ -2286,7 +2265,7 @@ public abstract class L2Skill
 						return null;
 					}
 
-					if(onlyFirst == false)
+					if(!onlyFirst)
 					{
 						targetList.add(target);
 					}
@@ -2314,7 +2293,7 @@ public abstract class L2Skill
 				{
 					cha = target;
 
-					if(onlyFirst == false)
+					if(!onlyFirst)
 					{
 						targetList.add(cha); // Add target to target list
 					}
@@ -2352,7 +2331,7 @@ public abstract class L2Skill
 							continue;
 						}
 
-						if(!GeoData.getInstance().canSeeTarget(activeChar, target))
+						if(!GeoEngine.canSeeTarget(activeChar, target, activeChar.isFlying()))
 						{
 							continue;
 						}
@@ -2369,7 +2348,7 @@ public abstract class L2Skill
 								continue;
 							}
 
-							if(onlyFirst == false)
+							if(!onlyFirst)
 							{
 								targetList.add((L2Character) obj); // Add obj to target lists
 							}
@@ -2394,7 +2373,7 @@ public abstract class L2Skill
 				if(target != null && target instanceof L2Summon)
 				{
 					L2Summon targetSummon = (L2Summon) target;
-					if(activeChar instanceof L2PcInstance && activeChar.getPet() != targetSummon && !targetSummon.isDead() && (targetSummon.getOwner().getPvpFlag() != 0 || targetSummon.getOwner().getKarma() > 0 || targetSummon.getOwner().isInDuel()) || targetSummon.getOwner().isInsideZone(L2Character.ZONE_PVP) && ((L2PcInstance) activeChar).isInsideZone(L2Character.ZONE_PVP))
+					if(activeChar instanceof L2PcInstance && activeChar.getPet() != targetSummon && !targetSummon.isDead() && (targetSummon.getOwner().getPvpFlag() != 0 || targetSummon.getOwner().getKarma() > 0 || targetSummon.getOwner().isInDuel()) || targetSummon.getOwner().isInsideZone(L2Character.ZONE_PVP) && activeChar.isInsideZone(L2Character.ZONE_PVP))
 						return new L2Character[]
 						{
 							targetSummon
@@ -2692,10 +2671,7 @@ public abstract class L2Skill
 
 			if(Config.TVT_EVENT_ENABLED && TvTEvent.getParticipantTeamId(activeCh.getObjectId()) != -1 && TvTEvent.getParticipantTeamId(targetChar.getObjectId()) != -1)
 			{
-				if(TvTEvent.getParticipantTeamId(activeCh.getObjectId()) == TvTEvent.getParticipantTeamId(targetChar.getObjectId()))
-					return true;
-				else
-					return false;
+				return TvTEvent.getParticipantTeamId(activeCh.getObjectId()) == TvTEvent.getParticipantTeamId(targetChar.getObjectId());
 			}
 
 			if(activeCh.getParty() != null && targetChar.getParty() != null && //Is in the same party???
@@ -2712,7 +2688,7 @@ public abstract class L2Skill
 		return false;
 	}
 
-	public static final boolean checkForAreaOffensiveSkills(L2Character caster, L2Character target, L2Skill skill, boolean sourceInArena)
+	public static boolean checkForAreaOffensiveSkills(L2Character caster, L2Character target, L2Skill skill, boolean sourceInArena)
 	{
 		if (target == null || target.isDead() || target == caster)
 			return false;
@@ -2784,10 +2760,8 @@ public abstract class L2Skill
 			}
 		}
 
-		if (!GeoData.getInstance().canSeeTarget(caster, target))
-			return false;
+		return GeoEngine.canSeeTarget(caster, target, caster.isFlying());
 
-		return true;
 	}
 	
 	@Override

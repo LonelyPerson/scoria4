@@ -18,17 +18,18 @@
  */
 package com.l2scoria.util;
 
+import com.l2scoria.gameserver.taskmanager.MemoryWatchDog;
+import javolution.text.TextBuilder;
+
 import java.io.InputStream;
 import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Logger;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-
-import javolution.text.TextBuilder;
+import java.util.logging.Logger;
 
 /**
  * This class ...
@@ -381,5 +382,26 @@ public class Util
 			System.exit(1);
 		}
 		return hash_array;
+	}
+
+	public static long gc(int i, int delay)
+	{
+		long freeMemBefore = MemoryWatchDog.getMemFree();
+		Runtime rt = Runtime.getRuntime();
+		rt.gc();
+		while(--i > 0)
+		{
+			try
+			{
+				Thread.sleep(delay);
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+			rt.gc();
+		}
+		rt.runFinalization();
+		return MemoryWatchDog.getMemFree() - freeMemBefore;
 	}
 }

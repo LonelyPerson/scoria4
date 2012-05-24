@@ -18,14 +18,6 @@
  */
 package com.l2scoria.gameserver.model.actor.instance;
 
-import static com.l2scoria.gameserver.ai.CtrlIntention.AI_INTENTION_ACTIVE;
-
-import java.text.DateFormat;
-import java.util.List;
-
-import javolution.text.TextBuilder;
-import javolution.util.FastList;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.ai.CtrlIntention;
 import com.l2scoria.gameserver.cache.HtmCache;
@@ -36,21 +28,8 @@ import com.l2scoria.gameserver.datatables.sql.HelperBuffTable;
 import com.l2scoria.gameserver.datatables.sql.ItemTable;
 import com.l2scoria.gameserver.datatables.sql.SpawnTable;
 import com.l2scoria.gameserver.idfactory.IdFactory;
-import com.l2scoria.gameserver.managers.CastleManager;
-import com.l2scoria.gameserver.managers.CustomNpcInstanceManager;
-import com.l2scoria.gameserver.managers.DimensionalRiftManager;
-import com.l2scoria.gameserver.managers.FortManager;
-import com.l2scoria.gameserver.managers.QuestManager;
-import com.l2scoria.gameserver.managers.TownManager;
-import com.l2scoria.gameserver.model.L2Attackable;
-import com.l2scoria.gameserver.model.L2Character;
-import com.l2scoria.gameserver.model.L2Clan;
-import com.l2scoria.gameserver.model.L2DropCategory;
-import com.l2scoria.gameserver.model.L2DropData;
-import com.l2scoria.gameserver.model.L2Object;
-import com.l2scoria.gameserver.model.L2Skill;
-import com.l2scoria.gameserver.model.L2Summon;
-import com.l2scoria.gameserver.model.L2World;
+import com.l2scoria.gameserver.managers.*;
+import com.l2scoria.gameserver.model.*;
 import com.l2scoria.gameserver.model.L2Skill.SkillType;
 import com.l2scoria.gameserver.model.actor.knownlist.NpcKnownList;
 import com.l2scoria.gameserver.model.actor.stat.NpcStat;
@@ -69,19 +48,7 @@ import com.l2scoria.gameserver.model.spawn.L2Spawn;
 import com.l2scoria.gameserver.model.zone.type.L2TownZone;
 import com.l2scoria.gameserver.network.L2GameClient;
 import com.l2scoria.gameserver.network.SystemMessageId;
-import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
-import com.l2scoria.gameserver.network.serverpackets.CustomNpcInfo;
-import com.l2scoria.gameserver.network.serverpackets.ExShowVariationCancelWindow;
-import com.l2scoria.gameserver.network.serverpackets.ExShowVariationMakeWindow;
-import com.l2scoria.gameserver.network.serverpackets.InventoryUpdate;
-import com.l2scoria.gameserver.network.serverpackets.MyTargetSelected;
-import com.l2scoria.gameserver.network.serverpackets.NpcHtmlMessage;
-import com.l2scoria.gameserver.network.serverpackets.NpcInfo;
-import com.l2scoria.gameserver.network.serverpackets.RadarControl;
-import com.l2scoria.gameserver.network.serverpackets.SocialAction;
-import com.l2scoria.gameserver.network.serverpackets.StatusUpdate;
-import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
-import com.l2scoria.gameserver.network.serverpackets.ValidateLocation;
+import com.l2scoria.gameserver.network.serverpackets.*;
 import com.l2scoria.gameserver.skills.Stats;
 import com.l2scoria.gameserver.taskmanager.DecayTaskManager;
 import com.l2scoria.gameserver.templates.L2HelperBuff;
@@ -90,6 +57,13 @@ import com.l2scoria.gameserver.templates.L2NpcTemplate;
 import com.l2scoria.gameserver.templates.L2Weapon;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.util.random.Rnd;
+import javolution.text.TextBuilder;
+import javolution.util.FastList;
+
+import java.text.DateFormat;
+import java.util.List;
+
+import static com.l2scoria.gameserver.ai.CtrlIntention.AI_INTENTION_ACTIVE;
 
 /**
  * This class represents a Non-Player-Character in the world. It can be a monster or a friendly character. It also uses
@@ -143,6 +117,10 @@ public class L2NpcInstance extends L2Character
 	private int _currentRHandId; // normally this shouldn't change from the template, but there exist exceptions
 	private int _currentCollisionHeight; // used for npc grow effect skills
 	private int _currentCollisionRadius; // used for npc grow effect skills
+
+	public long pathfindCount;
+	public long pathfindTime;
+
 
 	/** Task launching the function onRandomAnimation() */
 	protected class RandomAnimationTask implements Runnable

@@ -23,7 +23,7 @@ import com.l2scoria.gameserver.ai.CtrlIntention;
 import com.l2scoria.gameserver.ai.L2CharacterAI;
 import com.l2scoria.gameserver.ai.L2SummonAI;
 import com.l2scoria.gameserver.datatables.SkillTable;
-import com.l2scoria.gameserver.geo.GeoData;
+import com.l2scoria.gameserver.geodata.GeoEngine;
 import com.l2scoria.gameserver.model.L2Skill.SkillTargetType;
 import com.l2scoria.gameserver.model.actor.instance.L2DoorInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
@@ -211,9 +211,9 @@ public abstract class L2Summon extends L2PlayableInstance
 		{
 			if(isAutoAttackable(player))
 			{
-				if(Config.GEODATA > 0)
+				if(Config.GEODATA)
 				{
-					if(GeoData.getInstance().canSeeTarget(player, this))
+					if(GeoEngine.canSeeTarget(player, this, false))
 					{
 						player.getAI().setIntention(CtrlIntention.AI_INTENTION_ATTACK, this);
 						player.onActionRequest();
@@ -230,9 +230,9 @@ public abstract class L2Summon extends L2PlayableInstance
 				// This Action Failed packet avoids player getting stuck when clicking three or more times 
 				player.sendPacket(ActionFailed.STATIC_PACKET);
 
-				if(Config.GEODATA > 0)
+				if(Config.GEODATA)
 				{
-					if(GeoData.getInstance().canSeeTarget(player, this))
+					if(GeoEngine.canSeeTarget(player, this, false))
 					{
 						player.getAI().setIntention(CtrlIntention.AI_INTENTION_FOLLOW, this);
 					}

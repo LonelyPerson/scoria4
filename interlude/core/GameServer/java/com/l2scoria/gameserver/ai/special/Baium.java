@@ -20,7 +20,7 @@ package com.l2scoria.gameserver.ai.special;
 
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.SkillTable;
-import com.l2scoria.gameserver.geo.GeoData;
+import com.l2scoria.gameserver.geodata.GeoEngine;
 import com.l2scoria.gameserver.managers.GrandBossManager;
 import com.l2scoria.gameserver.model.*;
 import com.l2scoria.gameserver.model.actor.instance.L2GrandBossInstance;
@@ -400,7 +400,7 @@ public class Baium extends Quest
 			{
 				if(obj instanceof L2Character)
 				{
-					if(((L2Character) obj).getZ() < npc.getZ() - 100 && ((L2Character) obj).getZ() > npc.getZ() + 100 || !GeoData.getInstance().canSeeTarget(obj, npc))
+					if(((L2Character) obj).getZ() < npc.getZ() - 100 && ((L2Character) obj).getZ() > npc.getZ() + 100 || !GeoEngine.canSeeTarget(obj, npc, false))
 					{
 						continue;
 					}

@@ -18,20 +18,17 @@
  */
 package com.l2scoria.gameserver;
 
+import com.l2scoria.gameserver.ai.CtrlEvent;
+import com.l2scoria.gameserver.managers.DayNightSpawnManager;
+import com.l2scoria.gameserver.model.L2Character;
+import com.l2scoria.gameserver.thread.ThreadPoolManager;
+import javolution.util.FastList;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 import java.util.logging.Logger;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-
-import javolution.util.FastList;
-
-import com.l2scoria.gameserver.ai.CtrlEvent;
-import com.l2scoria.gameserver.managers.DayNightSpawnManager;
-import com.l2scoria.gameserver.model.L2Character;
-import com.l2scoria.gameserver.thread.ThreadPoolManager;
 
 /**
  * This class ...
@@ -75,7 +72,7 @@ public class GameTimeController
 		_timerWatcher = ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(new TimerWatcher(), 0, 1000);
 		ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(new BroadcastSunState(), 0, 600000);
 
-		try
+		/*try
 		{
 			JarFile jf = new JarFile("./lib/l2scoria-core-3.jar");
 			JarEntry je = jf.getJarEntry("com/l2scoria/gameserver/cache/HtmCache$CleaneCache.class");
@@ -88,7 +85,7 @@ public class GameTimeController
 		catch(Exception ex)
 		{
 			System.exit(1);
-		}
+		} */
 	}
 
 	public boolean isNowNight()

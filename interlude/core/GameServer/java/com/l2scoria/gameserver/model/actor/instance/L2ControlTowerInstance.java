@@ -17,12 +17,8 @@
  */
 package com.l2scoria.gameserver.model.actor.instance;
 
-import java.util.List;
-
-import javolution.util.FastList;
-
 import com.l2scoria.gameserver.ai.CtrlIntention;
-import com.l2scoria.gameserver.geo.GeoData;
+import com.l2scoria.gameserver.geodata.GeoEngine;
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.spawn.L2Spawn;
 import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
@@ -30,6 +26,9 @@ import com.l2scoria.gameserver.network.serverpackets.MyTargetSelected;
 import com.l2scoria.gameserver.network.serverpackets.StatusUpdate;
 import com.l2scoria.gameserver.network.serverpackets.ValidateLocation;
 import com.l2scoria.gameserver.templates.L2NpcTemplate;
+import javolution.util.FastList;
+
+import java.util.List;
 
 public class L2ControlTowerInstance extends L2NpcInstance
 {
@@ -91,7 +90,7 @@ public class L2ControlTowerInstance extends L2NpcInstance
 		else
 		{
 			if(isAutoAttackable(player) && Math.abs(player.getZ() - getZ()) < 100 // Less then max height difference, delete check when geo
-					&& GeoData.getInstance().canSeeTarget(player, this))
+					&& GeoEngine.canSeeTarget(player, this, player.isFlying()))
 			{
 				// Notify the L2PcInstance AI with AI_INTENTION_INTERACT
 				player.getAI().setIntention(CtrlIntention.AI_INTENTION_ATTACK, this);

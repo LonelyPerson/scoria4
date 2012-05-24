@@ -18,8 +18,6 @@
  */
 package com.l2scoria.gameserver.model;
 
-import java.lang.reflect.Constructor;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.idfactory.IdFactory;
 import com.l2scoria.gameserver.managers.ItemsOnGroundManager;
@@ -31,6 +29,8 @@ import com.l2scoria.gameserver.model.extender.BaseExtender;
 import com.l2scoria.gameserver.model.extender.BaseExtender.EventType;
 import com.l2scoria.gameserver.network.L2GameClient;
 import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
+
+import java.lang.reflect.Constructor;
 
 /**
  * Mother class of all objects in the world wich ones is it possible to interact (PC, NPC, Item...)<BR>
@@ -546,6 +546,13 @@ public abstract class L2Object
 	public L2PcInstance getActingPlayer()
 	{
 		return null;
+	}
+
+	public float getColHeight()
+	{
+		System.out.println("getColHeight called directly from L2Object");
+		Thread.dumpStack();
+		return 0.0F;
 	}
 
 }

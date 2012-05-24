@@ -20,7 +20,7 @@ package com.l2scoria.gameserver.skills.effects;
 
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.ai.CtrlIntention;
-import com.l2scoria.gameserver.geo.GeoData;
+import com.l2scoria.gameserver.geodata.GeoEngine;
 import com.l2scoria.gameserver.model.actor.instance.L2CommanderInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2FolkInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2FortSiegeGuardInstance;
@@ -130,9 +130,9 @@ final class EffectFear extends L2Effect
 		posX += signx * FEAR_RANGE;
 		posY += signy * FEAR_RANGE;
 
-		if (Config.GEODATA > 0)
+		if (Config.GEODATA)
 		{
-			Location destiny = GeoData.getInstance().moveCheck(getEffected().getX(), getEffected().getY(), getEffected().getZ(), posX, posY, posZ);
+			Location destiny = GeoEngine.moveCheck(getEffected().getX(), getEffected().getY(), getEffected().getZ(), posX, posY, getEffected().isFlying());
 			posX = destiny.getX();
 			posY = destiny.getY();
 		}

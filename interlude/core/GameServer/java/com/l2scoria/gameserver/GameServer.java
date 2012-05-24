@@ -18,20 +18,6 @@
  */
 package com.l2scoria.gameserver;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
-
-import mmo.SelectorServerConfig;
-import mmo.SelectorThread;
-
 import com.l2scoria.Config;
 import com.l2scoria.L2Scoria;
 import com.l2scoria.ServerType;
@@ -44,75 +30,16 @@ import com.l2scoria.gameserver.datatables.GmListTable;
 import com.l2scoria.gameserver.datatables.HeroSkillTable;
 import com.l2scoria.gameserver.datatables.NobleSkillTable;
 import com.l2scoria.gameserver.datatables.SkillTable;
-import com.l2scoria.gameserver.datatables.csv.ArmorSetsTable;
-import com.l2scoria.gameserver.datatables.csv.DoorTable;
-import com.l2scoria.gameserver.datatables.csv.ExtractableItemsData;
-import com.l2scoria.gameserver.datatables.csv.FishTable;
-import com.l2scoria.gameserver.datatables.csv.HennaTable;
-import com.l2scoria.gameserver.datatables.csv.MapRegionTable;
-import com.l2scoria.gameserver.datatables.csv.NpcWalkerRoutesTable;
-import com.l2scoria.gameserver.datatables.csv.RecipeTable;
-import com.l2scoria.gameserver.datatables.csv.StaticObjects;
-import com.l2scoria.gameserver.datatables.csv.SummonItemsData;
-import com.l2scoria.gameserver.datatables.sql.AccessLevels;
-import com.l2scoria.gameserver.datatables.sql.AdminCommandAccessRights;
-import com.l2scoria.gameserver.datatables.sql.CharNameTable;
-import com.l2scoria.gameserver.datatables.sql.CharTemplateTable;
-import com.l2scoria.gameserver.datatables.sql.ClanTable;
-import com.l2scoria.gameserver.datatables.sql.CustomArmorSetsTable;
-import com.l2scoria.gameserver.datatables.sql.HelperBuffTable;
-import com.l2scoria.gameserver.datatables.sql.HennaTreeTable;
-import com.l2scoria.gameserver.datatables.sql.ItemTable;
-import com.l2scoria.gameserver.datatables.sql.L2PetDataTable;
-import com.l2scoria.gameserver.datatables.sql.LevelUpData;
-import com.l2scoria.gameserver.datatables.sql.NpcTable;
-import com.l2scoria.gameserver.datatables.sql.OfflineTradersTable;
-import com.l2scoria.gameserver.datatables.sql.SkillSpellbookTable;
-import com.l2scoria.gameserver.datatables.sql.SkillTreeTable;
-import com.l2scoria.gameserver.datatables.sql.SpawnTable;
-import com.l2scoria.gameserver.datatables.sql.TeleportLocationTable;
+import com.l2scoria.gameserver.datatables.csv.*;
+import com.l2scoria.gameserver.datatables.sql.*;
 import com.l2scoria.gameserver.datatables.xml.AugmentationData;
 import com.l2scoria.gameserver.datatables.xml.ZoneData;
-import com.l2scoria.gameserver.geo.GeoData;
-import com.l2scoria.gameserver.geo.geoeditorcon.GeoEditorListener;
-import com.l2scoria.gameserver.geo.pathfinding.PathFinding;
-import com.l2scoria.gameserver.handler.AdminCommandHandler;
-import com.l2scoria.gameserver.handler.AutoAnnouncementHandler;
-import com.l2scoria.gameserver.handler.ItemHandler;
-import com.l2scoria.gameserver.handler.SkillHandler;
-import com.l2scoria.gameserver.handler.UserCommandHandler;
-import com.l2scoria.gameserver.handler.VoicedCommandHandler;
+import com.l2scoria.gameserver.geodata.GeoEngine;
+import com.l2scoria.gameserver.geoeditorcon.GeoEditorListener;
+import com.l2scoria.gameserver.handler.*;
 import com.l2scoria.gameserver.idfactory.IdFactory;
-import com.l2scoria.gameserver.managers.AuctionManager;
-import com.l2scoria.gameserver.managers.AwayManager;
-import com.l2scoria.gameserver.managers.BoatManager;
-import com.l2scoria.gameserver.managers.CastleManager;
-import com.l2scoria.gameserver.managers.CastleManorManager;
-import com.l2scoria.gameserver.managers.ClanHallManager;
-import com.l2scoria.gameserver.managers.CoupleManager;
-import com.l2scoria.gameserver.managers.CrownManager;
-import com.l2scoria.gameserver.managers.CursedWeaponsManager;
-import com.l2scoria.gameserver.managers.DatatablesManager;
-import com.l2scoria.gameserver.managers.DayNightSpawnManager;
-import com.l2scoria.gameserver.managers.DimensionalRiftManager;
-import com.l2scoria.gameserver.managers.FortManager;
-import com.l2scoria.gameserver.managers.FortSiegeManager;
-import com.l2scoria.gameserver.managers.FourSepulchersManager;
-import com.l2scoria.gameserver.managers.FunEventsManager;
-import com.l2scoria.gameserver.managers.GrandBossManager;
-import com.l2scoria.gameserver.managers.ItemsOnGroundManager;
-import com.l2scoria.gameserver.managers.MercTicketManager;
-import com.l2scoria.gameserver.managers.PetitionManager;
-import com.l2scoria.gameserver.managers.QuestManager;
-import com.l2scoria.gameserver.managers.RaidBossPointsManager;
-import com.l2scoria.gameserver.managers.RaidBossSpawnManager;
-import com.l2scoria.gameserver.managers.SiegeManager;
-import com.l2scoria.gameserver.managers.TvTManager;
-import com.l2scoria.gameserver.model.AutoChatHandler;
-import com.l2scoria.gameserver.model.L2Manor;
-import com.l2scoria.gameserver.model.L2World;
-import com.l2scoria.gameserver.model.PartyMatchRoomList;
-import com.l2scoria.gameserver.model.PartyMatchWaitingList;
+import com.l2scoria.gameserver.managers.*;
+import com.l2scoria.gameserver.model.*;
 import com.l2scoria.gameserver.model.entity.Announcements;
 import com.l2scoria.gameserver.model.entity.Hero;
 import com.l2scoria.gameserver.model.entity.MonsterRace;
@@ -144,8 +71,19 @@ import com.l2scoria.util.Memory;
 import com.l2scoria.util.Util;
 import com.l2scoria.util.database.L2DatabaseFactory;
 import com.l2scoria.util.database.LoginRemoteDbFactory;
-
 import com.lameguard.LameGuard;
+import mmo.SelectorServerConfig;
+import mmo.SelectorThread;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.util.Calendar;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 /**
  * 
@@ -309,11 +247,8 @@ public class GameServer
 			}
 
 			Util.printSection("Geodata");
-			GeoData.getInstance();
-			if(Config.GEODATA >= 2)
-			{
-				PathFinding.getInstance();
-			}
+			if (Config.GEODATA)
+				GeoEngine.loadGeo();
 
 			Util.printSection("Economy");
 			TradeController.getInstance();

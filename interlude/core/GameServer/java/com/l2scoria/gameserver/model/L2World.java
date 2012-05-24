@@ -18,15 +18,6 @@
  */
 package com.l2scoria.gameserver.model;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
-
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.GmListTable;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
@@ -34,6 +25,14 @@ import com.l2scoria.gameserver.model.actor.instance.L2PetInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PlayableInstance;
 import com.l2scoria.util.Point3D;
 import com.l2scoria.util.object.L2ObjectMap;
+import javolution.util.FastList;
+import javolution.util.FastMap;
+
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * This class ...
@@ -52,10 +51,16 @@ public final class L2World
 	public static final int SHIFT_BY = 12;
 
 	/** Map dimensions */
-	public static final int MAP_MIN_X = Config.WORLD_SIZE_MIN_X; //-131072
-	public static final int MAP_MAX_X = Config.WORLD_SIZE_MAX_X; //228608
-	public static final int MAP_MIN_Y = Config.WORLD_SIZE_MIN_Y; //-262144
-	public static final int MAP_MAX_Y = Config.WORLD_SIZE_MAX_Y; //262144
+	public static final int MAP_MIN_X = 15 - 20 << 15;
+	public static final int MAP_MAX_X = (26 - 19 << 15) - 1;
+	public static final int MAP_MIN_Y = 10 - 18 << 15;
+	public static final int MAP_MAX_Y = (26 - 17 << 15) - 1;
+	public static final int MAP_MIN_Z = -32768;
+	public static final int MAP_MAX_Z = 32767;
+
+	public static final int WORLD_SIZE_X = Config.GEO_X_LAST - Config.GEO_X_FIRST + 1;
+	public static final int WORLD_SIZE_Y = Config.GEO_Y_LAST - Config.GEO_Y_FIRST + 1;
+
 	/** calculated offset used so top left region is 0,0 */
 	public static final int OFFSET_X = Math.abs(MAP_MIN_X >> SHIFT_BY);
 	public static final int OFFSET_Y = Math.abs(MAP_MIN_Y >> SHIFT_BY);

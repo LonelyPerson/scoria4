@@ -16,7 +16,10 @@
  *
  * http://www.gnu.org/copyleft/gpl.html
  */
-package com.l2scoria.gameserver.geo.geoeditorcon;
+package com.l2scoria.gameserver.geoeditorcon;
+
+import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
+import javolution.util.FastList;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -24,24 +27,26 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.logging.Logger;
 
-import javolution.util.FastList;
-
-import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-
-
+/**
+ * @author Luno, Dezmond
+ */
 public class GeoEditorThread extends Thread
 {
 	private static Logger _log = Logger.getLogger(GeoEditorThread.class.getName());
 
 	private boolean _working = false;
-	private int _mode = 0;	// 0 - don't send coords, 1 - send each
-							// validateposition from client,
-							// 2 - send in intervals of _sendDelay ms.
-	private int _sendDelay	= 1000;	// default - once in second
 
-	private final Socket _geSocket;
+	private int _mode = 0; // 0 - don't send coords, 1 - send each
+
+	// validateposition from client, 2 - send in
+	// intervals of _sendDelay ms.
+	private int _sendDelay = 1000; // default - once in second
+
+	private Socket _geSocket;
+
 	private OutputStream _out;
-	private final FastList<L2PcInstance> _gms;
+
+	private FastList<L2PcInstance> _gms;
 
 	public GeoEditorThread(Socket ge)
 	{
@@ -50,14 +55,12 @@ public class GeoEditorThread extends Thread
 		_gms = new FastList<L2PcInstance>();
 	}
 
-	@Override
 	public void interrupt()
 	{
 		try
 		{
 			_geSocket.close();
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 		}
 		super.interrupt();
@@ -82,7 +85,7 @@ public class GeoEditorThread extends Thread
 				{
 					for (L2PcInstance gm : _gms)
 					{
-						if (gm.isOnline() == 1)
+						if (!gm.getClient().getConnection().isClosed())
 						{
 							sendGmPosition(gm);
 						}
@@ -101,27 +104,22 @@ public class GeoEditorThread extends Thread
 					{
 						timer += 100;
 					}
-				}
-				catch (Exception e)
+				} catch (Exception e)
 				{
 				}
 			}
-		}
-		catch (SocketException e)
+		} catch (SocketException e)
 		{
-			_log.warning("GeoEditor disconnected. " + e);
-		}
-		catch (Exception e)
+			_log.warning("GeoEditor disconnected. " + e.getMessage());
+		} catch (Exception e)
 		{
-			_log.severe("GeoEditor: " + e);
-		}
-		finally
+			e.printStackTrace();
+		} finally
 		{
 			try
 			{
 				_geSocket.close();
-			}
-			catch (Exception e)
+			} catch (Exception e)
 			{
 			}
 			_working = false;
@@ -145,20 +143,17 @@ public class GeoEditorThread extends Thread
 				writeH(z); // Coord Z;
 				_out.flush();
 			}
-		}
-		catch (SocketException e)
+		} catch (SocketException e)
 		{
-			_log.warning("GeoEditor disconnected. " + e);
+			_log.warning("GeoEditor disconnected. " + e.getMessage());
 			_working = false;
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
-			_log.severe("GeoEditor: " + e);
+			e.printStackTrace();
 			try
 			{
 				_geSocket.close();
-			}
-			catch (Exception ex)
+			} catch (Exception ex)
 			{
 			}
 			_working = false;
@@ -181,23 +176,21 @@ public class GeoEditorThread extends Thread
 			synchronized (_out)
 			{
 				writeC(0x01); // length 1 byte!
-				writeC(0x02); // Cmd = ping (dummy packet for connection test);
+				writeC(0x02); // Cmd = ping (dummy packet for connection
+				// test);
 				_out.flush();
 			}
-		}
-		catch (SocketException e)
+		} catch (SocketException e)
 		{
-			_log.warning("GeoEditor disconnected. " + e);
+			_log.warning("GeoEditor disconnected. " + e.getMessage());
 			_working = false;
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
-			_log.severe("GeoEditor: " + e);
+			e.printStackTrace();
 			try
 			{
 				_geSocket.close();
-			}
-			catch (Exception ex)
+			} catch (Exception ex)
 			{
 			}
 			_working = false;
@@ -262,7 +255,7 @@ public class GeoEditorThread extends Thread
 
 	public boolean isSend(L2PcInstance gm)
 	{
-        return _mode == 1 && _gms.contains(gm);
+		return _mode == 1 && _gms.contains(gm);
 	}
 
 	private boolean isConnected()

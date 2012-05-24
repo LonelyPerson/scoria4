@@ -18,28 +18,6 @@
  */
 package com.l2scoria.gameserver.model.actor.instance;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.concurrent.Future;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.logging.Level;
-
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
-import org.apache.commons.lang.ArrayUtils;
-
 import com.l2scoria.Config;
 import com.l2scoria.crypt.nProtect;
 import com.l2scoria.gameserver.GameTimeController;
@@ -51,86 +29,29 @@ import com.l2scoria.gameserver.ai.L2PlayerAI;
 import com.l2scoria.gameserver.cache.HtmCache;
 import com.l2scoria.gameserver.communitybbs.BB.Forum;
 import com.l2scoria.gameserver.communitybbs.Manager.ForumsBBSManager;
-import com.l2scoria.gameserver.datatables.AccessLevel;
-import com.l2scoria.gameserver.datatables.GmListTable;
-import com.l2scoria.gameserver.datatables.HeroSkillTable;
-import com.l2scoria.gameserver.datatables.NobleSkillTable;
-import com.l2scoria.gameserver.datatables.SkillTable;
+import com.l2scoria.gameserver.datatables.*;
 import com.l2scoria.gameserver.datatables.csv.FishTable;
 import com.l2scoria.gameserver.datatables.csv.HennaTable;
 import com.l2scoria.gameserver.datatables.csv.MapRegionTable;
 import com.l2scoria.gameserver.datatables.csv.RecipeTable;
-import com.l2scoria.gameserver.datatables.sql.AccessLevels;
-import com.l2scoria.gameserver.datatables.sql.AdminCommandAccessRights;
-import com.l2scoria.gameserver.datatables.sql.CharTemplateTable;
-import com.l2scoria.gameserver.datatables.sql.ClanTable;
-import com.l2scoria.gameserver.datatables.sql.HennaTreeTable;
-import com.l2scoria.gameserver.datatables.sql.ItemTable;
-import com.l2scoria.gameserver.datatables.sql.NpcTable;
-import com.l2scoria.gameserver.datatables.sql.SkillTreeTable;
-import com.l2scoria.gameserver.geo.GeoData;
+import com.l2scoria.gameserver.datatables.sql.*;
+import com.l2scoria.gameserver.geodata.GeoEngine;
 import com.l2scoria.gameserver.handler.IItemHandler;
 import com.l2scoria.gameserver.handler.ItemHandler;
 import com.l2scoria.gameserver.handler.admincommandhandlers.AdminEditChar;
-import com.l2scoria.gameserver.handler.skillhandlers.SummonFriend;
 import com.l2scoria.gameserver.handler.skillhandlers.SiegeFlag;
 import com.l2scoria.gameserver.handler.skillhandlers.StrSiegeAssault;
+import com.l2scoria.gameserver.handler.skillhandlers.SummonFriend;
 import com.l2scoria.gameserver.handler.skillhandlers.TakeCastle;
-import com.l2scoria.gameserver.managers.CastleManager;
-import com.l2scoria.gameserver.managers.CoupleManager;
-import com.l2scoria.gameserver.managers.CursedWeaponsManager;
-import com.l2scoria.gameserver.managers.DimensionalRiftManager;
-import com.l2scoria.gameserver.managers.DuelManager;
-import com.l2scoria.gameserver.managers.FortSiegeManager;
-import com.l2scoria.gameserver.managers.FunEventsManager;
-import com.l2scoria.gameserver.managers.ItemsOnGroundManager;
-import com.l2scoria.gameserver.managers.GrandBossManager;
-import com.l2scoria.gameserver.managers.QuestManager;
-import com.l2scoria.gameserver.managers.SiegeManager;
-import com.l2scoria.gameserver.model.BlockList;
-import com.l2scoria.gameserver.model.FishData;
-import com.l2scoria.gameserver.model.Inventory;
-import com.l2scoria.gameserver.model.ItemContainer;
-import com.l2scoria.gameserver.model.L2Attackable;
-import com.l2scoria.gameserver.model.L2Character;
-import com.l2scoria.gameserver.model.L2Clan;
-import com.l2scoria.gameserver.model.L2ClanMember;
-import com.l2scoria.gameserver.model.L2Effect;
-import com.l2scoria.gameserver.model.L2Fishing;
-import com.l2scoria.gameserver.model.L2Macro;
-import com.l2scoria.gameserver.model.L2ManufactureList;
-import com.l2scoria.gameserver.model.L2Object;
-import com.l2scoria.gameserver.model.L2Party;
-import com.l2scoria.gameserver.model.L2Radar;
-import com.l2scoria.gameserver.model.L2RecipeList;
-import com.l2scoria.gameserver.model.L2Request;
-import com.l2scoria.gameserver.model.L2ShortCut;
-import com.l2scoria.gameserver.model.L2Skill;
-import com.l2scoria.gameserver.model.L2SkillLearn;
-import com.l2scoria.gameserver.model.L2Summon;
-import com.l2scoria.gameserver.model.L2World;
-import com.l2scoria.gameserver.model.MacroList;
-import com.l2scoria.gameserver.model.PartyMatchRoom;
-import com.l2scoria.gameserver.model.PartyMatchRoomList;
-import com.l2scoria.gameserver.model.PartyMatchWaitingList;
-import com.l2scoria.gameserver.model.PcFreight;
-import com.l2scoria.gameserver.model.PcInventory;
-import com.l2scoria.gameserver.model.PcWarehouse;
-import com.l2scoria.gameserver.model.PetInventory;
-import com.l2scoria.gameserver.model.ShortCuts;
-import com.l2scoria.gameserver.model.TradeList;
+import com.l2scoria.gameserver.managers.*;
+import com.l2scoria.gameserver.model.*;
 import com.l2scoria.gameserver.model.L2Skill.SkillTargetType;
 import com.l2scoria.gameserver.model.L2Skill.SkillType;
 import com.l2scoria.gameserver.model.actor.appearance.PcAppearance;
 import com.l2scoria.gameserver.model.actor.knownlist.PcKnownList;
 import com.l2scoria.gameserver.model.actor.stat.PcStat;
 import com.l2scoria.gameserver.model.actor.status.PcStatus;
-import com.l2scoria.gameserver.model.base.ClassId;
-import com.l2scoria.gameserver.model.base.ClassLevel;
-import com.l2scoria.gameserver.model.base.Experience;
-import com.l2scoria.gameserver.model.base.PlayerClass;
-import com.l2scoria.gameserver.model.base.Race;
-import com.l2scoria.gameserver.model.base.SubClass;
+import com.l2scoria.gameserver.model.base.*;
 import com.l2scoria.gameserver.model.entity.Announcements;
 import com.l2scoria.gameserver.model.entity.Duel;
 import com.l2scoria.gameserver.model.entity.event.TvTEvent;
@@ -146,69 +67,12 @@ import com.l2scoria.gameserver.model.quest.Quest;
 import com.l2scoria.gameserver.model.quest.QuestState;
 import com.l2scoria.gameserver.network.L2GameClient;
 import com.l2scoria.gameserver.network.SystemMessageId;
-import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
-import com.l2scoria.gameserver.network.serverpackets.ChangeWaitType;
-import com.l2scoria.gameserver.network.serverpackets.CharInfo;
-import com.l2scoria.gameserver.network.serverpackets.ConfirmDlg;
-import com.l2scoria.gameserver.network.serverpackets.EtcStatusUpdate;
-import com.l2scoria.gameserver.network.serverpackets.ExDuelUpdateUserInfo;
-import com.l2scoria.gameserver.network.serverpackets.ExFishingEnd;
-import com.l2scoria.gameserver.network.serverpackets.ExFishingStart;
-import com.l2scoria.gameserver.network.serverpackets.ExOlympiadMode;
-import com.l2scoria.gameserver.network.serverpackets.ExOlympiadUserInfo;
-import com.l2scoria.gameserver.network.serverpackets.ExPCCafePointInfo;
-import com.l2scoria.gameserver.network.serverpackets.ExSetCompassZoneCode;
-import com.l2scoria.gameserver.network.serverpackets.FriendStatusPacket;
-import com.l2scoria.gameserver.network.serverpackets.HennaInfo;
-import com.l2scoria.gameserver.network.serverpackets.InventoryUpdate;
-import com.l2scoria.gameserver.network.serverpackets.ItemList;
-import com.l2scoria.gameserver.network.serverpackets.L2GameServerPacket;
-import com.l2scoria.gameserver.network.serverpackets.LeaveWorld;
-import com.l2scoria.gameserver.network.serverpackets.MagicSkillCanceld;
-import com.l2scoria.gameserver.network.serverpackets.MagicSkillUser;
-import com.l2scoria.gameserver.network.serverpackets.MyTargetSelected;
-import com.l2scoria.gameserver.network.serverpackets.NpcHtmlMessage;
-import com.l2scoria.gameserver.network.serverpackets.ObservationMode;
-import com.l2scoria.gameserver.network.serverpackets.ObservationReturn;
-import com.l2scoria.gameserver.network.serverpackets.PartySmallWindowUpdate;
-import com.l2scoria.gameserver.network.serverpackets.PetInventoryUpdate;
-import com.l2scoria.gameserver.network.serverpackets.PledgeShowInfoUpdate;
-import com.l2scoria.gameserver.network.serverpackets.PledgeShowMemberListDelete;
-import com.l2scoria.gameserver.network.serverpackets.PledgeShowMemberListUpdate;
-import com.l2scoria.gameserver.network.serverpackets.PrivateStoreListBuy;
-import com.l2scoria.gameserver.network.serverpackets.PrivateStoreListSell;
-import com.l2scoria.gameserver.network.serverpackets.QuestList;
-import com.l2scoria.gameserver.network.serverpackets.RecipeShopSellList;
-import com.l2scoria.gameserver.network.serverpackets.RelationChanged;
-import com.l2scoria.gameserver.network.serverpackets.Ride;
-import com.l2scoria.gameserver.network.serverpackets.SendTradeDone;
-import com.l2scoria.gameserver.network.serverpackets.SetupGauge;
-import com.l2scoria.gameserver.network.serverpackets.ShortCutInit;
-import com.l2scoria.gameserver.network.serverpackets.SkillCoolTime;
-import com.l2scoria.gameserver.network.serverpackets.SkillList;
-import com.l2scoria.gameserver.network.serverpackets.Snoop;
-import com.l2scoria.gameserver.network.serverpackets.SocialAction;
-import com.l2scoria.gameserver.network.serverpackets.StatusUpdate;
-import com.l2scoria.gameserver.network.serverpackets.StopMove;
-import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
-import com.l2scoria.gameserver.network.serverpackets.TargetSelected;
-import com.l2scoria.gameserver.network.serverpackets.TitleUpdate;
-import com.l2scoria.gameserver.network.serverpackets.TradeStart;
-import com.l2scoria.gameserver.network.serverpackets.TutorialShowHtml;
-import com.l2scoria.gameserver.network.serverpackets.UserInfo;
-import com.l2scoria.gameserver.network.serverpackets.ValidateLocation;
-import com.l2scoria.gameserver.skills.effects.EffectCharge;
+import com.l2scoria.gameserver.network.serverpackets.*;
 import com.l2scoria.gameserver.skills.Formulas;
-import com.l2scoria.gameserver.skills.Stats;
 import com.l2scoria.gameserver.skills.SkillsEngine;
-import com.l2scoria.gameserver.templates.L2Armor;
-import com.l2scoria.gameserver.templates.L2ArmorType;
-import com.l2scoria.gameserver.templates.L2EtcItemType;
-import com.l2scoria.gameserver.templates.L2Henna;
-import com.l2scoria.gameserver.templates.L2Item;
-import com.l2scoria.gameserver.templates.L2PcTemplate;
-import com.l2scoria.gameserver.templates.L2Weapon;
-import com.l2scoria.gameserver.templates.L2WeaponType;
+import com.l2scoria.gameserver.skills.Stats;
+import com.l2scoria.gameserver.skills.effects.EffectCharge;
+import com.l2scoria.gameserver.templates.*;
 import com.l2scoria.gameserver.thread.LoginServerThread;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.gameserver.util.Broadcast;
@@ -219,6 +83,20 @@ import com.l2scoria.util.Point3D;
 import com.l2scoria.util.database.L2DatabaseFactory;
 import com.l2scoria.util.database.LoginRemoteDbFactory;
 import com.l2scoria.util.random.Rnd;
+import javolution.util.FastList;
+import javolution.util.FastMap;
+import org.apache.commons.lang.ArrayUtils;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.*;
+import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Level;
 
 /**
  * This class represents all player characters in the world. There is always a client-thread connected to this (except
@@ -1298,10 +1176,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 	{
 		if(_dwarvenRecipeBook.containsKey(recipeId))
 			return true;
-		else if(_commonRecipeBook.containsKey(recipeId))
-			return true;
-		else
-			return false;
+		else return _commonRecipeBook.containsKey(recipeId);
 	}
 
 	/**
@@ -1390,10 +1265,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 	{
 		int len = questStateArray.length;
 		QuestState[] tmp = new QuestState[len + 1];
-		for(int i = 0; i < len; i++)
-		{
-			tmp[i] = questStateArray[i];
-		}
+		System.arraycopy(questStateArray, 0, tmp, 0, len);
 		tmp[len] = state;
 		return tmp;
 	}
@@ -4306,9 +4178,9 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 					}
 					else
 					{
-						if(Config.GEODATA > 0)
+						if(Config.GEODATA)
 						{
-							if(GeoData.getInstance().canSeeTarget(player, this))
+							if(GeoEngine.canSeeTarget(player, this, player.isFlying()))
 							{
 								player.getAI().setIntention(CtrlIntention.AI_INTENTION_ATTACK, this);
 								player.onActionRequest();
@@ -4323,9 +4195,9 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 				}
 				else
 				{
-					if(Config.GEODATA > 0)
+					if(Config.GEODATA)
 					{
-						if(GeoData.getInstance().canSeeTarget(player, this))
+						if(GeoEngine.canSeeTarget(player, this, player.isFlying()))
 						{
 							player.getAI().setIntention(CtrlIntention.AI_INTENTION_FOLLOW, this);
 						}
@@ -4432,9 +4304,9 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 						{
 							if (player.isInsideRadius(this, player.getPhysicalAttackRange(), false, false))
 							{
-								if(Config.GEODATA > 0)
+								if(Config.GEODATA)
 								{
-									if(GeoData.getInstance().canSeeTarget(player, this))
+									if(GeoEngine.canSeeTarget(player, this, player.isFlying()))
 									{
 										player.getAI().setIntention(CtrlIntention.AI_INTENTION_ATTACK, this);
 										player.onActionRequest();
@@ -4443,7 +4315,6 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 									{
 										player.sendPacket(new SystemMessage(SystemMessageId.CANT_SEE_TARGET));
 										player.sendPacket(ActionFailed.STATIC_PACKET);
-										return;
 									}
 								}
 								else
@@ -4522,9 +4393,9 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 
 						if (player.isInsideRadius(this, player.getPhysicalAttackRange(), false, false))
 						{
-							if(Config.GEODATA > 0)
+							if(Config.GEODATA)
 							{
-								if(GeoData.getInstance().canSeeTarget(player, this))
+								if(GeoEngine.canSeeTarget(player, this, player.isFlying()))
 								{
 									player.getAI().setIntention(CtrlIntention.AI_INTENTION_ATTACK, this);
 									player.onActionRequest();
@@ -4533,7 +4404,6 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 								{
 									player.sendPacket(new SystemMessage(SystemMessageId.CANT_SEE_TARGET));
 									player.sendPacket(ActionFailed.STATIC_PACKET);
-									return;
 								}
 							}
 							else
@@ -5989,7 +5859,6 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			case 24:
 				Announcements.getInstance().announceToAll("" + getName() + " is GodLike!");
 			default:
-				;
 		}
 	}
 
@@ -6741,10 +6610,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 	 */
 	public boolean isClanLeader()
 	{
-		if(getClan() == null)
-			return false;
-		else
-			return getObjectId() == getClan().getLeaderId();
+		return getClan() != null && getObjectId() == getClan().getLeaderId();
 	}
 
 	/**
@@ -6945,10 +6811,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			return true;
 		else if(weaponItem.getItemId() == 248) // orc fighter fists
 			return true;
-		else if(weaponItem.getItemId() == 252) // orc mage fists
-			return true;
-		else
-			return false;
+		else return weaponItem.getItemId() == 252;
 	}
 
 	public void setUptime(long time)
@@ -9112,14 +8975,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		{
 			if (((L2PcInstance) attacker).isInOlympiadMode())
 			{
-				if(isInOlympiadMode() && isOlympiadStart() && ((L2PcInstance) attacker).getOlympiadGameId() == getOlympiadGameId())
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
+				return isInOlympiadMode() && isOlympiadStart() && ((L2PcInstance) attacker).getOlympiadGameId() == getOlympiadGameId();
 			}
 			else if(isInOlympiadMode())
 			{
@@ -9359,6 +9215,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		L2Object target = null;
 		SkillTargetType sklTargetType = skill.getTargetType();
 		SkillType sklType = skill.getSkillType();
+		Point3D worldPosition = getCurrentSkillWorldPosition();
 
 		switch(sklTargetType)
 		{
@@ -9394,7 +9251,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		// Are the target and the player in the same duel?
 		if(isInDuel())
 		{
-			if(!(target instanceof L2PcInstance && ((L2PcInstance) target).getDuelId() == getDuelId()) && !(target instanceof L2SummonInstance && ((L2PcInstance) ((L2Summon) target).getOwner()).getDuelId() == getDuelId()))
+			if(!(target instanceof L2PcInstance && ((L2PcInstance) target).getDuelId() == getDuelId()) && !(target instanceof L2SummonInstance && ((L2Summon) target).getOwner().getDuelId() == getDuelId()))
 			{
 				sendMessage("You cannot do this while duelling.");
 				sendPacket(ActionFailed.STATIC_PACKET);
@@ -9614,7 +9471,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 				// Calculate the distance between the L2PcInstance and the target
 				if(sklTargetType == SkillTargetType.TARGET_GROUND)
 				{
-					if(!isInsideRadius(getCurrentSkillWorldPosition().getX(), getCurrentSkillWorldPosition().getY(), getCurrentSkillWorldPosition().getZ(), (int) (skill.getCastRange() + getTemplate().getCollisionRadius()), false, false))
+					if(!isInsideRadius(getCurrentSkillWorldPosition().getX(), getCurrentSkillWorldPosition().getY(), getCurrentSkillWorldPosition().getZ(), skill.getCastRange() + getTemplate().getCollisionRadius(), false, false))
 					{
 						// Send a System Message to the caster
 						sendPacket(SystemMessageId.TARGET_TOO_FAR);
@@ -9705,8 +9562,6 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 
 		if(sklTargetType == SkillTargetType.TARGET_GROUND)
 		{
-			final Point3D worldPosition = getCurrentSkillWorldPosition();
-
 			if (worldPosition == null)
 			{
 				_log.info("WorldPosition is null for skill: " + skill.getName() + ", player: " + getName() + ".");
@@ -9770,11 +9625,23 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		}
 
 		// GeoData Los Check here
-		if(skill.getCastRange() > 0 && !GeoData.getInstance().canSeeTarget(this, target))
+		if (skill.getCastRange() > 0)
 		{
-			sendPacket(new SystemMessage(SystemMessageId.CANT_SEE_TARGET));
-			sendPacket(ActionFailed.STATIC_PACKET);
-			return;
+			if (sklTargetType == SkillTargetType.TARGET_GROUND)
+			{
+				if (!GeoEngine.canSeeCoord(this.getX(), this.getY(), this.getZ(), worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), isFlying()))
+				{
+					sendPacket(new SystemMessage(SystemMessageId.CANT_SEE_TARGET));
+					sendPacket(ActionFailed.STATIC_PACKET);
+					return;
+				}
+			}
+			else if (!GeoEngine.canSeeTarget(this, target, isFlying()))
+			{
+				sendPacket(new SystemMessage(SystemMessageId.CANT_SEE_TARGET));
+				sendPacket(ActionFailed.STATIC_PACKET);
+				return;
+			}
 		}
 
 		// Check if the active L2Skill can be casted (ex : not sleeping...), Check if the target is correct and Notify the AI with AI_INTENTION_CAST and target
@@ -11736,10 +11603,8 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 
 	public boolean isRentedPet()
 	{
-		if(_taskRentPet != null)
-			return true;
+		return _taskRentPet != null;
 
-		return false;
 	}
 
 	public void stopWaterTask()
@@ -14129,23 +13994,23 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		switch(color.length())
 		{
 			case 1:
-				color = new StringBuilder().append("00000").append(color).toString();
+				color = "00000" + color;
 				break;
 
 			case 2:
-				color = new StringBuilder().append("0000").append(color).toString();
+				color = "0000" + color;
 				break;
 
 			case 3:
-				color = new StringBuilder().append("000").append(color).toString();
+				color = "000" + color;
 				break;
 
 			case 4:
-				color = new StringBuilder().append("00").append(color).toString();
+				color = "00" + color;
 				break;
 
 			case 5:
-				color = new StringBuilder().append("0").append(color).toString();
+				color = "0" + color;
 				break;
 		}
 		return color;
@@ -14448,11 +14313,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			}
 			int minLevel = SkillTreeTable.getInstance().getMinSkillLevel(id, getClassId(), level);
 
-			if (minLevel == 0) // Skill does not exist??
-			{
-				continue;
-			}
-			else
+			if (minLevel != 0)
 			{
 				// player level is too low for such skill level
 				if (getLevel() < (minLevel - Config.DECREASE_SKILL_LEVEL_DIF))
@@ -14893,10 +14754,6 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 	
 	public void setRaidAnswear(int answer)
 	{
-		if (this == null)
-		{
-			return;
-		}
 		/*if (answer == 1)
 		{
 			if (L2EventChecks.checkPlayer(this, eventType, eventPointsRequired, eventMinPlayers, eventParticipatingPlayers))

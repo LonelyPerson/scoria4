@@ -18,21 +18,14 @@
  */
 package com.l2scoria.gameserver.thread;
 
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.RejectedExecutionException;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Logger;
-
+import com.l2scoria.Config;
+import com.l2scoria.gameserver.network.L2GameClient;
 import javolution.text.TextBuilder;
 import mmo.ReceivablePacket;
 
-import com.l2scoria.Config;
-import com.l2scoria.gameserver.network.L2GameClient;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Logger;
 
 /**
  * <p>
@@ -365,7 +358,7 @@ public class ThreadPoolManager
 		}; */
 	}
 
-	private class PriorityThreadFactory implements ThreadFactory
+	public static class PriorityThreadFactory implements ThreadFactory
 	{
 		private int _prio;
 		private String _name;

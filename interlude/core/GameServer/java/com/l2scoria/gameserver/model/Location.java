@@ -26,43 +26,104 @@ package com.l2scoria.gameserver.model;
 
 public final class Location
 {
-	public int _x;
-	public int _y;
-	public int _z;
-	public int _heading;
+	public int x;
+	public int y;
+	public int z;
+	public int h;
 
 	public Location(int x, int y, int z)
 	{
-		_x = x;
-		_y = y;
-		_z = z;
+		this.x = x;
+		this.y = y;
+		this.z = z;
 	}
 
 	public Location(int x, int y, int z, int heading)
 	{
-		_x = x;
-		_y = y;
-		_z = z;
-		_heading = heading;
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		h = heading;
+	}
+
+	public void set(int x, int y, int z, int h)
+	{
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.h = h;
+	}
+
+	public void set(int x, int y, int z)
+	{
+		this.x = x;
+		this.y = y;
+		this.z = z;
 	}
 
 	public int getX()
 	{
-		return _x;
+		return x;
 	}
 
 	public int getY()
 	{
-		return _y;
+		return y;
 	}
 
 	public int getZ()
 	{
-		return _z;
+		return z;
 	}
 
 	public int getHeading()
 	{
-		return _heading;
+		return h;
+	}
+
+	public boolean equals(int _x, int _y, int _z)
+	{
+		return _x == x && _y == y && _z == z;
+	}
+
+	public Location world2geo()
+	{
+		x = x - L2World.MAP_MIN_X >> 4;
+		y = y - L2World.MAP_MIN_Y >> 4;
+		return this;
+	}
+
+	public Location geo2world()
+	{
+		x = (x << 4) + L2World.MAP_MIN_X + 8;
+		y = (y << 4) + L2World.MAP_MIN_Y + 8;
+		return this;
+	}
+
+	public void setX(int x)
+	{
+		this.x = x;
+	}
+
+	public void setY(int y)
+	{
+		this.y = y;
+	}
+
+	public void setZ(int z)
+	{
+		this.z = z;
+	}
+
+	public Location setH(int h)
+	{
+		this.h = h;
+		return this;
+	}
+
+	@Override
+	public Location clone()
+	{
+		return new Location(x, y, z, h);
 	}
 }

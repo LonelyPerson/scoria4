@@ -1,5 +1,4 @@
-/*
- * This program is free software; you can redistribute it and/or modify
+/* This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
  * any later version.
@@ -16,48 +15,46 @@
  *
  * http://www.gnu.org/copyleft/gpl.html
  */
-package com.l2scoria.gameserver.geo.geoeditorcon;
+package com.l2scoria.gameserver.geoeditorcon;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.l2scoria.Config;
-
-
+/**
+ * @author Dezmond
+ */
 public class GeoEditorListener extends Thread
 {
-	private static final Logger _log = Logger.getLogger(GeoEditorListener.class.getName());
-	
-	private static final int PORT = Config.GEOEDITOR_PORT;
-	
-	private static final class SingletonHolder
-	{
-		private static final GeoEditorListener INSTANCE = new GeoEditorListener();
-	}
-	
+	private static GeoEditorListener _instance;
+	private static final int PORT = 9011;
+	private static Logger _log = Logger.getLogger(GeoEditorListener.class.getName());
+	private ServerSocket _serverSocket;
+	private static GeoEditorThread _geoEditor;
+
 	public static GeoEditorListener getInstance()
 	{
-		return SingletonHolder.INSTANCE;
+		if (_instance == null)
+		{
+			try
+			{
+				_instance = new GeoEditorListener();
+				_instance.start();
+				_log.info("GeoEditorListener Initialized.");
+			} catch (IOException e)
+			{
+				_log.severe("Error creating geoeditor listener! " + e.getMessage());
+				System.exit(1);
+			}
+		}
+		return _instance;
 	}
-	
-	private ServerSocket _serverSocket;
-	private GeoEditorThread _geoEditor;
-	
-	private GeoEditorListener()
+
+	private GeoEditorListener() throws IOException
 	{
-		try
-		{
-			_serverSocket = new ServerSocket(PORT);
-		}
-		catch (IOException e)
-		{
-			_log.warning("Error creating geoeditor listener! " + e);
-			System.exit(1);
-		}
-		start();
-		_log.info("GeoEditorListener Initialized.");
+		_serverSocket = new ServerSocket(PORT);
 	}
 
 	public GeoEditorThread getThread()
@@ -74,7 +71,6 @@ public class GeoEditorListener extends Thread
 		return "Geoeditor not connected.";
 	}
 
-	@Override
 	public void run()
 	{
 		Socket connection = null;
@@ -93,30 +89,25 @@ public class GeoEditorListener extends Thread
 				_geoEditor = new GeoEditorThread(connection);
 				_geoEditor.start();
 			}
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
-			_log.warning("GeoEditorListener: " + e);
+			_log.info("GeoEditorListener: " + e.getMessage());
 			try
 			{
-				if (connection != null)
-					connection.close();
-			}
-			catch (Exception e2)
+				connection.close();
+			} catch (Exception e2)
 			{
 			}
-		}
-		finally
+		} finally
 		{
 			try
 			{
 				_serverSocket.close();
-			}
-			catch (IOException io)
+			} catch (IOException io)
 			{
-				_log.warning("GeoEditorListener: " + io);
+				_log.log(Level.INFO, "", io);
 			}
-			_log.info("GeoEditorListener Closed!");
+			_log.warning("GeoEditorListener Closed!");
 		}
 	}
 }
