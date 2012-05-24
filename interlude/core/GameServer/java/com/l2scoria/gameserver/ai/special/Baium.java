@@ -169,9 +169,9 @@ public class Baium extends Quest
 				// TODO: the person who woke baium up should be knocked across the room, onto a wall, and
 				// lose massive amounts of HP.
 				// add the archangel spawn - 5 archangel with array
-				for (int i = 0; i < ANGEL_LOCATION.length; i++)
+				for (int[] aANGEL_LOCATION : ANGEL_LOCATION)
 				{
-					Minions.add((L2Attackable) addSpawn(ARCHANGEL, ANGEL_LOCATION[i][0], ANGEL_LOCATION[i][1], ANGEL_LOCATION[i][2], ANGEL_LOCATION[i][3], false, 0));
+					Minions.add((L2Attackable) addSpawn(ARCHANGEL, aANGEL_LOCATION[0], aANGEL_LOCATION[1], aANGEL_LOCATION[2], aANGEL_LOCATION[3], false, 0));
 				}
 			}
 			// despawn the live baium after 30 minutes of inactivity
@@ -400,7 +400,7 @@ public class Baium extends Quest
 			{
 				if(obj instanceof L2Character)
 				{
-					if(((L2Character) obj).getZ() < npc.getZ() - 100 && ((L2Character) obj).getZ() > npc.getZ() + 100 || !GeoEngine.canSeeTarget(obj, npc, false))
+					if(obj.getZ() < npc.getZ() - 100 && obj.getZ() > npc.getZ() + 100 || !GeoEngine.canSeeTarget(obj, npc, false))
 					{
 						continue;
 					}
@@ -498,7 +498,7 @@ public class Baium extends Quest
 				skill = SkillTable.getInstance().getInfo(4127, 1);
 			}
 		}
-		else if(npc.getCurrentHp() > npc.getMaxHp() * 1 / 4)
+		else if(npc.getCurrentHp() > npc.getMaxHp() / 4)
 		{
 			if(Rnd.get(100) < 10)
 			{

@@ -18,19 +18,12 @@
  */
 package com.l2scoria.gameserver.ai.special;
 
-import java.util.List;
-import javolution.util.FastList;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.ai.CtrlIntention;
-import com.l2scoria.gameserver.managers.GrandBossManager;
-import com.l2scoria.gameserver.datatables.csv.DoorTable;
 import com.l2scoria.gameserver.datatables.SkillTable;
-import com.l2scoria.gameserver.model.L2CommandChannel;
-import com.l2scoria.gameserver.model.L2Party;
-import com.l2scoria.gameserver.model.L2Skill;
-import com.l2scoria.gameserver.model.L2Attackable;
-import com.l2scoria.gameserver.model.L2Character;
+import com.l2scoria.gameserver.datatables.csv.DoorTable;
+import com.l2scoria.gameserver.managers.GrandBossManager;
+import com.l2scoria.gameserver.model.*;
 import com.l2scoria.gameserver.model.actor.instance.L2GrandBossInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2MonsterInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2NpcInstance;
@@ -39,17 +32,12 @@ import com.l2scoria.gameserver.model.quest.Quest;
 import com.l2scoria.gameserver.model.quest.State;
 import com.l2scoria.gameserver.model.zone.type.L2BossZone;
 import com.l2scoria.gameserver.network.SystemMessageId;
-import com.l2scoria.gameserver.network.serverpackets.NpcInfo;
-import com.l2scoria.gameserver.network.serverpackets.Earthquake;
-import com.l2scoria.gameserver.network.serverpackets.MagicSkillCanceld;
-import com.l2scoria.gameserver.network.serverpackets.MagicSkillUser;
-import com.l2scoria.gameserver.network.serverpackets.CreatureSay;
-import com.l2scoria.gameserver.network.serverpackets.PlaySound;
-import com.l2scoria.gameserver.network.serverpackets.SocialAction;
-import com.l2scoria.gameserver.network.serverpackets.SpecialCamera;
-import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
+import com.l2scoria.gameserver.network.serverpackets.*;
 import com.l2scoria.gameserver.templates.StatsSet;
 import com.l2scoria.util.random.Rnd;
+import javolution.util.FastList;
+
+import java.util.List;
 
 public class Frintezza extends Quest
 {
@@ -1212,11 +1200,12 @@ public class Frintezza extends Quest
 		}
 		else if (event.equalsIgnoreCase("minions_despawn"))
 		{
-			for (int i = 0; i < Minions.size(); i++)
+			for (L2Attackable mob : Minions)
 			{
-				L2Attackable mob = Minions.get(i);
 				if (mob != null)
+				{
 					mob.decayMe();
+				}
 			}
 			Minions.clear();
 		}

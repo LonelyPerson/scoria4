@@ -18,11 +18,6 @@
  */
 package com.l2scoria.gameserver.ai.special;
 
-import java.util.concurrent.Future;
-import java.util.logging.Level;
-
-import javolution.util.FastList;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.cache.HtmCache;
 import com.l2scoria.gameserver.datatables.csv.DoorTable;
@@ -40,6 +35,10 @@ import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
 import com.l2scoria.gameserver.network.serverpackets.ExShowScreenMessage;
 import com.l2scoria.gameserver.network.serverpackets.NpcHtmlMessage;
 import com.l2scoria.gameserver.templates.L2NpcTemplate;
+import javolution.util.FastList;
+
+import java.util.concurrent.Future;
+import java.util.logging.Level;
 
 public class IceFairySirra extends Quest
 {
@@ -101,7 +100,7 @@ public class IceFairySirra extends Quest
 				String filename = "";
 				if(player.isInParty() && player.getParty().getPartyLeaderOID() == player.getObjectId())
 				{
-					if(checkItems(player) == true)
+					if(checkItems(player))
 					{
 						startQuestTimer("start", 100000, null, player);
 						_player = player;

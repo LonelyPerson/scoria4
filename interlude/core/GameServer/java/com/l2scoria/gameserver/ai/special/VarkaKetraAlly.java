@@ -72,7 +72,7 @@ public class VarkaKetraAlly extends Quest
 	{
 		if(attacker.getAllianceWithVarkaKetra() != 0)
 		{
-			if(attacker.isAlliedWithKetra() && npc.getFactionId() == "ketra" || attacker.isAlliedWithVarka() && npc.getFactionId() == "varka")
+			if(attacker.isAlliedWithKetra() && npc.getFactionId().equals("ketra") || attacker.isAlliedWithVarka() && npc.getFactionId().equals("varka"))
 			{
 				L2Skill skill = SkillTable.getInstance().getInfo(4578, 1);
 				if(skill != null)
@@ -112,7 +112,7 @@ public class VarkaKetraAlly extends Quest
 		{
 			L2ItemInstance mark = null;
 
-			if(player.isAlliedWithKetra() && npc.getFactionId() == "ketra")
+			if(player.isAlliedWithKetra() && npc.getFactionId().equals("ketra"))
 			{
 				L2ItemInstance varkasBadgeSoldier = player.getInventory().getItemByItemId(7216);
 				L2ItemInstance varkasBadgeOfficer = player.getInventory().getItemByItemId(7217);
@@ -155,7 +155,7 @@ public class VarkaKetraAlly extends Quest
 				}
 			}
 
-			if(player.isAlliedWithVarka() && npc.getFactionId() == "varka")
+			if(player.isAlliedWithVarka() && npc.getFactionId().equals("varka"))
 			{
 				L2ItemInstance ketrasBadgeSoldier = player.getInventory().getItemByItemId(7226);
 				L2ItemInstance ketrasBadgeOfficer = player.getInventory().getItemByItemId(7227);

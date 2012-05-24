@@ -277,8 +277,7 @@ public class PathFind
 		{
 			weight = Config.WEIGHT1;
 		}
-		else
-		// Цикл только для удобства
+		else // Цикл только для удобства
 		{
 			while (buff.isPlayer || Config.SIMPLE_PATHFIND_FOR_MOBS)
 			{

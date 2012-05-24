@@ -18,8 +18,6 @@
  */
 package com.l2scoria.gameserver.ai.special;
 
-import java.util.Collection;
-
 import com.l2scoria.gameserver.ai.CtrlIntention;
 import com.l2scoria.gameserver.datatables.sql.SpawnTable;
 import com.l2scoria.gameserver.model.L2Attackable;
@@ -28,6 +26,8 @@ import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.actor.position.L2CharPosition;
 import com.l2scoria.gameserver.model.quest.Quest;
 import com.l2scoria.gameserver.model.spawn.L2Spawn;
+
+import java.util.Collection;
 
 public class Gordon extends Quest
 {
@@ -236,7 +236,7 @@ public class Gordon extends Quest
 		X = WALKS[_isWalkTo - 1][0];
 		Y = WALKS[_isWalkTo - 1][1];
 		Z = WALKS[_isWalkTo - 1][2];
-		if(event == "time_isAttacked")
+		if(event.equals("time_isAttacked"))
 		{
 			_isAttacked = false;
 			if(npc.getNpcId() == GORDON)
@@ -245,10 +245,10 @@ public class Gordon extends Quest
 				npc.getAI().setIntention(CtrlIntention.AI_INTENTION_MOVE_TO, new L2CharPosition(X, Y, Z, 0));
 			}
 		}
-		else if(event == "check_ai")
+		else if(event.equals("check_ai"))
 		{
 			cancelQuestTimer("check_ai", null, null);
-			if(_isSpawned == false)
+			if(!_isSpawned)
 			{
 				L2NpcInstance gordon_ai = findTemplate(GORDON);
 				if(gordon_ai != null)
@@ -259,10 +259,10 @@ public class Gordon extends Quest
 				}
 			}
 		}
-		else if(event == "Start")
+		else if(event.equals("Start"))
 		{
 			startQuestTimer("Start", 1000, npc, null);
-			if(npc != null && _isSpawned == true)
+			if(npc != null && _isSpawned)
 			{
 				// check if player have Cursed Weapon and in radius
 				if(npc.getNpcId() == GORDON)
@@ -286,7 +286,7 @@ public class Gordon extends Quest
 					}
 				}
 				// end check
-				if(_isAttacked == true)
+				if(_isAttacked)
 					return super.onAdvEvent(event, npc, player);
 
 				if(npc.getNpcId() == GORDON && npc.getX() - 50 <= X && npc.getX() + 50 >= X && npc.getY() - 50 <= Y && npc.getY() + 50 >= Y)

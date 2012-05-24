@@ -18,14 +18,6 @@
  */
 package com.l2scoria.gameserver.ai;
 
-import static com.l2scoria.gameserver.ai.CtrlIntention.AI_INTENTION_ATTACK;
-import static com.l2scoria.gameserver.ai.CtrlIntention.AI_INTENTION_FOLLOW;
-import static com.l2scoria.gameserver.ai.CtrlIntention.AI_INTENTION_IDLE;
-
-import java.util.concurrent.Future;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.l2scoria.gameserver.GameTimeController;
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.L2Object;
@@ -33,17 +25,15 @@ import com.l2scoria.gameserver.model.L2Skill;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.actor.position.L2CharPosition;
 import com.l2scoria.gameserver.model.extender.BaseExtender.EventType;
-import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
-import com.l2scoria.gameserver.network.serverpackets.AutoAttackStart;
-import com.l2scoria.gameserver.network.serverpackets.AutoAttackStop;
-import com.l2scoria.gameserver.network.serverpackets.CharMoveToLocation;
-import com.l2scoria.gameserver.network.serverpackets.Die;
-import com.l2scoria.gameserver.network.serverpackets.MoveToLocationInVehicle;
-import com.l2scoria.gameserver.network.serverpackets.MoveToPawn;
-import com.l2scoria.gameserver.network.serverpackets.StopMove;
-import com.l2scoria.gameserver.network.serverpackets.StopRotation;
+import com.l2scoria.gameserver.network.serverpackets.*;
 import com.l2scoria.gameserver.taskmanager.AttackStanceTaskManager;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
+
+import java.util.concurrent.Future;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import static com.l2scoria.gameserver.ai.CtrlIntention.*;
 
 /**
  * Mother class of all objects AI in the world.<BR>
@@ -89,10 +79,10 @@ abstract class AbstractAI implements Ctrl
 				{
 					moveToPawn(_followTarget, _range);
 				}
-				else if (_followTarget instanceof L2Character && newtask)
+				else if (_followTarget != null && newtask)
 				{
 					newtask = false;
-					_actor.broadcastPacket(new MoveToPawn(_actor, (L2Character) _followTarget, _range));
+					_actor.broadcastPacket(new MoveToPawn(_actor, _followTarget, _range));
 				}
 			}
 			catch(Throwable t)
@@ -311,10 +301,8 @@ abstract class AbstractAI implements Ctrl
 				onIntentionInteract((L2Object) arg0);
 				break;
 		}
-		_actor.fireEvent(EventType.SETINTENTION.name, new Object[]
-		{
-			intention
-		});
+
+		_actor.fireEvent(EventType.SETINTENTION.name, intention);
 	}
 
 	/**

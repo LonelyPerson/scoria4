@@ -18,31 +18,8 @@
  */
 package com.l2scoria.gameserver.ai;
 
-import java.util.List;
-
-import javolution.util.FastList;
-
-import static com.l2scoria.gameserver.ai.CtrlIntention.AI_INTENTION_ACTIVE;
-import static com.l2scoria.gameserver.ai.CtrlIntention.AI_INTENTION_ATTACK;
-import static com.l2scoria.gameserver.ai.CtrlIntention.AI_INTENTION_CAST;
-import static com.l2scoria.gameserver.ai.CtrlIntention.AI_INTENTION_FOLLOW;
-import static com.l2scoria.gameserver.ai.CtrlIntention.AI_INTENTION_IDLE;
-import static com.l2scoria.gameserver.ai.CtrlIntention.AI_INTENTION_INTERACT;
-import static com.l2scoria.gameserver.ai.CtrlIntention.AI_INTENTION_MOVE_TO;
-import static com.l2scoria.gameserver.ai.CtrlIntention.AI_INTENTION_PICK_UP;
-import static com.l2scoria.gameserver.ai.CtrlIntention.AI_INTENTION_REST;
-
-import com.l2scoria.gameserver.model.L2Attackable;
-import com.l2scoria.gameserver.model.L2Character;
-import com.l2scoria.gameserver.model.L2Object;
-import com.l2scoria.gameserver.model.L2Skill;
-import com.l2scoria.gameserver.model.L2Summon;
-import com.l2scoria.gameserver.model.actor.instance.L2BoatInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2DoorInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2NpcInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2PlayableInstance;
+import com.l2scoria.gameserver.model.*;
+import com.l2scoria.gameserver.model.actor.instance.*;
 import com.l2scoria.gameserver.model.actor.position.L2CharPosition;
 import com.l2scoria.gameserver.network.serverpackets.AutoAttackStop;
 import com.l2scoria.gameserver.taskmanager.AttackStanceTaskManager;
@@ -50,6 +27,11 @@ import com.l2scoria.gameserver.templates.L2NpcTemplate;
 import com.l2scoria.gameserver.templates.L2Weapon;
 import com.l2scoria.gameserver.templates.L2WeaponType;
 import com.l2scoria.util.random.Rnd;
+import javolution.util.FastList;
+
+import java.util.List;
+
+import static com.l2scoria.gameserver.ai.CtrlIntention.*;
 
 /**
  * This class manages AI of L2Character.<BR>
@@ -777,7 +759,7 @@ public class L2CharacterAI extends AbstractAI
 		// Launch an explore task if necessary
 		if(_accessor.getActor() instanceof L2PcInstance)
 		{
-			((L2PcInstance) _accessor.getActor()).revalidateZone(true);
+			_accessor.getActor().revalidateZone(true);
 		}
 		else
 		{
@@ -1061,7 +1043,7 @@ public class L2CharacterAI extends AbstractAI
 					if(getAttackTarget() == getFollowTarget())
 					{
 						// allow GMs to keep following
-						boolean isGM = _actor instanceof L2PcInstance ? ((L2PcInstance) _actor).isGM() : false;
+						boolean isGM = _actor instanceof L2PcInstance && ((L2PcInstance) _actor).isGM();
 						if(L2Character.isInsidePeaceZone(_actor, target) && !isGM)
 						{
 							stopFollow();

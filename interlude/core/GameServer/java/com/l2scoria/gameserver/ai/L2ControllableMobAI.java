@@ -18,27 +18,18 @@
  */
 package com.l2scoria.gameserver.ai;
 
-import static com.l2scoria.gameserver.ai.CtrlIntention.AI_INTENTION_ACTIVE;
-import static com.l2scoria.gameserver.ai.CtrlIntention.AI_INTENTION_ATTACK;
+import com.l2scoria.gameserver.datatables.MobGroupTable;
+import com.l2scoria.gameserver.model.*;
+import com.l2scoria.gameserver.model.L2Character.AIAccessor;
+import com.l2scoria.gameserver.model.actor.instance.*;
+import com.l2scoria.gameserver.util.Util;
+import com.l2scoria.util.random.Rnd;
+import javolution.util.FastList;
 
 import java.util.List;
 
-import javolution.util.FastList;
-
-import com.l2scoria.gameserver.datatables.MobGroupTable;
-import com.l2scoria.gameserver.model.L2Attackable;
-import com.l2scoria.gameserver.model.L2Character;
-import com.l2scoria.gameserver.model.L2Object;
-import com.l2scoria.gameserver.model.L2Skill;
-import com.l2scoria.gameserver.model.MobGroup;
-import com.l2scoria.gameserver.model.L2Character.AIAccessor;
-import com.l2scoria.gameserver.model.actor.instance.L2ControllableMobInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2DoorInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2FolkInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2NpcInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import com.l2scoria.gameserver.util.Util;
-import com.l2scoria.util.random.Rnd;
+import static com.l2scoria.gameserver.ai.CtrlIntention.AI_INTENTION_ACTIVE;
+import static com.l2scoria.gameserver.ai.CtrlIntention.AI_INTENTION_ATTACK;
 
 /**
  * @author littlecrow AI for controllable mobs
@@ -211,7 +202,7 @@ public class L2ControllableMobAI extends L2AttackableAI
 		{
 			skills = _actor.getAllSkills();
 			dist2 = _actor.getPlanDistanceSq(target.getX(), target.getY());
-			range = _actor.getPhysicalAttackRange() + _actor.getTemplate().collisionRadius + target.getTemplate().collisionRadius;;
+			range = _actor.getPhysicalAttackRange() + _actor.getTemplate().collisionRadius + target.getTemplate().collisionRadius;
 			max_range = range;
 		}
 		catch(NullPointerException e)
@@ -333,7 +324,7 @@ public class L2ControllableMobAI extends L2AttackableAI
 					L2NpcInstance npc = (L2NpcInstance) obj;
 					String faction_id = ((L2NpcInstance) _actor).getFactionId();
 
-					if(faction_id != npc.getFactionId())
+					if(!faction_id.equals(npc.getFactionId()))
 					{
 						continue;
 					}
@@ -452,7 +443,6 @@ public class L2ControllableMobAI extends L2AttackableAI
 		}
 		hated = null;
 
-		return;
 	}
 
 	private boolean autoAttackCondition(L2Character target)
@@ -480,10 +470,8 @@ public class L2ControllableMobAI extends L2AttackableAI
 				return false;
 		}
 
-		if(target instanceof L2NpcInstance)
-			return false;
+		return !(target instanceof L2NpcInstance) && me.isAggressive();
 
-		return me.isAggressive();
 	}
 
 	private L2Character findNextRndTarget()
@@ -533,9 +521,7 @@ public class L2ControllableMobAI extends L2AttackableAI
 		// we choose a random target
 		int choice = Rnd.nextInt(potentialTarget.size());
 
-		L2Character target = potentialTarget.get(choice);
-
-		return target;
+		return potentialTarget.get(choice);
 	}
 
 	private L2ControllableMobInstance findNextGroupTarget()

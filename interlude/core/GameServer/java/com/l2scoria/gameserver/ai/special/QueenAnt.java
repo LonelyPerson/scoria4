@@ -18,11 +18,6 @@
  */
 package com.l2scoria.gameserver.ai.special;
 
-import java.util.List;
-import java.util.logging.Logger;
-
-import javolution.util.FastList;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.ai.CtrlIntention;
 import com.l2scoria.gameserver.datatables.SkillTable;
@@ -41,6 +36,10 @@ import com.l2scoria.gameserver.network.serverpackets.PlaySound;
 import com.l2scoria.gameserver.network.serverpackets.SocialAction;
 import com.l2scoria.gameserver.templates.StatsSet;
 import com.l2scoria.util.random.Rnd;
+import javolution.util.FastList;
+
+import java.util.List;
+import java.util.logging.Logger;
 
 public class QueenAnt extends Quest
 {
@@ -204,26 +203,26 @@ public class QueenAnt extends Quest
 		}
 		else if(event.equalsIgnoreCase("check_royal__Zone") && npc != null)
 		{
-			for(int i = 0; i < _Minions.size(); i++)
+			for (L2Attackable mob : _Minions)
 			{
-				L2Attackable mob = _Minions.get(i);
-				if(mob != null && !_Zone.isInsideZone(mob))
+				if (mob != null && !_Zone.isInsideZone(mob))
 				{
 					mob.teleToLocation(npc.getX(), npc.getY(), npc.getZ());
 				}
 			}
+
 			startQuestTimer("check_royal__Zone", 30000, npc, null);
 		}
 		else if(event.equalsIgnoreCase("despawn_royals"))
 		{
-			for(int i = 0; i < _Minions.size(); i++)
+			for (L2Attackable mob : _Minions)
 			{
-				L2Attackable mob = _Minions.get(i);
-				if(mob != null)
+				if (mob != null)
 				{
 					mob.decayMe();
 				}
 			}
+
 			_Minions.clear();
 		}
 		else if(event.equalsIgnoreCase("spawn_royal") && GrandBossManager.getInstance().getBossStatus(QUEEN) == ALIVE)

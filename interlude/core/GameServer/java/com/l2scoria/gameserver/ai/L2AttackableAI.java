@@ -155,10 +155,10 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable
 
 			// Check if player is an ally //TODO! [Nemesiss] it should be rather boolean or smth like that
 			// Comparing String isnt good idea!
-			if(me.getFactionId() == "varka" && ((L2PcInstance) target).isAlliedWithVarka())
+			if(me.getFactionId().equals("varka") && ((L2PcInstance) target).isAlliedWithVarka())
 				return false;
 
-			if(me.getFactionId() == "ketra" && ((L2PcInstance) target).isAlliedWithKetra())
+			if(me.getFactionId().equals("ketra") && ((L2PcInstance) target).isAlliedWithKetra())
 				return false;
 
 			// check if the target is within the grace period for JUST getting up from fake death
@@ -191,10 +191,8 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable
 			//if (target instanceof L2Summon)
 			//    return ((L2Summon)target).getKarma() > 0;
 			// Check if the L2MonsterInstance target is aggressive
-			if(target instanceof L2MonsterInstance)
-				return ((L2MonsterInstance) target).isAggressive() && GeoEngine.canSeeTarget(me, target, false);
+			return target instanceof L2MonsterInstance && ((L2MonsterInstance) target).isAggressive() && GeoEngine.canSeeTarget(me, target, false);
 
-			return false;
 		}
 		else if(_actor instanceof L2FriendlyMobInstance)
 		{
@@ -205,11 +203,7 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable
 				return false;
 
 			// Check if the L2PcInstance target has karma (=PK)
-			if(target instanceof L2PcInstance && ((L2PcInstance) target).getKarma() > 0)
-				// Los Check
-				return GeoEngine.canSeeTarget(me, target, false);
-			else
-				return false;
+			return target instanceof L2PcInstance && ((L2PcInstance) target).getKarma() > 0 && GeoEngine.canSeeTarget(me, target, false);
 		}
 		else
 		{
@@ -640,8 +634,6 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable
 
 		npc = null;
 
-		return;
-
 	}
 
 	/**
@@ -658,7 +650,7 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable
 	private void thinkAttack()
 	{
 		if (_actor.isCastingNow())
-			return;;
+			return;
 
 		if(_attackTimeout < GameTimeController.getGameTicks())
 		{
@@ -700,7 +692,7 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable
 					L2NpcInstance npc = (L2NpcInstance) obj;
 					String faction_id = ((L2NpcInstance) _actor).getFactionId();
 
-					if(npc == null || getAttackTarget() == null || faction_id != npc.getFactionId() || npc.getFactionRange() == 0)
+					if(npc == null || getAttackTarget() == null || !faction_id.equals(npc.getFactionId()) || npc.getFactionRange() == 0)
 					{
 						faction_id = null;
 						continue;

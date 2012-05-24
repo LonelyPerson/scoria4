@@ -18,24 +18,18 @@
  */
 package com.l2scoria.gameserver.ai;
 
-import static com.l2scoria.gameserver.ai.CtrlIntention.AI_INTENTION_ATTACK;
-import static com.l2scoria.gameserver.ai.CtrlIntention.AI_INTENTION_CAST;
-import static com.l2scoria.gameserver.ai.CtrlIntention.AI_INTENTION_IDLE;
-import static com.l2scoria.gameserver.ai.CtrlIntention.AI_INTENTION_INTERACT;
-import static com.l2scoria.gameserver.ai.CtrlIntention.AI_INTENTION_PICK_UP;
-import static com.l2scoria.gameserver.ai.CtrlIntention.AI_INTENTION_REST;
-import static com.l2scoria.gameserver.ai.CtrlIntention.AI_INTENTION_MOVE_TO;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.model.L2Character;
+import com.l2scoria.gameserver.model.L2Character.AIAccessor;
 import com.l2scoria.gameserver.model.L2Object;
 import com.l2scoria.gameserver.model.L2Skill;
-import com.l2scoria.gameserver.model.L2Character.AIAccessor;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2StaticObjectInstance;
 import com.l2scoria.gameserver.model.actor.knownlist.ObjectKnownList.KnownListAsynchronousUpdateTask;
 import com.l2scoria.gameserver.model.actor.position.L2CharPosition;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
+
+import static com.l2scoria.gameserver.ai.CtrlIntention.*;
 
 public class L2PlayerAI extends L2CharacterAI
 {
@@ -251,11 +245,8 @@ public class L2PlayerAI extends L2CharacterAI
 
 		if(checkTargetLostOrDead(target))
 		{
-			if(target != null)
-			{
-				// Notify the target
-				setAttackTarget(null);
-			}
+			// Notify the target
+			setAttackTarget(null);
 			return;
 		}
 
@@ -264,7 +255,6 @@ public class L2PlayerAI extends L2CharacterAI
 
 		_accessor.doAttack(target);
 		target = null;
-		return;
 	}
 
 	private void thinkCast()
@@ -335,7 +325,6 @@ public class L2PlayerAI extends L2CharacterAI
 		target = null;
 		oldTarget = null;
 
-		return;
 	}
 
 	private void thinkPickUp()
@@ -355,7 +344,6 @@ public class L2PlayerAI extends L2CharacterAI
 
 		target = null;
 
-		return;
 	}
 
 	private void thinkInteract()
@@ -378,7 +366,6 @@ public class L2PlayerAI extends L2CharacterAI
 		target = null;
 
 		setIntention(AI_INTENTION_IDLE);
-		return;
 	}
 
 	@Override

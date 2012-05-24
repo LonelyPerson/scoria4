@@ -18,10 +18,6 @@
  */
 package com.l2scoria.gameserver.ai.special;
 
-import java.util.List;
-
-import javolution.util.FastList;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.managers.GrandBossManager;
 import com.l2scoria.gameserver.model.L2Attackable;
@@ -33,6 +29,9 @@ import com.l2scoria.gameserver.network.serverpackets.CreatureSay;
 import com.l2scoria.gameserver.network.serverpackets.PlaySound;
 import com.l2scoria.gameserver.templates.StatsSet;
 import com.l2scoria.util.random.Rnd;
+import javolution.util.FastList;
+
+import java.util.List;
 
 public class Core extends Quest
 {
@@ -131,14 +130,14 @@ public class Core extends Quest
 		}
 		else if(event.equalsIgnoreCase("despawn_minions"))
 		{
-			for(int i = 0; i < Minions.size(); i++)
+			for (L2Attackable mob : Minions)
 			{
-				L2Attackable mob = Minions.get(i);
-				if(mob != null)
+				if (mob != null)
 				{
 					mob.decayMe();
 				}
 			}
+
 			Minions.clear();
 		}
 		return super.onAdvEvent(event, npc, player);

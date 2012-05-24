@@ -28,6 +28,7 @@ import java.util.logging.Logger;
  * @CoAuthor: DRiN
  * @Date: 01/03/2009
  */
+@SuppressWarnings("ResultOfMethodCallIgnored")
 public class GeoEngine
 {
 	private static final Logger log = Logger.getLogger(GeoEngine.class.getName());
@@ -907,12 +908,9 @@ public class GeoEngine
 		{
 			return false;
 		}
+
 		short temp_layer_h = (short) ((short) (temp_layer & 0x0fff0) >> 1);
-		if (Math.abs(temp_layer_h - hexth) >= Config.MAX_Z_DIFF || Math.abs(temp_layer_h - h) >= Config.MAX_Z_DIFF)
-		{
-			return false;
-		}
-		return checkNSWE((byte) (temp_layer & 0x0F), x, y, nextx, nexty);
+		return !(Math.abs(temp_layer_h - hexth) >= Config.MAX_Z_DIFF || Math.abs(temp_layer_h - h) >= Config.MAX_Z_DIFF) && checkNSWE((byte) (temp_layer & 0x0F), x, y, nextx, nexty);
 	}
 
 	/**
@@ -1149,7 +1147,6 @@ public class GeoEngine
 				return;
 			default:
 				log.severe("GeoEngine: Unknown block type");
-				return;
 		}
 	}
 
@@ -1483,7 +1480,6 @@ public class GeoEngine
 				log.severe("GeoEngine: Unknown block type.");
 				result[0] = z;
 				result[1] = NSWE_ALL;
-				return;
 		}
 	}
 
@@ -1933,11 +1929,7 @@ public class GeoEngine
 
 	private static boolean check_door_z(int minZ, int maxZ, int geoZ)
 	{
-		if (minZ <= geoZ && geoZ <= maxZ)
-		{
-			return true;
-		}
-		return Math.abs((minZ + maxZ) / 2 - geoZ) <= Door_MaxZDiff;
+		return minZ <= geoZ && geoZ <= maxZ || Math.abs((minZ + maxZ) / 2 - geoZ) <= Door_MaxZDiff;
 	}
 
 	private static boolean check_cell_in_door(int geoX, int geoY, L2Territory pos)

@@ -19,6 +19,7 @@
 package com.l2scoria.gameserver.ai.special;
 
 import com.l2scoria.gameserver.ai.CtrlIntention;
+import com.l2scoria.gameserver.geodata.GeoEngine;
 import com.l2scoria.gameserver.model.L2Attackable;
 import com.l2scoria.gameserver.model.actor.instance.L2NpcInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
@@ -45,9 +46,19 @@ public class Monastery extends Quest
 	@Override
 	public String onAggroRangeEnter(L2NpcInstance npc, L2PcInstance player, boolean isPet)
 	{
+		// в радиусе 300, не в бою, не имеет таргета
 		if(Util.calculateDistance(npc.getX(), npc.getY(), npc.getZ(), player.getX(), player.getY()) < 300 && !npc.isInCombat() && npc.getTarget() == null)
 		{
+			// объект в поле зрения
+			if(!GeoEngine.canSeeTarget(npc, player, npc.isFlying()))
+			{
+				return super.onAggroRangeEnter(npc, player, isPet);
+			}
+
+			// объект игрока
 			L2PcInstance target = isPet ? player.getPet().getOwner() : player;
+
+			// цель имеет одетое орухие, моб не мертв, цель не под шадоу мувом, цель видна
 			if(target.getActiveWeaponWithNullItem() != null && npc.getCurrentHp() > 1 && !target.isSilentMoving() && !target.getAppearance().getInvisible())
 			{
 				if(npc.getNpcId() == 22129)
@@ -58,6 +69,7 @@ public class Monastery extends Quest
 				{
 					npc.broadcastPacket(new CreatureSay(npc.getObjectId(), 0, npc.getName(), "You cannot carry a weapon without authorization!"));
 				}
+
 				((L2Attackable) npc).addDamageHate(target, 0, 999);
 				npc.getAI().setIntention(CtrlIntention.AI_INTENTION_ATTACK, target);
 			}
@@ -67,6 +79,7 @@ public class Monastery extends Quest
 				npc.getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE, null, null);
 			}
 		}
+
 		return super.onAggroRangeEnter(npc, player, isPet);
 	}
 }
