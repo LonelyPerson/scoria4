@@ -658,12 +658,7 @@ public class GeoEngine
 			curr_x = i_next_x;
 			curr_y = i_next_y;
 		}
-		diff_z = curr_z - _tz;
-		//dz = Math.abs(diff_z);
-		if (Config.ALLOW_FALL_FROM_WALLS)
-		{
-			return diff_z < Config.MAX_Z_DIFF ? 0 : diff_z * 10000;
-		}
+
 		return dz > Config.MAX_Z_DIFF ? dz * 1000 : 0;
 	}
 

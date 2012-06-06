@@ -3516,7 +3516,6 @@ public final class Config
 	public static boolean PATH_CLEAN;
 	public static boolean ALLOW_DOORS;
 	public static boolean SIMPLE_PATHFIND_FOR_MOBS;
-	public static boolean ALLOW_FALL_FROM_WALLS;
 	public static boolean ALLOW_KEYBOARD_MOVE;
 	public static int PATHFIND_BOOST;
 	public static boolean PATHFIND_DIAGONAL;
@@ -3550,7 +3549,6 @@ public final class Config
 			PATH_CLEAN = Boolean.parseBoolean(geodataSetting.getProperty("PathClean", "true"));
 			ALLOW_DOORS = Boolean.parseBoolean(geodataSetting.getProperty("AllowDoors", "false"));
 			SIMPLE_PATHFIND_FOR_MOBS = Boolean.parseBoolean(geodataSetting.getProperty("SimplePathFindForMobs", "true"));
-			ALLOW_FALL_FROM_WALLS = Boolean.parseBoolean(geodataSetting.getProperty("AllowFallFromWalls", "false"));
 			ALLOW_KEYBOARD_MOVE = Boolean.parseBoolean(geodataSetting.getProperty("AllowMoveWithKeyboard", "true"));
 			PATHFIND_BOOST = Integer.parseInt(geodataSetting.getProperty("PathFindBoost", "2"));
 			PATHFIND_DIAGONAL = Boolean.parseBoolean(geodataSetting.getProperty("PathFindDiagonal", "true"));
