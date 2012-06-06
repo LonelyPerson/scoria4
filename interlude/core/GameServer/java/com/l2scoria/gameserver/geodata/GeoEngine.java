@@ -658,8 +658,8 @@ public class GeoEngine
 			curr_x = i_next_x;
 			curr_y = i_next_y;
 		}
-
-		return dz > Config.MAX_Z_DIFF ? dz * 1000 : 0;
+		diff_z = curr_z - _tz;
+		return diff_z < Config.MAX_Z_DIFF ? 0 : diff_z * 10000;
 	}
 
 	public static Location MoveCheck(int __x, int __y, int _z, int __tx, int __ty, boolean withCollision, boolean backwardMove, boolean returnPrev)
