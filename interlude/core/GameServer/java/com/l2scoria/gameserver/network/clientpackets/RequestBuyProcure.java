@@ -18,10 +18,6 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.List;
-
-import javolution.util.FastList;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.sql.ItemTable;
 import com.l2scoria.gameserver.managers.CastleManorManager;
@@ -38,6 +34,9 @@ import com.l2scoria.gameserver.network.serverpackets.StatusUpdate;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
 import com.l2scoria.gameserver.templates.L2Item;
 import com.l2scoria.gameserver.util.Util;
+import javolution.util.FastList;
+
+import java.util.List;
 
 @SuppressWarnings("unused")
 public class RequestBuyProcure extends L2GameClientPacket
@@ -71,7 +70,7 @@ public class RequestBuyProcure extends L2GameClientPacket
 		{
 			long servise = readD();
 			int itemId = readD();
-			_items[i * 2 + 0] = itemId;
+			_items[(i * 2)] = itemId;
 			long cnt = readD();
 
 			if(cnt > Integer.MAX_VALUE || cnt < 1)
@@ -114,7 +113,7 @@ public class RequestBuyProcure extends L2GameClientPacket
 
 		for(int i = 0; i < _count; i++)
 		{
-			int itemId = _items[i * 2 + 0];
+			int itemId = _items[(i * 2)];
 			int count = _items[i * 2 + 1];
 			int price = 0;
 
@@ -157,7 +156,7 @@ public class RequestBuyProcure extends L2GameClientPacket
 
 		for(int i = 0; i < _count; i++)
 		{
-			int itemId = _items[i * 2 + 0];
+			int itemId = _items[(i * 2)];
 			int count = _items[i * 2 + 1];
 
 			if(count < 0)

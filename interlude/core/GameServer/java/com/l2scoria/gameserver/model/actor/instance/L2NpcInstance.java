@@ -591,10 +591,7 @@ public class L2NpcInstance extends L2Character
 		//if (!canTarget(player))
 		//    return false;
 
-		if(!isInsideRadius(player, INTERACTION_DISTANCE, false, false))
-			return false;
-
-		return true;
+		return isInsideRadius(player, INTERACTION_DISTANCE, false, false);
 	}
 
 	/**
@@ -785,43 +782,43 @@ public class L2NpcInstance extends L2Character
 			String className = getClass().getName().substring(43);
 			html1.append("<br>");
 
-			html1.append("Instance Type: " + className + "<br1>Faction: " + getFactionId() + "<br1>Location ID: " + (getSpawn() != null ? getSpawn().getLocation() : 0) + "<br1>");
+			html1.append("Instance Type: ").append(className).append("<br1>Faction: ").append(getFactionId()).append("<br1>Location ID: ").append(getSpawn() != null ? getSpawn().getLocation() : 0).append("<br1>");
 
 			if(this instanceof L2ControllableMobInstance)
 			{
-				html1.append("Mob Group: " + MobGroupTable.getInstance().getGroupForMob((L2ControllableMobInstance) this).getGroupId() + "<br>");
+				html1.append("Mob Group: ").append(MobGroupTable.getInstance().getGroupForMob((L2ControllableMobInstance) this).getGroupId()).append("<br>");
 			}
 			else
 			{
-				html1.append("Respawn Time: " + (getSpawn() != null ? getSpawn().getRespawnDelay() / 1000 + "  Seconds<br>" : "?  Seconds<br>"));
+				html1.append("Respawn Time: ").append(getSpawn() != null ? getSpawn().getRespawnDelay() / 1000 + "  Seconds<br>" : "?  Seconds<br>");
 			}
 
 			html1.append("<table border=\"0\" width=\"100%\">");
-			html1.append("<tr><td>Object ID</td><td>" + getObjectId() + "</td><td>NPC ID</td><td>" + getTemplate().npcId + "</td></tr>");
-			html1.append("<tr><td>Castle</td><td>" + getCastle().getCastleId() + "</td><td>Coords</td><td>" + getX() + "," + getY() + "," + getZ() + "</td></tr>");
-			html1.append("<tr><td>Level</td><td>" + getLevel() + "</td><td>Aggro</td><td>" + (this instanceof L2Attackable ? ((L2Attackable) this).getAggroRange() : 0) + "</td></tr>");
+			html1.append("<tr><td>Object ID</td><td>").append(getObjectId()).append("</td><td>NPC ID</td><td>").append(getTemplate().npcId).append("</td></tr>");
+			html1.append("<tr><td>Castle</td><td>").append(getCastle().getCastleId()).append("</td><td>Coords</td><td>").append(getX()).append(",").append(getY()).append(",").append(getZ()).append("</td></tr>");
+			html1.append("<tr><td>Level</td><td>").append(getLevel()).append("</td><td>Aggro</td><td>").append(this instanceof L2Attackable ? ((L2Attackable) this).getAggroRange() : 0).append("</td></tr>");
 			html1.append("</table><br>");
 
 			html1.append("<font color=\"LEVEL\">Combat</font>");
 			html1.append("<table border=\"0\" width=\"100%\">");
-			html1.append("<tr><td>Current HP</td><td>" + getCurrentHp() + "</td><td>Current MP</td><td>" + getCurrentMp() + "</td></tr>");
-			html1.append("<tr><td>Max.HP</td><td>" + (int) (getMaxHp() / getStat().calcStat(Stats.MAX_HP, 1, this, null)) + "*" + getStat().calcStat(Stats.MAX_HP, 1, this, null) + "</td><td>Max.MP</td><td>" + getMaxMp() + "</td></tr>");
-			html1.append("<tr><td>P.Atk.</td><td>" + getPAtk(null) + "</td><td>M.Atk.</td><td>" + getMAtk(null, null) + "</td></tr>");
-			html1.append("<tr><td>P.Def.</td><td>" + getPDef(null) + "</td><td>M.Def.</td><td>" + getMDef(null, null) + "</td></tr>");
-			html1.append("<tr><td>Accuracy</td><td>" + getAccuracy() + "</td><td>Evasion</td><td>" + getEvasionRate(null) + "</td></tr>");
-			html1.append("<tr><td>Critical</td><td>" + getCriticalHit(null, null) + "</td><td>Speed</td><td>" + getRunSpeed() + "</td></tr>");
-			html1.append("<tr><td>Atk.Speed</td><td>" + getPAtkSpd() + "</td><td>Cast.Speed</td><td>" + getMAtkSpd() + "</td></tr>");
+			html1.append("<tr><td>Current HP</td><td>").append(getCurrentHp()).append("</td><td>Current MP</td><td>").append(getCurrentMp()).append("</td></tr>");
+			html1.append("<tr><td>Max.HP</td><td>").append((int) (getMaxHp() / getStat().calcStat(Stats.MAX_HP, 1, this, null))).append("*").append(getStat().calcStat(Stats.MAX_HP, 1, this, null)).append("</td><td>Max.MP</td><td>").append(getMaxMp()).append("</td></tr>");
+			html1.append("<tr><td>P.Atk.</td><td>").append(getPAtk(null)).append("</td><td>M.Atk.</td><td>").append(getMAtk(null, null)).append("</td></tr>");
+			html1.append("<tr><td>P.Def.</td><td>").append(getPDef(null)).append("</td><td>M.Def.</td><td>").append(getMDef(null, null)).append("</td></tr>");
+			html1.append("<tr><td>Accuracy</td><td>").append(getAccuracy()).append("</td><td>Evasion</td><td>").append(getEvasionRate(null)).append("</td></tr>");
+			html1.append("<tr><td>Critical</td><td>").append(getCriticalHit(null, null)).append("</td><td>Speed</td><td>").append(getRunSpeed()).append("</td></tr>");
+			html1.append("<tr><td>Atk.Speed</td><td>").append(getPAtkSpd()).append("</td><td>Cast.Speed</td><td>").append(getMAtkSpd()).append("</td></tr>");
 			html1.append("</table><br>");
 
 			html1.append("<font color=\"LEVEL\">Basic Stats</font>");
 			html1.append("<table border=\"0\" width=\"100%\">");
-			html1.append("<tr><td>STR</td><td>" + getSTR() + "</td><td>DEX</td><td>" + getDEX() + "</td><td>CON</td><td>" + getCON() + "</td></tr>");
-			html1.append("<tr><td>INT</td><td>" + getINT() + "</td><td>WIT</td><td>" + getWIT() + "</td><td>MEN</td><td>" + getMEN() + "</td></tr>");
+			html1.append("<tr><td>STR</td><td>").append(getSTR()).append("</td><td>DEX</td><td>").append(getDEX()).append("</td><td>CON</td><td>").append(getCON()).append("</td></tr>");
+			html1.append("<tr><td>INT</td><td>").append(getINT()).append("</td><td>WIT</td><td>").append(getWIT()).append("</td><td>MEN</td><td>").append(getMEN()).append("</td></tr>");
 			html1.append("</table>");
 
-			html1.append("<br><center><table><tr><td><button value=\"Edit NPC\" action=\"bypass -h admin_edit_npc " + getTemplate().npcId + "\" width=100 height=15 back=\"sek.cbui94\" fore=\"sek.cbui92\"><br1></td>");
+			html1.append("<br><center><table><tr><td><button value=\"Edit NPC\" action=\"bypass -h admin_edit_npc ").append(getTemplate().npcId).append("\" width=100 height=15 back=\"sek.cbui94\" fore=\"sek.cbui92\"><br1></td>");
 			html1.append("<td><button value=\"Kill\" action=\"bypass -h admin_kill\" width=40 height=15 back=\"sek.cbui94\" fore=\"sek.cbui92\"></td><br1></tr>");
-			html1.append("<tr><td><button value=\"Show DropList\" action=\"bypass -h admin_show_droplist " + getTemplate().npcId + "\" width=100 height=15 back=\"sek.cbui94\" fore=\"sek.cbui92\"></td></tr>");
+			html1.append("<tr><td><button value=\"Show DropList\" action=\"bypass -h admin_show_droplist ").append(getTemplate().npcId).append("\" width=100 height=15 back=\"sek.cbui94\" fore=\"sek.cbui92\"></td></tr>");
 			html1.append("<td><button value=\"Delete\" action=\"bypass -h admin_delete\" width=40 height=15 back=\"sek.cbui94\" fore=\"sek.cbui92\"></td></tr>");
 			html1.append("</table></center><br>");
 			html1.append("</body></html>");

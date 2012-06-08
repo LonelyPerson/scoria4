@@ -1964,6 +1964,7 @@ public abstract class L2Skill
 					{
 						return new L2Character[]{activeChar};
 					}
+
 					if (npc.getFirstEffect(this) == null)
 					{
 						targetList.add(activeChar);
@@ -1971,10 +1972,13 @@ public abstract class L2Skill
 
 					for (L2Object newTarget : activeChar.getKnownList().getKnownObjects().values())
 					{
-						if (newTarget instanceof L2NpcInstance && ((L2NpcInstance) newTarget).getFactionId().equals(npc.getFactionId()))
+						if (newTarget instanceof L2NpcInstance && ((L2NpcInstance) newTarget).getFactionId() != null && ((L2NpcInstance) newTarget).getFactionId().equals(npc.getFactionId()))
 						{
 							if (!Util.checkIfInRange(getSkillRadius(), activeChar, newTarget, true))
+							{
 								continue;
+							}
+
 							if (((L2NpcInstance) newTarget).getFirstEffect(this) == null)
 							{
 								targetList.add((L2Character) newTarget);

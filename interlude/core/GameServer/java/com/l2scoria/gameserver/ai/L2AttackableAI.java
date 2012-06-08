@@ -153,13 +153,16 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable
 			if(!(me instanceof L2RaidBossInstance) && ((L2PcInstance) target).isSilentMoving())
 				return false;
 
-			// Check if player is an ally //TODO! [Nemesiss] it should be rather boolean or smth like that
-			// Comparing String isnt good idea!
-			if(me.getFactionId() != null && me.getFactionId().equals("varka") && ((L2PcInstance) target).isAlliedWithVarka())
-				return false;
+			if(me.getFactionId() != null)
+			{
+				// Check if player is an ally //TODO! [Nemesiss] it should be rather boolean or smth like that
+				// Comparing String isnt good idea!
+				if(me.getFactionId().equals("varka") && ((L2PcInstance) target).isAlliedWithVarka())
+					return false;
 
-			if(me.getFactionId() != null && me.getFactionId().equals("ketra") && ((L2PcInstance) target).isAlliedWithKetra())
-				return false;
+				if(me.getFactionId().equals("ketra") && ((L2PcInstance) target).isAlliedWithKetra())
+					return false;
+			}
 
 			// check if the target is within the grace period for JUST getting up from fake death
 			if(((L2PcInstance) target).isRecentFakeDeath())

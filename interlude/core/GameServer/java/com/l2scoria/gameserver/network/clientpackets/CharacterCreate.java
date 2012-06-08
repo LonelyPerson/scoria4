@@ -18,16 +18,10 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.SkillTable;
 import com.l2scoria.gameserver.datatables.sql.CharNameTable;
 import com.l2scoria.gameserver.datatables.sql.CharTemplateTable;
-import com.l2scoria.gameserver.datatables.sql.ItemTable;
 import com.l2scoria.gameserver.datatables.sql.SkillTreeTable;
 import com.l2scoria.gameserver.idfactory.IdFactory;
 import com.l2scoria.gameserver.managers.QuestManager;
@@ -43,10 +37,14 @@ import com.l2scoria.gameserver.network.L2GameClient;
 import com.l2scoria.gameserver.network.serverpackets.CharCreateFail;
 import com.l2scoria.gameserver.network.serverpackets.CharCreateOk;
 import com.l2scoria.gameserver.network.serverpackets.CharSelectInfo;
-import com.l2scoria.gameserver.templates.L2Item;
 import com.l2scoria.gameserver.templates.L2PcTemplate;
 import com.l2scoria.gameserver.templates.L2PcTemplate.PcTemplateItem;
 import com.l2scoria.gameserver.util.Util;
+
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 /**
  * This class ...
@@ -167,7 +165,6 @@ public final class CharacterCreate extends L2GameClientPacket
 	{
 		boolean result = true;
 
-		String test = text;
 		Pattern pattern;
 
 		try
@@ -180,7 +177,7 @@ public final class CharacterCreate extends L2GameClientPacket
 			pattern = Pattern.compile(".*");
 		}
 
-		Matcher regexp = pattern.matcher(test);
+		Matcher regexp = pattern.matcher(text);
 		if(!regexp.matches())
 		{
 			result = false;

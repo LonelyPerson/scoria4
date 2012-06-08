@@ -18,31 +18,21 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.List;
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.TradeController;
 import com.l2scoria.gameserver.cache.HtmCache;
 import com.l2scoria.gameserver.datatables.sql.ItemTable;
 import com.l2scoria.gameserver.model.L2Object;
 import com.l2scoria.gameserver.model.L2TradeList;
-import com.l2scoria.gameserver.model.actor.instance.L2CastleChamberlainInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2ClanHallManagerInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2FishermanInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2MercManagerInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2MerchantInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2NpcInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
+import com.l2scoria.gameserver.model.actor.instance.*;
 import com.l2scoria.gameserver.network.SystemMessageId;
-import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
-import com.l2scoria.gameserver.network.serverpackets.ItemList;
-import com.l2scoria.gameserver.network.serverpackets.NpcHtmlMessage;
-import com.l2scoria.gameserver.network.serverpackets.StatusUpdate;
-import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
+import com.l2scoria.gameserver.network.serverpackets.*;
 import com.l2scoria.gameserver.templates.L2Item;
 import com.l2scoria.gameserver.util.FloodProtector;
 import com.l2scoria.gameserver.util.Util;
+
+import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * This class ...
@@ -73,7 +63,7 @@ public final class RequestBuyItem extends L2GameClientPacket
 		for(int i = 0; i < _count; i++)
 		{
 			int itemId = readD();
-			_items[i * 2 + 0] = itemId;
+			_items[(i * 2)] = itemId;
 			long cnt = readD();
 
 			if(cnt > Integer.MAX_VALUE || cnt < 0)
@@ -118,21 +108,9 @@ public final class RequestBuyItem extends L2GameClientPacket
 			{
 				htmlFolder = "fisherman";
 			}
-			else if(target instanceof L2MercManagerInstance)
-			{
-				ok = true;
-			}
-			else if(target instanceof L2ClanHallManagerInstance)
-			{
-				ok = true;
-			}
-			else if(target instanceof L2CastleChamberlainInstance)
-			{
-				ok = true;
-			}
 			else
 			{
-				ok = false;
+				ok = target instanceof L2MercManagerInstance || target instanceof L2ClanHallManagerInstance || target instanceof L2CastleChamberlainInstance;
 			}
 		}
 		else
@@ -221,7 +199,7 @@ public final class RequestBuyItem extends L2GameClientPacket
 		long weight = 0;
 		for(int i = 0; i < _count; i++)
 		{
-			int itemId = _items[i * 2 + 0];
+			int itemId = _items[(i * 2)];
 			int count = _items[i * 2 + 1];
 			int price = -1;
 

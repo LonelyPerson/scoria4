@@ -18,9 +18,6 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.ai.CtrlIntention;
 import com.l2scoria.gameserver.communitybbs.CommunityBoard;
@@ -39,6 +36,9 @@ import com.l2scoria.gameserver.model.entity.olympiad.Olympiad;
 import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
 import com.l2scoria.gameserver.network.serverpackets.NpcHtmlMessage;
 import com.l2scoria.gameserver.util.FloodProtector;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class ...
@@ -87,7 +87,7 @@ public final class RequestBypassToServer extends L2GameClientPacket
 			{
 				String command;
 
-				if(_command.indexOf(" ") != -1)
+				if(_command.contains(" "))
 				{
 					command = _command.substring(0, _command.indexOf(" "));
 				}
@@ -268,7 +268,7 @@ public final class RequestBypassToServer extends L2GameClientPacket
 
 	private void playerHelp(L2PcInstance activeChar, String path)
 	{
-		if(path.indexOf("..") != -1)
+		if(path.contains(".."))
 			return;
 
 		String filename = "data/html/help/" + path;

@@ -18,14 +18,14 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.ai.CtrlEvent;
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.actor.position.L2CharPosition;
 import com.l2scoria.gameserver.network.serverpackets.PartyMemberPosition;
+
+import java.util.logging.Logger;
 
 /**
  * This class ...
@@ -86,9 +86,9 @@ public final class CannotMoveAnymore extends L2GameClientPacket
 			}
 		}
 
-		if(player instanceof L2PcInstance && ((L2PcInstance) player).getParty() != null)
+		if(player instanceof L2PcInstance && player.getParty() != null)
 		{
-			((L2PcInstance) player).getParty().broadcastToPartyMembers(((L2PcInstance) player), new PartyMemberPosition((L2PcInstance) player));
+			player.getParty().broadcastToPartyMembers(((L2PcInstance) player), new PartyMemberPosition((L2PcInstance) player));
 		}
 
 	}
