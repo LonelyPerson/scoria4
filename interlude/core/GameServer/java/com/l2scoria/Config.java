@@ -4118,6 +4118,11 @@ public final class Config
 	public static boolean DDOS_PROTECTION_ENABLED;
 	public static OnSuccessLoginAction ON_SUCCESS_LOGIN_ACTION;
 	public static String ON_SUCCESS_LOGIN_COMMAND_LS;
+        public static boolean FAKE_SERVER_LIST;
+        public static String FAKE_SERVER_LIST_TYPE;
+        public static double FAKE_SERVER_LIST_PARAM1;
+        public static int FAKE_SERVER_LIST_PARAM2;
+        
 
 	//============================================================
 	public static void loadLoginStartConfig()
@@ -4170,6 +4175,11 @@ public final class Config
 			USE_ACTIVATOR_PROTECTION = Boolean.parseBoolean(serverSettings.getProperty("UseActivatorProtection", "False"));
 			USE_AUTO_REBOOT = Boolean.parseBoolean(serverSettings.getProperty("EnableAutoRebootLogin", "False"));
 			AUTO_REBOOT_TIMER_TASK = Integer.parseInt(serverSettings.getProperty("AutoRebootLoginTimer", "60"));
+                        
+                        FAKE_SERVER_LIST = Boolean.parseBoolean(serverSettings.getProperty("FakeServerList", "False"));
+                        FAKE_SERVER_LIST_TYPE = serverSettings.getProperty("FakeServerListType", "STATIC");
+                        FAKE_SERVER_LIST_PARAM1 = Double.parseDouble(serverSettings.getProperty("FakeServerListParam1", "2000"));
+                        FAKE_SERVER_LIST_PARAM2 = Integer.parseInt(serverSettings.getProperty("FakeServerListParam2", "5000"));
 			
 			AUTO_CREATE_ACCOUNTS = Boolean.parseBoolean(serverSettings.getProperty("AutoCreateAccounts", "True"));
 

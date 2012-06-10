@@ -23,6 +23,7 @@ import com.l2scoria.gameserver.datatables.GameServerTable.GameServerInfo;
 import com.l2scoria.loginserver.L2LoginClient;
 import com.l2scoria.loginserver.network.gameserverpackets.ServerStatus;
 import javolution.util.FastList;
+import com.l2scoria.Config;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -133,8 +134,23 @@ public final class ServerList extends L2LoginServerPacket
 			writeD(server._port);
 			writeC(0x00); // age limit
 			writeC(server._pvp ? 0x01 : 0x00);
-			writeH(server._currentPlayers);
-			writeH(server._maxPlayers);
+                        if(Config.FAKE_SERVER_LIST) {
+                            if(Config.FAKE_SERVER_LIST_TYPE.equals("STATIC")) {
+                                writeH(Config.FAKE_SERVER_LIST_PARAM1);
+                                writeH(Config.FAKE_SERVER_LIST_PARAM2);
+                            } else if(Config.FAKE_SERVER_LIST_TYPE.equals("DYNAMIC")) {
+                                double mulOpertype = server._currentPlayers * Config.FAKE_SERVER_LIST_PARAM1;
+                                int currentOn = (int)mulOpertype + Config.FAKE_SERVER_LIST_PARAM2;
+                                writeH(currentOn);
+                                writeH(server._maxPlayers);                               
+                            } else {
+                                writeH(server._currentPlayers);
+                                writeH(server._maxPlayers); 
+                            }
+                        } else {
+                            writeH(server._currentPlayers);
+                            writeH(server._maxPlayers);
+                        }
 			writeC(server._status == ServerStatus.STATUS_DOWN ? 0x00 : 0x01);
 
 			int bits = 0;
