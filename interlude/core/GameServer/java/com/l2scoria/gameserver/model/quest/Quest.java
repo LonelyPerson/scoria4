@@ -18,19 +18,6 @@
  */
 package com.l2scoria.gameserver.model.quest;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.Collection;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.cache.HtmCache;
 import com.l2scoria.gameserver.datatables.GmListTable;
@@ -43,15 +30,28 @@ import com.l2scoria.gameserver.model.L2Skill;
 import com.l2scoria.gameserver.model.actor.instance.L2NpcInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.SystemMessageId;
+import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
 import com.l2scoria.gameserver.network.serverpackets.ConfirmDlg;
 import com.l2scoria.gameserver.network.serverpackets.NpcHtmlMessage;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
 import com.l2scoria.gameserver.scripting.ManagedScript;
 import com.l2scoria.gameserver.scripting.ScriptManager;
 import com.l2scoria.gameserver.templates.L2NpcTemplate;
-import java.sql.Connection;
 import com.l2scoria.util.database.L2DatabaseFactory;
 import com.l2scoria.util.random.Rnd;
+import javolution.util.FastList;
+import javolution.util.FastMap;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.Collection;
+import java.util.Map;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Luis Arias
@@ -665,6 +665,7 @@ public class Quest extends ManagedScript
 
 	public String onTalk(L2NpcInstance npc, L2PcInstance talker)
 	{
+		talker.sendPacket(ActionFailed.STATIC_PACKET);
 		return null;
 	}
 
@@ -790,8 +791,10 @@ public class Quest extends ManagedScript
 				sm = null;
 			}
 
+			player.sendPacket(ActionFailed.STATIC_PACKET);
 			player = null;
 		}
+
 		return false;
 	}
 

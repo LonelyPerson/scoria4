@@ -796,7 +796,7 @@ public class L2NpcInstance extends L2Character
 			html1.append("<table border=\"0\" width=\"100%\">");
 			html1.append("<tr><td>Object ID</td><td>").append(getObjectId()).append("</td><td>NPC ID</td><td>").append(getTemplate().npcId).append("</td></tr>");
 			html1.append("<tr><td>Castle</td><td>").append(getCastle().getCastleId()).append("</td><td>Coords</td><td>").append(getX()).append(",").append(getY()).append(",").append(getZ()).append("</td></tr>");
-			html1.append("<tr><td>Level</td><td>").append(getLevel()).append("</td><td>Aggro</td><td>").append(this instanceof L2Attackable ? ((L2Attackable) this).getAggroRange() : 0).append("</td></tr>");
+			html1.append("<tr><td>Level</td><td>").append(getLevel()).append("</td><td>Aggro</td><td>").append(this instanceof L2Attackable ? this.getAggroRange() : 0).append("</td></tr>");
 			html1.append("</table><br>");
 
 			html1.append("<font color=\"LEVEL\">Combat</font>");
@@ -856,19 +856,19 @@ public class L2NpcInstance extends L2Character
 
 			html1.append("<br><center><font color=\"LEVEL\">[Combat Stats]</font></center>");
 			html1.append("<table border=0 width=\"100%\">");
-			html1.append("<tr><td>Max.HP</td><td>" + (int) (getMaxHp() / getStat().calcStat(Stats.MAX_HP, 1, this, null)) + "*" + (int) getStat().calcStat(Stats.MAX_HP, 1, this, null) + "</td><td>Max.MP</td><td>" + getMaxMp() + "</td></tr>");
-			html1.append("<tr><td>P.Atk.</td><td>" + getPAtk(null) + "</td><td>M.Atk.</td><td>" + getMAtk(null, null) + "</td></tr>");
-			html1.append("<tr><td>P.Def.</td><td>" + getPDef(null) + "</td><td>M.Def.</td><td>" + getMDef(null, null) + "</td></tr>");
-			html1.append("<tr><td>Accuracy</td><td>" + getAccuracy() + "</td><td>Evasion</td><td>" + getEvasionRate(null) + "</td></tr>");
-			html1.append("<tr><td>Critical</td><td>" + getCriticalHit(null, null) + "</td><td>Speed</td><td>" + getRunSpeed() + "</td></tr>");
-			html1.append("<tr><td>Atk.Speed</td><td>" + getPAtkSpd() + "</td><td>Cast.Speed</td><td>" + getMAtkSpd() + "</td></tr>");
-			html1.append("<tr><td>Race</td><td>" + getTemplate().race + "</td><td></td><td></td></tr>");
+			html1.append("<tr><td>Max.HP</td><td>").append((int) (getMaxHp() / getStat().calcStat(Stats.MAX_HP, 1, this, null))).append("*").append((int) getStat().calcStat(Stats.MAX_HP, 1, this, null)).append("</td><td>Max.MP</td><td>").append(getMaxMp()).append("</td></tr>");
+			html1.append("<tr><td>P.Atk.</td><td>").append(getPAtk(null)).append("</td><td>M.Atk.</td><td>").append(getMAtk(null, null)).append("</td></tr>");
+			html1.append("<tr><td>P.Def.</td><td>").append(getPDef(null)).append("</td><td>M.Def.</td><td>").append(getMDef(null, null)).append("</td></tr>");
+			html1.append("<tr><td>Accuracy</td><td>").append(getAccuracy()).append("</td><td>Evasion</td><td>").append(getEvasionRate(null)).append("</td></tr>");
+			html1.append("<tr><td>Critical</td><td>").append(getCriticalHit(null, null)).append("</td><td>Speed</td><td>").append(getRunSpeed()).append("</td></tr>");
+			html1.append("<tr><td>Atk.Speed</td><td>").append(getPAtkSpd()).append("</td><td>Cast.Speed</td><td>").append(getMAtkSpd()).append("</td></tr>");
+			html1.append("<tr><td>Race</td><td>").append(getTemplate().race).append("</td><td></td><td></td></tr>");
 			html1.append("</table>");
 
 			html1.append("<br><center><font color=\"LEVEL\">[Basic Stats]</font></center>");
 			html1.append("<table border=0 width=\"100%\">");
-			html1.append("<tr><td>STR</td><td>" + getSTR() + "</td><td>DEX</td><td>" + getDEX() + "</td><td>CON</td><td>" + getCON() + "</td></tr>");
-			html1.append("<tr><td>INT</td><td>" + getINT() + "</td><td>WIT</td><td>" + getWIT() + "</td><td>MEN</td><td>" + getMEN() + "</td></tr>");
+			html1.append("<tr><td>STR</td><td>").append(getSTR()).append("</td><td>DEX</td><td>").append(getDEX()).append("</td><td>CON</td><td>").append(getCON()).append("</td></tr>");
+			html1.append("<tr><td>INT</td><td>").append(getINT()).append("</td><td>WIT</td><td>").append(getWIT()).append("</td><td>MEN</td><td>").append(getMEN()).append("</td></tr>");
 			html1.append("</table>");
 
 			html1.append("<br><center><font color=\"LEVEL\">[Drop Info]</font></center>");
@@ -883,15 +883,15 @@ public class L2NpcInstance extends L2Character
 
 					if(drop.getChance() >= 600000)
 					{
-						html1.append("<tr><td><font color=\"ff0000\">" + name + "</font></td><td>" + (drop.isQuestDrop() ? "Quest" : cat.isSweep() ? "Sweep" : "Drop") + "</td></tr>");
+						html1.append("<tr><td><font color=\"ff0000\">").append(name).append("</font></td><td>").append(drop.isQuestDrop() ? "Quest" : cat.isSweep() ? "Sweep" : "Drop").append("</td></tr>");
 					}
 					else if(drop.getChance() >= 300000)
 					{
-						html1.append("<tr><td><font color=\"00ff00\">" + name + "</font></td><td>" + (drop.isQuestDrop() ? "Quest" : cat.isSweep() ? "Sweep" : "Drop") + "</td></tr>");
+						html1.append("<tr><td><font color=\"00ff00\">").append(name).append("</font></td><td>").append(drop.isQuestDrop() ? "Quest" : cat.isSweep() ? "Sweep" : "Drop").append("</td></tr>");
 					}
 					else
 					{
-						html1.append("<tr><td><font color=\"0000ff\">" + name + "</font></td><td>" + (drop.isQuestDrop() ? "Quest" : cat.isSweep() ? "Sweep" : "Drop") + "</td></tr>");
+						html1.append("<tr><td><font color=\"0000ff\">").append(name).append("</font></td><td>").append(drop.isQuestDrop() ? "Quest" : cat.isSweep() ? "Sweep" : "Drop").append("</td></tr>");
 					}
 				}
 			}
@@ -1069,7 +1069,7 @@ public class L2NpcInstance extends L2Character
 		else if(command.startsWith("Link"))
 		{
 			String path = command.substring(5).trim();
-			if(path.indexOf("..") != -1)
+			if(path.contains(".."))
 				return;
 			String filename = "/data/html/" + path;
 			NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());
@@ -1445,7 +1445,7 @@ public class L2NpcInstance extends L2Character
 			{
 				if (q.getQuestIntId() >= 1 && q.getQuestIntId() < 1000)
 				{
-					if (player.getWeightPenalty() >= 3 || player.getInventory().getSize() > (int) player.GetInventoryLimit() * 0.8)
+					if (player.getWeightPenalty() >= 3 || player.getInventory().getSize() > player.GetInventoryLimit() * 0.8)
 					{
 						player.sendPacket(new SystemMessage(SystemMessageId.INVENTORY_LESS_THAN_80_PERCENT));
 						return;
@@ -1792,10 +1792,12 @@ public class L2NpcInstance extends L2Character
 					message += "</a><br>";
 				}
 			}
-			if(message == "")
+
+			if(message.equals(""))
 			{
 				message += "There is no winning lottery ticket...<br>";
 			}
+
 			html.replace("%result%", message);
 			message = null;
 		}
@@ -2036,7 +2038,7 @@ public class L2NpcInstance extends L2Character
 			}
 		}
 
-		if(getTemplate().type == "L2Auctioneer" && val == 0)
+		if(getTemplate().type.equals("L2Auctioneer") && val == 0)
 			return;
 
 		int npcId = getTemplate().npcId;
