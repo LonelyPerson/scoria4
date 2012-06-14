@@ -136,7 +136,7 @@ public final class ServerList extends L2LoginServerPacket
 			writeC(server._pvp ? 0x01 : 0x00);
                         if(Config.FAKE_SERVER_LIST) {
                             if(Config.FAKE_SERVER_LIST_TYPE.equals("STATIC")) {
-                                writeH(Config.FAKE_SERVER_LIST_PARAM1);
+                                writeH((int)Config.FAKE_SERVER_LIST_PARAM1);
                                 writeH(Config.FAKE_SERVER_LIST_PARAM2);
                             } else if(Config.FAKE_SERVER_LIST_TYPE.equals("DYNAMIC")) {
                                 double mulOpertype = server._currentPlayers * Config.FAKE_SERVER_LIST_PARAM1;

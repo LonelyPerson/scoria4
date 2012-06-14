@@ -193,6 +193,10 @@ public class CTF extends FunEvent
 			{
 				player.dismount();
 			}
+                        if (player.isDead()) 
+                        {
+                            player.doRevive();
+                        }
 
 			player.broadcastTitleInfo();
 			player.broadcastUserInfo();

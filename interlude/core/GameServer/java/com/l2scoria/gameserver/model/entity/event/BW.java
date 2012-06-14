@@ -183,6 +183,10 @@ public class BW extends FunEvent
 			{
 				player.dismount();
 			}
+                        if (player.isDead()) 
+                        {
+                            player.doRevive();
+                        }
 
 			player.broadcastTitleInfo();
 			player.broadcastUserInfo();
