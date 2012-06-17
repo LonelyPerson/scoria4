@@ -537,9 +537,9 @@ public class L2Spawn
 		int newlocx, newlocy, newlocz;
 
 		// If Locx=0 and Locy=0, the L2NpcInstance must be spawned in an area defined by location
-		if  (getLocx()==0 && getLocy()==0)
+		if  (getLocx() == 0 && getLocy() == 0)
 		{
-			if (getLocation()==0)
+			if (getLocation() == 0)
 			{
 				return mob;
 			}
@@ -557,11 +557,19 @@ public class L2Spawn
 			// The L2NpcInstance is spawned at the exact position (Lox, Locy, Locz)
 			newlocx = getLocx();
 			newlocy = getLocy();
-			newlocz = getLocz();
 
 			if (Config.GEODATA && mob instanceof L2MonsterInstance)
 			{
 				newlocz = GeoEngine.getHeight(newlocx, newlocy, getLocz());
+			}
+			else
+			{
+				newlocz = getLocz();
+			}
+
+			if(Math.abs(getLocz() - newlocz) > 100)
+			{
+				_log.warning("Spawn incorrect Z: ID[" + _template.npcId + "], origZ: " + getLocz() + ", geoZ: " + newlocz);
 			}
 		}
 
