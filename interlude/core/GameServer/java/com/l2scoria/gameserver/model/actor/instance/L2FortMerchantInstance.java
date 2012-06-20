@@ -18,17 +18,14 @@
  */
 package com.l2scoria.gameserver.model.actor.instance;
 
-import java.util.StringTokenizer;
-
 import com.l2scoria.gameserver.ai.CtrlIntention;
 import com.l2scoria.gameserver.datatables.sql.ClanTable;
-import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
-import com.l2scoria.gameserver.network.serverpackets.MyTargetSelected;
-import com.l2scoria.gameserver.network.serverpackets.NpcHtmlMessage;
-import com.l2scoria.gameserver.network.serverpackets.SocialAction;
-import com.l2scoria.gameserver.network.serverpackets.ValidateLocation;
+import com.l2scoria.gameserver.model.L2Clan;
+import com.l2scoria.gameserver.network.serverpackets.*;
 import com.l2scoria.gameserver.templates.L2NpcTemplate;
 import com.l2scoria.util.random.Rnd;
+
+import java.util.StringTokenizer;
 
 /**
  * @author programmos, scoria dev
@@ -148,9 +145,11 @@ public class L2FortMerchantInstance extends L2NpcWalkerInstance
 		html.setFile(filename);
 		html.replace("%objectId%", String.valueOf(getObjectId()));
 		html.replace("%npcId%", String.valueOf(getNpcId()));
+
 		if(getFort().getOwnerId() > 0)
 		{
-			html.replace("%clanname%", ClanTable.getInstance().getClan(getFort().getOwnerId()).getName());
+			L2Clan clan = ClanTable.getInstance().getClan(getFort().getOwnerId());
+			html.replace("%clanname%", clan != null ? clan.getName() : "ClanNotFound");
 		}
 		else
 		{
