@@ -18,15 +18,6 @@
  */
 package com.l2scoria.gameserver;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.WeakHashMap;
-import java.util.logging.Logger;
-
-import javolution.util.FastList;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.csv.RecipeTable;
 import com.l2scoria.gameserver.model.Inventory;
@@ -37,19 +28,15 @@ import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2RecipeInstance;
 import com.l2scoria.gameserver.network.SystemMessageId;
-import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
-import com.l2scoria.gameserver.network.serverpackets.ItemList;
-import com.l2scoria.gameserver.network.serverpackets.MagicSkillUser;
-import com.l2scoria.gameserver.network.serverpackets.RecipeBookItemList;
-import com.l2scoria.gameserver.network.serverpackets.RecipeItemMakeInfo;
-import com.l2scoria.gameserver.network.serverpackets.RecipeShopItemInfo;
-import com.l2scoria.gameserver.network.serverpackets.SetupGauge;
-import com.l2scoria.gameserver.network.serverpackets.StatusUpdate;
-import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
+import com.l2scoria.gameserver.network.serverpackets.*;
 import com.l2scoria.gameserver.skills.Stats;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.gameserver.util.Util;
 import com.l2scoria.util.random.Rnd;
+import javolution.util.FastList;
+
+import java.util.*;
+import java.util.logging.Logger;
 
 public class RecipeController
 {
@@ -113,7 +100,7 @@ public class RecipeController
 
 		RecipeItemMaker maker;
 
-		if(Config.ALT_GAME_CREATION && (maker = _activeMakers.get(manufacturer)) != null) // check if busy
+		if(Config.ALT_GAME_CREATION && _activeMakers.get(manufacturer) != null) // check if busy
 		{
 			player.sendMessage("Manufacturer is busy, please try later.");
 			return;
@@ -163,7 +150,7 @@ public class RecipeController
 		RecipeItemMaker maker;
 
 		// check if already busy (possible in alt mode only)
-		if(Config.ALT_GAME_CREATION && (maker = _activeMakers.get(player)) != null)
+		if(Config.ALT_GAME_CREATION && _activeMakers.get(player) != null)
 		{
 			SystemMessage sm = new SystemMessage(SystemMessageId.S1_S2);
 			sm.addString("You are busy creating ");
@@ -255,7 +242,7 @@ public class RecipeController
 			}
 
 			// validate recipe list
-			if(_recipeList == null || _recipeList.getRecipes().length == 0)
+			if(_recipeList.getRecipes().length == 0)
 			{
 				_player.sendMessage("No such recipe");
 				_player.sendPacket(ActionFailed.STATIC_PACKET);
@@ -278,17 +265,31 @@ public class RecipeController
 			if(_player != _target)
 			{
 				for(L2ManufactureItem temp : _player.getCreateList().getList())
+				{
 					if(temp.getRecipeId() == _recipeList.getId()) // find recipe for item we want manufactured
 					{
 						_price = temp.getCost();
+
+						if(Config.ALT_STOP_CRAFT_ON_ADENA_LIMIT)
+						{
+							if((Integer.MAX_VALUE - _player.getAdena()) < _price)
+							{
+								_target.sendMessage(_player.getName() + " has reached adena limit. Crafting is aborted.");
+								abort();
+								return;
+							}
+						}
+
 						if(_target.getAdena() < _price) // check price
 						{
 							_target.sendPacket(new SystemMessage(SystemMessageId.YOU_NOT_ENOUGH_ADENA));
 							abort();
 							return;
 						}
+
 						break;
 					}
+				}
 			}
 
 			// make temporary items

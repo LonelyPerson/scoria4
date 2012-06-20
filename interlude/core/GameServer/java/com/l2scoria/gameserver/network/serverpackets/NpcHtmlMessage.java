@@ -18,12 +18,12 @@
  */
 package com.l2scoria.gameserver.network.serverpackets;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.cache.HtmCache;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.clientpackets.RequestBypassToServer;
+
+import java.util.logging.Logger;
 
 /**
  * The HTML parser in the client knowns these standard and non-standard tags and attributes<br>
@@ -105,7 +105,7 @@ public class NpcHtmlMessage extends L2GameServerPacket
 		_html = _html.replaceAll(pattern, Integer.toString(value));
 	}
 
-	private final void buildBypassCache(L2PcInstance activeChar)
+	private void buildBypassCache(L2PcInstance activeChar)
 	{
 		if(activeChar == null)
 			return;

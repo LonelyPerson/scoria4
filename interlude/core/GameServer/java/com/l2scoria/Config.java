@@ -2231,6 +2231,7 @@ public final class Config
 	public static double ALT_GAME_CREATION_XP_RATE;
 	public static double ALT_GAME_CREATION_SP_RATE;
 	public static boolean ALT_BLACKSMITH_USE_RECIPES;
+	public static boolean ALT_STOP_CRAFT_ON_ADENA_LIMIT;
 
 	//============================================================
 	public static void loadCraftConfig()
@@ -2253,6 +2254,7 @@ public final class Config
 			ALT_GAME_CREATION_XP_RATE = Double.parseDouble(craftSettings.getProperty("AltGameCreationRateXp", "1"));
 			ALT_GAME_CREATION_SP_RATE = Double.parseDouble(craftSettings.getProperty("AltGameCreationRateSp", "1"));
 			ALT_BLACKSMITH_USE_RECIPES = Boolean.parseBoolean(craftSettings.getProperty("AltBlacksmithUseRecipes", "True"));
+			ALT_STOP_CRAFT_ON_ADENA_LIMIT = Boolean.parseBoolean(craftSettings.getProperty("AltStopCraftOnAdenaLimit", "True"));
 		}
 		catch(Exception e)
 		{
