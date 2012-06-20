@@ -1292,6 +1292,7 @@ public final class Config
 	public static boolean DECREASE_SKILL_LEVEL;
 	public static int DECREASE_SKILL_LEVEL_DIF;
 	public static boolean ALT_ALLOW_ATTACK_NPC;
+	public static boolean ALT_CAN_TRADE_AUGMENT, ALT_CAN_DROP_AUGMENT;
 
 	//============================================================
 	public static void loadAltConfig()
@@ -1419,6 +1420,8 @@ public final class Config
 			ALT_PRIVATE_STORE_DISTANCE = Integer.parseInt(altSettings.getProperty("AltPrivateStoreDist", "10"));
 			ALT_MINION_REMOVE = Boolean.parseBoolean(altSettings.getProperty("AltMinionRemove", "true"));
 			ALT_ALLOW_ATTACK_NPC = Boolean.parseBoolean(altSettings.getProperty("AltAllowAttackNPC", "true"));
+			ALT_CAN_TRADE_AUGMENT = Boolean.parseBoolean(altSettings.getProperty("AltCanTradeAugment", "false"));
+			ALT_CAN_DROP_AUGMENT = Boolean.parseBoolean(altSettings.getProperty("AltCanDropAugment", "false"));
 		}
 		catch(Exception e)
 		{

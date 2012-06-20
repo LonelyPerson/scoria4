@@ -23,7 +23,7 @@ import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 
 /**
  * This class ...
- * 
+ *
  * @version $Revision: 1.4.2.1.2.3 $ $Date: 2005/03/27 15:29:39 $
  */
 public class TradeStart extends L2GameServerPacket
@@ -40,16 +40,18 @@ public class TradeStart extends L2GameServerPacket
 
 	@Override
 	protected final void writeImpl()
-	{//0x2e TradeStart   d h (h dddhh dhhh)
-		if(_activeChar.getActiveTradeList() == null || _activeChar.getActiveTradeList().getPartner() == null)
+	{
+		//0x2e TradeStart   d h (h dddhh dhhh)
+		if (_activeChar.getActiveTradeList() == null || _activeChar.getActiveTradeList().getPartner() == null)
+		{
 			return;
+		}
 
 		writeC(0x1E);
 		writeD(_activeChar.getActiveTradeList().getPartner().getObjectId());
-		//writeD((_activeChar != null || _activeChar.getTransactionRequester() != null)? _activeChar.getTransactionRequester().getObjectId() : 0);
 
 		writeH(_itemList.length);
-		for(L2ItemInstance item : _itemList)//int i = 0; i < count; i++)
+		for (L2ItemInstance item : _itemList)//int i = 0; i < count; i++)
 		{
 			writeH(item.getItem().getType1()); // item type1
 			writeD(item.getObjectId());

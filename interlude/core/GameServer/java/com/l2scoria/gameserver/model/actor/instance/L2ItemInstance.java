@@ -592,7 +592,7 @@ public final class L2ItemInstance extends L2Object
 	 */
 	public boolean isDropable()
 	{
-		return isAugmented() ? false : _item.isDropable();
+		return _item.isDropable()  && (Config.ALT_CAN_DROP_AUGMENT || !isAugmented());
 	}
 
 	/**
@@ -612,7 +612,7 @@ public final class L2ItemInstance extends L2Object
 	 */
 	public boolean isTradeable()
 	{
-		return isAugmented() ? false : _item.isTradeable();
+		return _item.isTradeable() && (Config.ALT_CAN_TRADE_AUGMENT || !isAugmented());
 	}
 
 	/**
