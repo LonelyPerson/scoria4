@@ -40,6 +40,7 @@ public class GeoOptimizer
 			return new File(fileName).exists();
 		}
 
+		@SuppressWarnings("ResultOfMethodCallIgnored")
 		private void saveToFile(BlockLink[] links)
 		{
 			log.info("Saving matches to: " + fileName);
@@ -199,6 +200,7 @@ public class GeoOptimizer
 			}
 		}
 
+		@SuppressWarnings("ResultOfMethodCallIgnored")
 		private void saveToFile()
 		{
 			log.info("Saving checksums to: " + fileName);
@@ -236,7 +238,7 @@ public class GeoOptimizer
 			for (int i = 0; i < GeoEngine.BlocksInMap; i++)
 			{
 				crc32.update(region[i]);
-				_checkSums[i] = (int) (crc32.getValue() ^ 0xFFFFFFFF);
+				_checkSums[i] = (int) (~crc32.getValue());
 				crc32.reset();
 			}
 			checkSums[geoX][geoY] = _checkSums;

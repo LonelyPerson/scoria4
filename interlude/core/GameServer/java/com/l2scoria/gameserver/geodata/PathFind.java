@@ -248,6 +248,7 @@ public class PathFind
 		return result;
 	}
 
+	@SuppressWarnings("LoopStatementThatDoesntLoop")
 	public PathFindBuffers.GeoNode getNeighbour(int x, int y, PathFindBuffers.GeoNode from, boolean d)
 	{
 		int nX = x - buff.offsetX, nY = y - buff.offsetY;
@@ -277,8 +278,9 @@ public class PathFind
 		{
 			weight = Config.WEIGHT1;
 		}
-		else // Цикл только для удобства
+		else
 		{
+			// Цикл только для удобства
 			while (buff.isPlayer || Config.SIMPLE_PATHFIND_FOR_MOBS)
 			{
 				getHeightAndNSWE(x + 1, y, n._z);
