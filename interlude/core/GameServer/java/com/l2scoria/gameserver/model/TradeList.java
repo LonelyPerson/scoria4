@@ -18,12 +18,6 @@
  */
 package com.l2scoria.gameserver.model;
 
-import java.util.List;
-import java.util.logging.Logger;
-
-import javolution.util.FastList;
-import javolution.util.FastSet;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.sql.ItemTable;
 import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
@@ -36,6 +30,11 @@ import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
 import com.l2scoria.gameserver.templates.L2EtcItemType;
 import com.l2scoria.gameserver.templates.L2Item;
 import com.l2scoria.gameserver.util.Util;
+import javolution.util.FastList;
+import javolution.util.FastSet;
+
+import java.util.List;
+import java.util.logging.Logger;
 
 
 public class TradeList
@@ -816,6 +815,7 @@ public class TradeList
 					break;
 				}
 			}
+
 			// item with this objectId and price not found in tradelist
 			if (!found)
 			{

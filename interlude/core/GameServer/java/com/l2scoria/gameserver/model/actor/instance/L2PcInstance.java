@@ -13103,6 +13103,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 	public int GetInventoryLimit()
 	{
 		int ivlim;
+
 		if(isGM())
 		{
 			ivlim = Config.INVENTORY_MAXIMUM_GM;
@@ -13115,8 +13116,8 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		{
 			ivlim = Config.INVENTORY_MAXIMUM_NO_DWARF;
 		}
-		ivlim += (int) getStat().calcStat(Stats.INV_LIM, 0, null, null);
 
+		ivlim += (int) getStat().calcStat(Stats.INV_LIM, 0, null, null);
 		return ivlim;
 	}
 

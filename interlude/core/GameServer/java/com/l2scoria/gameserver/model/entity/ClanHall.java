@@ -18,16 +18,6 @@
  */
 package com.l2scoria.gameserver.model.entity;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.csv.DoorTable;
 import com.l2scoria.gameserver.datatables.sql.ClanTable;
@@ -41,16 +31,25 @@ import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.PledgeShowInfoUpdate;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
-import java.sql.Connection;
 import com.l2scoria.util.database.L2DatabaseFactory;
+import javolution.util.FastList;
+import javolution.util.FastMap;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ClanHall
 {
 	protected static final Logger _log = Logger.getLogger(ClanHall.class.getName());
 
 	private int _clanHallId;
-	private List<L2DoorInstance> _doors = new FastList<L2DoorInstance>();;
-	private List<String> _doorDefault = new FastList<String>();;
+	private List<L2DoorInstance> _doors = new FastList<L2DoorInstance>();
+	private List<String> _doorDefault = new FastList<String>();
 	private String _name;
 	private int _ownerId;
 	private L2Clan _ownerClan;
@@ -83,7 +82,7 @@ public class ClanHall
 		protected int _tempFee;
 		private long _rate;
 		private long _endDate;
-		protected boolean _inDebt;
+		//protected boolean _inDebt;
 
 		public ClanHallFunction(int type, int lvl, int lease, int tempLease, long rate, long time)
 		{
