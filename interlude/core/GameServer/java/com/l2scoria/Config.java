@@ -814,6 +814,10 @@ public final class Config
 	public static String CHAT_FILTER_CHARS;
 	public static String CHAT_FILTER_PUNISHMENT;
 	public static ArrayList<String> FILTER_LIST = new ArrayList<String>();
+        
+        public static boolean USE_TRADE_WORDS_FILTER;
+        public static String TRADE_WORD_FILTER_TEXT;
+        public static ArrayList<String> FILTER_TRADE_LIST = new ArrayList<String>();
 
 	public static int FS_TIME_ATTACK;
 	public static int FS_TIME_COOLDOWN;
@@ -991,6 +995,9 @@ public final class Config
 			CHAT_FILTER_PUNISHMENT = otherSettings.getProperty("ChatFilterPunishment", "off");
 			CHAT_FILTER_PUNISHMENT_PARAM1 = Integer.parseInt(otherSettings.getProperty("ChatFilterPunishmentParam1", "1"));
 			CHAT_FILTER_PUNISHMENT_PARAM2 = Integer.parseInt(otherSettings.getProperty("ChatFilterPunishmentParam2", "1000"));
+                        
+                        USE_TRADE_WORDS_FILTER = Boolean.parseBoolean(otherSettings.getProperty("UseTradeWordsFilter", "false"));
+                        TRADE_WORD_FILTER_TEXT = otherSettings.getProperty("TradeBadWordPunishment", "I`m just a spamer");
 
 			FS_TIME_ATTACK = Integer.parseInt(otherSettings.getProperty("TimeOfAttack", "50"));
 			FS_TIME_COOLDOWN = Integer.parseInt(otherSettings.getProperty("TimeOfCoolDown", "5"));
@@ -4028,6 +4035,32 @@ public final class Config
 			throw new Error("Failed to Load " + FILTER_FILE + " File.");
 		}
 	}
+        
+        public static void loadTradeFilter() 
+        {
+            	final String FILTER_TRADE_FILE = FService.FILTER_TRADE_FILE;
+
+		_log.info("Loading: " + FILTER_TRADE_FILE + ".");
+		try
+		{
+			LineNumberReader lnr = new LineNumberReader(new BufferedReader(new FileReader(new File(FILTER_TRADE_FILE))));
+			String line = null;
+			while((line = lnr.readLine()) != null)
+			{
+				if(line.trim().length() == 0 || line.startsWith("#"))
+				{
+					continue;
+				}
+				FILTER_TRADE_LIST.add(line.trim());
+			}
+			_log.info("Loaded " + FILTER_TRADE_LIST.size() + " Filter Trade title Words.");
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			throw new Error("Failed to Load " + FILTER_TRADE_FILE + " File.");
+		}
+        }
 
 	//============================================================
 	public static ArrayList<String> QUESTION_LIST = new ArrayList<String>();
@@ -4349,6 +4382,10 @@ public final class Config
 			{
 				loadFilter();
 			}
+                        if(Config.USE_TRADE_WORDS_FILTER) 
+                        {
+                                loadTradeFilter();
+                        }
 			if(Config.BOT_PROTECTOR)
 			{
 				loadQuestion();

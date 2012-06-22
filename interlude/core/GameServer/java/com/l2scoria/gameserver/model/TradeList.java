@@ -167,7 +167,26 @@ public class TradeList
 
 	public void setTitle(String title)
 	{
+            if(Config.USE_TRADE_WORDS_FILTER && !title.isEmpty()) 
+            {
+                boolean isBadTradeTitle = false;
+                for(String pattern : Config.FILTER_TRADE_LIST)
+                {
+                    if(title.toLowerCase().matches("(?i)."+pattern)) {
+                        isBadTradeTitle = true;
+                    }
+                }
+                if(isBadTradeTitle) {
+                    _title = Config.TRADE_WORD_FILTER_TEXT;
+                } else {
+                    _title = title;
+                }
+
+            } 
+            else 
+            {
 		_title = title;
+            }
 	}
 
 	public String getTitle()
