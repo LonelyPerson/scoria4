@@ -386,6 +386,7 @@ public abstract class L2Skill
 	private final boolean _magic;
 	private final boolean _staticReuse;
 	private final boolean _staticHitTime;
+        private final boolean _ignoreShld;
 	private final int _mpConsume;
 	private final int _mpInitialConsume;
 	private final int _hpConsume;
@@ -504,6 +505,7 @@ public abstract class L2Skill
 		_name = set.getString("name");
 		_operateType = set.getEnum("operateType", SkillOpType.class);
 		_magic = set.getBool("isMagic", false);
+                _ignoreShld = set.getBool("ignoreShld", false);
 		_staticReuse = set.getBool("staticReuse", false);
 		_staticHitTime = set.getBool("staticHitTime", false);
 		_ispotion = set.getBool("isPotion", false);
@@ -963,6 +965,14 @@ public abstract class L2Skill
 	{
 		return _level;
 	}
+        
+        /**
+         * @return Returns is ignore Shield defence
+         */
+        public final boolean isIgnoreShld() 
+        {
+            return _ignoreShld;
+        }
 
 	/**
 	 * @return Returns the magic.
@@ -1325,6 +1335,7 @@ public abstract class L2Skill
 		{
 			mask |= activeChar.getSecondaryWeaponItem().getItemType().mask();
 		}
+                System.out.println("Mask equip: "+mask);
 
 		return (mask & weaponsAllowed) != 0;
 

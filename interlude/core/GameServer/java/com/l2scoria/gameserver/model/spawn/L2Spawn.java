@@ -23,6 +23,7 @@ import com.l2scoria.gameserver.datatables.sql.TerritoryTable;
 import com.l2scoria.gameserver.geodata.GeoEngine;
 import com.l2scoria.gameserver.idfactory.IdFactory;
 import com.l2scoria.gameserver.model.L2Object;
+import com.l2scoria.gameserver.model.actor.instance.L2ChestInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2MonsterInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2NpcInstance;
 import com.l2scoria.gameserver.model.quest.Quest;
@@ -557,10 +558,16 @@ public class L2Spawn
 			// The L2NpcInstance is spawned at the exact position (Lox, Locy, Locz)
 			newlocx = getLocx();
 			newlocy = getLocy();
-
-			if (Config.GEODATA && mob instanceof L2MonsterInstance)
+			if (Config.GEODATA && ((mob instanceof  L2MonsterInstance) || (mob instanceof  L2ChestInstance)))
 			{
-				newlocz = GeoEngine.getHeight(newlocx, newlocy, getLocz());
+                            newlocz = GeoEngine.getHeight(newlocx, newlocy, getLocz());
+                                /*int geolocz = GeoEngine.getHeight(newlocx, newlocy, getLocz());
+                                if(Math.abs(getLocz() - geolocz) < 100) 
+                                {
+                                    newlocz = geolocz;
+                                } else {
+                                    newlocz = getLocz();
+                                } */
 			}
 			else
 			{
@@ -569,7 +576,7 @@ public class L2Spawn
 
 			if(Math.abs(getLocz() - newlocz) > 100)
 			{
-				_log.warning("Spawn incorrect Z: ID[" + _template.npcId + "], origZ: " + getLocz() + ", geoZ: " + newlocz);
+                                _log.warning("Bad Z-spawn. MobId: ["+mob.getNpcId()+"]. ObjectId: ["+mob.getObjectId()+". dbZ: "+getLocz()+", geoZ: "+newlocz);
 			}
 		}
 

@@ -35,6 +35,7 @@ import com.l2scoria.util.random.Rnd;
 import java.util.concurrent.Future;
 
 import static com.l2scoria.gameserver.ai.CtrlIntention.*;
+import java.util.logging.Level;
 
 /**
  * This class manages AI of L2Attackable.<BR>
@@ -54,6 +55,7 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable
 
 	/** The delay after wich the attacked is stopped */
 	private int _attackTimeout;
+        private int _attackInteractions = 0;
 
 	/** The L2Attackable aggro counter */
 	private int _globalAggro;
@@ -76,7 +78,7 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable
 		super(accessor);
 
 		_selfAnalysis.init();
-		_attackTimeout = Integer.MAX_VALUE;
+		_attackTimeout = 300;
 		_globalAggro = -10; // 10 seconds timeout of ATTACK after respawn
 	}
 
@@ -613,6 +615,10 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable
 
 				if (!npc.isInsideRadius(x1, y1, Config.MAX_DRIFT_RANGE, false))
 				{
+                                        if(Config.ON_DRIFT_MAX_RANGE_TELEPORT)
+                                        {
+                                            npc.teleToLocation(x1, y1, z1);
+                                        }
 					npc.setisReturningToSpawnPoint(true);
 				}
 				else
@@ -654,6 +660,27 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable
 	{
 		if (_actor.isCastingNow())
 			return;
+             
+                if(Config.MAX_FOLLOW_DRIFT_RANGE > 0)
+                {
+                    L2Attackable npc = (L2Attackable) _actor;
+                    if(npc instanceof L2MonsterInstance || npc instanceof L2RaidBossInstance)
+                    {
+                        int x1,y1,z1;
+                        _actor.setTarget(_actor);
+                        clientStopMoving(null);
+                        x1 = npc.getSpawn().getLocx();
+			y1 = npc.getSpawn().getLocy();
+			z1 = npc.getSpawn().getLocz();
+
+				if (!npc.isInsideRadius(x1, y1, Config.MAX_FOLLOW_DRIFT_RANGE, false))
+				{
+                                        npc.teleToLocation(x1, y1, z1);
+					npc.setisReturningToSpawnPoint(true);
+				}
+                        
+                    }
+                }
 
 		if(_attackTimeout < GameTimeController.getGameTicks())
 		{
@@ -665,6 +692,7 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable
 
 				// Calculate a new attack timeout
 				_attackTimeout = MAX_ATTACK_TIMEOUT + GameTimeController.getGameTicks();
+                                _log.warning("Set thinkAttack() timeout and walk. Timer:"+_attackTimeout+".Current:"+GameTimeController.getGameTicks());
 			}
 		}
 

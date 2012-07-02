@@ -112,6 +112,8 @@ public final class Config
 	public static int COORD_SYNCHRONIZE;
 	public static int DELETE_DAYS;
 	public static int MAX_DRIFT_RANGE;
+        public static int MAX_FOLLOW_DRIFT_RANGE;
+        public static boolean ON_DRIFT_MAX_RANGE_TELEPORT;
 	public static boolean ALLOWFISHING;
 	public static boolean ALLOW_MANOR;
 	public static int AUTODESTROY_ITEM_AFTER;
@@ -235,6 +237,8 @@ public final class Config
 			ZONE_TOWN = Integer.parseInt(optionsSettings.getProperty("ZoneTown", "0"));
 
 			MAX_DRIFT_RANGE = Integer.parseInt(optionsSettings.getProperty("MaxDriftRange", "300"));
+                        MAX_FOLLOW_DRIFT_RANGE = Integer.parseInt(optionsSettings.getProperty("MaxFollowDriftRage", "2000"));
+                        ON_DRIFT_MAX_RANGE_TELEPORT = Boolean.parseBoolean(optionsSettings.getProperty("OnFreeWallDriftMonsterTeleport", "false"));
 
 			MIN_NPC_ANIMATION = Integer.parseInt(optionsSettings.getProperty("MinNPCAnimation", "10"));
 			MAX_NPC_ANIMATION = Integer.parseInt(optionsSettings.getProperty("MaxNPCAnimation", "20"));

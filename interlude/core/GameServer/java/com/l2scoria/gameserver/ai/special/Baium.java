@@ -231,7 +231,7 @@ public class Baium extends Quest
 		}
 		if(npcId == STONE_BAIUM && GrandBossManager.getInstance().getBossStatus(LIVE_BAIUM) == ASLEEP)
 		{
-			if(_Zone.isPlayerAllowed(player))
+			if(_Zone.isPlayerAllowed(player) && player.getQuestState("baium").getQuestItemsCount(4295) > 0)
 			{
 				// once Baium is awaken, no more people may enter until he dies, the server reboots, or 
 				// 30 minutes pass with no attacks made against Baium.
@@ -290,8 +290,8 @@ public class Baium extends Quest
 				{
 					//print "Player "+player.getName()+" attempted to enter Baium's lair while flying!";
 					htmltext = "<html><body>Angelic Vortex:<br>You may not enter while flying a wyvern</body></html>";
-				}
-				else if(player.getQuestState("baium").getQuestItemsCount(4295) > 0) // bloody fabric
+				}                                
+				else if(player.getQuestState("baium") != null && player.getQuestState("baium").getQuestItemsCount(4295) > 0) // bloody fabric
 				{
 					player.getQuestState("baium").takeItems(4295, 1);
 					// allow entry for the player for the next 30 secs (more than enough time for the TP to happen)

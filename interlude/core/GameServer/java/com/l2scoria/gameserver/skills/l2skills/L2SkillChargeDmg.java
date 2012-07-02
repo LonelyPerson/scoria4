@@ -120,7 +120,10 @@ public class L2SkillChargeDmg extends L2Skill
 			// like in doAttackHitByDual which in fact does the calcPhysDam call twice
 
 			//boolean dual  = caster.isUsingDualWeapon();
-			boolean shld = Formulas.getInstance().calcShldUse(caster, target);
+                        boolean shld = false;
+                        if(!this.isIgnoreShld()) {
+                            shld = Formulas.getInstance().calcShldUse(caster, target);
+                        }
 			boolean crit = Formulas.getInstance().calcCrit(caster.getCriticalHit(target, this));
 			boolean soul = weapon != null && weapon.getChargedSoulshot() == L2ItemInstance.CHARGED_SOULSHOT && weapon.getItemType() != L2WeaponType.DAGGER;
 

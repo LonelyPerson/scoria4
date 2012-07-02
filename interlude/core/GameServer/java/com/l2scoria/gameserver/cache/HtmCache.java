@@ -60,7 +60,12 @@ public class HtmCache
 
 	public HtmCache()
 	{
+            try {
 		ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(new CleaneCache(), 30*60000, 30*60000);
+            } catch(Exception e) {
+                _log.warning("Error in HtmCache() main method");
+                //System.exit(1);
+            }
 		_cache = new FastMap<Integer, String>();
 		reload();
 	}
@@ -293,7 +298,8 @@ public class HtmCache
 
 	public String getHtm(String path)
 	{
-		String content = _cache.get(path.hashCode());
+            try {
+                String content = _cache.get(path.hashCode());
 
 		if(Config.LAZY_CACHE && content == null)
 		{
@@ -301,6 +307,9 @@ public class HtmCache
 		}
 
 		return content;
+            } catch(Exception f) {
+            return "Error";
+            }
 	}
 
 	public boolean contains(String path)

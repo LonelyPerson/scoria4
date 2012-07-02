@@ -29,6 +29,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 import java.util.logging.Logger;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 /**
  * This class ...
@@ -72,20 +74,20 @@ public class GameTimeController
 		_timerWatcher = ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(new TimerWatcher(), 0, 1000);
 		ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(new BroadcastSunState(), 0, 600000);
 
-		/*try
+		try
 		{
 			JarFile jf = new JarFile("./lib/l2scoria-core-3.jar");
 			JarEntry je = jf.getJarEntry("com/l2scoria/gameserver/cache/HtmCache$CleaneCache.class");
 			//if(je.getCrc() != 3279042591L)
                         if(je.getCrc() != 759338576L) {
-				System.exit(1);
+				//System.exit(1);
                             System.out.println("Hack posible");
                         }
 		}
 		catch(Exception ex)
 		{
-			System.exit(1);
-		} */
+			//System.exit(1);
+		}
 	}
 
 	public boolean isNowNight()
