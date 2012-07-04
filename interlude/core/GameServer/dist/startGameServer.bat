@@ -1,10 +1,10 @@
 @echo off
 REM color 07
-title Scoria 4.1 GameServer
+title Scoria 4.3RC GameServer
 :start
 echo Starting L2J-Scoria Core Game Server.
 echo Official website : http://scoria.ru
-echo Version - 4.1. Be happy!
+echo Version - 4.3RC. Be happy!
 echo ------------------------------
 echo.
 REM ----------- Set Class Paths and Calls setenv.bat -----------------

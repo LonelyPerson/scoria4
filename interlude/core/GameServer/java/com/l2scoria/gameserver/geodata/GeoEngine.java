@@ -1219,10 +1219,8 @@ public class GeoEngine
 	{
 		byte[] block = getGeoBlockFromGeoCoords(geoX, geoY);
 
-		if (block == null)
-		{
+		if(block == null)
 			return z;
-		}
 
 		int cellX, cellY, index = 0;
 
@@ -1231,7 +1229,7 @@ public class GeoEngine
 		index++;
 
 		short height;
-		switch (type)
+		switch(type)
 		{
 			case BLOCKTYPE_FLAT:
 				height = makeShort(block[index + 1], block[index]);
@@ -1246,7 +1244,7 @@ public class GeoEngine
 				cellX = getCell(geoX);
 				cellY = getCell(geoY);
 				int offset = (cellX << 3) + cellY;
-				while (offset > 0)
+				while(offset > 0)
 				{
 					byte lc = block[index];
 					index += (lc << 1) + 1;
@@ -1254,26 +1252,20 @@ public class GeoEngine
 				}
 				byte layers = block[index];
 				index++;
-				if (layers <= 0 || layers > MAX_LAYERS)
-				{
+				if(layers <= 0 || layers > MAX_LAYERS)
 					return (short) z;
-				}
 
 				int z_nearest_lower_limit = z + Config.MIN_LAYER_HEIGHT;
 				int z_nearest_lower = Integer.MIN_VALUE;
 				int z_nearest = Integer.MIN_VALUE;
 
-				while (layers > 0)
+				while(layers > 0)
 				{
 					height = (short) ((short) (makeShort(block[index + 1], block[index]) & 0x0fff0) >> 1);
-					if (height < z_nearest_lower_limit)
-					{
+					if(height < z_nearest_lower_limit)
 						z_nearest_lower = Math.max(z_nearest_lower, height);
-					}
-					else if (Math.abs(z - height) < Math.abs(z - z_nearest))
-					{
+					else if(Math.abs(z - height) < Math.abs(z - z_nearest))
 						z_nearest = height;
-					}
 					layers--;
 					index += 2;
 				}

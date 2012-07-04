@@ -692,7 +692,6 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable
 
 				// Calculate a new attack timeout
 				_attackTimeout = MAX_ATTACK_TIMEOUT + GameTimeController.getGameTicks();
-                                _log.warning("Set thinkAttack() timeout and walk. Timer:"+_attackTimeout+".Current:"+GameTimeController.getGameTicks());
 			}
 		}
 

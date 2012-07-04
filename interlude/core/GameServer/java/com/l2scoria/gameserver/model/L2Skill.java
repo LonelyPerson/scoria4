@@ -1206,6 +1206,15 @@ public abstract class L2Skill
 	{
 		return _isHeroSkill;
 	}
+        
+        public final boolean isLifeStoneSkill()
+        {
+            if(this.getId() >= 3080 && this.getId() <= 3259) 
+            {
+                return true;
+            }
+            return false;
+        }
 
 	public final int getNumCharges()
 	{

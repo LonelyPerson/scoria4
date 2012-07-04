@@ -2877,6 +2877,7 @@ public final class Config
 	public static boolean ALT_OLY_RESET_SKILL_REUSE;
 	public static boolean ALT_OLY_ALLOW_SAME_IP;
 	public static boolean ALT_OLY_ALLOW_SAME_HWID;
+        public static boolean ALT_OLY_DENY_LS_SKILLS;
 	public static String ALT_OLY_RESTRICTED_ITEMS;
 	public static int ALT_OLY_MAX_NOBLE_LIST;
 	public static List<Integer> LIST_OLY_RESTRICTED_ITEMS = new FastList<Integer>();
@@ -2921,6 +2922,7 @@ public final class Config
 			ALT_OLY_RESET_SKILL_REUSE = Boolean.parseBoolean(OLYMPSetting.getProperty("AltOlyRestSkillReuse", "true"));
 			ALT_OLY_ALLOW_SAME_IP = Boolean.parseBoolean(OLYMPSetting.getProperty("AltOlySameIP", "false"));
 			ALT_OLY_ALLOW_SAME_HWID = Boolean.parseBoolean(OLYMPSetting.getProperty("AltOlySameHwid", "false"));
+                        ALT_OLY_DENY_LS_SKILLS = Boolean.parseBoolean(OLYMPSetting.getProperty("AltOlyDenyLifeStoneSkill", "false"));
 			ALT_OLY_MAX_NOBLE_LIST = Integer.parseInt(OLYMPSetting.getProperty("AltOlyMaxNobleInList", "100"));
 			LIST_OLY_RESTRICTED_ITEMS = new FastList<Integer>();
 			for(String id : ALT_OLY_RESTRICTED_ITEMS.split(","))

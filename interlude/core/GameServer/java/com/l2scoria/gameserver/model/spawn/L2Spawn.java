@@ -560,21 +560,14 @@ public class L2Spawn
 			newlocy = getLocy();
 			if (Config.GEODATA && ((mob instanceof  L2MonsterInstance) || (mob instanceof  L2ChestInstance)))
 			{
-                            newlocz = GeoEngine.getHeight(newlocx, newlocy, getLocz());
-                                /*int geolocz = GeoEngine.getHeight(newlocx, newlocy, getLocz());
-                                if(Math.abs(getLocz() - geolocz) < 100) 
-                                {
-                                    newlocz = geolocz;
-                                } else {
-                                    newlocz = getLocz();
-                                } */
+                                newlocz = GeoEngine.getHeight(newlocx, newlocy, getLocz());
 			}
 			else
 			{
 				newlocz = getLocz();
 			}
 
-			if(Math.abs(getLocz() - newlocz) > 100)
+			if(Config.DEVELOPER && Math.abs(getLocz() - newlocz) > 100)
 			{
                                 _log.warning("Bad Z-spawn. MobId: ["+mob.getNpcId()+"]. ObjectId: ["+mob.getObjectId()+". dbZ: "+getLocz()+", geoZ: "+newlocz);
 			}

@@ -116,7 +116,7 @@ public final class Logout extends L2GameClientPacket
 
 		if(player.isOnline() == 1 && L2World.getInstance().getPlayer(player.getName()) != null)
 		{
-			if((player.isInStoreMode() && Config.OFFLINE_TRADE_ENABLE) || (player.isInCraftMode() && Config.OFFLINE_CRAFT_ENABLE) && player.getLevel() >= Config.OFFLINE_MIN_LEVEL)
+			if(player.getLevel() >= Config.OFFLINE_MIN_LEVEL && (player.isInStoreMode() && Config.OFFLINE_TRADE_ENABLE) || (player.isInCraftMode() && Config.OFFLINE_CRAFT_ENABLE))
 			{
 				try
 				{

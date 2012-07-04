@@ -59,7 +59,8 @@ public class AdminMenu implements IAdminCommandHandler
 			"admin_kick_menu",
 			"admin_kill_menu",
 			"admin_ban_menu",
-			"admin_unban_menu"
+			"admin_unban_menu",
+                        "admin_hwid_ban"
 	};
 	
 	private static final Logger _logAudit = Logger.getLogger("gmaudit");
@@ -210,6 +211,24 @@ public class AdminMenu implements IAdminCommandHandler
 				//ignore
 			}
 		}
+                else if(command.startsWith("admin_hwid_ban"))
+                {
+                    try
+                    {
+                        String targetName = command.substring(15);
+                        L2PcInstance player = L2World.getInstance().getPlayer(targetName);
+                        String hwid = player.getClient().getHWId();
+                        if(hwid != null && hwid.length() > 0)
+                        {
+                            player.sendMessage("Admin recived you HWID information: "+hwid);
+                            System.out.println("GETTING HWID INFORMATION: "+hwid);
+                        }
+                    }
+                    catch(StringIndexOutOfBoundsException e)
+                    {
+                        //ignore
+                    }
+                }
 		else if(command.equals("admin_kill_menu"))
 		{
 			handleKill(activeChar);
