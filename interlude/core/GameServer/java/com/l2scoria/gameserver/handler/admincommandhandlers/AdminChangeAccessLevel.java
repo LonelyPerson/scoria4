@@ -75,7 +75,10 @@ public class AdminChangeAccessLevel implements IAdminCommandHandler
 			if(activeChar.getTarget() instanceof L2PcInstance)
 			{
 				((L2PcInstance) activeChar.getTarget()).setAccessLevel(lvl);
-                                ((L2PcInstance) activeChar.getTarget()).closeNetConnection();
+                                if(lvl < 0) 
+                                {
+                                    ((L2PcInstance) activeChar.getTarget()).closeNetConnection();
+                                }
 				activeChar.sendMessage("You have changed the access level of player " + activeChar.getTarget().getName() + " to " + lvl + " .");
 			}
 		}
@@ -88,7 +91,10 @@ public class AdminChangeAccessLevel implements IAdminCommandHandler
 			if(player != null)
 			{
 				player.setAccessLevel(lvl);
-                                player.closeNetConnection();
+                                if(lvl < 0) 
+                                {
+                                    ((L2PcInstance) activeChar.getTarget()).closeNetConnection();
+                                }
 				activeChar.sendMessage("You have changed the access level of player " + activeChar.getTarget().getName() + " to " + lvl + " .");
 			}
 		}
