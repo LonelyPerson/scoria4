@@ -663,22 +663,25 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable
              
                 if(Config.MAX_FOLLOW_DRIFT_RANGE > 0)
                 {
-                    L2Attackable npc = (L2Attackable) _actor;
-                    if(npc instanceof L2MonsterInstance || npc instanceof L2RaidBossInstance)
-                    {
-                        int x1,y1,z1;
-                        _actor.setTarget(_actor);
-                        clientStopMoving(null);
-                        x1 = npc.getSpawn().getLocx();
-			y1 = npc.getSpawn().getLocy();
-			z1 = npc.getSpawn().getLocz();
+                    try {
+                        L2Attackable npc = (L2Attackable) _actor;
+                        if(npc instanceof L2MonsterInstance || npc instanceof L2RaidBossInstance)
+                        {
+                            int x1,y1,z1;
+                            _actor.setTarget(_actor);
+                            clientStopMoving(null);
+                            x1 = npc.getSpawn().getLocx();
+                            y1 = npc.getSpawn().getLocy();
+                            z1 = npc.getSpawn().getLocz();
 
-				if (!npc.isInsideRadius(x1, y1, Config.MAX_FOLLOW_DRIFT_RANGE, false))
-				{
-                                        npc.teleToLocation(x1, y1, z1);
-					npc.setisReturningToSpawnPoint(true);
-				}
-                        
+                                    if (!npc.isInsideRadius(x1, y1, Config.MAX_FOLLOW_DRIFT_RANGE, false))
+                                    {
+                                            npc.teleToLocation(x1, y1, z1);
+                                            npc.setisReturningToSpawnPoint(true);
+                                    }
+
+                        }
+                    } catch(Exception e) {
                     }
                 }
 

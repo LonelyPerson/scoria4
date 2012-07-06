@@ -81,6 +81,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -148,14 +149,12 @@ public class GameServer
 			{
 				ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(DeadlockDetector.getInstance(), Config.DEADLOCKCHECK_INTIAL_TIME, Config.DEADLOCKCHECK_DELAY_TIME);
 			}
-                        /*
+                        
 			if (!Arrays.equals(Util.securityCrypt(Config.USER_NAME), Util.getHash()))
 			{
 				System.out.println("UserName is wrong.");
 				throw new Exception("UserName is wrong.");
 			}
-                        * 
-                        */
 
 			new File(Config.DATAPACK_ROOT, "data/clans").mkdirs();
 			new File(Config.DATAPACK_ROOT, "data/crests").mkdirs();

@@ -1344,7 +1344,6 @@ public abstract class L2Skill
 		{
 			mask |= activeChar.getSecondaryWeaponItem().getItemType().mask();
 		}
-                System.out.println("Mask equip: "+mask);
 
 		return (mask & weaponsAllowed) != 0;
 
