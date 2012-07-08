@@ -318,6 +318,7 @@ public class BW extends FunEvent
 				player._eventName = "";
 				player._eventTeamId = 0;
 				player._eventCountKills = 0;
+                                player.atEvent = false;
 				if (player.isDead())
 					player.doRevive();
 				player.getStatus().setCurrentHp(player.getMaxHp());

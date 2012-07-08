@@ -33,6 +33,7 @@ public class CharMoveToLocation extends L2GameServerPacket
 
 	public CharMoveToLocation(L2Character cha)
 	{
+                cha.abortAttack();
 		_charObjId = cha.getObjectId();
 		_x = cha.getX();
 		_y = cha.getY();
