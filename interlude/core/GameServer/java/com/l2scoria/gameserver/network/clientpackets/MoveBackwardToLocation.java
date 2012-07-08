@@ -135,6 +135,7 @@ public class MoveBackwardToLocation extends L2GameClientPacket
 		}
 		else
 		{
+                        activeChar.abortAttack();
 			double dx = _targetX - _curX;
 			double dy = _targetY - _curY;
 
