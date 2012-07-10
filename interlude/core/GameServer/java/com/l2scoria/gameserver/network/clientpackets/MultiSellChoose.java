@@ -240,7 +240,7 @@ public class MultiSellChoose extends L2GameClientPacket
 			{
 				for(MultiSellIngredient a : entry.getProducts())
 				{
-					if(player.GetInventoryLimit() < inv.getSize() + _amount && !ItemTable.getInstance().createDummyItem(a.getItemId()).isStackable())
+					if((player.GetInventoryLimit() < inv.getSize() + (_amount*a.getItemCount())) && !ItemTable.getInstance().createDummyItem(a.getItemId()).isStackable())
 					{
 						player.sendPacket(new SystemMessage(SystemMessageId.SLOTS_FULL));
 						return;
@@ -250,6 +250,7 @@ public class MultiSellChoose extends L2GameClientPacket
 						player.sendPacket(new SystemMessage(SystemMessageId.SLOTS_FULL));
 						return;
 					}
+                                        System.out.println("Production count: "+_amount+".Production mul: "+a.getItemCount());
 				}
 				L2ItemInstance itemToTake = inv.getItemByItemId(e.getItemId()); // initialize and initial guess for the item to take.
 

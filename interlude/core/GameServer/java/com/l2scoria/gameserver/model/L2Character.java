@@ -7821,7 +7821,10 @@ public abstract class L2Character extends L2Object
 		}
 		catch(Exception e)
 		{
+                    if(Config.DEVELOPER) 
+                    {
 			_log.log(Level.WARNING, "", e);
+                    }
 		}
 	}
 

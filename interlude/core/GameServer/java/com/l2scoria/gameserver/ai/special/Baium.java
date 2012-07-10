@@ -72,6 +72,7 @@ public class Baium extends Quest
 		{ 115792, 16608, 10080, 0 },
 	};
 	List<L2Attackable> Minions = new FastList<L2Attackable>();
+        List<L2PcInstance> playerQuestEntered = new FastList<L2PcInstance>();
 	
 	private static long _LastAttackVsBaiumTime = 0;
 	private static L2BossZone _Zone;
@@ -231,7 +232,7 @@ public class Baium extends Quest
 		}
 		if(npcId == STONE_BAIUM && GrandBossManager.getInstance().getBossStatus(LIVE_BAIUM) == ASLEEP)
 		{
-			if(_Zone.isPlayerAllowed(player) && player.getQuestState("baium").getQuestItemsCount(4295) > 0)
+			if(_Zone.isPlayerAllowed(player) && player.getQuestState("baium") != null && playerQuestEntered.contains(player))
 			{
 				// once Baium is awaken, no more people may enter until he dies, the server reboots, or 
 				// 30 minutes pass with no attacks made against Baium.
@@ -294,6 +295,8 @@ public class Baium extends Quest
 				else if(player.getQuestState("baium") != null && player.getQuestState("baium").getQuestItemsCount(4295) > 0) // bloody fabric
 				{
 					player.getQuestState("baium").takeItems(4295, 1);
+                                        // BUG FIX HERE
+                                        playerQuestEntered.add(player);
 					// allow entry for the player for the next 30 secs (more than enough time for the TP to happen)
 					// Note: this just means 30secs to get in, no limits on how long it takes before we get out.
 					_Zone.allowPlayerEntry(player, 30);
@@ -388,6 +391,7 @@ public class Baium extends Quest
 		{
 			angel.deleteMe();
 		}
+                playerQuestEntered.clear();
 		return super.onKill(npc, killer, isPet);
 	}
 

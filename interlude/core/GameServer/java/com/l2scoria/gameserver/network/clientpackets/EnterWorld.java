@@ -29,10 +29,8 @@ import com.l2scoria.gameserver.datatables.csv.MapRegionTable;
 import com.l2scoria.gameserver.datatables.sql.AdminCommandAccessRights;
 import com.l2scoria.gameserver.handler.custom.CustomWorldHandler;
 import com.l2scoria.gameserver.managers.*;
-import com.l2scoria.gameserver.model.L2Character;
-import com.l2scoria.gameserver.model.L2Clan;
-import com.l2scoria.gameserver.model.L2Effect;
-import com.l2scoria.gameserver.model.L2World;
+import com.l2scoria.gameserver.model.*;
+import com.l2scoria.gameserver.model.L2Skill.SkillType;
 import com.l2scoria.gameserver.model.actor.instance.L2ClassMasterInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
@@ -173,6 +171,10 @@ public class EnterWorld extends L2GameClientPacket
 					activeChar.stopEffects(L2Effect.EffectType.COMBAT_POINT_HEAL_OVER_TIME);
 					activeChar.removeEffect(e);
 				}
+                                if (e.getSkill().getSkillType() == SkillType.FORCE_BUFF) 
+                                {
+                                    activeChar.removeEffect(e);
+                                }
 			}
 		}
 
