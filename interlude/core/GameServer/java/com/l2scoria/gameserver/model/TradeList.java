@@ -172,7 +172,7 @@ public class TradeList
                 boolean isBadTradeTitle = false;
                 for(String pattern : Config.FILTER_TRADE_LIST)
                 {
-                    if(title.toLowerCase().matches("(?i)."+pattern)) {
+                    if(title.toLowerCase().matches(".*"+pattern+".*")) {
                         isBadTradeTitle = true;
                     }
                 }
