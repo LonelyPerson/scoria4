@@ -16,7 +16,7 @@ package com.l2scoria.gameserver.ai;
 
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.GameTimeController;
-import com.l2scoria.gameserver.geodata.GeoEngine;
+import com.l2scoria.gameserver.geo.GeoData;
 import com.l2scoria.gameserver.model.*;
 import com.l2scoria.gameserver.model.L2Skill.SkillType;
 import com.l2scoria.gameserver.model.actor.instance.*;
@@ -166,7 +166,7 @@ public class L2FortSiegeGuardAI extends L2CharacterAI implements Runnable
 				return false;
 		}
 		// Los Check Here
-		return _actor.isAutoAttackable(target) && GeoEngine.canSeeTarget(_actor, target, false);
+		return _actor.isAutoAttackable(target) && GeoData.getInstance().canSeeTarget(_actor, target);
 
 	}
 
@@ -492,7 +492,7 @@ public class L2FortSiegeGuardAI extends L2CharacterAI implements Runnable
 							{
 								continue;
 							}
-							if(!GeoEngine.canSeeTarget(_actor, cha, false))
+							if(!GeoData.getInstance().canSeeTarget(_actor, cha))
 							{
 								break;
 							}
@@ -522,7 +522,7 @@ public class L2FortSiegeGuardAI extends L2CharacterAI implements Runnable
 				//&& _actor.getAttackByList().contains(getAttackTarget())
 				&& (npc.getAI()._intention == CtrlIntention.AI_INTENTION_IDLE || npc.getAI()._intention == CtrlIntention.AI_INTENTION_ACTIVE)
 				//limiting aggro for siege guards
-				&& target.isInsideRadius(npc, 1500, true, false) && GeoEngine.canSeeTarget(npc, target, false))
+				&& target.isInsideRadius(npc, 1500, true, false) && GeoData.getInstance().canSeeTarget(npc, target))
 				{
 					// Notify the L2Object AI with EVT_AGGRESSION
 					npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, getAttackTarget(), 1);
@@ -550,7 +550,7 @@ public class L2FortSiegeGuardAI extends L2CharacterAI implements Runnable
 						{
 							continue;
 						}
-						if(!GeoEngine.canSeeTarget(_actor, npc, false))
+						if(!GeoData.getInstance().canSeeTarget(_actor, npc))
 						{
 							break;
 						}
@@ -606,7 +606,7 @@ public class L2FortSiegeGuardAI extends L2CharacterAI implements Runnable
 			return;
 		}
 
-		if(!GeoEngine.canSeeTarget(_actor, attackTarget, false))
+		if(!GeoData.getInstance().canSeeTarget(_actor, attackTarget))
 		{
 			// Siege guards differ from normal mobs currently:
 			// If target cannot seen, don't attack any more

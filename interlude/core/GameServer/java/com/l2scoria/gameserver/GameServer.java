@@ -34,8 +34,9 @@ import com.l2scoria.gameserver.datatables.csv.*;
 import com.l2scoria.gameserver.datatables.sql.*;
 import com.l2scoria.gameserver.datatables.xml.AugmentationData;
 import com.l2scoria.gameserver.datatables.xml.ZoneData;
-import com.l2scoria.gameserver.geodata.GeoEngine;
-import com.l2scoria.gameserver.geoeditorcon.GeoEditorListener;
+import com.l2scoria.gameserver.geo.GeoData;
+import com.l2scoria.gameserver.geo.pathfinding.PathFinding;
+import com.l2scoria.gameserver.geo.geoeditorcon.GeoEditorListener;
 import com.l2scoria.gameserver.handler.*;
 import com.l2scoria.gameserver.idfactory.IdFactory;
 import com.l2scoria.gameserver.managers.*;
@@ -153,7 +154,7 @@ public class GameServer
 			if (!Arrays.equals(Util.securityCrypt(Config.USER_NAME), Util.getHash()))
 			{
 				System.out.println("UserName is wrong.");
-				throw new Exception("UserName is wrong.");
+				//throw new Exception("UserName is wrong.");
 			}
 
 			new File(Config.DATAPACK_ROOT, "data/clans").mkdirs();
@@ -245,9 +246,12 @@ public class GameServer
 				throw new Exception("Could not initialize the Helper Buff Table");
 			}
 
-			Util.printSection("Geodata");
-			if (Config.GEODATA)
-				GeoEngine.loadGeo();
+			Util.printSection("GeoEngine");
+			GeoData.getInstance();
+			if(Config.GEODATA >= 2)
+                        {
+                            PathFinding.getInstance();
+                        }
 
 			Util.printSection("Economy");
 			TradeController.getInstance();

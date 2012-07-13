@@ -250,7 +250,6 @@ public class MultiSellChoose extends L2GameClientPacket
 						player.sendPacket(new SystemMessage(SystemMessageId.SLOTS_FULL));
 						return;
 					}
-                                        System.out.println("Production count: "+_amount+".Production mul: "+a.getItemCount());
 				}
 				L2ItemInstance itemToTake = inv.getItemByItemId(e.getItemId()); // initialize and initial guess for the item to take.
 

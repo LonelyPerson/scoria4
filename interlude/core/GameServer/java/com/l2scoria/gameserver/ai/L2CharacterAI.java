@@ -759,7 +759,7 @@ public class L2CharacterAI extends AbstractAI
 		// Launch an explore task if necessary
 		if(_accessor.getActor() instanceof L2PcInstance)
 		{
-			_accessor.getActor().revalidateZone(true);
+			((L2PcInstance) _accessor.getActor()).revalidateZone(true);
 		}
 		else
 		{

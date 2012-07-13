@@ -15,7 +15,7 @@
 package com.l2scoria.gameserver.skills.effects;
 
 import com.l2scoria.Config;
-import com.l2scoria.gameserver.geodata.GeoEngine;
+import com.l2scoria.gameserver.geo.GeoData;
 import com.l2scoria.gameserver.model.L2Effect;
 import com.l2scoria.gameserver.model.Location;
 import com.l2scoria.gameserver.network.serverpackets.FlyToLocation;
@@ -79,9 +79,9 @@ public class EffectEnemyFlight extends L2Effect
 		_y = curY + (int) ((distance - offset) * sin);
 		_z = getEffected().getZ();
 		
-		if (Config.GEODATA)
+		if (Config.GEODATA > 0)
 		{
-			Location destiny = GeoEngine.moveCheck(getEffector().getX(), getEffector().getY(), getEffector().getZ(), _x, _y, getEffector().isFlying());
+			Location destiny = GeoData.getInstance().moveCheck(getEffector().getX(), getEffector().getY(), getEffector().getZ(), _x, _y, _z);
 			_x = destiny.getX();
 			_y = destiny.getY();
 		}

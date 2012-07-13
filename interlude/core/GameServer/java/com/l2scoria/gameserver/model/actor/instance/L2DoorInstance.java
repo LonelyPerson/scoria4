@@ -18,15 +18,26 @@
  */
 package com.l2scoria.gameserver.model.actor.instance;
 
+import java.util.Collection;
+import java.util.concurrent.ScheduledFuture;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javolution.text.TextBuilder;
+import javolution.util.FastList;
+
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.ai.CtrlIntention;
 import com.l2scoria.gameserver.ai.L2CharacterAI;
 import com.l2scoria.gameserver.ai.L2DoorAI;
-import com.l2scoria.gameserver.geodata.GeoControl;
-import com.l2scoria.gameserver.geodata.GeoEngine;
 import com.l2scoria.gameserver.managers.CastleManager;
 import com.l2scoria.gameserver.managers.FortManager;
-import com.l2scoria.gameserver.model.*;
+import com.l2scoria.gameserver.model.L2Character;
+import com.l2scoria.gameserver.model.L2Clan;
+import com.l2scoria.gameserver.model.L2Object;
+import com.l2scoria.gameserver.model.L2Skill;
+import com.l2scoria.gameserver.model.L2Summon;
+import com.l2scoria.gameserver.model.L2Territory;
 import com.l2scoria.gameserver.model.actor.knownlist.DoorKnownList;
 import com.l2scoria.gameserver.model.actor.position.L2CharPosition;
 import com.l2scoria.gameserver.model.actor.stat.DoorStat;
@@ -36,25 +47,21 @@ import com.l2scoria.gameserver.model.entity.siege.Castle;
 import com.l2scoria.gameserver.model.entity.siege.DevastatedCastle;
 import com.l2scoria.gameserver.model.entity.siege.Fort;
 import com.l2scoria.gameserver.network.L2GameClient;
-import com.l2scoria.gameserver.network.serverpackets.*;
+import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
+import com.l2scoria.gameserver.network.serverpackets.DoorStatusUpdate;
+import com.l2scoria.gameserver.network.serverpackets.MyTargetSelected;
+import com.l2scoria.gameserver.network.serverpackets.NpcHtmlMessage;
+import com.l2scoria.gameserver.network.serverpackets.ValidateLocation;
 import com.l2scoria.gameserver.templates.L2CharTemplate;
 import com.l2scoria.gameserver.templates.L2Weapon;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
-import javolution.text.TextBuilder;
-import javolution.util.FastList;
-
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.concurrent.ScheduledFuture;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * This class ...
  * 
  * @version $Revision: 1.3.2.2.2.5 $ $Date: 2005/03/27 15:29:32 $
  */
-public class L2DoorInstance extends L2Character implements GeoControl
+public class L2DoorInstance extends L2Character
 {
 	protected static final Logger log = Logger.getLogger(L2DoorInstance.class.getName());
 
@@ -63,9 +70,6 @@ public class L2DoorInstance extends L2Character implements GeoControl
 	private int _mapRegion = -1;
 	/** fort index in array L2Fort -> L2NpcInstance */
 	private int _fortIndex = -2;
-
-	public boolean geoOpen;
-	private boolean _geodata = true;
 
 	// when door is closed, the dimensions are
 	private int _rangeXMin = 0;
@@ -90,34 +94,7 @@ public class L2DoorInstance extends L2Character implements GeoControl
 	protected int _autoActionDelay = -1;
 	private ScheduledFuture<?> _autoActionTask;
 
-	public L2Territory pos;
-	private HashMap<Long, Byte> geoAround;
-
-	public L2Territory getGeoPos()
-	{
-		return pos;
-	}
-
-	public void setGeoPos(L2Territory value)
-	{
-		pos = value;
-	}
-
-	public HashMap<Long, Byte> getGeoAround()
-	{
-		return geoAround;
-	}
-
-	public void setGeoAround(HashMap<Long, Byte> value)
-	{
-		geoAround = value;
-	}
-
-	@Override
-	public boolean isGeoCloser()
-	{
-		return true;
-	}
+	public final L2Territory pos;
 
 	/** This class may be created only by L2Character and only for AI */
 	public class AIAccessor extends L2Character.AIAccessor
@@ -247,7 +224,6 @@ public class L2DoorInstance extends L2Character implements GeoControl
 		_name = name;
 		_unlockable = unlockable;
 		pos = new L2Territory(/*"door_" + doorId*/);
-		geoOpen = true;
 	}
 
 	@Override
@@ -316,7 +292,6 @@ public class L2DoorInstance extends L2Character implements GeoControl
 	public void setOpen(boolean open)
 	{
 		_open = open;
-		setGeoOpen(_open);
 	}
 
 	/**
@@ -591,20 +566,20 @@ public class L2DoorInstance extends L2Character implements GeoControl
 			NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());
 			TextBuilder html1 = new TextBuilder("<html><body><table border=0>");
 			html1.append("<tr><td>S.Y.L. Says:</td></tr>");
-			html1.append("<tr><td>Current HP  ").append(getCurrentHp()).append("</td></tr>");
-			html1.append("<tr><td>Max HP       ").append(getMaxHp()).append("</td></tr>");
+			html1.append("<tr><td>Current HP  " + getCurrentHp() + "</td></tr>");
+			html1.append("<tr><td>Max HP       " + getMaxHp() + "</td></tr>");
 
-			html1.append("<tr><td>Object ID: ").append(getObjectId()).append("</td></tr>");
-			html1.append("<tr><td>Door ID: ").append(getDoorId()).append("</td></tr>");
+			html1.append("<tr><td>Object ID: " + getObjectId() + "</td></tr>");
+			html1.append("<tr><td>Door ID: " + getDoorId() + "</td></tr>");
 			html1.append("<tr><td><br></td></tr>");
 
-			html1.append("<tr><td>Class: ").append(getClass().getName()).append("</td></tr>");
+			html1.append("<tr><td>Class: " + getClass().getName() + "</td></tr>");
 			html1.append("<tr><td><br></td></tr>");
 			html1.append("</table>");
 
 			html1.append("<table><tr>");
-			html1.append("<td><button value=\"Open\" action=\"bypass -h admin_open ").append(getDoorId()).append("\" width=40 height=15 back=\"sek.cbui94\" fore=\"sek.cbui92\"></td>");
-			html1.append("<td><button value=\"Close\" action=\"bypass -h admin_close ").append(getDoorId()).append("\" width=40 height=15 back=\"sek.cbui94\" fore=\"sek.cbui92\"></td>");
+			html1.append("<td><button value=\"Open\" action=\"bypass -h admin_open " + getDoorId() + "\" width=40 height=15 back=\"sek.cbui94\" fore=\"sek.cbui92\"></td>");
+			html1.append("<td><button value=\"Close\" action=\"bypass -h admin_close " + getDoorId() + "\" width=40 height=15 back=\"sek.cbui94\" fore=\"sek.cbui92\"></td>");
 			html1.append("<td><button value=\"Kill\" action=\"bypass -h admin_kill\" width=40 height=15 back=\"sek.cbui94\" fore=\"sek.cbui92\"></td>");
 			html1.append("<td><button value=\"Delete\" action=\"bypass -h admin_delete\" width=40 height=15 back=\"sek.cbui94\" fore=\"sek.cbui92\"></td>");
 			html1.append("</tr></table></body></html>");
@@ -813,40 +788,9 @@ public class L2DoorInstance extends L2Character implements GeoControl
 	@Override
 	public boolean doDie(L2Character killer)
 	{
-		return super.doDie(killer);
+		if(!super.doDie(killer))
+			return false;
 
-	}
-
-	/**
-	 * Устанавливает значение закрытости\открытости в геодате<br>
-	 * @param val новое значение
-	 */
-	private void setGeoOpen(boolean val)
-	{
-		if(geoOpen == val)
-			return;
-
-		if(!Config.ALLOW_DOORS)
-			return;
-
-		geoOpen = val;
-
-		if(!getGeodata())
-			return;
-
-		if(val)
-			GeoEngine.returnGeoAtControl(this);
-		else
-			GeoEngine.applyControl(this);
-	}
-
-	public void setGeodata(boolean value)
-	{
-		_geodata = value;
-	}
-
-	public boolean getGeodata()
-	{
-		return _geodata;
+		return true;
 	}
 }

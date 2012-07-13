@@ -18,23 +18,24 @@
  */
 package com.l2scoria.gameserver.model.spawn;
 
+import java.lang.reflect.Constructor;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javolution.util.FastList;
+
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.sql.TerritoryTable;
-import com.l2scoria.gameserver.geodata.GeoEngine;
+import com.l2scoria.gameserver.geo.GeoData;
 import com.l2scoria.gameserver.idfactory.IdFactory;
+import com.l2scoria.gameserver.model.L2Attackable;
 import com.l2scoria.gameserver.model.L2Object;
-import com.l2scoria.gameserver.model.actor.instance.L2ChestInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2MonsterInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2NpcInstance;
 import com.l2scoria.gameserver.model.quest.Quest;
 import com.l2scoria.gameserver.templates.L2NpcTemplate;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.util.random.Rnd;
-import javolution.util.FastList;
-
-import java.lang.reflect.Constructor;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * This class manages the spawn and respawn of a group of L2NpcInstance that are in the same are and have the same type.
@@ -105,7 +106,7 @@ public class L2Spawn
 	private int _instanceId = 0;
 
 	private L2NpcInstance _lastSpawn;
-	private static final FastList<SpawnListener> _spawnListeners = new FastList<SpawnListener>();
+	private static List<SpawnListener> _spawnListeners = new FastList<SpawnListener>();
 
 	/** The task launching the function doSpawn() */
 	class SpawnTask implements Runnable
@@ -537,13 +538,28 @@ public class L2Spawn
 	{
 		int newlocx, newlocy, newlocz;
 
-		// If Locx=0 and Locy=0, the L2NpcInstance must be spawned in an area defined by location
-		if  (getLocx() == 0 && getLocy() == 0)
+		boolean doCorrect = false;
+		if (Config.GEODATA > 0)
 		{
-			if (getLocation() == 0)
+			switch (Config.GEO_CORRECT_Z)
 			{
-				return mob;
+				case ALL:
+					doCorrect = true;
+					break;
+				case MONSTER:
+					if (mob instanceof L2Attackable)
+					{
+						doCorrect = true;
+					}
+					break;
 			}
+		}
+
+		// If Locx=0 and Locy=0, the L2NpcInstance must be spawned in an area defined by location
+		if(getLocx() == 0 && getLocy() == 0)
+		{
+			if(getLocation() == 0)
+				return mob;
 
 			// Calculate the random position in the location area
 			int p[] = TerritoryTable.getInstance().getRandomPoint(getLocation());
@@ -551,26 +567,18 @@ public class L2Spawn
 			// Set the calculated position of the L2NpcInstance
 			newlocx = p[0];
 			newlocy = p[1];
-			newlocz = p[2];
+			newlocz = GeoData.getInstance().getSpawnHeight(newlocx, newlocy, p[2], p[3], _id);
 		}
 		else
 		{
 			// The L2NpcInstance is spawned at the exact position (Lox, Locy, Locz)
 			newlocx = getLocx();
 			newlocy = getLocy();
-			if (Config.GEODATA && ((mob instanceof  L2MonsterInstance) || (mob instanceof  L2ChestInstance)))
+			if(doCorrect)
 			{
-                                newlocz = GeoEngine.getHeight(newlocx, newlocy, getLocz());
+				setLocz(GeoData.getInstance().getSpawnHeight(newlocx, newlocy, getLocz(), getLocz(), _id));
 			}
-			else
-			{
-				newlocz = getLocz();
-			}
-
-			if(Config.DEVELOPER && Math.abs(getLocz() - newlocz) > 100)
-			{
-                                _log.warning("Bad Z-spawn. MobId: ["+mob.getNpcId()+"]. ObjectId: ["+mob.getObjectId()+". dbZ: "+getLocz()+", geoZ: "+newlocz);
-			}
+			newlocz = getLocz();
 		}
 
 		mob.stopAllEffects();

@@ -35,7 +35,7 @@ import com.l2scoria.gameserver.datatables.csv.HennaTable;
 import com.l2scoria.gameserver.datatables.csv.MapRegionTable;
 import com.l2scoria.gameserver.datatables.csv.RecipeTable;
 import com.l2scoria.gameserver.datatables.sql.*;
-import com.l2scoria.gameserver.geodata.GeoEngine;
+import com.l2scoria.gameserver.geo.GeoData;
 import com.l2scoria.gameserver.handler.IItemHandler;
 import com.l2scoria.gameserver.handler.ItemHandler;
 import com.l2scoria.gameserver.handler.admincommandhandlers.AdminEditChar;
@@ -4178,9 +4178,9 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 					}
 					else
 					{
-						if(Config.GEODATA)
+						if(Config.GEODATA > 0)
 						{
-							if(GeoEngine.canSeeTarget(player, this, player.isFlying()))
+							if(GeoData.getInstance().canSeeTarget(player, this))
 							{
 								player.getAI().setIntention(CtrlIntention.AI_INTENTION_ATTACK, this);
 								player.onActionRequest();
@@ -4195,9 +4195,9 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 				}
 				else
 				{
-					if(Config.GEODATA)
+					if(Config.GEODATA > 0)
 					{
-						if(GeoEngine.canSeeTarget(player, this, player.isFlying()))
+						if(GeoData.getInstance().canSeeTarget(player, this))
 						{
 							player.getAI().setIntention(CtrlIntention.AI_INTENTION_FOLLOW, this);
 						}
@@ -4304,9 +4304,9 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 						{
 							if (player.isInsideRadius(this, player.getPhysicalAttackRange(), false, false))
 							{
-								if(Config.GEODATA)
+								if(Config.GEODATA > 0)
 								{
-									if(GeoEngine.canSeeTarget(player, this, player.isFlying()))
+									if(GeoData.getInstance().canSeeTarget(player, this))
 									{
 										player.getAI().setIntention(CtrlIntention.AI_INTENTION_ATTACK, this);
 										player.onActionRequest();
@@ -4393,9 +4393,9 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 
 						if (player.isInsideRadius(this, player.getPhysicalAttackRange(), false, false))
 						{
-							if(Config.GEODATA)
+							if(Config.GEODATA > 0)
 							{
-								if(GeoEngine.canSeeTarget(player, this, player.isFlying()))
+								if(GeoData.getInstance().canSeeTarget(player, this))
 								{
 									player.getAI().setIntention(CtrlIntention.AI_INTENTION_ATTACK, this);
 									player.onActionRequest();
@@ -9629,14 +9629,11 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		{
 			if (sklTargetType == SkillTargetType.TARGET_GROUND)
 			{
-				if (!GeoEngine.canSeeCoord(this.getX(), this.getY(), this.getZ(), worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), isFlying()))
-				{
 					sendPacket(new SystemMessage(SystemMessageId.CANT_SEE_TARGET));
 					sendPacket(ActionFailed.STATIC_PACKET);
 					return;
-				}
 			}
-			else if (!GeoEngine.canSeeTarget(this, target, isFlying()))
+			else if (!GeoData.getInstance().canSeeTarget(this, target))
 			{
 				sendPacket(new SystemMessage(SystemMessageId.CANT_SEE_TARGET));
 				sendPacket(ActionFailed.STATIC_PACKET);

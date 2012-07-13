@@ -21,7 +21,7 @@ package com.l2scoria.gameserver.ai;
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.GameTimeController;
 import com.l2scoria.gameserver.datatables.sql.TerritoryTable;
-import com.l2scoria.gameserver.geodata.GeoEngine;
+import com.l2scoria.gameserver.geo.GeoData;
 import com.l2scoria.gameserver.managers.DimensionalRiftManager;
 import com.l2scoria.gameserver.model.*;
 import com.l2scoria.gameserver.model.actor.instance.*;
@@ -118,7 +118,7 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable
 	 * 
 	 * @param target The targeted L2Object
 	 */
-	private boolean autoAttackCondition(L2Character target)
+        private boolean autoAttackCondition(L2Character target)
 	{
 		if(target == null || !(_actor instanceof L2Attackable))
 			return false;
@@ -155,16 +155,13 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable
 			if(!(me instanceof L2RaidBossInstance) && ((L2PcInstance) target).isSilentMoving())
 				return false;
 
-			if(me.getFactionId() != null)
-			{
-				// Check if player is an ally //TODO! [Nemesiss] it should be rather boolean or smth like that
-				// Comparing String isnt good idea!
-				if(me.getFactionId().equals("varka") && ((L2PcInstance) target).isAlliedWithVarka())
-					return false;
+			// Check if player is an ally //TODO! [Nemesiss] it should be rather boolean or smth like that
+			// Comparing String isnt good idea!
+			if(me.getFactionId().equals("varka") && ((L2PcInstance) target).isAlliedWithVarka())
+				return false;
 
-				if(me.getFactionId().equals("ketra") && ((L2PcInstance) target).isAlliedWithKetra())
-					return false;
-			}
+			if(me.getFactionId().equals("ketra") && ((L2PcInstance) target).isAlliedWithKetra())
+				return false;
 
 			// check if the target is within the grace period for JUST getting up from fake death
 			if(((L2PcInstance) target).isRecentFakeDeath())
@@ -191,13 +188,15 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable
 			// Check if the L2PcInstance target has karma (=PK)
 			if(target instanceof L2PcInstance && ((L2PcInstance) target).getKarma() > 0)
 				// Los Check
-				return GeoEngine.canSeeTarget(me, target, false);
+				return GeoData.getInstance().canSeeTarget(me, target);
 
 			//if (target instanceof L2Summon)
 			//    return ((L2Summon)target).getKarma() > 0;
 			// Check if the L2MonsterInstance target is aggressive
-			return target instanceof L2MonsterInstance && ((L2MonsterInstance) target).isAggressive() && GeoEngine.canSeeTarget(me, target, false);
+			if(target instanceof L2MonsterInstance)
+				return ((L2MonsterInstance) target).isAggressive() && GeoData.getInstance().canSeeTarget(me, target);
 
+			return false;
 		}
 		else if(_actor instanceof L2FriendlyMobInstance)
 		{
@@ -208,7 +207,11 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable
 				return false;
 
 			// Check if the L2PcInstance target has karma (=PK)
-			return target instanceof L2PcInstance && ((L2PcInstance) target).getKarma() > 0 && GeoEngine.canSeeTarget(me, target, false);
+			if(target instanceof L2PcInstance && ((L2PcInstance) target).getKarma() > 0)
+				// Los Check
+				return GeoData.getInstance().canSeeTarget(me, target);
+			else
+				return false;
 		}
 		else
 		{
@@ -224,7 +227,7 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable
 				return false;
 
 			// Check if the actor is Aggressive
-			return me.isAggressive() && GeoEngine.canSeeTarget(me, target, false);
+			return me.isAggressive() && GeoData.getInstance().canSeeTarget(me, target);
 		}
 	}
 
@@ -752,7 +755,7 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable
 											continue;
 										if (10 >= Rnd.get(100)) // chance
 											continue;
-										if (!GeoEngine.canSeeTarget(_actor, npc, false))
+										if (!GeoData.getInstance().canSeeTarget(_actor, npc))
 											break;
 
 										L2Object OldTarget = _actor.getTarget();
@@ -791,7 +794,7 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable
 										chance = 6;
 									if (chance >= Rnd.get(100)) // chance
 										continue;
-									if (!GeoEngine.canSeeTarget(_actor, npc, false))
+									if (!GeoData.getInstance().canSeeTarget(_actor, npc))
 										break;
 
 									L2Object OldTarget = _actor.getTarget();
@@ -889,7 +892,7 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable
 		}
 
 		// Considering, if bigger range will be attempted
-		if ((dist2 < 10000 + combinedCollision * combinedCollision) && !_selfAnalysis.isFighter && !_selfAnalysis.isBalanced && (_selfAnalysis.hasLongRangeSkills || _selfAnalysis.isArcher || _selfAnalysis.isHealer) && (_mostHatedAnalysis.isBalanced || _mostHatedAnalysis.isFighter) && (_mostHatedAnalysis.character.isRooted() || _mostHatedAnalysis.isSlower) && (Config.GEODATA ? 20 : 12) >= Rnd.get(100))
+		if ((dist2 < 10000 + combinedCollision * combinedCollision) && !_selfAnalysis.isFighter && !_selfAnalysis.isBalanced && (_selfAnalysis.hasLongRangeSkills || _selfAnalysis.isArcher || _selfAnalysis.isHealer) && (_mostHatedAnalysis.isBalanced || _mostHatedAnalysis.isFighter) && (_mostHatedAnalysis.character.isRooted() || _mostHatedAnalysis.isSlower) && (Config.GEODATA == 2 ? 20 : 12) >= Rnd.get(100))
 		{
 			int posX = _actor.getX();
 			int posY = _actor.getY();
@@ -909,7 +912,7 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable
 		}
 
 		// Cannot see target, needs to go closer, currently just goes to range 300 if mage
-		if ((dist2 > 96100 + combinedCollision * combinedCollision) && _selfAnalysis.hasLongRangeSkills && !GeoEngine.canSeeTarget(_actor, _mostHatedAnalysis.character, false))
+		if ((dist2 > 96100 + combinedCollision * combinedCollision) && _selfAnalysis.hasLongRangeSkills && !GeoData.getInstance().canSeeTarget(_actor, _mostHatedAnalysis.character))
 		{
 			if (!(_selfAnalysis.isMage && _actor.isMuted()))
 			{

@@ -22,7 +22,7 @@ import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.HeroSkillTable;
 import com.l2scoria.gameserver.datatables.SkillTable;
 import com.l2scoria.gameserver.datatables.sql.SkillTreeTable;
-import com.l2scoria.gameserver.geodata.GeoEngine;
+import com.l2scoria.gameserver.geo.GeoData;
 import com.l2scoria.gameserver.managers.SiegeManager;
 import com.l2scoria.gameserver.model.actor.instance.*;
 import com.l2scoria.gameserver.model.base.ClassId;
@@ -2164,7 +2164,7 @@ public abstract class L2Skill
 							continue;
 						}
 
-						if(!GeoEngine.canSeeTarget(activeChar, obj, activeChar.isFlying()))
+						if(!GeoData.getInstance().canSeeTarget(activeChar, obj))
 						{
 							continue;
 						}
@@ -2354,7 +2354,7 @@ public abstract class L2Skill
 							continue;
 						}
 
-						if(!GeoEngine.canSeeTarget(activeChar, target, activeChar.isFlying()))
+						if(!GeoData.getInstance().canSeeTarget(activeChar, target))
 						{
 							continue;
 						}
@@ -2783,7 +2783,7 @@ public abstract class L2Skill
 			}
 		}
 
-		return GeoEngine.canSeeTarget(caster, target, caster.isFlying());
+		return GeoData.getInstance().canSeeTarget(caster, target);
 
 	}
 	

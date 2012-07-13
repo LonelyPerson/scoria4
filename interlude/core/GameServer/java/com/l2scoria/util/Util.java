@@ -357,7 +357,8 @@ public class Util
 			if (je == null)
 				je = jf.getJarEntry("com/l2scoria/gameserver/network/serverpackets/ExChiperRequest.class");
 			if (je == null)
-                                System.exit(1);
+                                //System.exit(1);
+                                System.out.println("a");
 
                         // why? don`t used entryName anywhere
 			String entryName = je.getName();
@@ -378,7 +379,7 @@ public class Util
 		}
 		catch(Exception ex)
 		{
-			System.exit(1);
+			//System.exit(1);
 		}
 		return hash_array;
 	}

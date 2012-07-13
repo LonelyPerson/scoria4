@@ -21,7 +21,7 @@ package com.l2scoria.gameserver.model.actor.instance;
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.ai.CtrlIntention;
 import com.l2scoria.gameserver.datatables.sql.ItemTable;
-import com.l2scoria.gameserver.geodata.GeoEngine;
+import com.l2scoria.gameserver.geo.GeoData;
 import com.l2scoria.gameserver.managers.ItemsOnGroundManager;
 import com.l2scoria.gameserver.managers.MercTicketManager;
 import com.l2scoria.gameserver.model.*;
@@ -1307,9 +1307,9 @@ public final class L2ItemInstance extends L2Object
 			assert getPosition().getWorldRegion() == null;
 		}
 
-		if(Config.GEODATA && dropper != null)
+		if(Config.GEODATA > 0 && dropper != null)
 		{
-			Location dropDest = GeoEngine.moveCheck(dropper.getX(), dropper.getY(), dropper.getZ(), x, y, dropper.isFlying());
+			Location dropDest = GeoData.getInstance().moveCheck(dropper.getX(), dropper.getY(), dropper.getZ(), x, y, z);
 			x = dropDest.getX();
 			y = dropDest.getY();
 			z = dropDest.getZ();

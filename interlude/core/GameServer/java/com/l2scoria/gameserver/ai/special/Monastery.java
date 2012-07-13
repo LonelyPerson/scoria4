@@ -19,7 +19,7 @@
 package com.l2scoria.gameserver.ai.special;
 
 import com.l2scoria.gameserver.ai.CtrlIntention;
-import com.l2scoria.gameserver.geodata.GeoEngine;
+import com.l2scoria.gameserver.geo.GeoData;
 import com.l2scoria.gameserver.model.L2Attackable;
 import com.l2scoria.gameserver.model.actor.instance.L2NpcInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
@@ -50,7 +50,7 @@ public class Monastery extends Quest
 		if(Util.calculateDistance(npc.getX(), npc.getY(), npc.getZ(), player.getX(), player.getY()) < 300 && !npc.isInCombat() && npc.getTarget() == null)
 		{
 			// объект в поле зрения
-			if(!GeoEngine.canSeeTarget(npc, player, npc.isFlying()))
+			if(!GeoData.getInstance().canSeeTarget(npc, player))
 			{
 				return super.onAggroRangeEnter(npc, player, isPet);
 			}
