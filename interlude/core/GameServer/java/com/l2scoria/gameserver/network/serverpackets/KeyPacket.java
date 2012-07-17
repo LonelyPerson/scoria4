@@ -58,13 +58,15 @@ public final class KeyPacket extends L2GameServerPacket
 			}
 
 			return;
-		}
-
-		writeC(0x00);
-		writeC(0x01);
-		writeB(_key);
-		writeD(0x01);
-		writeD(0x01);
+		} 
+                else 
+                {
+                    writeC(0x00);
+                    writeC(0x01);
+                    writeB(_key);
+                    writeD(0x01);
+                    writeD(0x01);
+                }
 	}
 
 	/* (non-Javadoc)
