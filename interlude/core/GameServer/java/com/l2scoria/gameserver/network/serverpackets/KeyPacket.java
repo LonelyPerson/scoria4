@@ -62,10 +62,14 @@ public final class KeyPacket extends L2GameServerPacket
                 else 
                 {
                     writeC(0x00);
-                    writeC(0x01);
-                    writeB(_key);
-                    writeD(0x01);
-                    writeD(0x01);
+                    writeC(_key == null ? 0x00 : 0x01);
+                    if(_key != null) 
+                    {
+                        writeB(_key);
+                        writeD(0x01);
+                        writeD(0x01);
+                    }
+                    return;
                 }
 	}
 

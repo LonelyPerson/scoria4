@@ -167,8 +167,11 @@ public class TradeList
 
 	public void setTitle(String title)
 	{
-            if(Config.USE_TRADE_WORDS_FILTER && !title.isEmpty()) 
+            if(Config.USE_TRADE_WORDS_FILTER) 
             {
+                if(title == null) {
+                    _title = title;
+                }
                 boolean isBadTradeTitle = false;
                 for(String pattern : Config.FILTER_TRADE_LIST)
                 {
