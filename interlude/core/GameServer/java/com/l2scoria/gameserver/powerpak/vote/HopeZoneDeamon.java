@@ -104,9 +104,9 @@ public class HopeZoneDeamon implements Runnable
 				String line;
 				while((line = reader.readLine())!=null)
 				{
-					if (line.contains("moreinfo_total_rank_text"))
+					if (line.contains("Anonymous User Votes"))
 					{
-						_newVoteCount = Integer.valueOf(line.split(">")[2].replace("</div", ""));
+						_newVoteCount = Integer.valueOf(line.split(">")[2].replace("</span", ""));
 						break;
 					}
 				}
