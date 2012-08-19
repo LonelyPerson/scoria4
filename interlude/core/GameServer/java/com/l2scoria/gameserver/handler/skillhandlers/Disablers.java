@@ -685,7 +685,7 @@ public class Disablers implements ISkillHandler
 
 							if(stat == "heal")
 							{
-								if(Config.CANNOT_HEAL_RBGB && target.isRaid())
+								if(Config.CANNOT_HEAL_RBGB && activeChar instanceof L2PcInstance && target.isRaid())
 								{
 									activeChar.sendPacket(new SystemMessage(SystemMessageId.TARGET_IS_INCORRECT));
 									activeChar.sendPacket(ActionFailed.STATIC_PACKET);

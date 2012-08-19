@@ -98,7 +98,7 @@ public class Heal implements ISkillHandler
 					continue;
 				if(player != null && player.isCursedWeaponEquiped())
 					continue;
-				if(Config.CANNOT_HEAL_RBGB && target.isRaid())
+				if(Config.CANNOT_HEAL_RBGB && activeChar instanceof L2PcInstance && target.isRaid())
 					continue;
 			}
 

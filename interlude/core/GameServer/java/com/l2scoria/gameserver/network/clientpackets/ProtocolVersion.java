@@ -22,6 +22,7 @@ import com.l2scoria.Config;
 import com.l2scoria.gameserver.network.L2GameClient;
 import com.l2scoria.gameserver.network.serverpackets.KeyPacket;
 import com.l2scoria.gameserver.network.serverpackets.SendStatus;
+import java.util.logging.Level;
 import ru.catssoftware.protection.LameStub;
 
 import java.util.logging.Logger;
@@ -61,7 +62,7 @@ public final class ProtocolVersion extends L2GameClientPacket
 	@Override
 	protected void runImpl()
 	{
-		if(LameStub.ISLAME) 
+            if(LameStub.ISLAME) 
 		{
 			L2GameClient client = this.getClient();
 			if (_version == -2L)
@@ -69,7 +70,7 @@ public final class ProtocolVersion extends L2GameClientPacket
 				client.closeNow();
 				return;
 			}
-			else if (_version == -3L)
+			else if (_version == -3L || _version == 65533)
 			{
 				client.close(new SendStatus());
 				//client.closeNow();
@@ -98,9 +99,10 @@ public final class ProtocolVersion extends L2GameClientPacket
 				{
 
 				}
-			}
-
+			} else {
+                        _log.warning("TEMPLARE DEBUG: unknown protocol version from readD() bytes => " + _version);
 			client.close(KeyPacket.UNKNOWN_PROTOCOL_VERSION);
+                        }
 		}
 		else if(_version == 65534 || _version == -2) //ping
 		{
