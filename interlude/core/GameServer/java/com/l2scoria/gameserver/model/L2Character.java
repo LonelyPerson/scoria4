@@ -1540,21 +1540,13 @@ public abstract class L2Character extends L2Object
 		}
 
 		// Can't use Hero and resurrect skills during Olympiad
-		if(this instanceof L2PcInstance && ((L2PcInstance) this).isInOlympiadMode() && (skill.isHeroSkill() || skill.getSkillType() == SkillType.RESURRECT))
+		if(this instanceof L2PcInstance && ((L2PcInstance) this).isInOlympiadMode() && (skill.isHeroSkill() || skill.getSkillType() == SkillType.RESURRECT || (Config.ALT_OLY_DENY_LS_SKILLS && skill.isLifeStoneSkill())))
 		{
 			SystemMessage sm = new SystemMessage(SystemMessageId.THIS_SKILL_IS_NOT_AVAILABLE_FOR_THE_OLYMPIAD_EVENT);
 			sendPacket(sm);
 			sm = null;
 			return;
 		}
-                
-                if(Config.ALT_OLY_DENY_LS_SKILLS && skill.isLifeStoneSkill())
-                {
-                    	SystemMessage sm = new SystemMessage(SystemMessageId.THIS_SKILL_IS_NOT_AVAILABLE_FOR_THE_OLYMPIAD_EVENT);
-			sendPacket(sm);
-			sm = null;
-			return;
-                }
 
 		// Get all possible targets of the skill in a table in function of the skill target type
 		L2Object[] targets = skill.getTargetList(this);
