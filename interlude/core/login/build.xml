@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="all">
+	<property name="dist" location="build" />	
+	<property name="login" location="login" />  
+	<property name="commons" location="commons/src/main/java" />
+        
+	<path id="libs">
+	  <fileset dir="libs">
+        	<include name="*.jar"/>
+	  </fileset>	
+	</path>
+
+	<target name="clean">
+	  <delete dir="${dist}" />	
+	</target>
+
+	<target name="init">
+	  <mkdir dir="${dist}" />
+	  <mkdir dir="${dist}/sql" />	
+	  <mkdir dir="${dist}/libs" /> 	  
+	  <mkdir dir="${dist}/login" />
+	  <mkdir dir="${dist}/login/config" />
+	  <mkdir dir="${dist}/login/log"/>               
+	  <copy todir="${dist}/libs">	
+	    <fileset dir="libs">
+		<include name="*.jar" />
+	    </fileset>
+          </copy>
+	</target>
+
+	<target name="commons" depends="init">
+	   <delete dir="${dist}/classes" />
+	   <mkdir dir="${dist}/classes" />
+           <javac destdir="${dist}/classes" 
+		  optimize="off" debug="on"
+        	  source="1.5"
+        	  target="1.5"
+ 	   	  encoding="utf-8" >
+		
+		<src path="${commons}"/>
+		<classpath>
+		  <path refid="libs"/>   
+                </classpath>
+           </javac> 		
+	   <jar destfile="${dist}/libs/ext-commons.jar">
+		<fileset dir="${dist}/classes"/>	
+	   </jar>
+
+	   <delete dir="${dist}/classes" />
+	</target>
+
+	<target name="login" depends="commons">
+	   <delete dir="${dist}/classes" />
+	   <mkdir dir="${dist}/classes" />
+           <javac destdir="${dist}/classes" 
+		  optimize="off" debug="on"
+        	  source="1.5"
+        	  target="1.5"
+ 	   	  encoding="utf-8" >
+		<src path="${login}/main/java"/>
+		<classpath>
+		  <path refid="libs"/>   
+		  <path location="${dist}/libs/ext-commons.jar"/>
+	        </classpath>
+ 	   </javac>
+	   <jar destfile="${dist}/login/login.jar">
+		<fileset dir="${dist}/classes"/>	
+	   </jar>
+
+	   <copy todir="${dist}/login/">
+		<fileset dir="${login}/dist" />
+	   </copy>
+	   <delete dir="${dist}/classes" />
+	</target>
+
+        <target name="all" depends="login" />
+
+</project>
