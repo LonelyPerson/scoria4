@@ -914,6 +914,7 @@
   <set name="operateType" val="OP_PASSIVE"/>
   <set name="castRange" val="-1"/>
   <set name="effectRange" val="-1"/>
+  <set name="stackType" val="ValakasNeckle"/>
   <for>
     <add order="0x40" stat="maxHp" val="445"/>
     <mul order="0x30" stat="pAtk" val="1.04"/>
@@ -932,6 +933,7 @@
   <set name="operateType" val="OP_PASSIVE"/>
   <set name="castRange" val="-1"/>
   <set name="effectRange" val="-1"/>
+  <set name="stackType" val="AntharasEarring"/>
   <for>
     <mul order="0x30" stat="bleedVuln" val="0.2"/>
     <mul order="0x30" stat="gainHp" val="1.1"/>
@@ -949,6 +951,7 @@
   <set name="operateType" val="OP_PASSIVE"/>
   <set name="castRange" val="-1"/>
   <set name="effectRange" val="-1"/>
+  <set name="stackType" val="ZakenEarring"/>
   <for>
     <mul order="0x30" stat="bleedVuln" val="0.4"/>
     <mul order="0x30" stat="gainHp" val="1.1"/>
@@ -963,6 +966,7 @@
   <set name="operateType" val="OP_PASSIVE"/>
   <set name="castRange" val="-1"/>
   <set name="effectRange" val="-1"/>
+  <set name="stackType" val="OrfenEarring"/>
   <for>
     <mul order="0x30" stat="bleedVuln" val="0.6"/>
     <mul order="0x30" stat="gainHp" val="1.06"/>
@@ -974,6 +978,7 @@
   <set name="operateType" val="OP_PASSIVE"/>
   <set name="castRange" val="-1"/>
   <set name="effectRange" val="-1"/>
+  <set name="stackType" val="BaiumRing"/>
   <for>
     <mul order="0x30" stat="poisonVuln" val="0.2"/>
     <add order="0x40" stat="accCombat" val="2"/>
@@ -989,6 +994,7 @@
   <set name="operateType" val="OP_PASSIVE"/>
   <set name="castRange" val="-1"/>
   <set name="effectRange" val="-1"/>
+  <set name="stackType" val="AntqueenRing"/>
   <for>
     <mul order="0x30" stat="poisonVuln" val="0.4"/>
     <add order="0x40" stat="accCombat" val="2"/>
@@ -1002,6 +1008,7 @@
   <set name="operateType" val="OP_PASSIVE"/>
   <set name="castRange" val="-1"/>
   <set name="effectRange" val="-1"/>
+  <set name="stackType" val="CoreRing"/>
   <for>
     <mul order="0x30" stat="poisonVuln" val="0.6"/>
     <add order="0x40" stat="accCombat" val="1"/>
