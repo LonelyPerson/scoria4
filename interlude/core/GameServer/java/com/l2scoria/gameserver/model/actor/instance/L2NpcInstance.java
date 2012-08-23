@@ -1760,16 +1760,10 @@ public class L2NpcInstance extends L2Character
 					type2 += Math.pow(2, player.getLoto(i) - 17);
 				}
 			}
-			if(player.getAdena() < price)
-			{
-				sm = new SystemMessage(SystemMessageId.YOU_NOT_ENOUGH_ADENA);
-				player.sendPacket(sm);
-				return;
-			}
-			if (!player.reduceAdena("Loto", price, this, true))
-			{
-				return;
-			}
+                        if(!player.destroyItemByItemId("Loto", Config.ALT_LOTTERY_CONSUME_ITEM_ID, price, this, true))
+                        {
+                            return;
+                        }
 			Lottery.getInstance().increasePrize(price);
 
 			sm = new SystemMessage(SystemMessageId.ACQUIRED);
@@ -1872,7 +1866,7 @@ public class L2NpcInstance extends L2Character
 			int adena = check[1];
 			if(adena > 0)
 			{
-				player.addAdena("Loto", adena, this, true);
+                                player.addItem("Loto", Config.ALT_LOTTERY_PRISE_ITEM_ID, adena, this, true);
 			}
 			player.destroyItem("Loto", item, this, false);
 			return;

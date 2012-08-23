@@ -1242,6 +1242,8 @@ public final class Config
 	public static int ALT_MANOR_MAINTENANCE_PERIOD;
 	public static boolean ALT_MANOR_SAVE_ALL_ACTIONS;
 	public static int ALT_MANOR_SAVE_PERIOD_RATE;
+        public static int ALT_LOTTERY_CONSUME_ITEM_ID;
+        public static int ALT_LOTTERY_PRISE_ITEM_ID;
 	public static int ALT_LOTTERY_PRIZE;
 	public static int ALT_LOTTERY_TICKET_PRICE;
 	public static float ALT_LOTTERY_5_NUMBER_RATE;
@@ -1379,7 +1381,9 @@ public final class Config
 			ALT_MANOR_MAINTENANCE_PERIOD = Integer.parseInt(altSettings.getProperty("AltManorMaintenancePeriod", "360000"));
 			ALT_MANOR_SAVE_ALL_ACTIONS = Boolean.parseBoolean(altSettings.getProperty("AltManorSaveAllActions", "false"));
 			ALT_MANOR_SAVE_PERIOD_RATE = Integer.parseInt(altSettings.getProperty("AltManorSavePeriodRate", "2"));
-
+                        
+                        ALT_LOTTERY_CONSUME_ITEM_ID = Integer.parseInt(altSettings.getProperty("AltLotteryConsumeItemId", "57"));
+                        ALT_LOTTERY_PRISE_ITEM_ID = Integer.parseInt(altSettings.getProperty("AltLotteryWinItemId", "57"));
 			ALT_LOTTERY_PRIZE = Integer.parseInt(altSettings.getProperty("AltLotteryPrize", "50000"));
 			ALT_LOTTERY_TICKET_PRICE = Integer.parseInt(altSettings.getProperty("AltLotteryTicketPrice", "2000"));
 			ALT_LOTTERY_5_NUMBER_RATE = Float.parseFloat(altSettings.getProperty("AltLottery5NumberRate", "0.6"));
