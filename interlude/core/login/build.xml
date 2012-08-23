@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project default="all">
+<project default="dist" basedir=".">
+    <description>
+        This script will build the L2scoria_DataPack.
+        
+        $Author: L2scoria $
+        $Date: 2007-11-19 16:57:12 -0300 (mo, 19 nov 2007) $
+        $Revision: 1 $  
+        
+        This program is comerical
+
+    </description>
 	<property name="dist" location="build" />	
 	<property name="login" location="login" />  
 	<property name="commons" location="commons/src/main/java" />
@@ -16,15 +26,20 @@
 
 	<target name="init">
 	  <mkdir dir="${dist}" />
-	  <mkdir dir="${dist}/sql" />	
-	  <mkdir dir="${dist}/libs" /> 	  
+	  <mkdir dir="${dist}/login/sql" /> 
 	  <mkdir dir="${dist}/login" />
 	  <mkdir dir="${dist}/login/config" />
-	  <mkdir dir="${dist}/login/log"/>               
-	  <copy todir="${dist}/libs">	
+	  <mkdir dir="${dist}/login/log"/>
+          <mkdir dir="${dist}/login/libs" />
+	  <copy todir="${dist}/login/libs">	
 	    <fileset dir="libs">
 		<include name="*.jar" />
 	    </fileset>
+          </copy>
+          <copy todir="${dist}/login/sql">
+              <fileset dir="sql">
+                  <include name="*.sql" />
+              </fileset>
           </copy>
 	</target>
 
@@ -42,7 +57,7 @@
 		  <path refid="libs"/>   
                 </classpath>
            </javac> 		
-	   <jar destfile="${dist}/libs/ext-commons.jar">
+	   <jar destfile="${dist}/login/libs/ext-commons.jar">
 		<fileset dir="${dist}/classes"/>	
 	   </jar>
 
@@ -57,10 +72,10 @@
         	  source="1.5"
         	  target="1.5"
  	   	  encoding="utf-8" >
-		<src path="${login}/main/java"/>
+		<src path="main/java"/>
 		<classpath>
 		  <path refid="libs"/>   
-		  <path location="${dist}/libs/ext-commons.jar"/>
+		  <path location="${dist}/login/libs/ext-commons.jar"/>
 	        </classpath>
  	   </javac>
 	   <jar destfile="${dist}/login/login.jar">
@@ -68,11 +83,11 @@
 	   </jar>
 
 	   <copy todir="${dist}/login/">
-		<fileset dir="${login}/dist" />
+		<fileset dir="dist" />
 	   </copy>
 	   <delete dir="${dist}/classes" />
 	</target>
-
-        <target name="all" depends="login" />
+        
+        <target name="dist" depends="login" />
 
 </project>
