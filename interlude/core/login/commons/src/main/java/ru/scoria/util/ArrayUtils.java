@@ -1,4 +1,4 @@
-package ru.catssoftware.util;
+package ru.scoria.util;
 
 import java.lang.reflect.Array;
 

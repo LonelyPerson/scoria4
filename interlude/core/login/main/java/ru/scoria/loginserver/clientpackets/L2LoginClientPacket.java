@@ -1,11 +1,11 @@
-package ru.catssoftware.loginserver.clientpackets;
+package ru.scoria.loginserver.clientpackets;
 
 
 import org.apache.log4j.Logger;
 
 
-import ru.catssoftware.loginserver.L2LoginClient;
-import ru.catssoftware.loginserver.mmocore.ReceivablePacket;
+import ru.scoria.loginserver.L2LoginClient;
+import ru.scoria.loginserver.mmocore.ReceivablePacket;
 
 
 public abstract class L2LoginClientPacket extends ReceivablePacket<L2LoginClient>

@@ -16,14 +16,14 @@
  *
  * http://www.gnu.org/copyleft/gpl.html
  */
-package ru.catssoftware.util.concurrent;
+package ru.scoria.util.concurrent;
 
 import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Iterator;
 
-import ru.catssoftware.lang.L2Entity;
-import ru.catssoftware.util.SingletonMap;
+import ru.scoria.lang.L2Entity;
+import ru.scoria.util.SingletonMap;
 
 import javolution.util.FastCollection;
 import javolution.util.FastCollection.Record;

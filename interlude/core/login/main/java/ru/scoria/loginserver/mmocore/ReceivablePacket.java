@@ -1,4 +1,4 @@
-package ru.catssoftware.loginserver.mmocore;
+package ru.scoria.loginserver.mmocore;
 
 import javolution.text.TextBuilder;
 

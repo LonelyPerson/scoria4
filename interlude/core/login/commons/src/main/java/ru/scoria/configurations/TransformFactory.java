@@ -1,4 +1,4 @@
-package ru.catssoftware.configurations;
+package ru.scoria.configurations;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -7,19 +7,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-import ru.catssoftware.configurations.transformers.BooleanTransformer;
-import ru.catssoftware.configurations.transformers.ByteTransformer;
-import ru.catssoftware.configurations.transformers.CharTransformer;
-import ru.catssoftware.configurations.transformers.ClassTransformer;
-import ru.catssoftware.configurations.transformers.DoubleTransformer;
-import ru.catssoftware.configurations.transformers.EnumTransformer;
-import ru.catssoftware.configurations.transformers.FileTransformer;
-import ru.catssoftware.configurations.transformers.FloatTransformer;
-import ru.catssoftware.configurations.transformers.InetSocketAddressTransformer;
-import ru.catssoftware.configurations.transformers.IntegerTransformer;
-import ru.catssoftware.configurations.transformers.LongTransformer;
-import ru.catssoftware.configurations.transformers.ShortTransformer;
-import ru.catssoftware.configurations.transformers.StringTransformer;
+import ru.scoria.configurations.transformers.BooleanTransformer;
+import ru.scoria.configurations.transformers.ByteTransformer;
+import ru.scoria.configurations.transformers.CharTransformer;
+import ru.scoria.configurations.transformers.ClassTransformer;
+import ru.scoria.configurations.transformers.DoubleTransformer;
+import ru.scoria.configurations.transformers.EnumTransformer;
+import ru.scoria.configurations.transformers.FileTransformer;
+import ru.scoria.configurations.transformers.FloatTransformer;
+import ru.scoria.configurations.transformers.InetSocketAddressTransformer;
+import ru.scoria.configurations.transformers.IntegerTransformer;
+import ru.scoria.configurations.transformers.LongTransformer;
+import ru.scoria.configurations.transformers.ShortTransformer;
+import ru.scoria.configurations.transformers.StringTransformer;
 
 public class TransformFactory {
 	private static Map<Class<?>, PropertyTransformer<?>> _transformers = new HashMap<Class<?>, PropertyTransformer<?>>();

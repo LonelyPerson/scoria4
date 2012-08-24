@@ -1,4 +1,4 @@
-package ru.catssoftware.data.xml.base;
+package ru.scoria.data.xml.base;
 
 import java.lang.reflect.Field;
 
@@ -7,9 +7,9 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
-import ru.catssoftware.configurations.PropertyTransformer;
-import ru.catssoftware.configurations.TransformFactory;
-import ru.catssoftware.configurations.TransformationException;
+import ru.scoria.configurations.PropertyTransformer;
+import ru.scoria.configurations.TransformFactory;
+import ru.scoria.configurations.TransformationException;
 
 public abstract class XMLList extends XMLObject {
 	protected static Logger _log = Logger.getLogger("DATABASE");

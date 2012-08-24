@@ -1,4 +1,4 @@
-package ru.catssoftware.data.xml.base;
+package ru.scoria.data.xml.base;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -13,10 +13,10 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Node;
 
-import ru.catssoftware.annotations.XmlField;
-import ru.catssoftware.configurations.PropertyTransformer;
-import ru.catssoftware.configurations.TransformFactory;
-import ru.catssoftware.configurations.TransformationException;
+import ru.scoria.annotations.XmlField;
+import ru.scoria.configurations.PropertyTransformer;
+import ru.scoria.configurations.TransformFactory;
+import ru.scoria.configurations.TransformationException;
 
 public abstract class XMLObject {
 	protected static Logger _log = Logger.getLogger("ENGINE"); 

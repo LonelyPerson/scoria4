@@ -16,13 +16,13 @@
  *
  * http://www.gnu.org/copyleft/gpl.html
  */
-package ru.catssoftware.util;
+package ru.scoria.util;
 
 import java.lang.reflect.Array;
 import java.util.List;
 
 
-import ru.catssoftware.util.L2Collections.Filter;
+import ru.scoria.util.L2Collections.Filter;
 
 
 /**

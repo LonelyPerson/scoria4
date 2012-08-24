@@ -1,4 +1,4 @@
-package ru.catssoftware.loginserver.model;
+package ru.scoria.loginserver.model;
 
 // Generated 11 dec. 2006 17:28:16 by Hibernate Tools 3.2.0.beta8
 

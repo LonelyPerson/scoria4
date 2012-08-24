@@ -16,12 +16,12 @@
  *
  * http://www.gnu.org/copyleft/gpl.html
  */
-package ru.catssoftware.loginserver.clientpackets;
+package ru.scoria.loginserver.clientpackets;
 
-import ru.catssoftware.Config;
-import ru.catssoftware.loginserver.L2LoginClient.LoginClientState;
-import ru.catssoftware.loginserver.network.serverpackets.GGAuth;
-import ru.catssoftware.loginserver.network.serverpackets.LoginFailReason;
+import ru.scoria.Config;
+import ru.scoria.loginserver.L2LoginClient.LoginClientState;
+import ru.scoria.loginserver.network.serverpackets.GGAuth;
+import ru.scoria.loginserver.network.serverpackets.LoginFailReason;
 
 /**
  * @author -Wooden-
@@ -62,7 +62,7 @@ public class AuthGameGuard extends L2LoginClientPacket
 	}
 
 	/**
-	 * @see ru.catssoftware.loginserver.clientpackets.L2LoginClientPacket#readImpl()
+	 * @see ru.scoria.loginserver.clientpackets.L2LoginClientPacket#readImpl()
 	 */
 	@Override
 	protected boolean readImpl()

@@ -15,12 +15,12 @@
  *
  * http://www.gnu.org/copyleft/gpl.html
  */
-package ru.catssoftware.loginserver.thread;
+package ru.scoria.loginserver.thread;
 
 import java.net.Socket;
 import java.util.List;
 
-import ru.catssoftware.Config;
+import ru.scoria.Config;
 import javolution.util.FastList;
 
 /**

@@ -16,11 +16,11 @@
  *
  * http://www.gnu.org/copyleft/gpl.html
  */
-package ru.catssoftware.loginserver.network.gameserverpackets;
+package ru.scoria.loginserver.network.gameserverpackets;
 
-import ru.catssoftware.loginserver.clientpackets.ClientBasePacket;
-import ru.catssoftware.loginserver.manager.GameServerManager;
-import ru.catssoftware.loginserver.model.GameServerInfo;
+import ru.scoria.loginserver.clientpackets.ClientBasePacket;
+import ru.scoria.loginserver.manager.GameServerManager;
+import ru.scoria.loginserver.model.GameServerInfo;
 
 /**
  * @author -Wooden-

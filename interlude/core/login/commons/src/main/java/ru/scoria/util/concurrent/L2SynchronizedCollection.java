@@ -16,9 +16,9 @@
  *
  * http://www.gnu.org/copyleft/gpl.html
  */
-package ru.catssoftware.util.concurrent;
+package ru.scoria.util.concurrent;
 
-import ru.catssoftware.lang.L2Entity;
+import ru.scoria.lang.L2Entity;
 
 /**
  * @author NB4L1

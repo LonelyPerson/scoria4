@@ -16,11 +16,11 @@
  *
  * http://www.gnu.org/copyleft/gpl.html
  */
-package ru.catssoftware.loginserver.network.gameserverpackets;
+package ru.scoria.loginserver.network.gameserverpackets;
 
 import java.util.Vector;
 
-import ru.catssoftware.loginserver.clientpackets.ClientBasePacket;
+import ru.scoria.loginserver.clientpackets.ClientBasePacket;
 
 
 /**

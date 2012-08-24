@@ -1,11 +1,11 @@
-package ru.catssoftware.configurations.transformers;
+package ru.scoria.configurations.transformers;
 
 import java.lang.reflect.Field;
 
-import ru.catssoftware.configurations.PropertyTransformer;
-import ru.catssoftware.configurations.TransformFactory;
-import ru.catssoftware.configurations.TransformationException;
-import ru.catssoftware.util.ArrayUtils;
+import ru.scoria.configurations.PropertyTransformer;
+import ru.scoria.configurations.TransformFactory;
+import ru.scoria.configurations.TransformationException;
+import ru.scoria.util.ArrayUtils;
 
 public class IntArrayTransformer implements PropertyTransformer<int []> {
 	static {

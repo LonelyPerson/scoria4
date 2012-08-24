@@ -1,4 +1,4 @@
-package ru.catssoftware.data;
+package ru.scoria.data;
 
 import java.util.ArrayList;
 import java.util.Collection;

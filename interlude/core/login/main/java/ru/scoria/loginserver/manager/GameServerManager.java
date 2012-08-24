@@ -26,7 +26,7 @@
  *
  * http://www.gnu.org/copyleft/gpl.html
  */
-package ru.catssoftware.loginserver.manager;
+package ru.scoria.loginserver.manager;
 
 import java.io.File;
 import java.security.InvalidAlgorithmParameterException;
@@ -52,9 +52,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
-import ru.catssoftware.L2DatabaseFactory;
-import ru.catssoftware.loginserver.model.GameServerInfo;
-import ru.catssoftware.tools.random.Rnd;
+import ru.scoria.L2DatabaseFactory;
+import ru.scoria.loginserver.model.GameServerInfo;
+import ru.scoria.tools.random.Rnd;
 
 /**
  * Manager servers

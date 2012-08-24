@@ -1,4 +1,4 @@
-package ru.catssoftware.loginserver.clientpackets;
+package ru.scoria.loginserver.clientpackets;
 
 import java.security.GeneralSecurityException;
 import java.util.Map;
@@ -7,21 +7,21 @@ import javax.crypto.Cipher;
 
 import javolution.util.FastMap;
 
-import ru.catssoftware.Config;
-import ru.catssoftware.loginserver.L2LoginClient;
-import ru.catssoftware.loginserver.L2LoginClient.LoginClientState;
-import ru.catssoftware.loginserver.manager.BanManager;
-import ru.catssoftware.loginserver.manager.LoginManager;
-import ru.catssoftware.loginserver.manager.LoginManager.AuthLoginResult;
-import ru.catssoftware.loginserver.model.Account;
-import ru.catssoftware.loginserver.model.GameServerInfo;
-import ru.catssoftware.loginserver.network.serverpackets.LoginFailReason;
-import ru.catssoftware.loginserver.network.serverpackets.LoginOk;
-import ru.catssoftware.loginserver.network.serverpackets.RequestCardId;
-import ru.catssoftware.loginserver.network.serverpackets.ServerList;
-import ru.catssoftware.loginserver.services.exception.AccountBannedException;
-import ru.catssoftware.loginserver.services.exception.AccountWrongPasswordException;
-import ru.catssoftware.tools.random.Rnd;
+import ru.scoria.Config;
+import ru.scoria.loginserver.L2LoginClient;
+import ru.scoria.loginserver.L2LoginClient.LoginClientState;
+import ru.scoria.loginserver.manager.BanManager;
+import ru.scoria.loginserver.manager.LoginManager;
+import ru.scoria.loginserver.manager.LoginManager.AuthLoginResult;
+import ru.scoria.loginserver.model.Account;
+import ru.scoria.loginserver.model.GameServerInfo;
+import ru.scoria.loginserver.network.serverpackets.LoginFailReason;
+import ru.scoria.loginserver.network.serverpackets.LoginOk;
+import ru.scoria.loginserver.network.serverpackets.RequestCardId;
+import ru.scoria.loginserver.network.serverpackets.ServerList;
+import ru.scoria.loginserver.services.exception.AccountBannedException;
+import ru.scoria.loginserver.services.exception.AccountWrongPasswordException;
+import ru.scoria.tools.random.Rnd;
 
 
 /**

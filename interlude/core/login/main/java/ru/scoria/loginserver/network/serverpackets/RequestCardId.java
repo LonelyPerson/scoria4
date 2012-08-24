@@ -1,7 +1,7 @@
-package ru.catssoftware.loginserver.network.serverpackets;
+package ru.scoria.loginserver.network.serverpackets;
 
 
-import ru.catssoftware.loginserver.L2LoginClient;
+import ru.scoria.loginserver.L2LoginClient;
 
 public class RequestCardId extends L2LoginServerPacket {
 

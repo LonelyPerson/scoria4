@@ -1,6 +1,6 @@
-package ru.catssoftware.loginserver.model;
+package ru.scoria.loginserver.model;
 
-import ru.catssoftware.tools.network.SubNet;
+import ru.scoria.tools.network.SubNet;
 
 
 /**

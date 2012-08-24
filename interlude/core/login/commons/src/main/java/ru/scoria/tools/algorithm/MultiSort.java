@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package ru.catssoftware.tools.algorithm;
+package ru.scoria.tools.algorithm;
 
 import java.util.Arrays;
 import java.util.Collection;

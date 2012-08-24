@@ -1,4 +1,4 @@
-package ru.catssoftware.loginserver;
+package ru.scoria.loginserver;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,17 +10,17 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 
 
-import ru.catssoftware.Config;
-import ru.catssoftware.L2DatabaseFactory;
-import ru.catssoftware.Util;
-import ru.catssoftware.config.L2Properties;
-import ru.catssoftware.extension.ExtensionManager;
-import ru.catssoftware.loginserver.manager.BanManager;
-import ru.catssoftware.loginserver.manager.GameServerManager;
-import ru.catssoftware.loginserver.manager.LoginManager;
-import ru.catssoftware.loginserver.mmocore.SelectorConfig;
-import ru.catssoftware.loginserver.mmocore.SelectorThread;
-import ru.catssoftware.loginserver.thread.GameServerListener;
+import ru.scoria.Config;
+import ru.scoria.L2DatabaseFactory;
+import ru.scoria.Util;
+import ru.scoria.config.L2Properties;
+import ru.scoria.extension.ExtensionManager;
+import ru.scoria.loginserver.manager.BanManager;
+import ru.scoria.loginserver.manager.GameServerManager;
+import ru.scoria.loginserver.manager.LoginManager;
+import ru.scoria.loginserver.mmocore.SelectorConfig;
+import ru.scoria.loginserver.mmocore.SelectorThread;
+import ru.scoria.loginserver.thread.GameServerListener;
 
 public class L2LoginServer
 {

@@ -1,4 +1,4 @@
-package ru.catssoftware.loginserver.mmocore;
+package ru.scoria.loginserver.mmocore;
 
 public class ShellCheck
 {

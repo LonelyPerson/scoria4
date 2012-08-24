@@ -1,4 +1,4 @@
-package ru.catssoftware.loginserver;
+package ru.scoria.loginserver;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -11,20 +11,20 @@ import java.security.interfaces.RSAPrivateKey;
 import org.apache.log4j.Logger;
 
 
-import ru.catssoftware.Config;
-import ru.catssoftware.loginserver.crypt.LoginCrypt;
-import ru.catssoftware.loginserver.manager.LoginManager;
-import ru.catssoftware.loginserver.mmocore.ISocket;
-import ru.catssoftware.loginserver.mmocore.MMOConnection;
-import ru.catssoftware.loginserver.mmocore.SelectorThread;
-import ru.catssoftware.loginserver.model.Account;
-import ru.catssoftware.loginserver.model.SessionKey;
-import ru.catssoftware.loginserver.network.serverpackets.LoginFail;
-import ru.catssoftware.loginserver.network.serverpackets.LoginFailReason;
-import ru.catssoftware.loginserver.network.serverpackets.PlayFail;
-import ru.catssoftware.loginserver.network.serverpackets.PlayFailReason;
-import ru.catssoftware.tools.math.ScrambledKeyPair;
-import ru.catssoftware.tools.random.Rnd;
+import ru.scoria.Config;
+import ru.scoria.loginserver.crypt.LoginCrypt;
+import ru.scoria.loginserver.manager.LoginManager;
+import ru.scoria.loginserver.mmocore.ISocket;
+import ru.scoria.loginserver.mmocore.MMOConnection;
+import ru.scoria.loginserver.mmocore.SelectorThread;
+import ru.scoria.loginserver.model.Account;
+import ru.scoria.loginserver.model.SessionKey;
+import ru.scoria.loginserver.network.serverpackets.LoginFail;
+import ru.scoria.loginserver.network.serverpackets.LoginFailReason;
+import ru.scoria.loginserver.network.serverpackets.PlayFail;
+import ru.scoria.loginserver.network.serverpackets.PlayFailReason;
+import ru.scoria.tools.math.ScrambledKeyPair;
+import ru.scoria.tools.random.Rnd;
 
 /**
  * Represents a client connected into the LoginServer

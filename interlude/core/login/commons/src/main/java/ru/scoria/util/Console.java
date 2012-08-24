@@ -1,4 +1,4 @@
-package ru.catssoftware.util;
+package ru.scoria.util;
 
 public class Console {
 	public static void printSection(String s)

@@ -1,6 +1,6 @@
-package ru.catssoftware.loginserver;
+package ru.scoria.loginserver;
 
-import ru.catssoftware.Config;
+import ru.scoria.Config;
 
 public class LSConfig extends Config {
 	public static void setLSHost(String host) {

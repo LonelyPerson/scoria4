@@ -16,7 +16,7 @@
  *
  * http://www.gnu.org/copyleft/gpl.html
  */
-package ru.catssoftware.loginserver.network.serverpackets;
+package ru.scoria.loginserver.network.serverpackets;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

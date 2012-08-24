@@ -16,7 +16,7 @@
  *
  * http://www.gnu.org/copyleft/gpl.html
  */
-package ru.catssoftware.util;
+package ru.scoria.util;
 
 import java.util.Collection;
 import java.util.Map;

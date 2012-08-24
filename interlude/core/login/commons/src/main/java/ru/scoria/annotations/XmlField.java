@@ -1,4 +1,4 @@
-package ru.catssoftware.annotations;
+package ru.scoria.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -16,12 +16,12 @@
  *
  * http://www.gnu.org/copyleft/gpl.html
  */
-package ru.catssoftware.loginserver.network.serverpackets;
+package ru.scoria.loginserver.network.serverpackets;
 
 import org.apache.log4j.Logger;
 
 
-import ru.catssoftware.loginserver.L2LoginClient;
+import ru.scoria.loginserver.L2LoginClient;
 
 
 /**

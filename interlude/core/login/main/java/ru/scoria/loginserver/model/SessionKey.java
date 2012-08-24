@@ -23,14 +23,14 @@
  *
  * http://www.gnu.org/copyleft/gpl.html
  */
-package ru.catssoftware.loginserver.model;
+package ru.scoria.loginserver.model;
 
-import ru.catssoftware.Config;
+import ru.scoria.Config;
 
 /**
  * <p>This class is used to represent session keys used by the client to authenticate in the gameserver</p>
- * <p>A SessionKey is made up of two 8 bytes keys. One is send in the {@link ru.catssoftware.loginserver.serverpacket.LoginOk LoginOk}
- * packet and the other is sent in {@link ru.catssoftware.loginserver.serverpacket.PlayOk PlayOk}</p>
+ * <p>A SessionKey is made up of two 8 bytes keys. One is send in the {@link ru.scoria.loginserver.serverpacket.LoginOk LoginOk}
+ * packet and the other is sent in {@link ru.scoria.loginserver.serverpacket.PlayOk PlayOk}</p>
  * @author -Wooden-
  *
  */

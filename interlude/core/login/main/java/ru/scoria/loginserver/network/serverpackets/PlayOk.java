@@ -16,19 +16,19 @@
  *
  * http://www.gnu.org/copyleft/gpl.html
  */
-package ru.catssoftware.loginserver.network.serverpackets;
+package ru.scoria.loginserver.network.serverpackets;
 
 import java.io.IOException;
 import java.util.List;
 
 import javolution.util.FastList;
 
-import ru.catssoftware.Config;
-import ru.catssoftware.loginserver.ClientManager;
-import ru.catssoftware.loginserver.L2LoginClient;
-import ru.catssoftware.loginserver.L2LoginServer;
-import ru.catssoftware.loginserver.model.SessionKey;
-import ru.catssoftware.loginserver.network.loginserverpackets.ClientConnected;
+import ru.scoria.Config;
+import ru.scoria.loginserver.ClientManager;
+import ru.scoria.loginserver.L2LoginClient;
+import ru.scoria.loginserver.L2LoginServer;
+import ru.scoria.loginserver.model.SessionKey;
+import ru.scoria.loginserver.network.loginserverpackets.ClientConnected;
 
 
 public final class PlayOk extends L2LoginServerPacket

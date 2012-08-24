@@ -1,4 +1,4 @@
-package ru.catssoftware.loginserver.network.serverpackets;
+package ru.scoria.loginserver.network.serverpackets;
 
 public enum PlayFailReason
 {

@@ -1,4 +1,4 @@
-package ru.catssoftware.loginserver.manager;
+package ru.scoria.loginserver.manager;
 
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
@@ -27,20 +27,20 @@ import javolution.util.FastSet;
 import org.apache.log4j.Logger;
 
 
-import ru.catssoftware.Config;
-import ru.catssoftware.L2DatabaseFactory;
-import ru.catssoftware.loginserver.L2LoginClient;
-import ru.catssoftware.loginserver.model.Account;
-import ru.catssoftware.loginserver.model.GameServerInfo;
-import ru.catssoftware.loginserver.model.SessionKey;
-import ru.catssoftware.loginserver.network.gameserverpackets.ServerStatus;
-import ru.catssoftware.loginserver.services.exception.AccountBannedException;
-import ru.catssoftware.loginserver.services.exception.AccountModificationException;
-import ru.catssoftware.loginserver.services.exception.AccountWrongPasswordException;
-import ru.catssoftware.loginserver.thread.GameServerThread;
-import ru.catssoftware.tools.codec.Base64;
-import ru.catssoftware.tools.math.ScrambledKeyPair;
-import ru.catssoftware.tools.random.Rnd;
+import ru.scoria.Config;
+import ru.scoria.L2DatabaseFactory;
+import ru.scoria.loginserver.L2LoginClient;
+import ru.scoria.loginserver.model.Account;
+import ru.scoria.loginserver.model.GameServerInfo;
+import ru.scoria.loginserver.model.SessionKey;
+import ru.scoria.loginserver.network.gameserverpackets.ServerStatus;
+import ru.scoria.loginserver.services.exception.AccountBannedException;
+import ru.scoria.loginserver.services.exception.AccountModificationException;
+import ru.scoria.loginserver.services.exception.AccountWrongPasswordException;
+import ru.scoria.loginserver.thread.GameServerThread;
+import ru.scoria.tools.codec.Base64;
+import ru.scoria.tools.math.ScrambledKeyPair;
+import ru.scoria.tools.random.Rnd;
 
 public class LoginManager
 {

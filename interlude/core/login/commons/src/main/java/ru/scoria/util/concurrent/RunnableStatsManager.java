@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package ru.catssoftware.util.concurrent;
+package ru.scoria.util.concurrent;
 
 import java.io.PrintStream;
 import java.text.NumberFormat;
@@ -61,7 +61,7 @@ public final class RunnableStatsManager
 		{
 			_classStats.put(clazz, this);
 			
-			_className = clazz.getName().replace("ru.catssoftware.gameserver.", "");
+			_className = clazz.getName().replace("ru.scoria.gameserver.", "");
 		}
 		
 		private MethodStat getMethodStat(String methodName)

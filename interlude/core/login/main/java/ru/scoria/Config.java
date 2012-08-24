@@ -1,12 +1,12 @@
-package ru.catssoftware;
+package ru.scoria;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Properties;
 
-import ru.catssoftware.L2Config;
-import ru.catssoftware.config.L2Properties;
+import ru.scoria.L2Config;
+import ru.scoria.config.L2Properties;
 
 
 

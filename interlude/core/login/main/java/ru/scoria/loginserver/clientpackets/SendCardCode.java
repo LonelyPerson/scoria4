@@ -1,14 +1,14 @@
-package ru.catssoftware.loginserver.clientpackets;
+package ru.scoria.loginserver.clientpackets;
 
 
 
-import ru.catssoftware.Config;
-import ru.catssoftware.loginserver.L2LoginClient;
-import ru.catssoftware.loginserver.L2LoginClient.LoginClientState;
-import ru.catssoftware.loginserver.manager.LoginManager;
-import ru.catssoftware.loginserver.network.serverpackets.LoginFailReason;
-import ru.catssoftware.loginserver.network.serverpackets.LoginOk;
-import ru.catssoftware.loginserver.network.serverpackets.ServerList;
+import ru.scoria.Config;
+import ru.scoria.loginserver.L2LoginClient;
+import ru.scoria.loginserver.L2LoginClient.LoginClientState;
+import ru.scoria.loginserver.manager.LoginManager;
+import ru.scoria.loginserver.network.serverpackets.LoginFailReason;
+import ru.scoria.loginserver.network.serverpackets.LoginOk;
+import ru.scoria.loginserver.network.serverpackets.ServerList;
 
 public class SendCardCode extends L2LoginClientPacket {
 

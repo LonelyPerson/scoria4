@@ -1,4 +1,4 @@
-package ru.catssoftware.extension;
+package ru.scoria.extension;
 
 public interface IExtension {
 	public static abstract class ExtensionInfo {

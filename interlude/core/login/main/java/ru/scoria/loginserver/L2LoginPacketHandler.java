@@ -1,20 +1,20 @@
-package ru.catssoftware.loginserver;
+package ru.scoria.loginserver;
 
 import java.nio.ByteBuffer;
 import java.util.Map;
 
 import javolution.util.FastMap;
 
-import ru.catssoftware.Config;
-import ru.catssoftware.loginserver.L2LoginClient.LoginClientState;
-import ru.catssoftware.loginserver.clientpackets.AuthGameGuard;
-import ru.catssoftware.loginserver.clientpackets.RequestAuthLogin;
-import ru.catssoftware.loginserver.clientpackets.RequestServerList;
-import ru.catssoftware.loginserver.clientpackets.RequestServerLogin;
-import ru.catssoftware.loginserver.clientpackets.SendCardCode;
-import ru.catssoftware.loginserver.mmocore.IPacketHandler;
-import ru.catssoftware.loginserver.mmocore.ReceivablePacket;
-import ru.catssoftware.loginserver.network.serverpackets.LoginFailReason;
+import ru.scoria.Config;
+import ru.scoria.loginserver.L2LoginClient.LoginClientState;
+import ru.scoria.loginserver.clientpackets.AuthGameGuard;
+import ru.scoria.loginserver.clientpackets.RequestAuthLogin;
+import ru.scoria.loginserver.clientpackets.RequestServerList;
+import ru.scoria.loginserver.clientpackets.RequestServerLogin;
+import ru.scoria.loginserver.clientpackets.SendCardCode;
+import ru.scoria.loginserver.mmocore.IPacketHandler;
+import ru.scoria.loginserver.mmocore.ReceivablePacket;
+import ru.scoria.loginserver.network.serverpackets.LoginFailReason;
 
 
 

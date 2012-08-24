@@ -16,7 +16,7 @@
  *
  * http://www.gnu.org/copyleft/gpl.html
  */
-package ru.catssoftware.loginserver.thread;
+package ru.scoria.loginserver.thread;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -29,7 +29,7 @@ import javolution.util.FastMap;
 import org.apache.log4j.Logger;
 
 
-import ru.catssoftware.Config;
+import ru.scoria.Config;
 
 /**
  * @author -Wooden-

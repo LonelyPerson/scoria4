@@ -16,7 +16,7 @@
  *
  * http://www.gnu.org/copyleft/gpl.html
  */
-package ru.catssoftware.accountmanager;
+package ru.scoria.accountmanager;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -25,11 +25,11 @@ import java.util.List;
 
 import org.apache.log4j.xml.DOMConfigurator;
 
-import ru.catssoftware.Config;
-import ru.catssoftware.L2DatabaseFactory;
-import ru.catssoftware.loginserver.manager.LoginManager;
-import ru.catssoftware.loginserver.model.Account;
-import ru.catssoftware.loginserver.services.exception.AccountModificationException;
+import ru.scoria.Config;
+import ru.scoria.L2DatabaseFactory;
+import ru.scoria.loginserver.manager.LoginManager;
+import ru.scoria.loginserver.model.Account;
+import ru.scoria.loginserver.services.exception.AccountModificationException;
 
 
 

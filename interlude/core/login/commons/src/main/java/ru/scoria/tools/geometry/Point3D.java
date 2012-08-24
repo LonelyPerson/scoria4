@@ -12,12 +12,12 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package ru.catssoftware.tools.geometry;
+package ru.scoria.tools.geometry;
 
 import java.io.Serializable;
 
-import ru.catssoftware.annotations.XmlField;
-import ru.catssoftware.data.xml.base.XMLObject;
+import ru.scoria.annotations.XmlField;
+import ru.scoria.data.xml.base.XMLObject;
 
 public class Point3D extends XMLObject implements Serializable
 {

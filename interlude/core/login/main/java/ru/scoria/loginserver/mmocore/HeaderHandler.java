@@ -1,4 +1,4 @@
-package ru.catssoftware.loginserver.mmocore;
+package ru.scoria.loginserver.mmocore;
 
 abstract class HeaderHandler<T extends MMOConnection<T>, H extends HeaderHandler<T, H>>
 {

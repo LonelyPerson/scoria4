@@ -1,4 +1,4 @@
-package ru.catssoftware.data;
+package ru.scoria.data;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

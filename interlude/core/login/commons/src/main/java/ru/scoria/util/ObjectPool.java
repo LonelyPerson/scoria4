@@ -16,7 +16,7 @@
  *
  * http://www.gnu.org/copyleft/gpl.html
  */
-package ru.catssoftware.util;
+package ru.scoria.util;
 
 /**
  * @author NB4L1

@@ -12,9 +12,9 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package ru.catssoftware.tools.security;
+package ru.scoria.tools.security;
 
-import ru.catssoftware.tools.random.Rnd;
+import ru.scoria.tools.random.Rnd;
 
 /**
  * Blowfish keygen for GameServer client connections

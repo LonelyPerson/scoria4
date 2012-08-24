@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package ru.catssoftware.tools.util;
+package ru.scoria.tools.util;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -21,7 +21,7 @@ import java.math.BigInteger;
 import java.util.Properties;
 import java.util.Random;
 
-import ru.catssoftware.config.L2Properties;
+import ru.scoria.config.L2Properties;
 
 
 /**

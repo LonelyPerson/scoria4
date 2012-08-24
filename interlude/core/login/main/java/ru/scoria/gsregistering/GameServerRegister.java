@@ -16,7 +16,7 @@
  *
  * http://www.gnu.org/copyleft/gpl.html
  */
-package ru.catssoftware.gsregistering;
+package ru.scoria.gsregistering;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -25,11 +25,11 @@ import java.math.BigInteger;
 
 import org.apache.log4j.xml.DOMConfigurator;
 
-import ru.catssoftware.Config;
-import ru.catssoftware.L2DatabaseFactory;
-import ru.catssoftware.loginserver.manager.GameServerManager;
-import ru.catssoftware.loginserver.model.GameServerInfo;
-import ru.catssoftware.tools.util.HexUtil;
+import ru.scoria.Config;
+import ru.scoria.L2DatabaseFactory;
+import ru.scoria.loginserver.manager.GameServerManager;
+import ru.scoria.loginserver.model.GameServerInfo;
+import ru.scoria.tools.util.HexUtil;
 
 
 public class GameServerRegister

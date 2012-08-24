@@ -12,12 +12,12 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package ru.catssoftware.util;
+package ru.scoria.util;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
-import ru.catssoftware.util.concurrent.ExecuteWrapper;
+import ru.scoria.util.concurrent.ExecuteWrapper;
 
 
 /**

@@ -23,7 +23,7 @@
  *
  * http://www.gnu.org/copyleft/gpl.html
  */
-package ru.catssoftware.loginserver.manager;
+package ru.scoria.loginserver.manager;
 
 import java.io.File;
 import java.io.IOException;

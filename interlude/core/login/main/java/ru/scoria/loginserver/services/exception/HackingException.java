@@ -16,7 +16,7 @@
  *
  * http://www.gnu.org/copyleft/gpl.html
  */
-package ru.catssoftware.loginserver.services.exception;
+package ru.scoria.loginserver.services.exception;
 
 /**
  * This class ...

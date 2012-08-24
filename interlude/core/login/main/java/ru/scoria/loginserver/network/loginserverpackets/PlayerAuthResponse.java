@@ -16,11 +16,11 @@
  *
  * http://www.gnu.org/copyleft/gpl.html
  */
-package ru.catssoftware.loginserver.network.loginserverpackets;
+package ru.scoria.loginserver.network.loginserverpackets;
 
 import java.io.IOException;
 
-import ru.catssoftware.loginserver.network.serverpackets.ServerBasePacket;
+import ru.scoria.loginserver.network.serverpackets.ServerBasePacket;
 
 
 /**
@@ -37,7 +37,7 @@ public class PlayerAuthResponse extends ServerBasePacket
 	}
 
 	/* (non-Javadoc)
-	 * @see ru.catssoftware.loginserver.network.serverpackets.ServerBasePacket#getContent()
+	 * @see ru.scoria.loginserver.network.serverpackets.ServerBasePacket#getContent()
 	 */
 	@Override
 	public byte[] getContent() throws IOException

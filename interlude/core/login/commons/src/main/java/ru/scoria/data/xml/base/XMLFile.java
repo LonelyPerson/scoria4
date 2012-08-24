@@ -1,4 +1,4 @@
-package ru.catssoftware.data.xml.base;
+package ru.scoria.data.xml.base;
 
 import java.io.File;
 
@@ -7,7 +7,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-import ru.catssoftware.annotations.XmlFile;
+import ru.scoria.annotations.XmlFile;
 
 public abstract class XMLFile extends XMLList {
 	public XMLFile() {

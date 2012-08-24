@@ -1,7 +1,7 @@
-package ru.catssoftware.loginserver.network.serverpackets;
+package ru.scoria.loginserver.network.serverpackets;
 
-import ru.catssoftware.loginserver.L2LoginClient;
-import ru.catssoftware.loginserver.mmocore.SendablePacket;
+import ru.scoria.loginserver.L2LoginClient;
+import ru.scoria.loginserver.mmocore.SendablePacket;
 
 
 /**
@@ -11,7 +11,7 @@ import ru.catssoftware.loginserver.mmocore.SendablePacket;
 public abstract class L2LoginServerPacket extends SendablePacket<L2LoginClient>
 {
 	/**
-	* @see ru.catssoftware.loginserver.mmocore.SendablePacket#getHeaderSize()
+	* @see ru.scoria.loginserver.mmocore.SendablePacket#getHeaderSize()
 	*/
 	@Override
 	protected int getHeaderSize()
@@ -20,7 +20,7 @@ public abstract class L2LoginServerPacket extends SendablePacket<L2LoginClient>
 	}
 
 	/**
-	* @see ru.catssoftware.loginserver.mmocore.SendablePacket#writeHeader(int)
+	* @see ru.scoria.loginserver.mmocore.SendablePacket#writeHeader(int)
 	*/
 	@Override
 	protected void writeHeader(int dataSize)

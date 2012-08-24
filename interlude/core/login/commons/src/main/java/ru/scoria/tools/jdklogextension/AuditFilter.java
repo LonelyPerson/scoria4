@@ -23,7 +23,7 @@
  *
  * http://www.gnu.org/copyleft/gpl.html
  */
-package ru.catssoftware.tools.jdklogextension;
+package ru.scoria.tools.jdklogextension;
 
 import java.util.logging.Filter;
 import java.util.logging.LogRecord;

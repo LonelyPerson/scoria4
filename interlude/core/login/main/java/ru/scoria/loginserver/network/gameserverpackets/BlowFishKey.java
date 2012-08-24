@@ -16,7 +16,7 @@
  *
  * http://www.gnu.org/copyleft/gpl.html
  */
-package ru.catssoftware.loginserver.network.gameserverpackets;
+package ru.scoria.loginserver.network.gameserverpackets;
 
 import java.security.GeneralSecurityException;
 import java.security.interfaces.RSAPrivateKey;
@@ -27,7 +27,7 @@ import javax.crypto.Cipher;
 import org.apache.log4j.Logger;
 
 
-import ru.catssoftware.loginserver.clientpackets.ClientBasePacket;
+import ru.scoria.loginserver.clientpackets.ClientBasePacket;
 
 /**
  * @author -Wooden-

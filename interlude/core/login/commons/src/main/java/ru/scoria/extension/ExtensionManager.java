@@ -1,4 +1,4 @@
-package ru.catssoftware.extension;
+package ru.scoria.extension;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,8 +12,8 @@ import org.apache.log4j.Logger;
 
 
 
-import ru.catssoftware.AbstractDatabaseFactory;
-import ru.catssoftware.extension.IExtension.ExtensionInfo;
+import ru.scoria.AbstractDatabaseFactory;
+import ru.scoria.extension.IExtension.ExtensionInfo;
 import sun.misc.Service;
 
 public class ExtensionManager {

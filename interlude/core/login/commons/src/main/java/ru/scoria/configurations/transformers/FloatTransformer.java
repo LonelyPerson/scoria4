@@ -14,12 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with aion-emu.  If not, see <http://www.gnu.org/licenses/>.
  */
-package ru.catssoftware.configurations.transformers;
+package ru.scoria.configurations.transformers;
 
 import java.lang.reflect.Field;
 
-import ru.catssoftware.configurations.PropertyTransformer;
-import ru.catssoftware.configurations.TransformationException;
+import ru.scoria.configurations.PropertyTransformer;
+import ru.scoria.configurations.TransformationException;
 
 
 /**

@@ -1,4 +1,4 @@
-package ru.catssoftware.loginserver.mmocore;
+package ru.scoria.loginserver.mmocore;
 
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;

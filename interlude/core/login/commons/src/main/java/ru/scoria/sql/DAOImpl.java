@@ -1,10 +1,10 @@
-package ru.catssoftware.sql;
+package ru.scoria.sql;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import ru.catssoftware.lang.L2Entity;
+import ru.scoria.lang.L2Entity;
 
 public interface DAOImpl<T extends L2Entity> {
 	public boolean store(Connection con) throws SQLException;

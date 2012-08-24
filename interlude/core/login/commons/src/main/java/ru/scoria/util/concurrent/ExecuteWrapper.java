@@ -1,4 +1,4 @@
-package ru.catssoftware.util.concurrent;
+package ru.scoria.util.concurrent;
 
 public class ExecuteWrapper implements Runnable
 {

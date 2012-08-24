@@ -1,6 +1,6 @@
-package ru.catssoftware.loginserver.network.gameserverpackets;
+package ru.scoria.loginserver.network.gameserverpackets;
 
-import ru.catssoftware.loginserver.clientpackets.ClientBasePacket;
+import ru.scoria.loginserver.clientpackets.ClientBasePacket;
 
 public class ChangeAllowedHwid extends ClientBasePacket
 {

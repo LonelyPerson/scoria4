@@ -16,10 +16,10 @@
  *
  * http://www.gnu.org/copyleft/gpl.html
  */
-package ru.catssoftware.loginserver.clientpackets;
+package ru.scoria.loginserver.clientpackets;
 
-import ru.catssoftware.loginserver.network.serverpackets.LoginFailReason;
-import ru.catssoftware.loginserver.network.serverpackets.ServerList;
+import ru.scoria.loginserver.network.serverpackets.LoginFailReason;
+import ru.scoria.loginserver.network.serverpackets.ServerList;
 
 /**
  * Format: ddc

@@ -1,4 +1,4 @@
-package ru.catssoftware.configurations;
+package ru.scoria.configurations;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,7 +9,7 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 
 
-import ru.catssoftware.annotations.Property;
+import ru.scoria.annotations.Property;
 
 
 

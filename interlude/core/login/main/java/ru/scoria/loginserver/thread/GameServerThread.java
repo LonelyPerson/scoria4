@@ -1,4 +1,4 @@
-package ru.catssoftware.loginserver.thread;
+package ru.scoria.loginserver.thread;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -23,17 +23,17 @@ import javolution.util.FastSet;
 import org.apache.log4j.Logger;
 
 
-import ru.catssoftware.Config;
-import ru.catssoftware.loginserver.L2LoginServer;
-import ru.catssoftware.loginserver.manager.GameServerManager;
-import ru.catssoftware.loginserver.manager.LoginManager;
-import ru.catssoftware.loginserver.model.GameServerInfo;
-import ru.catssoftware.loginserver.model.SessionKey;
-import ru.catssoftware.loginserver.network.gameserverpackets.*;
-import ru.catssoftware.loginserver.network.loginserverpackets.*;
-import ru.catssoftware.loginserver.network.serverpackets.ServerBasePacket;
-import ru.catssoftware.tools.network.SubNetHost;
-import ru.catssoftware.tools.security.NewCrypt;
+import ru.scoria.Config;
+import ru.scoria.loginserver.L2LoginServer;
+import ru.scoria.loginserver.manager.GameServerManager;
+import ru.scoria.loginserver.manager.LoginManager;
+import ru.scoria.loginserver.model.GameServerInfo;
+import ru.scoria.loginserver.model.SessionKey;
+import ru.scoria.loginserver.network.gameserverpackets.*;
+import ru.scoria.loginserver.network.loginserverpackets.*;
+import ru.scoria.loginserver.network.serverpackets.ServerBasePacket;
+import ru.scoria.tools.network.SubNetHost;
+import ru.scoria.tools.security.NewCrypt;
 
 /**
  * @author -Wooden-

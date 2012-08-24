@@ -23,16 +23,16 @@
  *
  * http://www.gnu.org/copyleft/gpl.html
  */
-package ru.catssoftware.loginserver.model;
+package ru.scoria.loginserver.model;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import ru.catssoftware.loginserver.network.gameserverpackets.ServerStatus;
-import ru.catssoftware.loginserver.thread.GameServerThread;
-import ru.catssoftware.tools.util.HexUtil;
+import ru.scoria.loginserver.network.gameserverpackets.ServerStatus;
+import ru.scoria.loginserver.thread.GameServerThread;
+import ru.scoria.tools.util.HexUtil;
 
 
 /**

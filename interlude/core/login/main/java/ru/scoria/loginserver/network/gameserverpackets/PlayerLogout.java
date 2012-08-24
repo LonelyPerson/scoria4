@@ -16,9 +16,9 @@
  *
  * http://www.gnu.org/copyleft/gpl.html
  */
-package ru.catssoftware.loginserver.network.gameserverpackets;
+package ru.scoria.loginserver.network.gameserverpackets;
 
-import ru.catssoftware.loginserver.clientpackets.ClientBasePacket;
+import ru.scoria.loginserver.clientpackets.ClientBasePacket;
 
 /**
  * @author -Wooden-

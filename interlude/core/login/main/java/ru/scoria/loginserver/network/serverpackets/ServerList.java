@@ -16,7 +16,7 @@
  *
  * http://www.gnu.org/copyleft/gpl.html
  */
-package ru.catssoftware.loginserver.network.serverpackets;
+package ru.scoria.loginserver.network.serverpackets;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -25,11 +25,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import ru.catssoftware.Config;
-import ru.catssoftware.loginserver.L2LoginClient;
-import ru.catssoftware.loginserver.manager.GameServerManager;
-import ru.catssoftware.loginserver.model.GameServerInfo;
-import ru.catssoftware.loginserver.network.gameserverpackets.ServerStatus;
+import ru.scoria.Config;
+import ru.scoria.loginserver.L2LoginClient;
+import ru.scoria.loginserver.manager.GameServerManager;
+import ru.scoria.loginserver.model.GameServerInfo;
+import ru.scoria.loginserver.network.gameserverpackets.ServerStatus;
 
 import javolution.util.FastMap;
 

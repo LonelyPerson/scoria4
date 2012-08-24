@@ -1,4 +1,4 @@
-package ru.catssoftware;
+package ru.scoria;
 
 import java.sql.Connection;
 import java.sql.SQLException;

@@ -16,14 +16,14 @@
  *
  * http://www.gnu.org/copyleft/gpl.html
  */
-package ru.catssoftware.loginserver.clientpackets;
+package ru.scoria.loginserver.clientpackets;
 
-import ru.catssoftware.Config;
-import ru.catssoftware.loginserver.manager.LoginManager;
-import ru.catssoftware.loginserver.model.SessionKey;
-import ru.catssoftware.loginserver.network.serverpackets.LoginFailReason;
-import ru.catssoftware.loginserver.network.serverpackets.PlayFailReason;
-import ru.catssoftware.loginserver.network.serverpackets.PlayOk;
+import ru.scoria.Config;
+import ru.scoria.loginserver.manager.LoginManager;
+import ru.scoria.loginserver.model.SessionKey;
+import ru.scoria.loginserver.network.serverpackets.LoginFailReason;
+import ru.scoria.loginserver.network.serverpackets.PlayFailReason;
+import ru.scoria.loginserver.network.serverpackets.PlayOk;
 
 /**
  * Fromat is ddc

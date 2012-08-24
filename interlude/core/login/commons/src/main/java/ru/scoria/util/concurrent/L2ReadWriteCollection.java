@@ -16,11 +16,11 @@
  *
  * http://www.gnu.org/copyleft/gpl.html
  */
-package ru.catssoftware.util.concurrent;
+package ru.scoria.util.concurrent;
 
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import ru.catssoftware.lang.L2Entity;
+import ru.scoria.lang.L2Entity;
 
 
 /**

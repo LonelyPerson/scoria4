@@ -1,4 +1,4 @@
-package ru.catssoftware.loginserver;
+package ru.scoria.loginserver;
 
 import java.util.Map;
 
@@ -8,8 +8,8 @@ import javolution.util.FastMap;
 import org.apache.log4j.Logger;
 
 
-import ru.catssoftware.Config;
-import ru.catssoftware.loginserver.network.serverpackets.LoginFailReason;
+import ru.scoria.Config;
+import ru.scoria.loginserver.network.serverpackets.LoginFailReason;
 
 public class ClientManager extends Thread {
 	private static Logger _log = Logger.getLogger("ClientManager");

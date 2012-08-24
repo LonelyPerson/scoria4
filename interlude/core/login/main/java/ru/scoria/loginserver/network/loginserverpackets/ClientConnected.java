@@ -1,9 +1,9 @@
-package ru.catssoftware.loginserver.network.loginserverpackets;
+package ru.scoria.loginserver.network.loginserverpackets;
 
 import java.io.IOException;
 
-import ru.catssoftware.loginserver.L2LoginClient;
-import ru.catssoftware.loginserver.network.serverpackets.ServerBasePacket;
+import ru.scoria.loginserver.L2LoginClient;
+import ru.scoria.loginserver.network.serverpackets.ServerBasePacket;
 
 
 public class ClientConnected extends ServerBasePacket {

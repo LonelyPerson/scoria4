@@ -15,12 +15,12 @@
  *
  * http://www.gnu.org/copyleft/gpl.html
  */
-package ru.catssoftware.loginserver.crypt;
+package ru.scoria.loginserver.crypt;
 
 import java.io.IOException;
 
-import ru.catssoftware.tools.random.Rnd;
-import ru.catssoftware.tools.security.NewCrypt;
+import ru.scoria.tools.random.Rnd;
+import ru.scoria.tools.security.NewCrypt;
 
 
 /**

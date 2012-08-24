@@ -12,9 +12,9 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package ru.catssoftware.util;
+package ru.scoria.util;
 
-import ru.catssoftware.lang.L2Integer;
+import ru.scoria.lang.L2Integer;
 
 /**
  * @author NB4L1

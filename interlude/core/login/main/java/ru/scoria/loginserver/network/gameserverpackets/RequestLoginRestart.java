@@ -15,7 +15,7 @@
  *
  * http://www.gnu.org/copyleft/gpl.html
  */
-package ru.catssoftware.loginserver.network.gameserverpackets;
+package ru.scoria.loginserver.network.gameserverpackets;
 
 /**
  *
@@ -30,7 +30,7 @@ public class RequestLoginRestart /*extends ClientBasePacket*/
 	}*/
 
 	/**
-	 * @see ru.catssoftware.gameserver.gameserverpackets.GameServerBasePacket#getContent()
+	 * @see ru.scoria.gameserver.gameserverpackets.GameServerBasePacket#getContent()
 	 */
 	//@Override
 	/*public byte[] getContent() throws IOException

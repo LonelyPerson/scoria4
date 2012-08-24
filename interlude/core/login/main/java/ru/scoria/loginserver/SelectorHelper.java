@@ -1,4 +1,4 @@
-package ru.catssoftware.loginserver;
+package ru.scoria.loginserver;
 
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
@@ -7,16 +7,16 @@ import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import ru.catssoftware.loginserver.manager.BanManager;
-import ru.catssoftware.loginserver.mmocore.HeaderInfo;
-import ru.catssoftware.loginserver.mmocore.IAcceptFilter;
-import ru.catssoftware.loginserver.mmocore.IClientFactory;
-import ru.catssoftware.loginserver.mmocore.IMMOExecutor;
-import ru.catssoftware.loginserver.mmocore.ISocket;
-import ru.catssoftware.loginserver.mmocore.ReceivablePacket;
-import ru.catssoftware.loginserver.mmocore.SelectorThread;
-import ru.catssoftware.loginserver.mmocore.TCPHeaderHandler;
-import ru.catssoftware.loginserver.network.serverpackets.Init;
+import ru.scoria.loginserver.manager.BanManager;
+import ru.scoria.loginserver.mmocore.HeaderInfo;
+import ru.scoria.loginserver.mmocore.IAcceptFilter;
+import ru.scoria.loginserver.mmocore.IClientFactory;
+import ru.scoria.loginserver.mmocore.IMMOExecutor;
+import ru.scoria.loginserver.mmocore.ISocket;
+import ru.scoria.loginserver.mmocore.ReceivablePacket;
+import ru.scoria.loginserver.mmocore.SelectorThread;
+import ru.scoria.loginserver.mmocore.TCPHeaderHandler;
+import ru.scoria.loginserver.network.serverpackets.Init;
 
 
 
@@ -59,7 +59,7 @@ public class SelectorHelper extends TCPHeaderHandler<L2LoginClient> implements I
 	}
 
 	/**
-	* @see ru.catssoftware.loginserver.mmocore.TCPHeaderHandler#handleHeader(java.nio.channels.SelectionKey, java.nio.ByteBuffer)
+	* @see ru.scoria.loginserver.mmocore.TCPHeaderHandler#handleHeader(java.nio.channels.SelectionKey, java.nio.ByteBuffer)
 	*/
 	@Override
 	public HeaderInfo<L2LoginClient> handleHeader(SelectionKey key, ByteBuffer buf)
