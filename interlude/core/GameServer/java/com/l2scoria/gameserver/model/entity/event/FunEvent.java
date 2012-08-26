@@ -11,7 +11,7 @@ import java.util.concurrent.Future;
 import java.util.logging.Logger;
 
 import com.l2scoria.Config;
-import com.l2scoria.gameserver.datatables.csv.DoorTable;
+import com.l2scoria.gameserver.datatables.sql.DoorTable;
 import com.l2scoria.gameserver.datatables.sql.NpcTable;
 import com.l2scoria.gameserver.idfactory.IdFactory;
 import com.l2scoria.gameserver.managers.FunEventsManager;

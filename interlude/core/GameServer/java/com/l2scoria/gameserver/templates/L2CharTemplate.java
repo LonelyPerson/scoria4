@@ -94,8 +94,8 @@ public class L2CharTemplate
 	public final int baseMpConsumeRate;
 	public final int baseHpConsumeRate;
 
-	public final int collisionRadius;
-	public final int collisionHeight;
+	public int collisionRadius;
+	public int collisionHeight;
 
 	public L2CharTemplate(StatsSet set)
 	{

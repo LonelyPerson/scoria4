@@ -26,7 +26,7 @@
 package com.l2scoria.gameserver.model;
 
 import com.l2scoria.Config;
-import com.l2scoria.gameserver.geo.GeoData;
+import com.l2scoria.gameserver.geodata.GeoEngine;
 import com.l2scoria.util.random.Rnd;
 
 import java.awt.*;
@@ -51,7 +51,6 @@ public class L2Territory
 	}
 
 	private Point[] _points;
-//	private String _terr;
 	private int _xMin;
 	private int _xMax;
 	private int _yMin;
@@ -61,11 +60,10 @@ public class L2Territory
 	private int _procMax;
 	private Polygon poly;
 
-	public L2Territory(/*String string*/)
+	public L2Territory()
 	{
 		poly = new Polygon();
 		_points = new Point[0];
-//		_terr = string;
 		_xMin = 999999;
 		_xMax = -999999;
 		_yMin = 999999;
@@ -171,9 +169,9 @@ public class L2Territory
 
 			if(poly.contains(p[0], p[1]))
 			{
-				if(Config.GEODATA > 0)
+				if(Config.GEODATA)
 				{
-					int tempz = GeoData.getInstance().getHeight(p[0], p[1], _zMin + (_zMax - _zMin) / 2);
+					int tempz = GeoEngine.getHeight(p[0], p[1], _zMin + (_zMax - _zMin) / 2);
 
 					if(_zMin != _zMax)
 					{
@@ -189,7 +187,7 @@ public class L2Territory
 
 					p[2] = tempz;
 
-					if(GeoData.getInstance().getNSWE(p[0], p[1], p[2]) != 15)
+					if(GeoEngine.getNSWE(p[0], p[1], p[2]) != 15)
 					{
 						continue;
 					}

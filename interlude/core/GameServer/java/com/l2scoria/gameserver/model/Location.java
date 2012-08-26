@@ -80,7 +80,7 @@ public final class Location
 	{
 		return h;
 	}
-        /*
+
 	public boolean equals(int _x, int _y, int _z)
 	{
 		return _x == x && _y == y && _z == z;
@@ -125,5 +125,5 @@ public final class Location
 	public Location clone()
 	{
 		return new Location(x, y, z, h);
-	} */
+	}
 }

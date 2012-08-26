@@ -18,14 +18,14 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.serverpackets.PartyMemberPosition;
 import com.l2scoria.gameserver.network.serverpackets.ValidateLocation;
 import com.l2scoria.gameserver.network.serverpackets.ValidateLocationInVehicle;
 import com.l2scoria.gameserver.thread.TaskPriority;
+
+import java.util.logging.Logger;
 
 /**
  * This class ...
@@ -121,7 +121,7 @@ public class ValidatePosition extends L2GameClientPacket
                         // intended for geodata. Sends a validation packet to client
                         // when too far from server calculated true coordinate.
                         // Due to geodata/zone errors, some Z axis checks are made.
-                        else if (Config.GEODATA > 0 && (diffSq > 10000 || Math.abs(dz) > 200))
+                        else if (Config.GEODATA && (diffSq > 10000 || Math.abs(dz) > 200))
                         {
                                 if (Math.abs(dz) > 200 && Math.abs(dz) < 1500 && Math.abs(_z - activeChar.getClientZ()) < 800)
                                 {

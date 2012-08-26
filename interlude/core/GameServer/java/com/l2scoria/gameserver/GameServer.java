@@ -34,9 +34,7 @@ import com.l2scoria.gameserver.datatables.csv.*;
 import com.l2scoria.gameserver.datatables.sql.*;
 import com.l2scoria.gameserver.datatables.xml.AugmentationData;
 import com.l2scoria.gameserver.datatables.xml.ZoneData;
-import com.l2scoria.gameserver.geo.GeoData;
-import com.l2scoria.gameserver.geo.pathfinding.PathFinding;
-import com.l2scoria.gameserver.geo.geoeditorcon.GeoEditorListener;
+import com.l2scoria.gameserver.geodata.GeoEngine;
 import com.l2scoria.gameserver.handler.*;
 import com.l2scoria.gameserver.idfactory.IdFactory;
 import com.l2scoria.gameserver.managers.*;
@@ -247,11 +245,8 @@ public class GameServer
 			}
 
 			Util.printSection("GeoEngine");
-			GeoData.getInstance();
-			if(Config.GEODATA >= 2)
-                        {
-                            PathFinding.getInstance();
-                        }
+			if (Config.GEODATA)
+				GeoEngine.loadGeo();
 
 			Util.printSection("Economy");
 			TradeController.getInstance();
@@ -309,10 +304,6 @@ public class GameServer
 			// read pet stats from db
 			L2PetDataTable.getInstance().loadPetsData();
 			SQLQueue.getInstance();
-			if(Config.ACCEPT_GEOEDITOR_CONN)
-			{
-				GeoEditorListener.getInstance();
-			}
 			if(Config.SAVE_DROPPED_ITEM)
 			{
 				ItemsOnGroundManager.getInstance();

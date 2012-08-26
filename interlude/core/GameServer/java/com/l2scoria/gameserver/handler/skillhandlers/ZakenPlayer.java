@@ -34,57 +34,59 @@ public class ZakenPlayer implements ISkillHandler
 	{
 		try
 		{
-			for(int index = 0; index < targets.length; index++)
+			for (L2Object target1 : targets)
 			{
-				if(!(targets[index] instanceof L2Character))
+				if (!(target1 instanceof L2Character))
+				{
 					continue;
-				L2Character target = (L2Character) targets[index];
+				}
+				L2Character target = (L2Character) target1;
 				int ch = (Rnd.get(14) + 1);
-				if(ch == 1)
+				if (ch == 1)
 				{
 					target.teleToLocation(55299, 219120, -2952, true);
 				}
-				else if(ch == 2)
+				else if (ch == 2)
 				{
 					target.teleToLocation(56363, 218043, -2952, true);
 				}
-				else if(ch == 3)
+				else if (ch == 3)
 				{
 					target.teleToLocation(54245, 220162, -2952, true);
 				}
-				else if(ch == 4)
+				else if (ch == 4)
 				{
 					target.teleToLocation(56289, 220126, -2952, true);
 				}
-				else if(ch == 5)
+				else if (ch == 5)
 				{
 					target.teleToLocation(55299, 219120, -3224, true);
 				}
-				else if(ch == 6)
+				else if (ch == 6)
 				{
 					target.teleToLocation(56363, 218043, -3224, true);
 				}
-				else if(ch == 7)
+				else if (ch == 7)
 				{
 					target.teleToLocation(54245, 220162, -3224, true);
 				}
-				else if(ch == 8)
+				else if (ch == 8)
 				{
 					target.teleToLocation(56289, 220126, -3224, true);
 				}
-				else if(ch == 9)
+				else if (ch == 9)
 				{
 					target.teleToLocation(55299, 219120, -3496, true);
 				}
-				else if(ch == 10)
+				else if (ch == 10)
 				{
 					target.teleToLocation(56363, 218043, -3496, true);
 				}
-				else if(ch == 11)
+				else if (ch == 11)
 				{
 					target.teleToLocation(54245, 220162, -3496, true);
 				}
-				else if(ch == 12)
+				else if (ch == 12)
 				{
 					target.teleToLocation(56289, 220126, -3496, true);
 				}

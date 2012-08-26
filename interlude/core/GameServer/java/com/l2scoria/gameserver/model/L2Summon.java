@@ -23,7 +23,7 @@ import com.l2scoria.gameserver.ai.CtrlIntention;
 import com.l2scoria.gameserver.ai.L2CharacterAI;
 import com.l2scoria.gameserver.ai.L2SummonAI;
 import com.l2scoria.gameserver.datatables.SkillTable;
-import com.l2scoria.gameserver.geo.GeoData;
+import com.l2scoria.gameserver.geodata.GeoEngine;
 import com.l2scoria.gameserver.model.L2Skill.SkillTargetType;
 import com.l2scoria.gameserver.model.actor.instance.L2DoorInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
@@ -34,15 +34,7 @@ import com.l2scoria.gameserver.model.actor.stat.SummonStat;
 import com.l2scoria.gameserver.model.actor.status.SummonStatus;
 import com.l2scoria.gameserver.model.base.Experience;
 import com.l2scoria.gameserver.network.SystemMessageId;
-import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
-import com.l2scoria.gameserver.network.serverpackets.MyTargetSelected;
-import com.l2scoria.gameserver.network.serverpackets.NpcInfo;
-import com.l2scoria.gameserver.network.serverpackets.PetDelete;
-import com.l2scoria.gameserver.network.serverpackets.PetInfo;
-import com.l2scoria.gameserver.network.serverpackets.PetStatusShow;
-import com.l2scoria.gameserver.network.serverpackets.PetStatusUpdate;
-import com.l2scoria.gameserver.network.serverpackets.StatusUpdate;
-import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
+import com.l2scoria.gameserver.network.serverpackets.*;
 import com.l2scoria.gameserver.taskmanager.DecayTaskManager;
 import com.l2scoria.gameserver.templates.L2NpcTemplate;
 import com.l2scoria.gameserver.templates.L2Weapon;
@@ -211,9 +203,9 @@ public abstract class L2Summon extends L2PlayableInstance
 		{
 			if(isAutoAttackable(player))
 			{
-				if(Config.GEODATA > 0)
+				if(Config.GEODATA)
 				{
-					if(GeoData.getInstance().canSeeTarget(player, this))
+					if(GeoEngine.canSeeTarget(player, this, false))
 					{
 						player.getAI().setIntention(CtrlIntention.AI_INTENTION_ATTACK, this);
 						player.onActionRequest();
@@ -230,9 +222,9 @@ public abstract class L2Summon extends L2PlayableInstance
 				// This Action Failed packet avoids player getting stuck when clicking three or more times 
 				player.sendPacket(ActionFailed.STATIC_PACKET);
 
-				if(Config.GEODATA > 0)
+				if(Config.GEODATA)
 				{
-					if(GeoData.getInstance().canSeeTarget(player, this))
+					if(GeoEngine.canSeeTarget(player, this, false))
 					{
 						player.getAI().setIntention(CtrlIntention.AI_INTENTION_FOLLOW, this);
 					}

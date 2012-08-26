@@ -4,7 +4,7 @@ import com.l2scoria.gameserver.geo.GeoData;
 import com.l2scoria.gameserver.geo.pathfinding.Node;
 import com.l2scoria.gameserver.geo.pathfinding.cellnodes.CellPathFinding;
 import com.l2scoria.gameserver.geo.util.L2Arrays;
-import com.l2scoria.gameserver.datatables.csv.DoorTable;
+import com.l2scoria.gameserver.datatables.sql.DoorTable;
 import com.l2scoria.gameserver.model.L2Object;
 import com.l2scoria.gameserver.model.L2World;
 import com.l2scoria.gameserver.model.Location;
@@ -23,18 +23,10 @@ import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
-import java.nio.channels.FileChannel.MapMode;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.logging.Logger;
-
-import ru.akumu.geoengine.paths.GeoNode;
-import ru.akumu.geoengine.paths.Paths;
-import ru.akumu.geoengine.paths.type.AbstractNodeLoc;
-import ru.akumu.geoengine.paths.type.GeoPath;
 
 public class MovementEngine extends GeoData
 {

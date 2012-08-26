@@ -17,7 +17,7 @@ package com.l2scoria.gameserver.model.zone.type;
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.GameServer;
 import com.l2scoria.gameserver.ai.special.VanHalter;
-import com.l2scoria.gameserver.datatables.csv.DoorTable;
+import com.l2scoria.gameserver.datatables.sql.DoorTable;
 import com.l2scoria.gameserver.datatables.csv.MapRegionTable;
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;

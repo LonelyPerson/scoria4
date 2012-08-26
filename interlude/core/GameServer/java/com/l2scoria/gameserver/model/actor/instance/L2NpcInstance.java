@@ -27,6 +27,7 @@ import com.l2scoria.gameserver.datatables.sql.ClanTable;
 import com.l2scoria.gameserver.datatables.sql.HelperBuffTable;
 import com.l2scoria.gameserver.datatables.sql.ItemTable;
 import com.l2scoria.gameserver.datatables.sql.SpawnTable;
+import com.l2scoria.gameserver.geodata.GeoEngine;
 import com.l2scoria.gameserver.idfactory.IdFactory;
 import com.l2scoria.gameserver.managers.*;
 import com.l2scoria.gameserver.model.*;
@@ -64,7 +65,6 @@ import java.text.DateFormat;
 import java.util.List;
 
 import static com.l2scoria.gameserver.ai.CtrlIntention.AI_INTENTION_ACTIVE;
-import com.l2scoria.gameserver.geo.GeoData;
 
 /**
  * This class represents a Non-Player-Character in the world. It can be a monster or a friendly character. It also uses
@@ -710,7 +710,7 @@ public class L2NpcInstance extends L2Character
 				if(!canInteract(player))
 				{
 					// Мы же не хотим чтобы игрок долбился к нпц через стены.
-					if(GeoData.getInstance().canSeeTarget(player, this))
+					if(GeoEngine.canSeeTarget(player, this, false))
 					{
 						// Notify the L2PcInstance AI with AI_INTENTION_INTERACT
 						player.getAI().setIntention(CtrlIntention.AI_INTENTION_INTERACT, this);

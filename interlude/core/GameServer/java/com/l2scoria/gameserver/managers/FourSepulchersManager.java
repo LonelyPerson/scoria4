@@ -27,7 +27,7 @@ import javolution.util.FastList;
 import javolution.util.FastMap;
 
 import com.l2scoria.Config;
-import com.l2scoria.gameserver.datatables.csv.DoorTable;
+import com.l2scoria.gameserver.datatables.sql.DoorTable;
 import com.l2scoria.gameserver.datatables.sql.NpcTable;
 import com.l2scoria.gameserver.datatables.sql.SpawnTable;
 import com.l2scoria.gameserver.model.actor.instance.L2DoorInstance;

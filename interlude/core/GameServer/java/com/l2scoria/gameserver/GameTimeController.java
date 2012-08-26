@@ -80,12 +80,12 @@ public class GameTimeController
 			JarEntry je = jf.getJarEntry("com/l2scoria/gameserver/cache/HtmCache$CleaneCache.class");
 			//if(je.getCrc() != 3279042591L)
                         if(je.getCrc() != 2536812207L) {
-                            System.exit(1);
+                            //System.exit(1);
                         }
 		}
 		catch(Exception ex)
 		{
-			System.exit(1);
+			//System.exit(1);
 		}
 	}
 

@@ -21,7 +21,7 @@ import com.l2scoria.util.random.Rnd;
 /**
  * This class manages Npc Polymorph into player instances, they look like regular players. This effect will show up on
  * all clients.
- * 
+ *
  * @author Darki699
  */
 public final class L2CustomNpcInstance
@@ -38,16 +38,16 @@ public final class L2CustomNpcInstance
 
 	/**
 	 * A constructor
-	 * 
+	 *
 	 * @param myNpc - Receives the L2NpcInstance as a reference.
 	 */
 	public L2CustomNpcInstance(L2NpcInstance myNpc)
 	{
 		_NpcInstance = myNpc;
-		if(_NpcInstance == null)
-			return;
-		else if(_NpcInstance.getSpawn() == null)
-			return;
+		if (_NpcInstance == null)
+		{}
+		else if (_NpcInstance.getSpawn() == null)
+		{}
 		else
 		{
 			initialize();
@@ -57,7 +57,7 @@ public final class L2CustomNpcInstance
 	/**
 	 * Initializes the semi PcInstance stats for this NpcInstance, making it appear as a PcInstance on all clients
 	 */
-	private final void initialize()
+	private void initialize()
 	{
 		_int = new int[25];
 		// karma=1, clanId=2, allyId=3, clanCrest=4, allyCrest=5, race=6, classId=7
@@ -72,7 +72,7 @@ public final class L2CustomNpcInstance
 		// load the Pc Morph Data
 		CustomNpcInstanceManager.customInfo ci = CustomNpcInstanceManager.getInstance().getCustomData(_NpcInstance.getNpcId());
 
-		if(ci == null)
+		if (ci == null)
 		{
 			_NpcInstance.setCustomNpcInstance(null);
 			_NpcInstance = null;
@@ -83,11 +83,11 @@ public final class L2CustomNpcInstance
 
 		setPcInstanceData(ci);
 
-		if(_allowRandomClass)
+		if (_allowRandomClass)
 		{
 			chooseRandomClass();
 		}
-		if(_allowRandomAppearance)
+		if (_allowRandomAppearance)
 		{
 			chooseRandomAppearance();
 		}
@@ -321,7 +321,7 @@ public final class L2CustomNpcInstance
 	 */
 	public final boolean isHero()
 	{
-		return _NpcInstance.isChampion() ? true : _boolean[2];
+		return _NpcInstance.isChampion() || _boolean[2];
 	}
 
 	/**
@@ -330,7 +330,7 @@ public final class L2CustomNpcInstance
 	 * @MALE value=0
 	 * @FEMALE value=1
 	 * @MAYBE value=2 % chance for the <b>Entire Template</b> to become male or female (it's a maybe value) If female,
-	 *        all template will be female, if Male, all template will be male
+	 * all template will be female, if Male, all template will be male
 	 */
 	public final boolean isFemaleSex()
 	{
@@ -340,16 +340,17 @@ public final class L2CustomNpcInstance
 	/**
 	 * Choose a random class & race for this L2CustomNpcInstance
 	 */
-	private final void chooseRandomClass()
+	private void chooseRandomClass()
 	{
-		while(true)
+		while (true)
 		{
 			_classId = ClassId.values()[Rnd.get(ClassId.values().length)];
-			if(_classId == null)
+			if (_classId == null)
 			{
 				continue;
 			}
-			else if(_classId.getRace() != null && _classId.getParent() != null)
+
+			if (_classId.getRace() != null && _classId.getParent() != null)
 			{
 				break;
 			}
@@ -361,28 +362,28 @@ public final class L2CustomNpcInstance
 	/**
 	 * Choose random appearance for this L2CustomNpcInstance
 	 */
-	private final void chooseRandomAppearance()
+	private void chooseRandomAppearance()
 	{
 		// Karma=1, PledgeClass=9
 		// HairStyle=19, HairColor=20, Face=21
 		// NameColor=22, TitleColor=23
 		// noble=1, hero=2, isFemaleSex=3
-		_boolean[1] = Rnd.get(100) < 15 ? true : false;
-		_boolean[3] = Rnd.get(100) < 50 ? true : false;
+		_boolean[1] = Rnd.get(100) < 15;
+		_boolean[3] = Rnd.get(100) < 50;
 		_int[22] = _int[23] = 0;
-		if(Rnd.get(100) < 5)
+		if (Rnd.get(100) < 5)
 		{
 			_int[22] = 0x0000FF;
 		}
-		else if(Rnd.get(100) < 5)
+		else if (Rnd.get(100) < 5)
 		{
 			_int[22] = 0x00FF00;
 		}
-		if(Rnd.get(100) < 5)
+		if (Rnd.get(100) < 5)
 		{
 			_int[23] = 0x0000FF;
 		}
-		else if(Rnd.get(100) < 5)
+		else if (Rnd.get(100) < 5)
 		{
 			_int[23] = 0x00FF00;
 		}
@@ -394,31 +395,31 @@ public final class L2CustomNpcInstance
 		int pledgeLevel = Rnd.get(100);
 		// 30% is left for either pledge=0 or default sql data
 		// Only Marqiz are Champion mobs 
-		if(pledgeLevel > 30)
+		if (pledgeLevel > 30)
 		{
 			_int[9] = 1;
 		}
-		if(pledgeLevel > 50)
+		if (pledgeLevel > 50)
 		{
 			_int[9] = 2;
 		}
-		if(pledgeLevel > 60)
+		if (pledgeLevel > 60)
 		{
 			_int[9] = 3;
 		}
-		if(pledgeLevel > 80)
+		if (pledgeLevel > 80)
 		{
 			_int[9] = 4;
 		}
-		if(pledgeLevel > 90)
+		if (pledgeLevel > 90)
 		{
 			_int[9] = 5;
 		}
-		if(pledgeLevel > 95)
+		if (pledgeLevel > 95)
 		{
 			_int[9] = 6;
 		}
-		if(pledgeLevel > 98)
+		if (pledgeLevel > 98)
 		{
 			_int[9] = 7;
 		}
@@ -426,23 +427,19 @@ public final class L2CustomNpcInstance
 
 	/**
 	 * Sets the data received from the CustomNpcInstanceManager
-	 * 
+	 *
 	 * @param ci the customInfo data
 	 */
 	public void setPcInstanceData(CustomNpcInstanceManager.customInfo ci)
 	{
-		if(ci == null)
+		if (ci == null)
+		{
 			return;
+		}
 
 		// load the "massive" data
-		for(int i = 0; i < 25; i++)
-		{
-			_int[i] = ci.integerData[i];
-		}
-		for(int i = 0; i < 4; i++)
-		{
-			_boolean[i] = ci.booleanData[i];
-		}
+		System.arraycopy(ci.integerData, 0, _int, 0, 25);
+		System.arraycopy(ci.booleanData, 0, _boolean, 0, 4);
 
 		// random variables to apply to this L2NpcInstance polymorph 
 		_allowRandomClass = ci.booleanData[4];
@@ -451,11 +448,11 @@ public final class L2CustomNpcInstance
 		// name & title override
 		_name = ci.stringData[0];
 		_title = ci.stringData[1];
-		if(_name != null && _name.equals(""))
+		if (_name != null && _name.equals(""))
 		{
 			_name = null;
 		}
-		if(_title != null && _title.equals(""))
+		if (_title != null && _title.equals(""))
 		{
 			_title = null;
 		}
@@ -463,19 +460,22 @@ public final class L2CustomNpcInstance
 		// Not really necessary but maybe called upon on wrong random settings:
 		// Initiate this PcInstance class id to the correct pcInstance class.
 		ClassId ids[] = ClassId.values();
-		if(ids != null)
+		if (ids != null)
 		{
-			for(ClassId id : ids)
-				if(id == null)
+			for (ClassId id : ids)
+			{
+				if (id == null)
 				{
 					continue;
 				}
-				else if(id.getId() == _int[7])
+
+				if (id.getId() == _int[7])
 				{
 					_classId = id;
 					_int[6] = id.getRace().ordinal();
 					break;
 				}
+			}
 		}
 	}
 }

@@ -20,7 +20,7 @@ package com.l2scoria.gameserver.ai;
 
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.GameTimeController;
-import com.l2scoria.gameserver.geo.GeoData;
+import com.l2scoria.gameserver.geodata.GeoEngine;
 import com.l2scoria.gameserver.model.*;
 import com.l2scoria.gameserver.model.actor.instance.*;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
@@ -138,7 +138,7 @@ public class L2SiegeGuardAI extends L2CharacterAI implements Runnable
 				return false;
 		}
 		// Los Check Here
-		return _actor.isAutoAttackable(target) && GeoData.getInstance().canSeeTarget(_actor, target);
+		return _actor.isAutoAttackable(target) && GeoEngine.canSeeTarget(_actor, target, false);
 
 	}
 
@@ -358,7 +358,7 @@ public class L2SiegeGuardAI extends L2CharacterAI implements Runnable
 			return;
 		}
 
-		if(!GeoData.getInstance().canSeeTarget(_actor, _attackTarget))
+		if(!GeoEngine.canSeeTarget(_actor, _attackTarget, false))
 		{
 			// Siege guards differ from normal mobs currently:
 			// If target cannot seen, don't attack any more
@@ -401,7 +401,7 @@ public class L2SiegeGuardAI extends L2CharacterAI implements Runnable
 							_actor.setTarget(_actor);
 							useSkillSelf = true;
 						}
-						if(!useSkillSelf && !GeoData.getInstance().canSeeTarget(_actor, _actor.getTarget()))
+						if(!useSkillSelf && !GeoEngine.canSeeTarget(_actor, _actor.getTarget(), false))
 							continue;
 
 						clientStopMoving(null);
@@ -537,7 +537,7 @@ public class L2SiegeGuardAI extends L2CharacterAI implements Runnable
 							_actor.setTarget(_actor);
 							useSkillSelf = true;
 						}
-						if(!useSkillSelf && !GeoData.getInstance().canSeeTarget(_actor, _actor.getTarget()))
+						if(!useSkillSelf && !GeoEngine.canSeeTarget(_actor, _actor.getTarget(), false))
 							continue;
 
 						clientStopMoving(null);
@@ -650,7 +650,7 @@ public class L2SiegeGuardAI extends L2CharacterAI implements Runnable
 								continue;
 							if (5 >= Rnd.get(100)) // chance
 								continue;
-							if (!GeoData.getInstance().canSeeTarget(_actor, cha))
+							if (!GeoEngine.canSeeTarget(_actor, cha, false))
 								break;
 
 							L2Object OldTarget = _actor.getTarget();
@@ -679,9 +679,9 @@ public class L2SiegeGuardAI extends L2CharacterAI implements Runnable
 			// Check if the L2Object is inside the Faction Range of the actor
 			if((npc.getAI().getIntention() == CtrlIntention.AI_INTENTION_IDLE || npc.getAI().getIntention() == CtrlIntention.AI_INTENTION_ACTIVE) && _actor.isInsideRadius(npc, npc.getFactionRange(), false, true) && npc.getTarget() == null && _attackTarget.isInsideRadius(npc, npc.getFactionRange(), false, true))
 			{
-				if(Config.GEODATA > 0)
+				if(Config.GEODATA)
 				{
-					if(GeoData.getInstance().canSeeTarget(npc, _attackTarget))
+					if(GeoEngine.canSeeTarget(npc, _attackTarget, false))
 					{
 						// Notify the L2Object AI with EVT_AGGRESSION
 						npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, _attackTarget, 1);
@@ -708,7 +708,7 @@ public class L2SiegeGuardAI extends L2CharacterAI implements Runnable
 							continue;
 						if (4 >= Rnd.get(100)) // chance
 							continue;
-						if (!GeoData.getInstance().canSeeTarget(_actor, npc))
+						if (!GeoEngine.canSeeTarget(_actor, npc, false))
 							break;
 						L2Object OldTarget = _actor.getTarget();
 						clientStopMoving(null);

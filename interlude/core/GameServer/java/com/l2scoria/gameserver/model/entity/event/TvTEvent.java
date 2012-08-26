@@ -23,7 +23,7 @@ import javolution.util.FastMap;
 import com.l2scoria.Config;
 import com.l2scoria.crypt.nProtect;
 import com.l2scoria.crypt.nProtect.RestrictionType;
-import com.l2scoria.gameserver.datatables.csv.DoorTable;
+import com.l2scoria.gameserver.datatables.sql.DoorTable;
 import com.l2scoria.gameserver.datatables.csv.MapRegionTable;
 import com.l2scoria.gameserver.datatables.sql.ItemTable;
 import com.l2scoria.gameserver.datatables.sql.NpcTable;

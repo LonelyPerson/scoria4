@@ -32,7 +32,7 @@ import java.util.logging.Logger;
 
 import javolution.util.FastList;
 
-import com.l2scoria.gameserver.datatables.csv.DoorTable;
+import com.l2scoria.gameserver.datatables.sql.DoorTable;
 import com.l2scoria.gameserver.datatables.sql.ClanTable;
 import com.l2scoria.gameserver.datatables.sql.NpcTable;
 import com.l2scoria.gameserver.idfactory.IdFactory;

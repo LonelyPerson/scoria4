@@ -18,9 +18,9 @@
  */
 package com.l2scoria.gameserver.templates;
 
-import java.util.Map;
-
 import javolution.util.FastMap;
+
+import java.util.Map;
 
 /**
  * @author mkizub <BR>
@@ -32,6 +32,15 @@ public final class StatsSet
 {
 
 	private final Map<String, Object> _set = new FastMap<String, Object>();
+
+	public StatsSet()
+	{}
+
+	public StatsSet(Map<String, Object> map)
+	{
+		for(String key : map.keySet())
+			_set.put(key, map.get(key));
+	}
 
 	/**
 	 * Returns the set of values
@@ -580,5 +589,11 @@ public final class StatsSet
 	public void set(String name, Enum<?> value)
 	{
 		_set.put(name, value);
+	}
+
+	@Override
+	public StatsSet clone()
+	{
+		return new StatsSet(_set);
 	}
 }

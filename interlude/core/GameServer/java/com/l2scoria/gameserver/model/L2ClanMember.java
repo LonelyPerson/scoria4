@@ -18,13 +18,13 @@
  */
 package com.l2scoria.gameserver.model;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-
 import com.l2scoria.gameserver.managers.SiegeManager;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import java.sql.Connection;
 import com.l2scoria.util.database.L2DatabaseFactory;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 /**
  * This class ...
@@ -85,7 +85,6 @@ public class L2ClanMember
 		if(player == null && _player != null)
 		{
 			// this is here to keep the data when the player logs off
-                        try {
 			_name = _player.getName();
 			_level = _player.getLevel();
 			_classId = _player.getClassId().getId();
@@ -95,9 +94,6 @@ public class L2ClanMember
 			_title = _player.getTitle();
 			_apprentice = _player.getApprentice();
 			_sponsor = _player.getSponsor();
-                        } catch(Exception e) {
-                            // exception
-                        }
 		}
 
 		if(player != null)

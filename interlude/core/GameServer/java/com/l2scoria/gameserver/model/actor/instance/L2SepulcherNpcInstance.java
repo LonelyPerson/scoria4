@@ -22,7 +22,7 @@ import javolution.util.FastMap;
 
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.ai.CtrlIntention;
-import com.l2scoria.gameserver.datatables.csv.DoorTable;
+import com.l2scoria.gameserver.datatables.sql.DoorTable;
 import com.l2scoria.gameserver.managers.FourSepulchersManager;
 import com.l2scoria.gameserver.model.L2World;
 import com.l2scoria.gameserver.model.quest.Quest;

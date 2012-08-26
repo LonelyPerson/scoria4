@@ -20,17 +20,11 @@ package com.l2scoria.gameserver.skills.effects;
 
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.ai.CtrlIntention;
-import com.l2scoria.gameserver.geo.GeoData;
-import com.l2scoria.gameserver.model.actor.instance.L2CommanderInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2FolkInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2FortSiegeGuardInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2SiegeFlagInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2SiegeGuardInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2SiegeSummonInstance;
-import com.l2scoria.gameserver.model.actor.position.L2CharPosition;
+import com.l2scoria.gameserver.geodata.GeoEngine;
 import com.l2scoria.gameserver.model.L2Effect;
 import com.l2scoria.gameserver.model.Location;
+import com.l2scoria.gameserver.model.actor.instance.*;
+import com.l2scoria.gameserver.model.actor.position.L2CharPosition;
 import com.l2scoria.gameserver.skills.Env;
 
 /**
@@ -130,9 +124,9 @@ final class EffectFear extends L2Effect
 		posX += signx * FEAR_RANGE;
 		posY += signy * FEAR_RANGE;
 
-		if (Config.GEODATA > 0)
+		if (Config.GEODATA)
 		{
-			Location destiny = GeoData.getInstance().moveCheck(getEffected().getX(), getEffected().getY(), getEffected().getZ(), posX, posY, posZ);
+			Location destiny = GeoEngine.moveCheck(getEffected().getX(), getEffected().getY(), getEffected().getZ(), posX, posY, false);
 			posX = destiny.getX();
 			posY = destiny.getY();
 		}

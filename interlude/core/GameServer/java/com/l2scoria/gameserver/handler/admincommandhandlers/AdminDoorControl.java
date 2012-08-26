@@ -18,19 +18,19 @@
  */
 package com.l2scoria.gameserver.handler.admincommandhandlers;
 
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
-import com.l2scoria.gameserver.datatables.csv.DoorTable;
 import com.l2scoria.gameserver.datatables.sql.AdminCommandAccessRights;
+import com.l2scoria.gameserver.datatables.sql.DoorTable;
 import com.l2scoria.gameserver.handler.IAdminCommandHandler;
 import com.l2scoria.gameserver.managers.CastleManager;
 import com.l2scoria.gameserver.model.L2Object;
 import com.l2scoria.gameserver.model.actor.instance.L2DoorInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.entity.siege.Castle;
+
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
 /**
  * This class handles following admin commands:<br>

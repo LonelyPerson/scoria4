@@ -562,9 +562,7 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>> i
 			return -1;
 		}
 
-		Integer objectId = _charSlotMapping.get(charslot);
-
-		return objectId.intValue();
+		return _charSlotMapping.get(charslot);
 	}
 
 	@Override

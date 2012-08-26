@@ -14,16 +14,8 @@
  */
 package com.l2scoria.gameserver.model.entity.siege;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.Calendar;
-import java.util.List;
-import java.util.logging.Logger;
-
-import javolution.util.FastList;
-
-import com.l2scoria.gameserver.datatables.csv.DoorTable;
 import com.l2scoria.gameserver.datatables.sql.ClanTable;
+import com.l2scoria.gameserver.datatables.sql.DoorTable;
 import com.l2scoria.gameserver.model.L2Clan;
 import com.l2scoria.gameserver.model.L2Object;
 import com.l2scoria.gameserver.model.actor.instance.L2DoorInstance;
@@ -34,8 +26,15 @@ import com.l2scoria.gameserver.model.zone.type.L2FortZone;
 import com.l2scoria.gameserver.network.serverpackets.PlaySound;
 import com.l2scoria.gameserver.network.serverpackets.PledgeShowInfoUpdate;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
-import java.sql.Connection;
 import com.l2scoria.util.database.L2DatabaseFactory;
+import javolution.util.FastList;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.Calendar;
+import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * @author programmos, scoria dev
@@ -284,16 +283,9 @@ public class Fort
 
 			if(door.getCurrentHp() <= 0)
 			{
-				door.decayMe(); // Kill current if not killed already
-				door = DoorTable.parseList(_doorDefault.get(i));
-
-				if(isDoorWeak)
-				{
-					door.setCurrentHp(door.getMaxHp() / 2);
-				}
-
+				door.decayMe();	// Kill current if not killed already
+				door.setCurrentHp(isDoorWeak ? door.getMaxHp() / 2 : door.getMaxHp());
 				door.spawnMe(door.getX(), door.getY(), door.getZ());
-				getDoors().set(i, door);
 			}
 			else if(door.getOpen() == false)
 			{
@@ -411,16 +403,23 @@ public class Fort
 
 			while(rs.next())
 			{
-				// Create list of the door default for use when respawning dead doors
-				_doorDefault.add(rs.getString("name") + ";" + rs.getInt("id") + ";" + rs.getInt("x") + ";" + rs.getInt("y") + ";" + rs.getInt("z") + ";" + rs.getInt("range_xmin") + ";" + rs.getInt("range_ymin") + ";" + rs.getInt("range_zmin") + ";" + rs.getInt("range_xmax") + ";" + rs.getInt("range_ymax") + ";" + rs.getInt("range_zmax") + ";" + rs.getInt("hp") + ";" + rs.getInt("pDef") + ";" + rs.getInt("mDef"));
+				try
+				{
+					// Create list of the door default for use when respawning dead doors
+					_doorDefault.add(rs.getString("name") + ";" + rs.getInt("id") + ";" + rs.getInt("x") + ";" + rs.getInt("y") + ";" + rs.getInt("z") + ";" + rs.getInt("range_xmin") + ";" + rs.getInt("range_ymin") + ";" + rs.getInt("range_zmin") + ";" + rs.getInt("range_xmax") + ";" + rs.getInt("range_ymax") + ";" + rs.getInt("range_zmax") + ";" + rs.getInt("hp") + ";" + rs.getInt("pDef") + ";" + rs.getInt("mDef"));
 
-				L2DoorInstance door = DoorTable.parseList(_doorDefault.get(_doorDefault.size() - 1));
-				door.spawnMe(door.getX(), door.getY(), door.getZ());
+					L2DoorInstance door = DoorTable.getInstance().getDoor(rs.getInt("id"));
+					door.spawnMe(door.getX(), door.getY(), door.getZ());
 
-				_doors.add(door);
+					_doors.add(door);
 
-				DoorTable.getInstance().putDoor(door);
-				door = null;
+					DoorTable.getInstance().putDoor(door);
+					door = null;
+				}
+				catch (NullPointerException npe)
+				{
+					_log.warning("No door data for door ID: " + rs.getInt("id"));
+				}
 			}
 
 			rs.close();

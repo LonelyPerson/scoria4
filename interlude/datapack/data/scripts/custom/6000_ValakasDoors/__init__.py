@@ -1,5 +1,5 @@
 import sys
-from com.l2scoria.gameserver.datatables.csv import DoorTable
+from com.l2scoria.gameserver.datatables.sql import DoorTable
 from com.l2scoria.gameserver.model.quest import State
 from com.l2scoria.gameserver.model.quest import QuestState
 from com.l2scoria.gameserver.model.quest.jython import QuestJython as JQuest

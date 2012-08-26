@@ -17,7 +17,7 @@
  */
 package com.l2scoria.gameserver.handler.itemhandlers;
 
-import com.l2scoria.gameserver.datatables.csv.DoorTable;
+import com.l2scoria.gameserver.datatables.sql.DoorTable;
 import com.l2scoria.gameserver.handler.IItemHandler;
 import com.l2scoria.gameserver.model.L2Object;
 import com.l2scoria.gameserver.model.actor.instance.L2DoorInstance;

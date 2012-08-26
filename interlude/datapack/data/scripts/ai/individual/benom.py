@@ -1,6 +1,6 @@
 import sys
 from com.l2scoria.gameserver.ai import CtrlIntention
-from com.l2scoria.gameserver.datatables.csv import DoorTable
+from com.l2scoria.gameserver.datatables.sql import DoorTable
 from com.l2scoria.gameserver.managers import CastleManager
 from com.l2scoria.gameserver.managers import GrandBossManager
 from com.l2scoria.gameserver.model.actor.position import L2CharPosition

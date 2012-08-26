@@ -35,7 +35,7 @@ import com.l2scoria.gameserver.datatables.csv.HennaTable;
 import com.l2scoria.gameserver.datatables.csv.MapRegionTable;
 import com.l2scoria.gameserver.datatables.csv.RecipeTable;
 import com.l2scoria.gameserver.datatables.sql.*;
-import com.l2scoria.gameserver.geo.GeoData;
+import com.l2scoria.gameserver.geodata.GeoEngine;
 import com.l2scoria.gameserver.handler.IItemHandler;
 import com.l2scoria.gameserver.handler.ItemHandler;
 import com.l2scoria.gameserver.handler.admincommandhandlers.AdminEditChar;
@@ -4182,9 +4182,9 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 					}
 					else
 					{
-						if(Config.GEODATA > 0)
+						if(Config.GEODATA)
 						{
-							if(GeoData.getInstance().canSeeTarget(player, this))
+							if(GeoEngine.canSeeTarget(player, this, false))
 							{
 								player.getAI().setIntention(CtrlIntention.AI_INTENTION_ATTACK, this);
 								player.onActionRequest();
@@ -4199,9 +4199,9 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 				}
 				else
 				{
-					if(Config.GEODATA > 0)
+					if(Config.GEODATA)
 					{
-						if(GeoData.getInstance().canSeeTarget(player, this))
+						if(GeoEngine.canSeeTarget(player, this, false))
 						{
 							player.getAI().setIntention(CtrlIntention.AI_INTENTION_FOLLOW, this);
 						}
@@ -4308,9 +4308,9 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 						{
 							if (player.isInsideRadius(this, player.getPhysicalAttackRange(), false, false))
 							{
-								if(Config.GEODATA > 0)
+								if(Config.GEODATA)
 								{
-									if(GeoData.getInstance().canSeeTarget(player, this))
+									if(GeoEngine.canSeeTarget(player, this, false))
 									{
 										player.getAI().setIntention(CtrlIntention.AI_INTENTION_ATTACK, this);
 										player.onActionRequest();
@@ -4397,9 +4397,9 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 
 						if (player.isInsideRadius(this, player.getPhysicalAttackRange(), false, false))
 						{
-							if(Config.GEODATA > 0)
+							if(Config.GEODATA)
 							{
-								if(GeoData.getInstance().canSeeTarget(player, this))
+								if(GeoEngine.canSeeTarget(player, this, false))
 								{
 									player.getAI().setIntention(CtrlIntention.AI_INTENTION_ATTACK, this);
 									player.onActionRequest();
@@ -9637,7 +9637,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 					sendPacket(ActionFailed.STATIC_PACKET);
 					return;
 			}
-			else if (!GeoData.getInstance().canSeeTarget(this, target))
+			else if (!GeoEngine.canSeeTarget(this, target, false))
 			{
 				sendPacket(new SystemMessage(SystemMessageId.CANT_SEE_TARGET));
 				sendPacket(ActionFailed.STATIC_PACKET);
@@ -12481,17 +12481,20 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			}// returns pet to control item
 		}
 
-		if(getClanId() != 0 && getClan() != null && getName() != null)
+		if(getClanId() != 0)
 		{
 			// set the status for pledge member list to OFFLINE
 			try
 			{
-				L2ClanMember clanMember = getClan().getClanMember(getName());
-				if(clanMember != null)
+				L2Clan clan = getClan();
+				if(clan != null)
 				{
-					clanMember.setPlayerInstance(null);
+					L2ClanMember clanMember = clan.getClanMember(getName());
+					if(clanMember != null)
+					{
+						clanMember.setPlayerInstance(null);
+					}
 				}
-				clanMember = null;
 			}
 			catch(Exception e)
 			{

@@ -286,6 +286,7 @@ public class L2CharacterAI extends AbstractAI
 			clientActionFailed();
 			return;
 		}
+
 		if(target instanceof L2PcInstance && _actor instanceof L2PcInstance)
 		{
 			if(((L2PcInstance) _actor).getKarma() > 0 && _actor.getLevel() - ((L2PcInstance) target).getLevel() >= 10 && ((L2PlayableInstance) target).getProtectionBlessing() && !((L2Character) target).isInsideZone(ZONE_PVP))

@@ -19,7 +19,7 @@ package com.l2scoria.gameserver.handler.admincommandhandlers;
 
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.sql.AdminCommandAccessRights;
-import com.l2scoria.gameserver.geo.GeoData;
+import com.l2scoria.gameserver.geodata.GeoEngine;
 import com.l2scoria.gameserver.handler.IAdminCommandHandler;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 
@@ -96,7 +96,7 @@ public class AdminGeodata implements IAdminCommandHandler
 			case admin_geo_position:
 			case admin_geo_bug:
 			case admin_geo_unload:
-				if(Config.GEODATA == 0)
+				if(!Config.GEODATA)
 				{
 					activeChar.sendMessage("Geodata is curently off!");
 					return true;
@@ -107,21 +107,21 @@ public class AdminGeodata implements IAdminCommandHandler
 		switch(commandEnum)
 		{
 			case admin_geo_z:
-				activeChar.sendMessage("GeoEngine: Geo_Z = " + GeoData.getInstance().getHeight(activeChar.getX(), activeChar.getY(), activeChar.getZ()) + " Loc_Z = " + activeChar.getZ());
+				activeChar.sendMessage("GeoEngine: Geo_Z = " + GeoEngine.getHeight(activeChar.getX(), activeChar.getY(), activeChar.getZ()) + " Loc_Z = " + activeChar.getZ());
 				break;
 
 			case admin_geo_type:
-				short type = GeoData.getInstance().getType(activeChar.getX(), activeChar.getY());
+				short type = GeoEngine.getType(activeChar.getX(), activeChar.getY());
 				activeChar.sendMessage("GeoEngine: Geo_Type = " + type);
 
-				int height = GeoData.getInstance().getHeight(activeChar.getX(), activeChar.getY(), activeChar.getZ());
+				int height = GeoEngine.getHeight(activeChar.getX(), activeChar.getY(), activeChar.getZ());
 				activeChar.sendMessage("GeoEngine: height = " + height);
 				break;
 
 			case admin_geo_nswe:
 				String result = "";
 
-				short nswe = GeoData.getInstance().getNSWE(activeChar.getX(), activeChar.getY(), activeChar.getZ());
+				short nswe = GeoEngine.getNSWE(activeChar.getX(), activeChar.getY(), activeChar.getZ());
 
 				if((nswe & 8) == 0)
 				{
@@ -149,7 +149,7 @@ public class AdminGeodata implements IAdminCommandHandler
 			case admin_geo_los:
 				if(activeChar.getTarget() != null)
 				{
-					if(GeoData.getInstance().canSeeTarget(activeChar, activeChar.getTarget()))
+					if(GeoEngine.canSeeTarget(activeChar, activeChar.getTarget(), false))
 					{
 						activeChar.sendMessage("GeoEngine: can see target.");
 					}
@@ -167,11 +167,11 @@ public class AdminGeodata implements IAdminCommandHandler
 			case admin_geo_position:
 				activeChar.sendMessage("GeoEngine:");
 				activeChar.sendMessage(".... Current position: x: " + activeChar.getX() + " y: " + activeChar.getY() + " z: " + activeChar.getZ());
-				activeChar.sendMessage(".... geo position: " + GeoData.getInstance().geoPosition(activeChar.getX(), activeChar.getY()));
+				//activeChar.sendMessage(".... geo position: " + GeoEngine.geoPosition(activeChar.getX(), activeChar.getY()));
 				break;
 
 			case admin_geo_load:
-				String[] v = command.substring(15).split(" ");
+				/*String[] v = command.substring(15).split(" ");
 
 				if(v.length != 2)
 				{
@@ -184,7 +184,7 @@ public class AdminGeodata implements IAdminCommandHandler
 						byte rx = Byte.parseByte(v[0]);
 						byte ry = Byte.parseByte(v[1]);
 
-						boolean result2 = GeoData.getInstance().loadGeodataFile(rx, ry);
+						boolean result2 = GeoEngine.loadGeodataFile(rx, ry);
 
 						if(result2)
 						{
@@ -199,11 +199,11 @@ public class AdminGeodata implements IAdminCommandHandler
 					{
 						activeChar.sendMessage("You have to write numbers of regions <regionX> <regionY>");
 					}
-				}
+				}*/
 				break;
 
 			case admin_geo_unload:
-				String[] v2 = command.substring(17).split(" ");
+				/*String[] v2 = command.substring(17).split(" ");
 
 				if(v2.length != 2)
 				{
@@ -216,18 +216,18 @@ public class AdminGeodata implements IAdminCommandHandler
 						byte rx = Byte.parseByte(v2[0]);
 						byte ry = Byte.parseByte(v2[1]);
 
-						GeoData.getInstance().unloadGeodata(rx, ry);
+						GeoEngine.unloadGeodata(rx, ry);
 						activeChar.sendMessage("GeoEngine: geo [" + rx + "," + ry + "] unloaded.");
 					}
 					catch(Exception e)
 					{
 						activeChar.sendMessage("You have to write numbers of regions <regionX> <regionY>");
 					}
-				}
+				}*/
 				break;
 
 			case admin_geo_bug:
-				try
+				/*try
 				{
 					String comment = command.substring(14);
 					GeoData.getInstance().addGeoDataBug(activeChar, comment);
@@ -235,7 +235,7 @@ public class AdminGeodata implements IAdminCommandHandler
 				catch(StringIndexOutOfBoundsException e)
 				{
 					activeChar.sendMessage("Usage: //admin_geo_bug <comments>");
-				}
+				} */
 				break;
 		}
 

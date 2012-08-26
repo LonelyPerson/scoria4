@@ -21,7 +21,7 @@ package com.l2scoria.gameserver.ai.special;
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.ai.CtrlIntention;
 import com.l2scoria.gameserver.datatables.SkillTable;
-import com.l2scoria.gameserver.datatables.csv.DoorTable;
+import com.l2scoria.gameserver.datatables.sql.DoorTable;
 import com.l2scoria.gameserver.managers.GrandBossManager;
 import com.l2scoria.gameserver.model.*;
 import com.l2scoria.gameserver.model.actor.instance.L2GrandBossInstance;

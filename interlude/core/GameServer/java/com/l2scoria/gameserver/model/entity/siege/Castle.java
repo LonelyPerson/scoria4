@@ -18,25 +18,14 @@
  */
 package com.l2scoria.gameserver.model.entity.siege;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
-
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 import com.l2scoria.Config;
-import com.l2scoria.gameserver.datatables.csv.DoorTable;
 import com.l2scoria.gameserver.datatables.sql.ClanTable;
+import com.l2scoria.gameserver.datatables.sql.DoorTable;
 import com.l2scoria.gameserver.managers.CastleManager;
 import com.l2scoria.gameserver.managers.CastleManorManager;
-import com.l2scoria.gameserver.managers.CrownManager;
 import com.l2scoria.gameserver.managers.CastleManorManager.CropProcure;
 import com.l2scoria.gameserver.managers.CastleManorManager.SeedProduction;
+import com.l2scoria.gameserver.managers.CrownManager;
 import com.l2scoria.gameserver.model.L2Clan;
 import com.l2scoria.gameserver.model.L2Manor;
 import com.l2scoria.gameserver.model.L2Object;
@@ -50,6 +39,16 @@ import com.l2scoria.gameserver.network.serverpackets.PledgeShowInfoUpdate;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.gameserver.updaters.CastleUpdater;
 import com.l2scoria.util.database.L2DatabaseFactory;
+import javolution.util.FastList;
+import javolution.util.FastMap;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
 
 public class Castle
 {
@@ -468,28 +467,19 @@ public class Castle
 	 */
 	public void spawnDoor(boolean isDoorWeak)
 	{
-		for(int i = 0; i < getDoors().size(); i++)
+		for (int i = 0; i < getDoors().size(); i++)
 		{
 			L2DoorInstance door = getDoors().get(i);
-			if(door.getCurrentHp() <= 0)
+			if (door.getCurrentHp() <= 0)
 			{
-				door.decayMe(); // Kill current if not killed already
-				door = DoorTable.parseList(_doorDefault.get(i));
-
-				if(isDoorWeak)
-				{
-					door.setCurrentHp(door.getMaxHp() / 2);
-				}
-
-				door.spawnMe(door.getX(), door.getY(), door.getZ());
-				getDoors().set(i, door);
+				door.decayMe();	// Kill current if not killed already
+				door.setCurrentHp(isDoorWeak ? door.getMaxHp() / 2 : door.getMaxHp());
+				door.spawnMe(door.getX(), door.getY(),door.getZ());
 			}
-			else if(door.getOpen())
+			else if (!door.getOpen())
 			{
 				door.closeMe();
 			}
-
-			door = null;
 		}
 		loadDoorUpgrade(); // Check for any upgrade the doors may have
 	}
@@ -608,7 +598,7 @@ public class Castle
 				// Create list of the door default for use when respawning dead doors
 				_doorDefault.add(rs.getString("name") + ";" + rs.getInt("id") + ";" + rs.getInt("x") + ";" + rs.getInt("y") + ";" + rs.getInt("z") + ";" + rs.getInt("range_xmin") + ";" + rs.getInt("range_ymin") + ";" + rs.getInt("range_zmin") + ";" + rs.getInt("range_xmax") + ";" + rs.getInt("range_ymax") + ";" + rs.getInt("range_zmax") + ";" + rs.getInt("hp") + ";" + rs.getInt("pDef") + ";" + rs.getInt("mDef"));
 
-				L2DoorInstance door = DoorTable.parseList(_doorDefault.get(_doorDefault.size() - 1));
+				L2DoorInstance door = DoorTable.getInstance().getDoor(rs.getInt("id"));
 				door.spawnMe(door.getX(), door.getY(), door.getZ());
 				_doors.add(door);
 				DoorTable.getInstance().putDoor(door);

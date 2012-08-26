@@ -51,10 +51,15 @@ public final class L2World
 	public static final int SHIFT_BY = 12;
 
 	/** Map dimensions */
-	public static final int MAP_MIN_X = Config.WORLD_SIZE_MIN_X; //-131072
-	public static final int MAP_MAX_X = Config.WORLD_SIZE_MAX_X; //228608
-	public static final int MAP_MIN_Y = Config.WORLD_SIZE_MIN_Y; //-262144
-	public static final int MAP_MAX_Y = Config.WORLD_SIZE_MAX_Y; //262144
+	public static final int MAP_MIN_X = 15 - 20 << 15;
+	public static final int MAP_MAX_X = (26 - 19 << 15) - 1;
+	public static final int MAP_MIN_Y = 10 - 18 << 15;
+	public static final int MAP_MAX_Y = (26 - 17 << 15) - 1;
+	public static final int MAP_MIN_Z = -32768;
+	public static final int MAP_MAX_Z = 32767;
+
+	public static final int WORLD_SIZE_X = Config.GEO_X_LAST - Config.GEO_X_FIRST + 1;
+	public static final int WORLD_SIZE_Y = Config.GEO_Y_LAST - Config.GEO_Y_FIRST + 1;
 
 	/** calculated offset used so top left region is 0,0 */
 	public static final int OFFSET_X = Math.abs(MAP_MIN_X >> SHIFT_BY);

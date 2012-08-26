@@ -24,7 +24,7 @@ import com.l2scoria.Config;
 import com.l2scoria.gameserver.GameTimeController;
 import com.l2scoria.gameserver.ai.CtrlIntention;
 import com.l2scoria.gameserver.datatables.SkillTable;
-import com.l2scoria.gameserver.datatables.csv.DoorTable;
+import com.l2scoria.gameserver.datatables.sql.DoorTable;
 import com.l2scoria.gameserver.managers.GrandBossManager;
 import com.l2scoria.gameserver.model.L2Attackable;
 import com.l2scoria.gameserver.model.L2Character;

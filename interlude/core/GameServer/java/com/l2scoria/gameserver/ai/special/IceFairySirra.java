@@ -20,7 +20,7 @@ package com.l2scoria.gameserver.ai.special;
 
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.cache.HtmCache;
-import com.l2scoria.gameserver.datatables.csv.DoorTable;
+import com.l2scoria.gameserver.datatables.sql.DoorTable;
 import com.l2scoria.gameserver.datatables.sql.NpcTable;
 import com.l2scoria.gameserver.datatables.sql.SpawnTable;
 import com.l2scoria.gameserver.managers.GrandBossManager;

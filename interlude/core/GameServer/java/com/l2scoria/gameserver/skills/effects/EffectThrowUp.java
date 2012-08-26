@@ -15,7 +15,7 @@
 package com.l2scoria.gameserver.skills.effects;
 
 import com.l2scoria.Config;
-import com.l2scoria.gameserver.geo.GeoData;
+import com.l2scoria.gameserver.geodata.GeoEngine;
 import com.l2scoria.gameserver.model.L2Effect;
 import com.l2scoria.gameserver.model.Location;
 import com.l2scoria.gameserver.network.serverpackets.FlyToLocation;
@@ -84,9 +84,9 @@ public class EffectThrowUp extends L2Effect
 		_y = getEffector().getY() - (int) (offset * sin);
 		_z = getEffected().getZ();
 		
-		if (Config.GEODATA > 0)
+		if (Config.GEODATA)
 		{
-			Location destiny = GeoData.getInstance().moveCheck(getEffected().getX(), getEffected().getY(), getEffected().getZ(), _x, _y, _z);
+			Location destiny = GeoEngine.moveCheck(getEffected().getX(), getEffected().getY(), getEffected().getZ(), _x, _y, false);
 			_x = destiny.getX();
 			_y = destiny.getY();
 		}

@@ -23,7 +23,7 @@ import com.l2scoria.gameserver.ai.CtrlIntention;
 import com.l2scoria.gameserver.datatables.SkillTable;
 import com.l2scoria.gameserver.datatables.sql.NpcTable;
 import com.l2scoria.gameserver.datatables.sql.SpawnTable;
-import com.l2scoria.gameserver.geo.GeoData;
+import com.l2scoria.gameserver.geodata.GeoEngine;
 import com.l2scoria.gameserver.managers.GrandBossManager;
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.L2Skill;
@@ -604,7 +604,7 @@ public class Antharas extends Quest
 						int rx = Rnd.get(175000, 179900);
 						int ry = Rnd.get(112400, 116000);
 						int rdt = (_antharas.getX() - rx) * (_antharas.getX() - rx) + (_antharas.getY() - ry) * (_antharas.getY() - ry);
-						if (GeoData.getInstance().canSeeTarget(_antharas.getX(), _antharas.getY(), -7704, rx, ry, -7704))
+						if (GeoEngine.canSeeCoord(_antharas, rx, ry, -7704, false))
 							if (rdt < dt)
 							{
 								x = rx;
