@@ -4090,8 +4090,12 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 	{
 		if(_client != null)
 		{
+                    try {
 			_client.close(new LeaveWorld());
 			setClient(null);
+                    } catch(Exception f) {
+                        _log.warning("netConnection null-type exception: "+f);
+                    }
 		}
 	}
 
@@ -12477,7 +12481,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			}// returns pet to control item
 		}
 
-		if(getClanId() != 0 && getClan() != null)
+		if(getClanId() != 0 && getClan() != null && getName() != null)
 		{
 			// set the status for pledge member list to OFFLINE
 			try

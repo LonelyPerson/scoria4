@@ -306,9 +306,13 @@ public class BuffHandler implements IVoicedCommandHandler, ICustomByPassHandler,
 			player.removeProfile(param);
 			useVoicedCommand(PowerPakConfig.BUFFER_COMMAND, player, "");
 		}
-		else if(parameters.startsWith("MakeBuffs") || parameters.startsWith("RestoreBuffs") || parameters.startsWith("ProfBuffs"))
+		else if(parameters.startsWith("MakeBuffs") || parameters.startsWith("RestoreBuffs") || parameters.startsWith("ProfBuffs") || parameters.startsWith("DonatorMakeBuffs"))
 		{
-			String buffName = parameters.substring(9).trim();
+                        String buffName;
+                        if(parameters.startsWith("DonatorMakeBuffs"))
+                            buffName = parameters.substring(16).trim();
+                        else
+                            buffName = parameters.substring(9).trim();
 			int totaladena = 0;
 			ArrayList<Buff> buffs = null;
 			if(parameters.startsWith("RestoreBuffs"))
@@ -319,8 +323,20 @@ public class BuffHandler implements IVoicedCommandHandler, ICustomByPassHandler,
 				getOwnBuffs(player.getObjectId()).clear();
 				getOwnBuffs(player.getObjectId()).addAll(buffs);
 			}
-			else	
+                        else {
 				buffs = BuffTable.getInstance().getBuffsForName(buffName);
+                        }
+                        
+                        if(parameters.startsWith("DonatorMakeBuffs"))
+                        {
+                            if(!player.isDonator())
+                            {
+                                player.sendMessage("Данный баф доступен только для донаторов");
+                                return;
+                            }
+                        }
+                        
+                        
 			if(buffs!=null && buffs.size()==1)
 			{
 				if(!getOwnBuffs(player.getObjectId()).contains(buffs.get(0)))
