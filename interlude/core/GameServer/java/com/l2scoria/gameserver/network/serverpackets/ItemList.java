@@ -18,11 +18,10 @@
  */
 package com.l2scoria.gameserver.network.serverpackets;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
+import org.apache.log4j.Logger;
 
 /**
  * sample 27 00 00 01 00 // item count 04 00 // itemType1 0-weapon/ring/earring/necklace 1-armor/shield
@@ -36,7 +35,7 @@ import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
  */
 public class ItemList extends L2GameServerPacket
 {
-	private static Logger _log = Logger.getLogger(ItemList.class.getName());
+	private static Logger _log = Logger.getLogger(ItemList.class);
 	private static final String _S__27_ITEMLIST = "[S] 1b ItemList";
 	private L2ItemInstance[] _items;
 	private boolean _showWindow;
@@ -65,7 +64,7 @@ public class ItemList extends L2GameServerPacket
 	{
 		for(L2ItemInstance temp : _items)
 		{
-			_log.fine("item:" + temp.getItem().getName() + " type1:" + temp.getItem().getType1() + " type2:" + temp.getItem().getType2());
+			_log.info("item:" + temp.getItem().getName() + " type1:" + temp.getItem().getType1() + " type2:" + temp.getItem().getType2());
 		}
 	}
 
@@ -78,6 +77,7 @@ public class ItemList extends L2GameServerPacket
 		int count = _items.length;
 		writeH(count);
 
+		int items = 0;
 		for(L2ItemInstance temp : _items)
 		{
 			if(temp == null || temp.getItem() == null)
@@ -109,6 +109,13 @@ public class ItemList extends L2GameServerPacket
 			}
 
 			writeD(temp.getMana());
+
+			items++;
+			if(items > 400)
+			{
+				_log.warn("Player "+getClient().getActiveChar()+" has more what 400 items, packet overflow");
+				break;
+			}
 		}
 	}
 
