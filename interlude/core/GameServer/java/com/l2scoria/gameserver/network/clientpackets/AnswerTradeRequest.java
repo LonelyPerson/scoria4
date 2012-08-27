@@ -21,9 +21,7 @@ package com.l2scoria.gameserver.network.clientpackets;
 import com.l2scoria.gameserver.model.L2World;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.SystemMessageId;
-import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
-import com.l2scoria.gameserver.network.serverpackets.SendTradeDone;
-import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
+import com.l2scoria.gameserver.network.serverpackets.*;
 
 /**
  * This class ...
@@ -69,7 +67,7 @@ public final class AnswerTradeRequest extends L2GameClientPacket
 		if(partner == null || L2World.getInstance().findObject(partner.getObjectId()) == null)
 		{
 			// Trade partner not found, cancel trade
-			player.sendPacket(new SendTradeDone(0));
+			player.sendPacket(new com.l2scoria.gameserver.network.serverpackets.TradeDone(0));
 			SystemMessage msg = new SystemMessage(SystemMessageId.TARGET_IS_NOT_FOUND_IN_THE_GAME);
 			player.sendPacket(msg);
 			player.setActiveRequester(null);

@@ -18,8 +18,6 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
@@ -27,6 +25,8 @@ import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.InventoryUpdate;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
 import com.l2scoria.gameserver.templates.L2Item;
+
+import java.util.logging.Logger;
 
 /**
  * This class ...
@@ -63,6 +63,8 @@ public class RequestUnEquipItem extends L2GameClientPacket
 		L2PcInstance activeChar = getClient().getActiveChar();
 		if(activeChar == null)
 			return;
+
+		activeChar._inWorld = true;
 
 		L2ItemInstance item = activeChar.getInventory().getPaperdollItemByL2ItemId(_slot);
 		if(item == null)

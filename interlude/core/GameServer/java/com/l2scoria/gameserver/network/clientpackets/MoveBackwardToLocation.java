@@ -18,8 +18,6 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.nio.BufferUnderflowException;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.ai.CtrlIntention;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
@@ -32,6 +30,8 @@ import com.l2scoria.gameserver.templates.L2WeaponType;
 import com.l2scoria.gameserver.thread.TaskPriority;
 import com.l2scoria.gameserver.util.IllegalPlayerAction;
 import com.l2scoria.gameserver.util.Util;
+
+import java.nio.BufferUnderflowException;
 
 /**
  * This class ...
@@ -97,6 +97,8 @@ public class MoveBackwardToLocation extends L2GameClientPacket
 
 		if(activeChar == null)
 			return;
+
+		activeChar._inWorld = true;
 
 		if (_targetX == _originX && _targetY == _originY && _targetZ == _originZ)
 		{

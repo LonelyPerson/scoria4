@@ -50,7 +50,7 @@ import com.l2scoria.gameserver.templates.L2NpcTemplate;
  * hhdh ddddc dcc cddd d *...*: here i am not sure at least it looks like it reads that much data (32 bytes), not sure
  * about the format inside because it is not read thanks to the ususal parsingfunctiondddddSddddQddddddddddddddddddddddddddddddddddddddddddddddddhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhddddddddddddddddddddffffddddSdddddcccddh
  * [h] c dc d hhdh ddddc c dcc cddd d c dd d d
- * 
+ *
  * @version $Revision: 1.14.2.4.2.12 $ $Date: 2005/04/11 10:05:55 $
  */
 public class UserInfo extends L2GameServerPacket
@@ -59,11 +59,18 @@ public class UserInfo extends L2GameServerPacket
 	private L2PcInstance _activeChar;
 	private int _runSpd, _walkSpd, _swimRunSpd, _swimWalkSpd, _flRunSpd, _flWalkSpd, _flyRunSpd, _flyWalkSpd, _relation;
 	private float _moveMultiplier;
+	private boolean _first;
 
 	/**
 	 * @param _characters
 	 */
+
 	public UserInfo(L2PcInstance character)
+	{
+		this(character, false);
+	}
+
+	public UserInfo(L2PcInstance character, boolean first)
 	{
 		_activeChar = character;
 
@@ -73,19 +80,41 @@ public class UserInfo extends L2GameServerPacket
 		_swimRunSpd = _flRunSpd = _flyRunSpd = _runSpd;
 		_swimWalkSpd = _flWalkSpd = _flyWalkSpd = _walkSpd;
 		_relation = _activeChar.isClanLeader() ? 0x40 : 0;
-		if(_activeChar.getSiegeState() == 1)
+
+		if (_activeChar.getSiegeState() == 1)
 		{
 			_relation |= 0x180;
 		}
-		if(_activeChar.getSiegeState() == 2)
+
+		if (_activeChar.getSiegeState() == 2)
 		{
 			_relation |= 0x80;
 		}
+
+		_first = first;
 	}
 
 	@Override
 	protected final void writeImpl()
 	{
+		if (_activeChar == null)
+		{
+			return;
+		}
+
+		if (_activeChar != getClient().getActiveChar())
+		{
+			return;
+		}
+
+		if (!_first && getClient().getActiveChar() != null)
+		{
+			if (!_activeChar._inWorld && getClient().getActiveChar() == _activeChar)
+			{
+				return;
+			}
+		}
+
 		writeC(0x04);
 
 		writeD(_activeChar.getX());
@@ -97,7 +126,7 @@ public class UserInfo extends L2GameServerPacket
 		writeD(_activeChar.getRace().ordinal());
 		writeD(_activeChar.getAppearance().getSex() ? 1 : 0);
 
-		if(_activeChar.getClassIndex() == 0)
+		if (_activeChar.getClassIndex() == 0)
 		{
 			writeD(_activeChar.getClassId().getId());
 		}
@@ -121,9 +150,9 @@ public class UserInfo extends L2GameServerPacket
 		writeD(_activeChar.getSp());
 		writeD(_activeChar.getCurrentLoad());
 		writeD(_activeChar.getMaxLoad());
-		
+
 		writeD(0x28); // FIXME: дальность оружия (PTS: nWeaponRange)
-		
+
 		writeD(_activeChar.getInventory().getPaperdollObjectId(Inventory.PAPERDOLL_DHAIR));
 		writeD(_activeChar.getInventory().getPaperdollObjectId(Inventory.PAPERDOLL_REAR));
 		writeD(_activeChar.getInventory().getPaperdollObjectId(Inventory.PAPERDOLL_LEAR));
@@ -208,7 +237,7 @@ public class UserInfo extends L2GameServerPacket
 		writeF(_activeChar.getAttackSpeedMultiplier());
 
 		L2Summon pet = _activeChar.getPet();
-		if(_activeChar.getMountType() != 0 && pet != null)
+		if (_activeChar.getMountType() != 0 && pet != null)
 		{
 			writeF(pet.getTemplate().collisionRadius);
 			writeF(pet.getTemplate().collisionHeight);
@@ -225,14 +254,14 @@ public class UserInfo extends L2GameServerPacket
 		writeD(_activeChar.isGM() ? 1 : 0); // builder level
 
 		String title = _activeChar.getTitle();
-		if(_activeChar.getAppearance().getInvisible() && _activeChar.isGM())
+		if (_activeChar.getAppearance().getInvisible() && _activeChar.isGM())
 		{
 			title = "Invisible";
 		}
-		if(_activeChar.getPoly().isMorphed())
+		if (_activeChar.getPoly().isMorphed())
 		{
 			L2NpcTemplate polyObj = NpcTable.getInstance().getTemplate(_activeChar.getPoly().getPolyId());
-			if(polyObj != null)
+			if (polyObj != null)
 			{
 				title += " - " + polyObj.name;
 			}
@@ -253,7 +282,7 @@ public class UserInfo extends L2GameServerPacket
 		writeD(_activeChar.getPvpKills());
 
 		writeH(_activeChar.getCubics().size());
-		for(int id : _activeChar.getCubics().keySet())
+		for (int id : _activeChar.getCubics().keySet())
 		{
 			writeH(id);
 		}
@@ -275,11 +304,11 @@ public class UserInfo extends L2GameServerPacket
 		writeD((int) _activeChar.getCurrentCp());
 		writeC(_activeChar.isMounted() ? 0 : _activeChar.getEnchantEffect());
 
-		if(_activeChar.getTeam() == 1)
+		if (_activeChar.getTeam() == 1)
 		{
 			writeC(0x01); //team circle around feet 1= Blue, 2 = red
 		}
-		else if(_activeChar.getTeam() == 2)
+		else if (_activeChar.getTeam() == 2)
 		{
 			writeC(0x02); //team circle around feet 1= Blue, 2 = red
 		}
@@ -302,10 +331,10 @@ public class UserInfo extends L2GameServerPacket
 
 		writeD(_activeChar.getPledgeClass()); //changes the text above CP on Status Window
 		writeD(_activeChar.getPledgeType()); // TODO: PLEDGE TYPE
-		
+
 		writeD(_activeChar.getAppearance().getTitleColor());
 
-		if(_activeChar.isCursedWeaponEquiped())
+		if (_activeChar.isCursedWeaponEquiped())
 		{
 			writeD(CursedWeaponsManager.getInstance().getLevel(_activeChar.getCursedWeaponEquipedId()));
 		}

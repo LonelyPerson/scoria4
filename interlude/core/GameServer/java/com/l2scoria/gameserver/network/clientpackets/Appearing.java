@@ -19,6 +19,7 @@
 package com.l2scoria.gameserver.network.clientpackets;
 
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
+import com.l2scoria.gameserver.network.serverpackets.PartyMemberPosition;
 import com.l2scoria.gameserver.network.serverpackets.UserInfo;
 
 /**
@@ -47,12 +48,17 @@ public final class Appearing extends L2GameClientPacket
 		if(activeChar == null)
 			return;
 
+		activeChar._inWorld = true;
+
 		if(activeChar.isTeleporting())
 		{
 			activeChar.onTeleported();
 		}
 
 		sendPacket(new UserInfo(activeChar));
+
+		if (activeChar.getParty() != null)
+			activeChar.getParty().broadcastToPartyMembers(activeChar, new PartyMemberPosition(activeChar));
 	}
 
 	/* (non-Javadoc)

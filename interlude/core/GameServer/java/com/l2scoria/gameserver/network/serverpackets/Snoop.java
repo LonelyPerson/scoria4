@@ -18,6 +18,10 @@
  */
 package com.l2scoria.gameserver.network.serverpackets;
 
+/**
+ * CDSDDSS -> (0xd5)(objId)(name)(0x00)(type)(speaker)(name)
+ */
+
 public class Snoop extends L2GameServerPacket
 {
 	private static final String _S__D5_SNOOP = "[S] D5 Snoop";

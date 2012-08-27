@@ -191,6 +191,8 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 	public static final int STORE_PRIVATE_MANUFACTURE = 5;
 	public static final int STORE_PRIVATE_PACKAGE_SELL = 8;
 
+	public boolean _inWorld = false;
+
 	// events
 	private String eventState = null;
 	public String _eventName = "";
@@ -273,6 +275,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 				return;
 			}
 
+			_inWorld = true;
 			super.doAttack(target);
 
 			// cancel the recent fake-death protection instantly if the player attacks or casts spells
@@ -297,6 +300,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		@Override
 		public void doCast(L2Skill skill)
 		{
+			_inWorld = true;
 			super.doCast(skill);
 
 			// cancel the recent fake-death protection instantly if the player attacks or casts spells
@@ -6434,7 +6438,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		_activeTradeList.lock();
 		_activeTradeList = null;
 
-		sendPacket(new SendTradeDone(0));
+		sendPacket(new TradeDone(0));
 		SystemMessage msg = new SystemMessage(SystemMessageId.S1_CANCELED_TRADE);
 		msg.addString(partner.getName());
 		sendPacket(msg);
@@ -6444,7 +6448,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 	public void onTradeFinish(boolean successfull)
 	{
 		_activeTradeList = null;
-		sendPacket(new SendTradeDone(1));
+		sendPacket(new TradeDone(1));
 		if(successfull)
 		{
 			sendPacket(new SystemMessage(SystemMessageId.TRADE_SUCCESSFUL));
@@ -7059,7 +7063,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		refreshOverloaded();
 		refreshExpertisePenalty();
 		// Send a Server->Client packet UserInfo to this L2PcInstance and CharInfo to all L2PcInstance in its _KnownPlayers (broadcast)
-		if(broadcastType == 1)
+		if(broadcastType == 1 && _inWorld)
 		{
 			sendPacket(new UserInfo(this));
 		}

@@ -18,8 +18,6 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.communitybbs.Manager.RegionBBSManager;
 import com.l2scoria.gameserver.datatables.SkillTable;
@@ -29,13 +27,15 @@ import com.l2scoria.gameserver.model.entity.event.TvTEvent;
 import com.l2scoria.gameserver.model.entity.olympiad.Olympiad;
 import com.l2scoria.gameserver.model.entity.sevensigns.SevenSignsFestival;
 import com.l2scoria.gameserver.network.L2GameClient;
-import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.L2GameClient.GameClientState;
+import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
 import com.l2scoria.gameserver.network.serverpackets.CharSelectInfo;
 import com.l2scoria.gameserver.network.serverpackets.RestartResponse;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
 import com.l2scoria.gameserver.taskmanager.AttackStanceTaskManager;
+
+import java.util.logging.Logger;
 
 /**
  * This class ...
@@ -162,6 +162,7 @@ public final class RequestRestart extends L2GameClientPacket
 
 		// detach the client from the char so that the connection isnt closed in the deleteMe
 		player.setClient(null);
+		player._inWorld=false;
 
 		RegionBBSManager.getInstance().changeCommunityBoard();
 

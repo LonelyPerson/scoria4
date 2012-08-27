@@ -203,7 +203,7 @@ public class EnterWorld extends L2GameClientPacket
 
 		sendPacket(new ClientSetTime()); // SetClientTime
 
-		sendPacket(new UserInfo(activeChar));
+		sendPacket(new UserInfo(activeChar, true));
 
 		sendPacket(new HennaInfo(activeChar));
 

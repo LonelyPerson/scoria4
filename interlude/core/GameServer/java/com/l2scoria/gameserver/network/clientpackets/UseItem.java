@@ -18,8 +18,6 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.GameTimeController;
 import com.l2scoria.gameserver.handler.IItemHandler;
@@ -41,6 +39,8 @@ import com.l2scoria.gameserver.templates.L2WeaponType;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.gameserver.util.FloodProtector;
 import com.l2scoria.gameserver.util.Util;
+
+import java.util.logging.Logger;
 
 /**
  * This class ...
@@ -323,6 +323,8 @@ public final class UseItem extends L2GameClientPacket
 		{
 			_log.finest(activeChar.getObjectId() + ": use item " + _objectId);
 		}
+
+		activeChar._inWorld = true;
 
 		if(item.isEquipable())
 		{
