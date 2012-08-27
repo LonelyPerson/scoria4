@@ -57,7 +57,7 @@ public class ShortCutRegister extends L2GameServerPacket
 		{
 			case L2ShortCut.TYPE_ITEM: //1
 				writeD(_shortcut.getId());
-				writeD(0x01); //CharacterType
+				writeD(_shortcut.getCharacterType()); //CharacterType
 				writeD(-1);
 				writeD(0x00);  // unknown
 				writeD(0x00);  // unknown
@@ -67,20 +67,11 @@ public class ShortCutRegister extends L2GameServerPacket
 				writeD(_shortcut.getId());
 				writeD(_shortcut.getLevel());
 				writeC(0x00); // C5
-				writeD(0x01); //CharacterType
+				writeD(_shortcut.getCharacterType()); //CharacterType
 				break;
-			/*case L2ShortCut.TYPE_ACTION: //3
-				writeD(_shortcut.getId());
-				break;
-			case L2ShortCut.TYPE_MACRO: //4
-				writeD(_shortcut.getId());
-				break;
-			case L2ShortCut.TYPE_RECIPE: //5
-				writeD(_shortcut.getId());
-				break;*/
 			default:
 				writeD(_shortcut.getId());
-				writeD(0x01); //CharacterType
+				writeD(_shortcut.getCharacterType()); //CharacterType
 		}
 
 		

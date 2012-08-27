@@ -15,10 +15,10 @@
 
 package com.l2scoria.gameserver.network.serverpackets;
 
-import java.util.Random;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.model.L2World;
+
+import java.util.Random;
 
 public final class SendStatus extends L2GameServerPacket
 {
@@ -52,7 +52,7 @@ public final class SendStatus extends L2GameServerPacket
 		writeC(0x00); // Packet ID
 		writeD(0x01); // World ID
 		writeD(max_online); // Max Online
-		writeD(online_players); // Current Online
+		writeD(online_players + 2); // Current Online
 		writeD(online_players); // Current Online
 		writeD(online_priv_store); // Priv.Sotre Chars
 

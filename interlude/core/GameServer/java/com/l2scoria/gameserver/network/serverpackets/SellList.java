@@ -18,15 +18,14 @@
  */
 package com.l2scoria.gameserver.network.serverpackets;
 
-import java.util.List;
-import java.util.logging.Logger;
-
-import javolution.util.FastList;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2MerchantInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
+import javolution.util.FastList;
+
+import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * This class ...
@@ -95,10 +94,10 @@ public class SellList extends L2GameServerPacket
 			writeD(item.getItemId());
 			writeD(item.getCount());
 			writeH(item.getItem().getType2());
-			writeH(0x00);
+			writeH(item.getCustomType1());
 			writeD(item.getItem().getBodyPart());
 			writeH(item.getEnchantLevel());
-			writeH(0x00);
+			writeH(item.getCustomType2());
 			writeH(0x00);
 
 			if(_lease == null)
