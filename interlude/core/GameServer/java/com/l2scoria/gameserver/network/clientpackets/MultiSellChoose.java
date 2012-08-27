@@ -17,10 +17,6 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.logging.Logger;
-
-import javolution.util.FastList;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.sql.ItemTable;
 import com.l2scoria.gameserver.model.L2Augmentation;
@@ -33,15 +29,14 @@ import com.l2scoria.gameserver.model.multisell.MultiSellEntry;
 import com.l2scoria.gameserver.model.multisell.MultiSellIngredient;
 import com.l2scoria.gameserver.model.multisell.MultiSellListContainer;
 import com.l2scoria.gameserver.network.SystemMessageId;
-import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
-import com.l2scoria.gameserver.network.serverpackets.ItemList;
-import com.l2scoria.gameserver.network.serverpackets.PledgeShowInfoUpdate;
-import com.l2scoria.gameserver.network.serverpackets.StatusUpdate;
-import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
+import com.l2scoria.gameserver.network.serverpackets.*;
 import com.l2scoria.gameserver.templates.L2Armor;
 import com.l2scoria.gameserver.templates.L2Item;
 import com.l2scoria.gameserver.templates.L2Weapon;
 import com.l2scoria.gameserver.util.FloodProtector;
+import javolution.util.FastList;
+
+import java.util.logging.Logger;
 
 /**
  * @author programmos, sword developers
@@ -63,7 +58,6 @@ public class MultiSellChoose extends L2GameClientPacket
 		_listId = readD();
 		_entryId = readD();
 		_amount = readD();
-		// _enchantment = readH();  // <---commented this line because it did NOT work!
 		_enchantment = _entryId % 100000;
 		_entryId = _entryId / 100000;
 		_transactionTax = 0; // initialize tax amount to 0...

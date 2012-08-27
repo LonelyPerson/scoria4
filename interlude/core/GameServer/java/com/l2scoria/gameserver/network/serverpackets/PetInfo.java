@@ -162,7 +162,7 @@ public class PetInfo extends L2GameServerPacket
 		writeD(_summon.getPAtkSpd());//atkspeed
 		writeD(_summon.getMAtkSpd());//casting speed
 
-		writeD(0);//c2  abnormal visual effect... bleed=1; poison=2; poison & bleed=3; flame=4;
+		writeD(_summon.getAbnormalEffect());//c2  abnormal visual effect... bleed=1; poison=2; poison & bleed=3; flame=4;
 		int npcId = _summon.getTemplate().npcId;
 
 		if(npcId >= 12526 && npcId <= 12528)

@@ -20,7 +20,7 @@ package com.l2scoria.gameserver.network.serverpackets;
 
 /**
  * This class ...
- * 
+ *
  * @version $Revision: 1.3.2.1.2.3 $ $Date: 2005/03/27 15:29:57 $
  */
 public final class KeyPacket extends L2GameServerPacket
@@ -29,6 +29,7 @@ public final class KeyPacket extends L2GameServerPacket
 	public static final KeyPacket UNKNOWN_PROTOCOL_VERSION = new KeyPacket(null);
 
 	private byte[] _key;
+
 	public KeyPacket(byte[] key)
 	{
 		_key = key;
@@ -36,6 +37,7 @@ public final class KeyPacket extends L2GameServerPacket
 
 	private byte[] _data;
 	private boolean _isLame = false;
+
 	public KeyPacket(byte[] data, boolean val)
 	{
 		_data = data;
@@ -45,7 +47,7 @@ public final class KeyPacket extends L2GameServerPacket
 	@Override
 	public void writeImpl()
 	{
-		if(_isLame)
+		if (_isLame)
 		{
 			writeC(0x00);
 			writeC(_data == null ? 0x00 : 0x01);
@@ -56,21 +58,17 @@ public final class KeyPacket extends L2GameServerPacket
 				writeD(0x01);
 				writeD(0x01);
 			}
-
 			return;
-		} 
-                else 
-                {
-                    writeC(0x00);
-                    writeC(_key == null ? 0x00 : 0x01);
-                    if(_key != null) 
-                    {
-                        writeB(_key);
-                        writeD(0x01);
-                        writeD(0x01);
-                    }
-                    return;
-                }
+		}
+
+		writeC(0x00);
+		writeC(_key == null ? 0x00 : 0x01);
+		if (_key != null)
+		{
+			writeB(_key);
+			writeD(0x01);
+			writeD(0x01);
+		}
 	}
 
 	/* (non-Javadoc)
