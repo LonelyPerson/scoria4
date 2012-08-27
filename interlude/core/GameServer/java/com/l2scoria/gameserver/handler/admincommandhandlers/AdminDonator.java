@@ -169,40 +169,24 @@ public class AdminDonator implements IAdminCommandHandler
 				return;
 
 			con = L2DatabaseFactory.getInstance().getConnection();
-			PreparedStatement statement = con.prepareStatement("SELECT * FROM characters_custom_data WHERE obj_Id=?");
-			statement.setInt(1, player.getObjectId());
+			PreparedStatement statement = con.prepareStatement("SELECT * FROM accounts WHERE login=?");
+			statement.setString(1, player.getAccountName());
 			ResultSet result = statement.executeQuery();
-
+                        long newTime = premiumTime+System.currentTimeMillis();
 			if(result.next())
 			{
-				PreparedStatement stmt = con.prepareStatement(newDonator ? UPDATE_DATA : DEL_DATA);
-				if(newDonator)
-				{
-					stmt.setLong(1, premiumTime == 0 ? 0 : System.currentTimeMillis() + premiumTime);
-					stmt.setInt(2, player.getObjectId());
-					stmt.execute();
-				}
-				else
-				{
-					stmt.setInt(1, player.getObjectId());
-					stmt.execute();
-				}
-				stmt.close();
-				stmt = null;
-			}
-			else
-			{
-				if(newDonator)
-				{
-					PreparedStatement stmt = con.prepareStatement(INSERT_DATA);
-					stmt.setInt(1, player.getObjectId());
-					stmt.setString(2, player.getName());
-					stmt.setInt(3, 1);
-					stmt.setLong(4, premiumTime == 0 ? 0 : System.currentTimeMillis() + premiumTime);
-					stmt.execute();
-					stmt.close();
-					stmt = null;
-				}
+                            if(newDonator) {
+                                PreparedStatement query = con.prepareStatement(UPDATE_ACCOUNTS);
+                                query.setLong(1, newTime);
+                                query.setString(2, player.getAccountName());
+                                query.execute();
+                                query.close();
+                            } else {
+                                PreparedStatement query = con.prepareStatement(REMOVE_PREMIUM);
+                                query.setString(1, player.getAccountName());
+                                query.execute();
+                                query.close();
+                            }
 			}
 			result.close();
 			statement.close();
@@ -223,9 +207,8 @@ public class AdminDonator implements IAdminCommandHandler
 
 	// Updates That Will be Executed by SQL
 	// ----------------------------------------
-	String INSERT_DATA= "INSERT INTO characters_custom_data (obj_Id, char_name, donator, prem_end_date) VALUES (?,?,?,?)";
-	String UPDATE_DATA = "UPDATE characters_custom_data SET donator=1, prem_end_date=? WHERE obj_Id=?";
-	String DEL_DATA = "UPDATE characters_custom_data SET donator=0, prem_end_date=0 WHERE obj_Id=?";
+	String UPDATE_ACCOUNTS = "UPDATE accounts SET premium = ? WHERE login = ?";
+        String REMOVE_PREMIUM = "UPDATE accounts SET premium = 0 WHERE login = ?";
 
 	/**
 	 * @return

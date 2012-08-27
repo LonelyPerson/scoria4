@@ -395,27 +395,33 @@ public class Personal implements ICustomByPassHandler
 		Connection con = null;
 		try
 		{
-			con = L2DatabaseFactory.getInstance().getConnection();
+			if(Config.USE_RL_DATABSE)
+                        {
+                            con = LoginRemoteDbFactory.getInstance().getConnection();
+                        }
+                        else
+                        {
+                            con = L2DatabaseFactory.getInstance().getConnection();
+                        }
 			
-			PreparedStatement statement = con.prepareStatement("SELECT * FROM characters_custom_data WHERE obj_Id=?");
-			statement.setInt(1, activeChar.getObjectId());
+			PreparedStatement statement = con.prepareStatement("SELECT * FROM accounts WHERE login=?");
+			statement.setString(1, activeChar.getAccountName());
 			ResultSet result = statement.executeQuery();
 			if(result.next())
 			{
-				PreparedStatement stmt = con.prepareStatement("UPDATE characters_custom_data SET donator=1, prem_end_date=? WHERE obj_Id=?");
-				stmt.setLong(1, premiumTime == 0 ? 0 : System.currentTimeMillis() + premiumTime);
-				stmt.setInt(2, activeChar.getObjectId());
-				stmt.execute();
-				stmt.close();
-				stmt = null;
-			}
-			else
-			{
-				PreparedStatement stmt = con.prepareStatement("INSERT INTO characters_custom_data (obj_Id, char_name, donator, prem_end_date) VALUES (?,?,?,?)");
-				stmt.setInt(1, activeChar.getObjectId());
-				stmt.setString(2, activeChar.getName());
-				stmt.setInt(3, 1);
-				stmt.setLong(4, premiumTime == 0 ? 0 : System.currentTimeMillis() + premiumTime);
+                            long db_premium = result.getLong("premium");
+                            long new_premium = 0;
+                            if(db_premium > System.currentTimeMillis())
+                            {
+                                new_premium = db_premium+premiumTime;
+                            }
+                            else
+                            {
+                                new_premium = premiumTime+System.currentTimeMillis();
+                            }
+				PreparedStatement stmt = con.prepareStatement("UPDATE accounts SET premium = ? WHERE login = ?");
+				stmt.setLong(1, new_premium);
+				stmt.setString(2, activeChar.getAccountName());
 				stmt.execute();
 				stmt.close();
 				stmt = null;

@@ -97,6 +97,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class represents all player characters in the world. There is always a client-thread connected to this (except
@@ -13533,6 +13534,43 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			sendPacket(new SystemMessage(SystemMessageId.DEATH_PENALTY_LIFTED));
 		}
 	}
+        
+        public void restoreLoginCustomData() 
+        {
+            long donatorTime = 0;
+            String charLogin = this.getAccountName();
+            try {
+                Connection con;
+                if(Config.USE_RL_DATABSE)
+                {
+                    con = LoginRemoteDbFactory.getInstance().getConnection();
+                }
+                else
+                {
+                    con = L2DatabaseFactory.getInstance().getConnection();
+                }
+                if(charLogin != null)
+                {
+                    PreparedStatement query = con.prepareStatement("SELECT * FROM `accounts` WHERE `login` = ?");
+                    query.setString(1, charLogin);
+                    
+                    ResultSet result = query.executeQuery();
+                    while(result.next())
+                    {
+                        donatorTime = result.getLong("premium");
+                    }
+                    if(donatorTime > 0 && donatorTime > System.currentTimeMillis()) 
+                    {
+                        this.setDonator(true);
+                    }
+                }
+                try { con.close(); } catch(Exception i) {}
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+            
+            
+        }
 
 	/**
 	 * restore all Custom Data hero/noble/donator
@@ -13551,9 +13589,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 
 			int hero = 0;
 			int noble = 0;
-			int donator = 0;
 			long hero_end = 0;
-			long prem_end = 0;
 
 			con = L2DatabaseFactory.getInstance().getConnection();
 			PreparedStatement statement = con.prepareStatement(STATUS_DATA_GET);
@@ -13565,9 +13601,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			{
 				hero = rset.getInt("hero");
 				noble = rset.getInt("noble");
-				donator = rset.getInt("donator");
 				hero_end = rset.getLong("hero_end_date");
-				prem_end = rset.getLong("prem_end_date");
 			}
 			rset.close();
 			statement.close();
@@ -13582,11 +13616,6 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			if(noble > 0)
 			{
 				setNoble(true, false);
-			}
-
-			if(donator > 0 && (prem_end == 0 || prem_end > System.currentTimeMillis()))
-			{
-				setDonator(true);
 			}
 		}
 		catch(Exception e)

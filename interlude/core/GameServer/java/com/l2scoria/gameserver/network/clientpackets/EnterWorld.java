@@ -189,6 +189,9 @@ public class EnterWorld extends L2GameClientPacket
 
 		//restores custom status
 		activeChar.restoreCustomStatus();
+                
+                // restore some data from login data, like donator status account or hwid
+                activeChar.restoreLoginCustomData();
 
 		//Expand Skill
 		ExStorageMaxCount esmc = new ExStorageMaxCount(activeChar);

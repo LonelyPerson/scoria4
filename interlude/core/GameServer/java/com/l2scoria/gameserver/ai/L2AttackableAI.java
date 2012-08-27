@@ -662,7 +662,7 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable
                 {
                     try {
                         L2Attackable npc = (L2Attackable) _actor;
-                        if(npc instanceof L2MonsterInstance || npc instanceof L2RaidBossInstance)
+                        if(npc instanceof L2MonsterInstance || (npc instanceof L2RaidBossInstance && npc.getNpcId() != 29014))
                         {
                             int x1,y1,z1;
                             _actor.setTarget(_actor);
