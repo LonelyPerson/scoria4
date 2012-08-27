@@ -18,21 +18,8 @@
  */
 package com.l2scoria.gameserver.powerpak.personal;
 
-import java.util.Map.Entry;
-import java.util.StringTokenizer;
-import java.security.MessageDigest;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
-import javolution.text.TextBuilder;
-
-import com.l2scoria.crypt.Base64;
-import com.l2scoria.util.database.L2DatabaseFactory;
-import com.l2scoria.util.database.LoginRemoteDbFactory;
-import com.l2scoria.gameserver.util.Util;
-
 import com.l2scoria.Config;
+import com.l2scoria.crypt.Base64;
 import com.l2scoria.gameserver.cache.HtmCache;
 import com.l2scoria.gameserver.handler.ICustomByPassHandler;
 import com.l2scoria.gameserver.handler.IVoicedCommandHandler;
@@ -43,6 +30,17 @@ import com.l2scoria.gameserver.model.quest.Quest;
 import com.l2scoria.gameserver.model.quest.QuestState;
 import com.l2scoria.gameserver.network.serverpackets.ItemList;
 import com.l2scoria.gameserver.network.serverpackets.NpcHtmlMessage;
+import com.l2scoria.gameserver.util.Util;
+import com.l2scoria.util.database.L2DatabaseFactory;
+import com.l2scoria.util.database.LoginRemoteDbFactory;
+import javolution.text.TextBuilder;
+
+import java.security.MessageDigest;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.Map.Entry;
+import java.util.StringTokenizer;
 
 public class Personal implements ICustomByPassHandler
 {
@@ -63,8 +61,7 @@ public class Personal implements ICustomByPassHandler
 			if(!params.equals("0"))
 				index= "-"+params; 
 		String text = HtmCache.getInstance().getHtm("data/html/custom/menu"+index+".htm");
-		activeChar.sendPacket(new NpcHtmlMessage(5,text)); 
-		return;
+		activeChar.sendPacket(new NpcHtmlMessage(5,text));
 	}
 	
 	public void changePass(L2PcInstance activeChar, String params)

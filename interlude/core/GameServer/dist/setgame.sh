@@ -12,9 +12,11 @@ CLASSPATH=${CLASSPATH}:./lib/jython.jar
 CLASSPATH=${CLASSPATH}:./lib/jython-engine.jar
 CLASSPATH=${CLASSPATH}:./lib/java-engine-1.0.2.jar
 CLASSPATH=${CLASSPATH}:./lib/core-3.3.0.jar
+
 #Commons
 CLASSPATH=${CLASSPATH}:./lib/commons-logging-1.1.jar
 CLASSPATH=${CLASSPATH}:./lib/commons-lang-2.1.jar
+CLASSPATH=${CLASSPATH}:./lib/log4j-1.2.16.jar
 
 #Javolution
 CLASSPATH=${CLASSPATH}:./lib/javolution.jar

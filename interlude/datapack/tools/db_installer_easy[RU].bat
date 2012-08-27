@@ -158,6 +158,7 @@ echo ^ �����襭� 23 ��� ***
 @cls
 echo ^ �����襭� 24 ��� ***
 %mysqlPath% -h %gshost% -u %gsuser% --password=%gspass% -D %gsdb% < ../sql/character_skills.sql
+%mysqlPath% -h %gshost% -u %gsuser% --password=%gspass% -D %gsdb% < ../sql/character_votes.sql
 @cls
 echo ^ �����襭� 25 ��� ***
 %mysqlPath% -h %gshost% -u %gsuser% --password=%gspass% -D %gsdb% < ../sql/character_skills_save.sql

@@ -161,11 +161,13 @@ public class EnterWorld extends L2GameClientPacket
 					activeChar.stopEffects(L2Effect.EffectType.HEAL_OVER_TIME);
 					activeChar.removeEffect(e);
 				}
+
 				if (e.getEffectType() == L2Effect.EffectType.MANA_HEAL_OVER_TIME)
 				{
 					activeChar.stopEffects(L2Effect.EffectType.MANA_HEAL_OVER_TIME);
 					activeChar.removeEffect(e);
 				}
+
 				if (e.getEffectType() == L2Effect.EffectType.COMBAT_POINT_HEAL_OVER_TIME)
 				{
 					activeChar.stopEffects(L2Effect.EffectType.COMBAT_POINT_HEAL_OVER_TIME);

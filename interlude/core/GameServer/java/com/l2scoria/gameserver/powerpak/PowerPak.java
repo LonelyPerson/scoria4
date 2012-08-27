@@ -29,11 +29,9 @@ import com.l2scoria.gameserver.powerpak.Servers.WebServer;
 import com.l2scoria.gameserver.powerpak.engrave.EngraveManager;
 import com.l2scoria.gameserver.powerpak.globalGK.GKHandler;
 import com.l2scoria.gameserver.powerpak.gmshop.GMShop;
+import com.l2scoria.gameserver.powerpak.personal.Personal;
 import com.l2scoria.gameserver.powerpak.rss.rss;
 import com.l2scoria.gameserver.powerpak.rss.rssHandler;
-import com.l2scoria.gameserver.powerpak.personal.Personal;
-import com.l2scoria.gameserver.powerpak.vote.L2TopDeamon;
-import com.l2scoria.gameserver.powerpak.vote.HopeZoneDeamon;
 import com.l2scoria.gameserver.powerpak.xmlrpc.XMLRPCServer;
 import com.l2scoria.util.Util;
 
@@ -121,10 +119,6 @@ public class PowerPak
 			System.out.println("...Enabled");
 		}
 
-		if(PowerPakConfig.L2TOPDEMON_ENABLED)
-			L2TopDeamon.getInstance();
-		if(PowerPakConfig.HOPEZONEDEMON_ENABLED)
-			HopeZoneDeamon.getInstance();
 		if(PowerPakConfig.WEBSERVER_ENABLED)
 			WebServer.getInstance();
 		

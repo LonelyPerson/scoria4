@@ -18,77 +18,116 @@
  */
 package com.l2scoria.gameserver.util.sql;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.concurrent.ScheduledFuture;
-
-import javolution.util.FastList;
-
-import com.l2scoria.gameserver.thread.ThreadPoolManager;
-import java.sql.Connection;
+import com.l2scoria.gameserver.taskmanager.ExclusiveTask;
 import com.l2scoria.util.database.L2DatabaseFactory;
+import javolution.util.FastList;
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
- * 
- * 
- * @author Nick
+ * @author DiezelMax, NB4L1
  */
-public class SQLQueue implements Runnable
+public final class SQLQueue extends ExclusiveTask
 {
-	private static SQLQueue _instance =null;
-	public static SQLQueue getInstance() {
-		if(_instance == null)
+	private static SQLQueue _instance;
+	private static Logger _log = Logger.getLogger(SQLQueue.class);
+	private FastList<SQLQuery> _query = new FastList<SQLQuery>();
+
+	public static final SQLQueue getInstance()
+	{
+		if (_instance == null)
+		{
 			_instance = new SQLQueue();
+		}
+
 		return _instance;
 	}
-	private FastList<SQLQuery> _query;
-	private ScheduledFuture<?> _task;
-	private Connection _con;
-	private boolean _inShutdown;
-	private boolean _isRuning;
-	private SQLQueue() {
-		_query = new FastList<SQLQuery>();
-		try {
-			_con = L2DatabaseFactory.getInstance().getConnection();
-			_task = ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(this, 60000, 60000);
-		} catch(SQLException e) {
-			
-		}
-		
-		
-	}
-	public void shutdown() {
-		_inShutdown = true;
-		_task.cancel(false);
-		if(!_isRuning && _query.size()>0) 
-			run();
-		try { _con.close(); } catch(Exception e) { }
-	}
-	public void add(SQLQuery q) {
-		if(!_inShutdown)
-				_query.addLast(q);
-	}
-	@Override
-	public void run()
+
+	private SQLQueue()
 	{
-		_isRuning = true;
-		synchronized(_query) {
-			while(_query.size()>0) {
-				SQLQuery q = _query.removeFirst();
-				try {
-					q.execute(_con);
-				} catch(Exception e) {
-					
+		schedule(60000);
+		_log.info("SQLQueue: started");
+	}
+
+
+	protected Connection getConnection() throws SQLException
+	{
+		return L2DatabaseFactory.getInstance().getConnection();
+	}
+
+
+	public synchronized void run()
+	{
+		flush();
+	}
+
+	private SQLQuery getNextQuery()
+	{
+		synchronized (_query)
+		{
+			if (_query.isEmpty())
+			{
+				return null;
+			}
+			return _query.removeFirst();
+		}
+	}
+
+	private boolean _running = false;
+
+	private void flush()
+	{
+		Connection con = null;
+		if (_running)
+		{
+			return;
+		}
+		try
+		{
+			_running = true;
+			con = getConnection();
+			for (SQLQuery q; (q = getNextQuery()) != null; )
+			{
+				try
+				{
+					q.execute(con);
+				} catch (Exception e)
+				{
+					_log.warn("SQLQueue: Error executing " + q.getClass().getSimpleName(), e);
 				}
 			}
+		} catch (SQLException e)
+		{
+		} finally
+		{
+			if (con != null)
+			{
+				try
+				{
+					con.close();
+				} catch (SQLException e)
+				{
+				}
+			}
+			_running = false;
 		}
-		try {
-			PreparedStatement stm = _con.prepareStatement("select * from characters where char_name is null");
-			stm.execute();
-			stm.close();
-		} catch(Exception e) {
-			
+
+	}
+
+	@Override
+	protected void onElapsed()
+	{
+		flush();
+		schedule(60000);
+	}
+
+	public void add(SQLQuery q)
+	{
+		synchronized (_query)
+		{
+			_query.add(q);
 		}
-		_isRuning = false;
 	}
 }

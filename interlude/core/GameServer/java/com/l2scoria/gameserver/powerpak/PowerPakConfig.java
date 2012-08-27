@@ -18,15 +18,13 @@
  */
 package com.l2scoria.gameserver.powerpak;
 
+import com.l2scoria.L2Properties;
+import com.l2scoria.gameserver.templates.L2Item;
+import javolution.util.FastList;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
-
-import javolution.util.FastList;
-
-import com.l2scoria.L2Properties;
-import com.l2scoria.gameserver.datatables.sql.ItemTable;
-import com.l2scoria.gameserver.templates.L2Item;
 
 /**
  * @author Nick
@@ -91,24 +89,6 @@ public class PowerPakConfig
 	public static boolean WEBSERVER_ENABLED;
 	public static int WEBSERVER_PORT;
 	public static String WEBSERVER_HOST;
-
-	public static boolean HOPEZONEDEMON_ENABLED;
-	public static int HOPEZONEDEMON_INTERVAL;
-	public static int HOPEZONEDEMON_VOTES_FOR_REWARD;
-	public static String HOPEZONEDEMON_URL;
-	public static FastList<int[]> HOPEZONEREWARDS;
-	public static boolean HOPEZONEDEMON_REWARD_PRIVATE_STORE;
-	public static String HOPEZONEDEMON_MESSAGE;
-
-	public static boolean L2TOPDEMON_ENABLED;
-	public static int L2TOPDEMON_POLLINTERVAL;
-	public static boolean L2TOPDEMON_IGNOREFIRST;
-	public static int L2TOPDEMON_MIN;
-	public static int L2TOPDEMON_MAX;
-	public static int L2TOPDEMON_ITEM;
-	public static String L2TOPDEMON_MESSAGE;
-	public static String L2TOPDEMON_URL;
-	public static String L2TOPDEMON_PREFIX;
 	
 	public static void load()
 	{
@@ -148,32 +128,35 @@ public class PowerPakConfig
 				}
 			}
 			str = p.getProperty("EngraveAllowGrades", "all").toLowerCase();
-			if(str.indexOf("none") != -1 || str.indexOf("all") != -1)
+
+			boolean all = str.contains("all");
+
+			if(all || str.contains("none"))
 			{
 				ENGRAVE_ALLOW_GRADE.add(L2Item.CRYSTAL_NONE);
 			}
 
-			if(str.indexOf("a") != -1 || str.indexOf("all") != -1)
+			if(all || str.contains("a"))
 			{
 				ENGRAVE_ALLOW_GRADE.add(L2Item.CRYSTAL_A);
 			}
 
-			if(str.indexOf("b") != -1 || str.indexOf("all") != -1)
+			if(all || str.contains("b"))
 			{
 				ENGRAVE_ALLOW_GRADE.add(L2Item.CRYSTAL_B);
 			}
 
-			if(str.indexOf("c") != -1 || str.indexOf("all") != -1)
+			if(all || str.contains("c"))
 			{
 				ENGRAVE_ALLOW_GRADE.add(L2Item.CRYSTAL_C);
 			}
 
-			if(str.indexOf("d") != -1 || str.indexOf("all") != -1)
+			if(all || str.contains("d"))
 			{
 				ENGRAVE_ALLOW_GRADE.add(L2Item.CRYSTAL_D);
 			}
 
-			if(str.indexOf("s") != -1 || str.indexOf("all") != -1)
+			if(all || str.contains("s"))
 			{
 				ENGRAVE_ALLOW_GRADE.add(L2Item.CRYSTAL_S);
 			}
@@ -234,59 +217,10 @@ public class PowerPakConfig
 			XMLRPC_HOST = p.getProperty("XMLRPCHost", "localhost");
 			XMLRPC_PORT = Integer.parseInt(p.getProperty("XMLRPCPort", "7000"));
 
-			L2TOPDEMON_ENABLED = Boolean.parseBoolean(p.getProperty("L2TopDeamonEnabled","false"));
-			L2TOPDEMON_URL = p.getProperty("L2TopDeamonURL","");
-			L2TOPDEMON_POLLINTERVAL = Integer.parseInt(p.getProperty("L2TopDeamonPollInterval","5"));
-			L2TOPDEMON_PREFIX = p.getProperty("L2TopDeamonPrefix","");
-			L2TOPDEMON_ITEM = Integer.parseInt(p.getProperty("L2TopDeamonRewardItem","0"));
-			L2TOPDEMON_MESSAGE = L2Utils.loadMessage(p.getProperty("L2TopDeamonMessage",""));
-			L2TOPDEMON_MIN = Integer.parseInt(p.getProperty("L2TopDeamonMin","1"));
-			L2TOPDEMON_MAX = Integer.parseInt(p.getProperty("L2TopDeamonMax","1"));
-			L2TOPDEMON_IGNOREFIRST = Boolean.parseBoolean(p.getProperty("L2TopDeamonDoNotRewardAtFirstTime","false"));
-			if (ItemTable.getInstance().getTemplate(L2TOPDEMON_ITEM)==null) {
-				L2TOPDEMON_ENABLED = false;
-				System.err.println("Powerpak: Unknown item ("+L2TOPDEMON_ITEM+") as vote reward. Vote disabled");
-			}
-
 			WEBSERVER_ENABLED = Boolean.parseBoolean(p.getProperty("WebServerEnabled","false"));
 			WEBSERVER_HOST = p.getProperty("WebServerHost","localhost");
 			WEBSERVER_PORT = Integer.parseInt(p.getProperty("WebServerPort","8080"));
-			
-			HOPEZONEDEMON_ENABLED = Boolean.parseBoolean(p.getProperty("HopeZoneDeamonEnabled","false"));
-			HOPEZONEDEMON_INTERVAL = Integer.parseInt(p.getProperty("HopeZoneDeamonInterval","15"));
-			HOPEZONEDEMON_VOTES_FOR_REWARD = Integer.parseInt(p.getProperty("HopeZoneDeamonVotesForReward","10"));
-			HOPEZONEDEMON_URL = p.getProperty("HopeZoneDeamonURL","localhost");
-			HOPEZONEDEMON_REWARD_PRIVATE_STORE = Boolean.parseBoolean(p.getProperty("HopeZoneRewardPrivateStore","false"));
-			HOPEZONEDEMON_MESSAGE = p.getProperty("HopeZoneDeamonMessage","");
-			
-			HOPEZONEREWARDS = new FastList<int[]>();
-			String[] propertySplit = p.getProperty("HopeZoneDeamonReward", "").split(";");
 
-			for(String item : propertySplit)
-			{
-				String[] itemSplit = item.split(",");
-				if(itemSplit.length != 2)
-				{
-					System.out.println("[HopeZoneDeamonReward]: invalid config property -> HopeZoneDeamonReward \"" + item + "\"");
-				}
-				else
-				{
-					try
-					{
-						HOPEZONEREWARDS.add(new int[]
-						{
-							Integer.parseInt(itemSplit[0]), Integer.parseInt(itemSplit[1])
-						});
-					}
-					catch(NumberFormatException nfe)
-					{
-						if(!item.equals(""))
-						{
-							System.out.println("[HopeZoneDeamonReward]: invalid config property -> Reward \"" + itemSplit[0] + "\"" + itemSplit[1]);
-						}
-					}
-				}
-			}
 			
 			RSS_ENABLED = Boolean.parseBoolean(p.getProperty("RssEnabled","true"));
 			RSS_INTERVAL = Integer.parseInt(p.getProperty("RssRefreshInterval","15"));

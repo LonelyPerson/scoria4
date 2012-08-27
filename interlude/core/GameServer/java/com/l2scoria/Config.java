@@ -23,11 +23,11 @@ import com.l2scoria.gameserver.services.FService;
 import com.l2scoria.gameserver.services.Instruments;
 import javolution.util.FastList;
 import javolution.util.FastMap;
+import org.apache.log4j.Logger;
 
 import java.io.*;
 import java.math.BigInteger;
 import java.util.*;
-import java.util.logging.Logger;
 
 /**
  * This class contains global server configuration.<br>
@@ -39,7 +39,7 @@ import java.util.logging.Logger;
  */
 public final class Config
 {
-	private static final Logger _log = Logger.getLogger(Config.class.getName());
+	private static final Logger _log = Logger.getLogger(Config.class);
 
 	//============================================================
 	public static boolean EVERYBODY_HAS_ADMIN_RIGHTS;
@@ -1818,7 +1818,7 @@ public final class Config
 			if(TVT_EVENT_PARTICIPATION_NPC_ID == 0)
 			{
 				TVT_EVENT_ENABLED = false;
-				_log.warning("TvTEventEngine[Config.load()]: invalid config property -> TvTEventParticipationNpcId");
+				_log.error("TvTEventEngine[Config.load()]: invalid config property -> TvTEventParticipationNpcId");
 			}
 			else
 			{
@@ -1827,7 +1827,7 @@ public final class Config
 				if(propertySplit.length < 3)
 				{
 					TVT_EVENT_ENABLED = false;
-					_log.warning("TvTEventEngine[Config.load()]: invalid config property -> TvTEventParticipationNpcCoordinates");
+					_log.error("TvTEventEngine[Config.load()]: invalid config property -> TvTEventParticipationNpcCoordinates");
 				}
 				else
 				{
@@ -1847,7 +1847,7 @@ public final class Config
 					if(propertySplit.length < 3)
 					{
 						TVT_EVENT_ENABLED = false;
-						_log.warning("TvTEventEngine[Config.load()]: invalid config property -> TvTEventTeam1Coordinates");
+						_log.error("TvTEventEngine[Config.load()]: invalid config property -> TvTEventTeam1Coordinates");
 					}
 					else
 					{
@@ -1861,7 +1861,7 @@ public final class Config
 						if(propertySplit.length < 3)
 						{
 							TVT_EVENT_ENABLED = false;
-							_log.warning("TvTEventEngine[Config.load()]: invalid config property -> TvTEventTeam2Coordinates");
+							_log.error("TvTEventEngine[Config.load()]: invalid config property -> TvTEventTeam2Coordinates");
 						}
 						else
 						{
@@ -1876,7 +1876,7 @@ public final class Config
 								
 								if(rewardSplit.length != 2)
 								{
-									_log.warning("TvTEventEngine[Config.load()]: invalid config property -> TvTEventReward \"" + reward + "\"");
+									_log.error("TvTEventEngine[Config.load()]: invalid config property -> TvTEventReward \"" + reward + "\"");
 								}
 								else
 								{
@@ -1891,7 +1891,7 @@ public final class Config
 									{
 										if(!reward.equals(""))
 										{
-											_log.warning("TvTEventEngine[Config.load()]: invalid config property -> TvTEventReward \"" + reward + "\"");
+											_log.error("TvTEventEngine[Config.load()]: invalid config property -> TvTEventReward \"" + reward + "\"");
 										}
 									}
 								}
@@ -1905,7 +1905,7 @@ public final class Config
 								
 								if(BuffMSplit.length != 2)
 								{
-									_log.warning("TvTEventEngine[Config.load()]: invalid config property -> TvTEventBuff \"" + BuffM + "\"");
+									_log.error("TvTEventEngine[Config.load()]: invalid config property -> TvTEventBuff \"" + BuffM + "\"");
 								}
 								else
 								{
@@ -1920,7 +1920,7 @@ public final class Config
 									{
 										if(!BuffM.equals(""))
 										{
-											_log.warning("TvTEventEngine[Config.load()]: invalid config property -> TvTEventBuff \"" + BuffM + "\"");
+											_log.error("TvTEventEngine[Config.load()]: invalid config property -> TvTEventBuff \"" + BuffM + "\"");
 										}
 									}
 								}
@@ -1935,7 +1935,7 @@ public final class Config
 								
 								if(BuffWsplit.length != 2)
 								{
-									_log.warning("TvTEventEngine[Config.load()]: invalid config property -> TvTEventBuff \"" + BuffW + "\"");
+									_log.error("TvTEventEngine[Config.load()]: invalid config property -> TvTEventBuff \"" + BuffW + "\"");
 								}
 								else
 								{
@@ -1950,7 +1950,7 @@ public final class Config
 									{
 										if(!BuffW.equals(""))
 										{
-											_log.warning("TvTEventEngine[Config.load()]: invalid config property -> TvTEventBuff \"" + BuffW + "\"");
+											_log.error("TvTEventEngine[Config.load()]: invalid config property -> TvTEventBuff \"" + BuffW + "\"");
 										}
 									}
 								}
@@ -1969,7 +1969,7 @@ public final class Config
 								{
 									if(!door.equals(""))
 									{
-										_log.warning("TvTEventEngine[Config.load()]: invalid config property -> TvTDoorsToOpen \"" + door + "\"");
+										_log.error("TvTEventEngine[Config.load()]: invalid config property -> TvTDoorsToOpen \"" + door + "\"");
 									}
 								}
 							}
@@ -1986,7 +1986,7 @@ public final class Config
 								{
 									if(!door.equals(""))
 									{
-										_log.warning("TvTEventEngine[Config.load()]: invalid config property -> TvTDoorsToClose \"" + door + "\"");
+										_log.error("TvTEventEngine[Config.load()]: invalid config property -> TvTDoorsToClose \"" + door + "\"");
 									}
 								}
 							}
@@ -2829,7 +2829,7 @@ public final class Config
 			ENABLE_PK_INFO = Boolean.valueOf(pvpSettings.getProperty("EnablePkInfo", "false"));
 			// Get the AnnounceAllKill, AnnouncePvpKill and AnnouncePkKill values 
 			ANNOUNCE_ALL_KILL = Boolean.parseBoolean(pvpSettings.getProperty("AnnounceAllKill", "False"));
-			if(ANNOUNCE_ALL_KILL == true)
+			if(ANNOUNCE_ALL_KILL)
 			{
 				ANNOUNCE_PVP_KILL = Boolean.parseBoolean(pvpSettings.getProperty("AnnouncePvPKill", "False"));
 				ANNOUNCE_PK_KILL = Boolean.parseBoolean(pvpSettings.getProperty("AnnouncePkKill", "False"));
@@ -2856,6 +2856,184 @@ public final class Config
 			throw new Error("Failed to Load " + PVP + " File.");
 		}
 	}
+
+	public static int DEAMON_MAX_VOTES;
+	public static boolean L2TOPDAEMON_ENABLED, MMOTOPDAEMON_ENABLED, HOPZONEDAEMON_ENABLED;
+
+	public static void loadWebDaemonsConfig()
+	{
+		try
+		{
+			Properties daemonConfig = new Properties();
+			InputStream is = new FileInputStream(new File(FService.DAEMON_CONFIG_FILE));
+			daemonConfig.load(is);
+			is.close();
+
+			DEAMON_MAX_VOTES = Integer.parseInt(daemonConfig.getProperty("DeamonMaxVotesPerSession","20"));
+
+			L2TOPDAEMON_ENABLED = Boolean.parseBoolean(daemonConfig.getProperty("L2TopEnabled", "false"));
+			if(L2TOPDAEMON_ENABLED)
+			{
+				loadL2topConfig();
+			}
+
+			MMOTOPDAEMON_ENABLED = Boolean.parseBoolean(daemonConfig.getProperty("MMOTopEnabled", "false"));
+			if(MMOTOPDAEMON_ENABLED)
+			{
+				loadMMOTopConfig();
+			}
+
+			HOPZONEDAEMON_ENABLED = Boolean.parseBoolean(daemonConfig.getProperty("HopZoneEnabled", "false"));
+			if(HOPZONEDAEMON_ENABLED)
+			{
+				loadHopZoneConfig();
+			}
+		}
+		catch (Exception e){}
+	}
+
+
+	///////////////////////////////////////////////////
+	//		L  2  T  O  P
+	///////////////////////////////////////////////////
+
+	public static int			L2TOPDEMON_POLLINTERVAL;
+	public static int			L2TOPDEMON_SERVERID;
+	public static String		L2TOPDEMON_KEY;
+	public static String 		L2TOPDEMON_NAMEALLOWED;
+	public static int			L2TOPDEMON_MIN;
+	public static int			L2TOPDEMON_MAX;
+	public static int			L2TOPDEMON_ITEM;
+	public static int			L2TOPDEMON_POLL_INVERVAL;
+	public static String		L2TOPDEMON_PREFIX;
+	public static boolean		L2TOPDEMON_IGNOREFIRST;
+	public static RewardMode	L2TOP_REW_MODE;
+	public static enum			RewardMode
+	{
+		ALL, SMS, WEB
+	}
+
+	//**********************************************************************************************
+	public static void loadL2topConfig()
+	{
+		System.out.println("Loading: " + FService.L2TOP_DAEMON_CONFIG_FILE);
+		try
+		{
+			Properties l2topSettings = new Properties();
+			InputStream is = new FileInputStream(new File(FService.L2TOP_DAEMON_CONFIG_FILE));
+			l2topSettings.load(is);
+			is.close();
+
+			L2TOPDEMON_SERVERID = Integer.parseInt(l2topSettings.getProperty("ServerID","0"));
+			L2TOPDEMON_KEY = l2topSettings.getProperty("ServerKey","");
+			L2TOPDEMON_POLLINTERVAL = Integer.parseInt(l2topSettings.getProperty("PollInterval","10"));
+			L2TOPDEMON_PREFIX = l2topSettings.getProperty("Prefix","");
+			L2TOPDEMON_ITEM = Integer.parseInt(l2topSettings.getProperty("RewardItem","0"));
+			L2TOPDEMON_MIN = Integer.parseInt(l2topSettings.getProperty("Min","1"));
+			L2TOPDEMON_MAX = Integer.parseInt(l2topSettings.getProperty("Max","1"));
+			L2TOPDEMON_POLL_INVERVAL = Integer.parseInt(l2topSettings.getProperty("PollInterval","10"));
+			L2TOPDEMON_NAMEALLOWED = l2topSettings.getProperty("AllowedNames",".+");
+			L2TOPDEMON_IGNOREFIRST = Boolean.parseBoolean(l2topSettings.getProperty("DoNotRewardAtFirstTime","false"));
+			L2TOP_REW_MODE = RewardMode.valueOf(l2topSettings.getProperty("Mode", "ALL"));
+		}
+		catch (Exception e)
+		{
+			_log.error(e.getMessage(), e);
+			throw new Error("Failed to Load " + FService.L2TOP_DAEMON_CONFIG_FILE + " File.");
+		}
+	}
+
+	///////////////////////////////////////////////////
+	//		M  M  O  T  O  P
+	///////////////////////////////////////////////////
+
+	public static int[] MMOTOPDAEMON_REWARD;
+	public static int MMOTOPDAEMON_ITEM_ID;
+	public static String MMOTOPDAEMON_URL;
+	public static boolean MMOTOPDAEMON_REWARD_FIRST;
+	public static int MMOTOPDAEMON_POLL_INVERVAL;
+
+	//**********************************************************************************************
+	public static void loadMMOTopConfig()
+	{
+		System.out.println("Loading: " + FService.MMOTOP_DAEMON_CONFIG_FILE);
+		try
+		{
+			Properties mmotopSettings = new Properties();
+			InputStream is = new FileInputStream(new File(FService.MMOTOP_DAEMON_CONFIG_FILE));
+			mmotopSettings.load(is);
+			is.close();
+
+			MMOTOPDAEMON_REWARD = new int[2];
+			MMOTOPDAEMON_REWARD[0] = Integer.parseInt(mmotopSettings.getProperty("RewardMin","1"));
+			MMOTOPDAEMON_REWARD[1] = Integer.parseInt(mmotopSettings.getProperty("RewardMax","10"));
+			MMOTOPDAEMON_ITEM_ID = Integer.parseInt(mmotopSettings.getProperty("ItemID", "4037"));
+			MMOTOPDAEMON_URL = mmotopSettings.getProperty("SiteURL", "");
+			MMOTOPDAEMON_REWARD_FIRST = Boolean.parseBoolean(mmotopSettings.getProperty("RewardAtFirst", "false"));
+			MMOTOPDAEMON_POLL_INVERVAL = Integer.parseInt(mmotopSettings.getProperty("PollInterval","10"));
+		}
+		catch (Exception e)
+		{
+			_log.error(e.getMessage(), e);
+			throw new Error("Failed to Load " + FService.MMOTOP_DAEMON_CONFIG_FILE + " File.");
+		}
+	}
+
+	public static int HOPZONEDAEMON_INTERVAL;
+	public static int HOPZONEDAEMON_VOTES_FOR_REWARD;
+	public static String HOPZONEDAEMON_URL;
+	public static int[][] HOPZONEDAEMON_REWARDS;
+	public static boolean HOPZONEDAEMON_REWARD_PRIVATE_STORE;
+	public static String HOPZONEDAEMON_MESSAGE;
+
+	public static void loadHopZoneConfig()
+	{
+		System.out.println("Loading: " + FService.HOPZONE_DAEMON_CONFIG_FILE);
+		try
+		{
+			Properties p = new L2Properties(FService.HOPZONE_DAEMON_CONFIG_FILE);
+
+			HOPZONEDAEMON_INTERVAL = Integer.parseInt(p.getProperty("PollInterval","15"));
+			HOPZONEDAEMON_VOTES_FOR_REWARD = Integer.parseInt(p.getProperty("VotesForReward","10"));
+			HOPZONEDAEMON_URL = p.getProperty("SiteURL","localhost");
+			HOPZONEDAEMON_REWARD_PRIVATE_STORE = Boolean.parseBoolean(p.getProperty("RewardPrivateStore","false"));
+			HOPZONEDAEMON_MESSAGE = p.getProperty("DeamonMessage","");
+
+			String rewards = p.getProperty("Reward", null);
+			if(rewards != null)
+			{
+				String[] entries = rewards.split(";");
+				HOPZONEDAEMON_REWARDS = new int[entries.length][];
+
+				int i = 0;
+				for(String enty : entries)
+				{
+					String[] data = enty.split(",");
+					try
+					{
+						int itemId = Integer.parseInt(data[0]);
+						int itemCount = Integer.parseInt(data[1]);
+						HOPZONEDAEMON_REWARDS[i++] = new int[]{itemId, itemCount};
+					}
+					catch (NumberFormatException nfe)
+					{
+						nfe.printStackTrace();
+					}
+				}
+			}
+			else
+			{
+				_log.error("HopZone rewards are not defined!");
+				HOPZONEDAEMON_ENABLED = false;
+			}
+		}
+		catch (Exception e)
+		{
+			_log.error(e.getMessage(), e);
+			throw new Error("Failed to Load " + FService.HOPZONE_DAEMON_CONFIG_FILE + " File.");
+		}
+	}
+
 
 	//============================================================
 	public static boolean ALT_OLY_WEEK;
@@ -3924,7 +4102,7 @@ public final class Config
 		}
 		catch(Exception e)
 		{
-			_log.warning("Failed to load " + POWERPAK + " file");
+			_log.error("Failed to load " + POWERPAK + " file");
 		}
 	}
 
@@ -3978,7 +4156,7 @@ public final class Config
 			}
 			catch(Exception e)
 			{
-				_log.warning("Failed to Load " + EXTENDER_FILE + " File.");
+				_log.error("Failed to Load " + EXTENDER_FILE + " File.");
 			}
 		}
 	}
@@ -4006,7 +4184,7 @@ public final class Config
 		}
 		catch(Exception e)
 		{
-			_log.warning("Failed to load " + DAEMONS + " file.");
+			_log.error("Failed to load " + DAEMONS + " file.");
 		}
 	}
 
@@ -4119,7 +4297,7 @@ public final class Config
 		}
 		catch(Exception e)
 		{
-			_log.warning("Could not load HexID file (" + HEXID_FILE + "). Hopefully login will give us one.");
+			_log.error("Could not load HexID file (" + HEXID_FILE + "). Hopefully login will give us one.");
 		}
 
 	}
@@ -4382,6 +4560,7 @@ public final class Config
 			loadServerVersionConfig();
 			loadExtendersConfig();
 			loadDaemonsConf();
+			loadWebDaemonsConfig();
 
 			if(Config.USE_SAY_FILTER)
 			{
@@ -4405,7 +4584,7 @@ public final class Config
 		}
 		else
 		{
-			_log.severe("Could not Load Config: server mode was not set");
+			_log.error("Could not Load Config: server mode was not set");
 		}
 	}
 
@@ -5313,7 +5492,7 @@ public final class Config
 		}
 		catch(Exception e)
 		{
-			_log.warning("Failed to save hex id to " + fileName + " File.");
+			_log.error("Failed to save hex id to " + fileName + " File.");
 			e.printStackTrace();
 		}
 	}

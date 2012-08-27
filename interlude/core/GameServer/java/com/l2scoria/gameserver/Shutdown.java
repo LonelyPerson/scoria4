@@ -18,16 +18,9 @@
  */
 package com.l2scoria.gameserver;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.sql.OfflineTradersTable;
-import com.l2scoria.gameserver.managers.CastleManorManager;
-import com.l2scoria.gameserver.managers.CursedWeaponsManager;
-import com.l2scoria.gameserver.managers.GrandBossManager;
-import com.l2scoria.gameserver.managers.ItemsOnGroundManager;
-import com.l2scoria.gameserver.managers.QuestManager;
-import com.l2scoria.gameserver.managers.RaidBossSpawnManager;
+import com.l2scoria.gameserver.managers.*;
 import com.l2scoria.gameserver.model.L2World;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.entity.Announcements;
@@ -43,6 +36,8 @@ import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.gameserver.util.sql.SQLQueue;
 import com.l2scoria.util.database.L2DatabaseFactory;
 import com.l2scoria.util.database.SqlUtils;
+
+import java.util.logging.Logger;
 
 /**
  * This class provides the functions for shutting down and restarting the server It closes all open client connections
@@ -279,7 +274,8 @@ public class Shutdown extends Thread
 
 			disconnectAllCharacters();
 
-			SQLQueue.getInstance().shutdown();
+			SQLQueue.getInstance().run();
+
 			// ensure all services are stopped
 			try
 			{

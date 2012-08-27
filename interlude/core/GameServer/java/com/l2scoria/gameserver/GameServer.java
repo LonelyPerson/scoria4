@@ -62,6 +62,7 @@ import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.gameserver.thread.daemons.DeadlockDetector;
 import com.l2scoria.gameserver.thread.daemons.PcPoint;
 import com.l2scoria.gameserver.thread.daemons.ServerOnline;
+import com.l2scoria.gameserver.thread.webdaemon.SWebDaemon;
 import com.l2scoria.gameserver.util.DynamicExtension;
 import com.l2scoria.gameserver.util.FloodProtector;
 import com.l2scoria.gameserver.util.sql.SQLQueue;
@@ -80,7 +81,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -149,11 +149,11 @@ public class GameServer
 				ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(DeadlockDetector.getInstance(), Config.DEADLOCKCHECK_INTIAL_TIME, Config.DEADLOCKCHECK_DELAY_TIME);
 			}
                         
-			if (!Arrays.equals(Util.securityCrypt(Config.USER_NAME), Util.getHash()))
+			/*if (!Arrays.equals(Util.securityCrypt(Config.USER_NAME), Util.getHash()))
 			{
 				System.out.println("UserName is wrong.");
 				throw new Exception("UserName is wrong.");
-			}
+			}*/
 
 			new File(Config.DATAPACK_ROOT, "data/clans").mkdirs();
 			new File(Config.DATAPACK_ROOT, "data/crests").mkdirs();
@@ -445,6 +445,7 @@ public class GameServer
 			{
 				System.out.println("Failed loading scripts.cfg, no script going to be loaded");
 			}
+
 			try
 			{
 				CompiledScriptCache compiledScriptCache = L2ScriptEngineManager.getInstance().getCompiledScriptCache();
@@ -471,6 +472,7 @@ public class GameServer
 			{
 				System.out.println("Failed to store Compiled Scripts Cache." + e);
 			}
+
 			QuestManager.getInstance().report();
 			if(!Config.ALT_DEV_NO_SCRIPT)
 			{
@@ -480,6 +482,10 @@ public class GameServer
 			{
 				System.out.println("Script: disable load.");
 			}
+
+			Util.printSection("Web Daemons");
+			SWebDaemon.getInstance();
+
 			Util.printSection("Game Server");
 			if ((Config.OFFLINE_TRADE_ENABLE || Config.OFFLINE_CRAFT_ENABLE) && Config.RESTORE_OFFLINERS)
 				OfflineTradersTable.restoreOfflineTraders();

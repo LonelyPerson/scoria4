@@ -36,9 +36,10 @@
         	<include name="xmlrpc-server-3.1.2.jar"/>
         	<include name="ws-commons-util-1.0.2.jar"/>
         	<include name="lameguard-1.9.5.jar"/>
-                <include name="ExtAPI.jar"/>
+            <include name="ExtAPI.jar"/>
         	<include name="akumu.geoengine.1.2.0.7.jar"/>
-        	<include name="trove-2.1.0.jar"/>
+            <include name="trove-2.1.0.jar"/>
+            <include name="log4j-1.2.16.jar"/>
         </fileset>
     </path>   
     
@@ -258,6 +259,7 @@
     	<mkdir dir="${build.dist.game}/config/powerpak/webservices" />
     	<mkdir dir="${build.dist.game}/config/network" />
     	<mkdir dir="${build.dist.game}/config/fun" />
+        <mkdir dir="${build.dist.game}/config/daemons" />
         
         <mkdir dir="${build.dist.login}/config_en" />
     	<mkdir dir="${build.dist.login}/config_en/network" />
@@ -282,9 +284,10 @@
     	<copy todir="${build.dist.game}/config">
 			<fileset dir="config">
 				<include name="*.properties"/>
-				<include name="*.info"/>
-				<include name="chatfilter.txt"/>
-                                <include name="tradefilter.txt"/>
+                <include name="*.info"/>
+                <include name="log4j.xml"/>
+                <include name="chatfilter.txt"/>
+                <include name="tradefilter.txt"/>
 				<include name="Custom.txt"/>
 				<include name="questionwords.txt"/>
 				<include name="key.cfg"/>

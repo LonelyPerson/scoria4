@@ -51,6 +51,12 @@ public class FService
 	public static final String BOSS_CONFIG_FILE = "./config/head/boss.properties";
 	public static final String PERSONAL_CONFIG_FILE = "./config/head/personal.properties";
 
+	// daemons
+	public static final String DAEMON_CONFIG_FILE = "./config/daemons/daemons.properties";
+	public static final String L2TOP_DAEMON_CONFIG_FILE = "./config/daemons/l2top.properties";
+	public static final String MMOTOP_DAEMON_CONFIG_FILE = "./config/daemons/mmotop.properties";
+	public static final String HOPZONE_DAEMON_CONFIG_FILE = "./config/daemons/hopzone.properties";
+
 	//functions
 	public static final String ACCESS_CONFIGURATION_FILE = "./config/functions/access.properties";
 	public static final String CRAFTING = "./config/functions/crafting.properties";
