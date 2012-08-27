@@ -1302,8 +1302,8 @@ public final class Config
 	public static int RAID_RANKING_UP_TO_100TH;
 	public static int ALT_PRIVATE_STORE_DISTANCE;
 	public static boolean ALT_MINION_REMOVE;
-	public static boolean DECREASE_SKILL_LEVEL;
-	public static int DECREASE_SKILL_LEVEL_DIF;
+	public static boolean DISABLE_SKILLS_ON_LEVEL_LOST;
+	public static int DISABLE_SKILLS_LEVEL_DIF;
 	public static boolean ALT_ALLOW_ATTACK_NPC;
 	public static boolean ALT_CAN_TRADE_AUGMENT, ALT_CAN_DROP_AUGMENT;
 
@@ -1324,8 +1324,8 @@ public final class Config
 			ALT_WEIGHT_LIMIT = Double.parseDouble(altSettings.getProperty("AltWeightLimit", "1"));
 			ALT_GAME_SKILL_LEARN = Boolean.parseBoolean(altSettings.getProperty("AltGameSkillLearn", "false"));
 			AUTO_LEARN_SKILLS = Boolean.parseBoolean(altSettings.getProperty("AutoLearnSkills", "false"));
-			DECREASE_SKILL_LEVEL = Boolean.parseBoolean(altSettings.getProperty("AltDecreaseSkillLvl", "true"));
-			DECREASE_SKILL_LEVEL_DIF = Integer.parseInt(altSettings.getProperty("AltSkillDecreaseDif", "9"));
+			DISABLE_SKILLS_ON_LEVEL_LOST = Boolean.parseBoolean(altSettings.getProperty("AltDisableSkillsOnLevelLost", "true"));
+			DISABLE_SKILLS_LEVEL_DIF = Integer.parseInt(altSettings.getProperty("AltSkillDecreaseDif", "9"));
 			ALT_GAME_CANCEL_BOW = altSettings.getProperty("AltGameCancelByHit", "Cast").equalsIgnoreCase("bow") || altSettings.getProperty("AltGameCancelByHit", "Cast").equalsIgnoreCase("all");
 			ALT_GAME_CANCEL_CAST = altSettings.getProperty("AltGameCancelByHit", "Cast").equalsIgnoreCase("cast") || altSettings.getProperty("AltGameCancelByHit", "Cast").equalsIgnoreCase("all");
 			ALT_GAME_SHIELD_BLOCKS = Boolean.parseBoolean(altSettings.getProperty("AltShieldBlocks", "false"));

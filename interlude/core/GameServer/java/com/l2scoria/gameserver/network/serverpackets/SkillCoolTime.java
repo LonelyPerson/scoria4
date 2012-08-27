@@ -46,9 +46,8 @@ public class SkillCoolTime extends L2GameServerPacket
 		{
 			writeD(ts.getSkill());
 			writeD(0x00);
-			writeD(Math.round(ts.getReuse() / 1000.f));
-			//writeD(Math.round(ts.getRemaining() / 1000.f));
-			writeD(0x00);
+			writeD(Math.round(ts.getReuse() / 1000));
+			writeD(Math.round(ts.getRemaining() / 1000));
 		}
 	}
 

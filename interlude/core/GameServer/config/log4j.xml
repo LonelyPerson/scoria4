@@ -94,16 +94,6 @@
 		</layout>
 	</appender>
 
-	<appender name="CatsGuard" class="org.apache.log4j.RollingFileAppender">
-		<param name="File" value="log/catsguard.log"/>
-		<param name="Append" value="true"/>
-		<param name="maxBackupIndex" value="50" />
-		<param name="MaxFileSize" value="10MB"/>
-		<layout class="org.apache.log4j.EnhancedPatternLayout">
-			<param name="ConversionPattern" value="[%d{dd.MM.yy HH:mm:ss}] %m%n" />
-		</layout>
-	</appender>
-
 	<logger name="GmAccess" additivity="false">
 		<appender-ref ref="GCMASYNC" />
 	</logger>
@@ -116,11 +106,6 @@
 
 	<logger name="BOSSTATE" additivity="false">
 	  <appender-ref ref="BOSSTATE" />
-	</logger>
-
-	<logger name="CatsGuard" additivity="false">
-	  <appender-ref ref="CatsGuard" />
-	  <appender-ref ref="CONSOLE"/>
 	</logger>
 
     <!-- Root Logger -->

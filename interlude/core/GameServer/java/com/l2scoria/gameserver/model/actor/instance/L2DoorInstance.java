@@ -51,16 +51,20 @@ import java.util.logging.Logger;
 
 /**
  * This class ...
- * 
+ *
  * @version $Revision: 1.3.2.2.2.5 $ $Date: 2005/03/27 15:29:32 $
  */
 public class L2DoorInstance extends L2Character implements GeoControl
 {
 	protected static final Logger log = Logger.getLogger(L2DoorInstance.class.getName());
 
-	/** The castle index in the array of L2Castle this L2NpcInstance belongs to */
+	/**
+	 * The castle index in the array of L2Castle this L2NpcInstance belongs to
+	 */
 	private int _castleIndex = -2;
-	/** fort index in array L2Fort -> L2NpcInstance */
+	/**
+	 * fort index in array L2Fort -> L2NpcInstance
+	 */
 	private int _fortIndex = -2;
 
 	private boolean _siegeWeaponOlnyAttackable;
@@ -80,7 +84,9 @@ public class L2DoorInstance extends L2Character implements GeoControl
 	protected int _autoActionDelay = -1;
 	private ScheduledFuture<?> _autoActionTask;
 
-	/** This class may be created only by L2Character and only for AI */
+	/**
+	 * This class may be created only by L2Character and only for AI
+	 */
 	public class AIAccessor extends L2Character.AIAccessor
 	{
 		protected AIAccessor()
@@ -97,42 +103,42 @@ public class L2DoorInstance extends L2Character implements GeoControl
 		@Override
 		public void moveTo(int x, int y, int z, int offset)
 		{
-		//null;
+			//null;
 		}
 
 		@Override
 		public void moveTo(int x, int y, int z)
 		{
-		//null;
+			//null;
 		}
 
 		@Override
 		public void stopMove(L2CharPosition pos)
 		{
-		//null;
+			//null;
 		}
 
 		@Override
 		public void doAttack(L2Character target)
 		{
-		//null;
+			//null;
 		}
 
 		@Override
 		public void doCast(L2Skill skill)
 		{
-		//null;
+			//null;
 		}
 	}
 
 	@Override
 	public L2CharacterAI getAI()
 	{
-		if(_ai == null)
+		if (_ai == null)
 		{
 			synchronized (this)
 			{
-				if(_ai == null)
+				if (_ai == null)
 				{
 					_ai = new L2DoorAI(new AIAccessor());
 				}
@@ -154,8 +160,7 @@ public class L2DoorInstance extends L2Character implements GeoControl
 			try
 			{
 				onClose();
-			}
-			catch(Throwable e)
+			} catch (Throwable e)
 			{
 				log.log(Level.SEVERE, "", e);
 			}
@@ -173,7 +178,7 @@ public class L2DoorInstance extends L2Character implements GeoControl
 			{
 				String doorAction;
 
-				if(!getOpen())
+				if (!getOpen())
 				{
 					doorAction = "opened";
 					openMe();
@@ -184,12 +189,11 @@ public class L2DoorInstance extends L2Character implements GeoControl
 					closeMe();
 				}
 
-				if(Config.DEBUG)
+				if (Config.DEBUG)
 				{
 					log.info("Auto " + doorAction + " door ID " + _doorId + " (" + _name + ") for " + _autoActionDelay / 60000 + " minute(s).");
 				}
-			}
-			catch(Exception e)
+			} catch (Exception e)
 			{
 				log.warning("Could not auto open/close door ID " + _doorId + " (" + _name + ")");
 			}
@@ -197,7 +201,7 @@ public class L2DoorInstance extends L2Character implements GeoControl
 	}
 
 	/**
-     */
+	 */
 	public L2DoorInstance(int objectId, L2CharTemplate template, int doorId, String name, boolean unlockable, boolean showHp)
 	{
 		super(objectId, template);
@@ -213,7 +217,7 @@ public class L2DoorInstance extends L2Character implements GeoControl
 	@Override
 	public final DoorKnownList getKnownList()
 	{
-		if(super.getKnownList() == null || !(super.getKnownList() instanceof DoorKnownList))
+		if (super.getKnownList() == null || !(super.getKnownList() instanceof DoorKnownList))
 		{
 			setKnownList(new DoorKnownList(this));
 		}
@@ -224,7 +228,7 @@ public class L2DoorInstance extends L2Character implements GeoControl
 	@Override
 	public final DoorStat getStat()
 	{
-		if(super.getStat() == null || !(super.getStat() instanceof DoorStat))
+		if (super.getStat() == null || !(super.getStat() instanceof DoorStat))
 		{
 			setStat(new DoorStat(this));
 		}
@@ -235,7 +239,7 @@ public class L2DoorInstance extends L2Character implements GeoControl
 	@Override
 	public final DoorStatus getStatus()
 	{
-		if(super.getStatus() == null || !(super.getStatus() instanceof DoorStatus))
+		if (super.getStatus() == null || !(super.getStatus() instanceof DoorStatus))
 		{
 			setStatus(new DoorStatus(this));
 		}
@@ -282,24 +286,31 @@ public class L2DoorInstance extends L2Character implements GeoControl
 	{
 		//System.out.println("Door open: " + String.valueOf(_open));
 
-		if(_open == open)
-			return;
-
-		_open = open;
-
-		if(!Config.GEODATA || !getGeodata())
+		if (_open == open)
 		{
 			return;
 		}
 
-		if(open)
+		_open = open;
+
+		if (!Config.GEODATA || !getGeodata())
+		{
+			return;
+		}
+
+		if (open)
+		{
 			GeoEngine.returnGeoAtControl(this);
+		}
 		else
+		{
 			GeoEngine.applyControl(this);
+		}
 	}
 
 	/**
 	 * Дверь/стена может быть атаоквана только осадным орудием
+	 *
 	 * @return true если дверь/стену можно атаковать только осадным орудием
 	 */
 	public boolean isSiegeWeaponOnlyAttackable()
@@ -309,6 +320,7 @@ public class L2DoorInstance extends L2Character implements GeoControl
 
 	/**
 	 * Устанавливает двери/стене признак возможности атаковать только осадным оружием
+	 *
 	 * @param val true - дверь/стену можно атаковать только осадным орудием
 	 */
 	public void setSiegeWeaponOlnyAttackable(boolean val)
@@ -319,15 +331,17 @@ public class L2DoorInstance extends L2Character implements GeoControl
 	/**
 	 * Sets the delay in milliseconds for automatic opening/closing of this door instance. <BR>
 	 * <B>Note:</B> A value of -1 cancels the auto open/close task.
-	 * 
+	 *
 	 * @param int actionDelay
 	 */
 	public void setAutoActionDelay(int actionDelay)
 	{
-		if(_autoActionDelay == actionDelay)
+		if (_autoActionDelay == actionDelay)
+		{
 			return;
+		}
 
-		if(actionDelay > -1)
+		if (actionDelay > -1)
 		{
 			AutoOpenClose ao = new AutoOpenClose();
 			_autoActionTask = ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(ao, actionDelay, actionDelay);
@@ -335,7 +349,7 @@ public class L2DoorInstance extends L2Character implements GeoControl
 		}
 		else
 		{
-			if(_autoActionTask != null)
+			if (_autoActionTask != null)
 			{
 				_autoActionTask.cancel(false);
 			}
@@ -347,35 +361,43 @@ public class L2DoorInstance extends L2Character implements GeoControl
 	public int getDamage()
 	{
 		int dmg = 6 - (int) Math.ceil(getCurrentHp() / getMaxHp() * 6);
-		if(dmg > 6)
+		if (dmg > 6)
+		{
 			return 6;
-		if(dmg < 0)
+		}
+		if (dmg < 0)
+		{
 			return 0;
+		}
 		return dmg;
 	}
 
 	public final Castle getCastle()
 	{
-		if(_castleIndex < 0)
+		if (_castleIndex < 0)
 		{
 			_castleIndex = CastleManager.getInstance().getCastleIndex(this);
 		}
 
-		if(_castleIndex < 0)
+		if (_castleIndex < 0)
+		{
 			return null;
+		}
 
 		return CastleManager.getInstance().getCastles().get(_castleIndex);
 	}
 
 	public final Fort getFort()
 	{
-		if(_fortIndex < 0)
+		if (_fortIndex < 0)
 		{
 			_fortIndex = FortManager.getInstance().getFortIndex(this);
 		}
 
-		if(_fortIndex < 0)
+		if (_fortIndex < 0)
+		{
 			return null;
+		}
 
 		return FortManager.getInstance().getForts().get(_fortIndex);
 	}
@@ -395,22 +417,43 @@ public class L2DoorInstance extends L2Character implements GeoControl
 		return true;
 	}
 
+	public boolean isEnemy()
+	{
+		if (getCastle() != null && getCastle().getSiege().getIsInProgress())
+		{
+			return true;
+		}
+		if (getFort() != null && getFort().getSiege().getIsInProgress())
+		{
+			return true;
+		}
+		return false;
+	}
+
 	@Override
 	public boolean isAutoAttackable(L2Character attacker)
 	{
-		if(isUnlockable())
+		if (isUnlockable())
+		{
 			return true;
+		}
 
 		// Doors can`t be attacked by NPCs
-		if(attacker == null || !(attacker instanceof L2PlayableInstance))
+		if (attacker == null || !(attacker instanceof L2PlayableInstance))
+		{
 			return false;
+		}
 
 		L2PcInstance character;
 
-		if(attacker instanceof L2Summon)
+		if (attacker instanceof L2Summon)
+		{
 			character = ((L2Summon) attacker).getOwner();
+		}
 		else
+		{
 			character = (L2PcInstance) attacker;
+		}
 
 		// Attackable during siege by attacker only
 
@@ -418,19 +461,19 @@ public class L2DoorInstance extends L2Character implements GeoControl
 
 		boolean isFort = getFort() != null && getFort().getFortId() > 0 && getFort().getSiege().getIsInProgress() && getFort().getSiege().checkIsAttacker(character.getClan());
 
-		if(isFort)
+		if (isFort)
 		{
 			L2Clan clan = character.getClan();
-			if(clan != null && clan == getFort().getOwnerClan())
+			if (clan != null && clan == getFort().getOwnerClan())
 			{
 				clan = null;
 				return false;
 			}
 		}
-		else if(isCastle)
+		else if (isCastle)
 		{
 			L2Clan clan = character.getClan();
-			if(clan != null && clan.getClanId() == getCastle().getOwnerId())
+			if (clan != null && clan.getClanId() == getCastle().getOwnerId())
 			{
 				clan = null;
 				return false;
@@ -447,12 +490,15 @@ public class L2DoorInstance extends L2Character implements GeoControl
 
 	@Override
 	public void updateAbnormalEffect()
-	{}
+	{
+	}
 
 	public int getDistanceToWatchObject(L2Object object)
 	{
-		if(!(object instanceof L2PcInstance))
+		if (!(object instanceof L2PcInstance))
+		{
 			return 0;
+		}
 		return 2000;
 	}
 
@@ -466,8 +512,10 @@ public class L2DoorInstance extends L2Character implements GeoControl
 	 */
 	public int getDistanceToForgetObject(L2Object object)
 	{
-		if(!(object instanceof L2PcInstance))
+		if (!(object instanceof L2PcInstance))
+		{
 			return 0;
+		}
 
 		return 4000;
 	}
@@ -503,11 +551,13 @@ public class L2DoorInstance extends L2Character implements GeoControl
 	@Override
 	public void onAction(L2PcInstance player)
 	{
-		if(player == null)
+		if (player == null)
+		{
 			return;
+		}
 
 		// Check if the L2PcInstance already target the L2NpcInstance
-		if(this != player.getTarget())
+		if (this != player.getTarget())
 		{
 			// Set the target of the L2PcInstance player
 			player.setTarget(this);
@@ -531,16 +581,16 @@ public class L2DoorInstance extends L2Character implements GeoControl
 		{
 			//            MyTargetSelected my = new MyTargetSelected(getObjectId(), player.getLevel());
 			//            player.sendPacket(my);
-			if(isAutoAttackable(player))
+			if (isAutoAttackable(player))
 			{
-				if(Math.abs(player.getZ() - getZ()) < 400) // this max heigth difference might need some tweaking
+				if (Math.abs(player.getZ() - getZ()) < 400) // this max heigth difference might need some tweaking
 				{
 					player.getAI().setIntention(CtrlIntention.AI_INTENTION_ATTACK, this);
 				}
 			}
-			else if(player.getClan() != null && getClanHall() != null && player.getClanId() == getClanHall().getOwnerId())
+			else if (player.getClan() != null && getClanHall() != null && player.getClanId() == getClanHall().getOwnerId())
 			{
-				if(!isInsideRadius(player, L2NpcInstance.INTERACTION_DISTANCE, false, false))
+				if (!isInsideRadius(player, L2NpcInstance.INTERACTION_DISTANCE, false, false))
 				{
 					player.getAI().setIntention(CtrlIntention.AI_INTENTION_INTERACT, this);
 				}
@@ -549,7 +599,7 @@ public class L2DoorInstance extends L2Character implements GeoControl
 					//need find serverpacket which ask open/close gate. now auto
 					//if (getOpen() == 1) player.sendPacket(new SystemMessage(1140));
 					//else player.sendPacket(new SystemMessage(1141));
-					if(!getOpen())
+					if (!getOpen())
 					{
 						openMe();
 					}
@@ -568,17 +618,19 @@ public class L2DoorInstance extends L2Character implements GeoControl
 	public void onActionShift(L2GameClient client)
 	{
 		L2PcInstance player = client.getActiveChar();
-		if(player == null)
+		if (player == null)
+		{
 			return;
+		}
 
-		if(player.getAccessLevel().isGm())
+		if (player.getAccessLevel().isGm())
 		{
 			player.setTarget(this);
 			MyTargetSelected my = new MyTargetSelected(getObjectId(), player.getLevel());
 			player.sendPacket(my);
 			my = null;
 
-			if(isAutoAttackable(player))
+			if (isAutoAttackable(player))
 			{
 				DoorStatusUpdate su = new DoorStatusUpdate(this);
 				player.sendPacket(su);
@@ -627,12 +679,14 @@ public class L2DoorInstance extends L2Character implements GeoControl
 	{
 		Collection<L2PcInstance> knownPlayers = getKnownList().getKnownPlayers().values();
 
-		if(knownPlayers == null || knownPlayers.isEmpty())
+		if (knownPlayers == null || knownPlayers.isEmpty())
+		{
 			return;
+		}
 
 		DoorStatusUpdate su = new DoorStatusUpdate(this);
 
-		for(L2PcInstance player : knownPlayers)
+		for (L2PcInstance player : knownPlayers)
 		{
 			player.sendPacket(su);
 		}
@@ -652,8 +706,10 @@ public class L2DoorInstance extends L2Character implements GeoControl
 	{
 		synchronized (this)
 		{
-			if(!getOpen())
+			if (!getOpen())
+			{
 				return;
+			}
 
 			setOpen(false);
 		}
@@ -665,8 +721,10 @@ public class L2DoorInstance extends L2Character implements GeoControl
 	{
 		synchronized (this)
 		{
-			if(getOpen())
+			if (getOpen())
+			{
 				return;
+			}
 			setOpen(true);
 		}
 
@@ -688,9 +746,9 @@ public class L2DoorInstance extends L2Character implements GeoControl
 	{
 		FastList<L2SiegeGuardInstance> result = new FastList<L2SiegeGuardInstance>();
 
-		for(L2Object obj : getKnownList().getKnownObjects().values())
+		for (L2Object obj : getKnownList().getKnownObjects().values())
 		{
-			if(obj instanceof L2SiegeGuardInstance)
+			if (obj instanceof L2SiegeGuardInstance)
 			{
 				result.add((L2SiegeGuardInstance) obj);
 			}
@@ -706,9 +764,9 @@ public class L2DoorInstance extends L2Character implements GeoControl
 		Collection<L2Object> objs = getKnownList().getKnownObjects().values();
 		//synchronized (getKnownList().getKnownObjects()) 
 		{
-			for(L2Object obj : objs)
+			for (L2Object obj : objs)
 			{
-				if(obj instanceof L2FortSiegeGuardInstance)
+				if (obj instanceof L2FortSiegeGuardInstance)
 				{
 					result.add((L2FortSiegeGuardInstance) obj);
 				}
@@ -720,7 +778,7 @@ public class L2DoorInstance extends L2Character implements GeoControl
 	@Override
 	public void reduceCurrentHp(double damage, L2Character attacker, boolean awake)
 	{
-		if(this.isAutoAttackable(attacker) || (attacker instanceof L2PcInstance && ((L2PcInstance) attacker).isGM()))
+		if (this.isAutoAttackable(attacker) || (attacker instanceof L2PcInstance && ((L2PcInstance) attacker).isGM()))
 		{
 			super.reduceCurrentHp(damage, attacker, awake);
 		}

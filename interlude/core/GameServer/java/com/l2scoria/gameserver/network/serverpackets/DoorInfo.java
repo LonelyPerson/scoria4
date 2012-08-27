@@ -42,7 +42,13 @@ public class DoorInfo extends L2GameServerPacket
 		writeC(0x4c);
 		writeD(_door.getObjectId());
 		writeD(_door.getDoorId());
-		writeD(_door.isHPVisible() ? 1 : 0); // отображать ли хп у двери или стены
+		writeD(1);
+		writeD(1);
+		writeD(_door.isEnemy() ? 1 : 0);
+		writeD((int)_door.getCurrentHp());
+		writeD(_door.getMaxHp());
+		writeD(_door.isHPVisible() ? 1 : 0);
+		writeD(_door.getDamage());
 	}
 
 	/* (non-Javadoc)

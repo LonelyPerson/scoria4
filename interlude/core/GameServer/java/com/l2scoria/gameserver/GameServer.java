@@ -74,16 +74,13 @@ import com.l2scoria.util.database.LoginRemoteDbFactory;
 import com.lameguard.LameGuard;
 import mmo.SelectorServerConfig;
 import mmo.SelectorThread;
+import org.apache.log4j.Logger;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.Calendar;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
 
 /**
  * 
@@ -92,30 +89,19 @@ import java.util.logging.Logger;
 
 public class GameServer
 {
-	private static Logger _log = Logger.getLogger("Loader");
+	private static Logger _log = Logger.getLogger(GameServer.class);
 	private static SelectorThread<L2GameClient> _selectorThread;
 	private static LoginServerThread _loginThread;
 
 	public static final Calendar dateTimeServerStarted = Calendar.getInstance();
 
-	public static void main(String[] args) throws Exception, Throwable
+	@SuppressWarnings("ResultOfMethodCallIgnored")
+	public static void main(String[] args) throws Throwable
 	{
 		ServerType.serverMode = ServerType.MODE_GAMESERVER;
-		//Local Constants
-		final String LOG_FOLDER = "log"; // Name of folder for log file
-		final String LOG_NAME = "./log.cfg"; // Name of log file
 
-		/*** Main ***/
 		// Create log folder
-		File logFolder = new File(Config.DATAPACK_ROOT, LOG_FOLDER);
-		logFolder.mkdir();
-
-		// Create input stream for log file -- or store file data into memory
-		InputStream is = new FileInputStream(new File(LOG_NAME));
-		LogManager.getLogManager().readConfiguration(is);
-		is.close();
-		is = null;
-		logFolder = null;
+		new File(Config.DATAPACK_ROOT, "log").mkdir();
 
 		long serverLoadStart = System.currentTimeMillis();
 
@@ -528,7 +514,7 @@ public class GameServer
 		// maxMemory is the upper limit the jvm can use, totalMemory the size of the current allocation pool,
 		// freeMemory the unused memory in the allocation pool
 		_log.info("GameServer Started, free memory " + Memory.getFreeMemory() + " Mb of " + Memory.getTotalMemory() + " Mb");
-		_log.finest("Used memory:" + Memory.getUsedMemory() + " MB");
+		_log.info("Used memory:" + Memory.getUsedMemory() + " MB");
 
 		_loginThread = LoginServerThread.getInstance();
 		_loginThread.start();
@@ -545,11 +531,11 @@ public class GameServer
 		}
 		catch (IOException e)
 		{
-			_log.severe("FATAL: Failed to open server socket. Reason: " + e.getMessage());
+			_log.error("FATAL: Failed to open server socket. Reason: " + e.getMessage());
 			System.exit(1);
 		}
 		_selectorThread.start();
-		_log.config("Maximum Numbers of Connected Players: " + Config.MAXIMUM_ONLINE_USERS);
+		_log.info("Maximum Numbers of Connected Players: " + Config.MAXIMUM_ONLINE_USERS);
 
 		Util.printSection("L2Scoria Version");
 		_log.info("Operating System: " + Util.getOSName() + " " + Util.getOSVersion() + " " + Util.getOSArch());

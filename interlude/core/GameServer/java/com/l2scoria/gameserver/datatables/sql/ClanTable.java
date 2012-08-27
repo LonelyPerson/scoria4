@@ -18,17 +18,6 @@
  */
 package com.l2scoria.gameserver.datatables.sql;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.Map;
-import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
-
-import javolution.util.FastMap;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.idfactory.IdFactory;
 import com.l2scoria.gameserver.managers.FortManager;
@@ -41,14 +30,20 @@ import com.l2scoria.gameserver.model.entity.siege.Fort;
 import com.l2scoria.gameserver.model.entity.siege.FortSiege;
 import com.l2scoria.gameserver.model.entity.siege.Siege;
 import com.l2scoria.gameserver.network.SystemMessageId;
-import com.l2scoria.gameserver.network.serverpackets.PledgeShowInfoUpdate;
-import com.l2scoria.gameserver.network.serverpackets.PledgeShowMemberListAll;
-import com.l2scoria.gameserver.network.serverpackets.PledgeShowMemberListUpdate;
-import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
-import com.l2scoria.gameserver.network.serverpackets.UserInfo;
+import com.l2scoria.gameserver.network.serverpackets.*;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.gameserver.util.Util;
 import com.l2scoria.util.database.L2DatabaseFactory;
+import javolution.util.FastMap;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.Map;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 /**
  * This class ...
@@ -533,12 +528,12 @@ public class ClanTable
 		clan1.broadcastClanStatus();
 		clan2.broadcastClanStatus();
 
-		//for(L2ClanMember player: clan1.getMembers())
+		//for(L2ClanMember player: clan1.getMembersCount())
 		//{
 		//    if(player.getPlayerInstance()!=null)
 		//			player.getPlayerInstance().setWantsPeace(0);
 		//}
-		//for(L2ClanMember player: clan2.getMembers())
+		//for(L2ClanMember player: clan2.getMembersCount())
 		//{
 		//    if(player.getPlayerInstance()!=null)
 		//			player.getPlayerInstance().setWantsPeace(0);

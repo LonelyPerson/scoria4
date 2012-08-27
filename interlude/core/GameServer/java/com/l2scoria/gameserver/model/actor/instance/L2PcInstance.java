@@ -69,7 +69,6 @@ import com.l2scoria.gameserver.network.L2GameClient;
 import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.*;
 import com.l2scoria.gameserver.skills.Formulas;
-import com.l2scoria.gameserver.skills.SkillsEngine;
 import com.l2scoria.gameserver.skills.Stats;
 import com.l2scoria.gameserver.skills.effects.EffectCharge;
 import com.l2scoria.gameserver.templates.*;
@@ -97,7 +96,6 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * This class represents all player characters in the world. There is always a client-thread connected to this (except
@@ -2301,10 +2299,10 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			broadcastPacket(new MagicSkillUser(this, this, 5103, 1, 1000, 0));
 			setClassTemplate(Id);
 
-			if (!isGM() && Config.DECREASE_SKILL_LEVEL)
+			/*if (!isGM() && Config.DECREASE_SKILL_LEVEL)
 			{
 				checkPlayerSkills();
-			}
+			} */
 		}
 		finally
 		{
@@ -10999,38 +10997,30 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 
 	public void sendSkillList(L2PcInstance player)
 	{
-		SkillList sl = new SkillList();
-		if(player != null)
+		L2Skill[] array = getAllSkills();
+		List<L2Skill> skills = new ArrayList<L2Skill>(array.length);
+
+		for(L2Skill s : player.getAllSkills())
 		{
-			for(L2Skill s : player.getAllSkills())
+			if(s == null)
 			{
-				if(s == null)
-				{
-					continue;
-				}
-
-				if(s.getId() > 9000)
-				{
-					continue; // Fake skills to change base stats
-				}
-
-				if(s.bestowed())
-				{
-					continue;
-				}
-
-				if(s.isChance())
-				{
-					sl.addSkill(s.getId(), s.getLevel(), s.isChance());
-				}
-				else
-				{
-					sl.addSkill(s.getId(), s.getLevel(), s.isPassive());
-				}
+				continue;
 			}
+
+			if(s.getId() > 9000 && s.getId() < 9007)
+			{
+				continue; // Fake skills to change base stats
+			}
+
+			if(s.bestowed())
+			{
+				continue;
+			}
+
+			skills.add(s);
 		}
-		sendPacket(sl);
-		sl = null;
+
+		sendPacket(new SkillList(skills));
 	}
 
 	/**
@@ -11719,10 +11709,10 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			}
 		}
 
-		if (!isGM() && Config.DECREASE_SKILL_LEVEL)
+		/*if (!isGM() && Config.DECREASE_SKILL_LEVEL)
 		{
 			checkPlayerSkills();
-		}
+		}*/
 	}
 
 	public long getLastAccess()
@@ -13667,13 +13657,13 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 	{
 		private int skill;
 		private long reuse;
-		private Date stamp;
+		private long stamp;
 
 		public TimeStamp(int _skill, long _reuse)
 		{
 			skill = _skill;
 			reuse = _reuse;
-			stamp = new Date(new Date().getTime() + reuse);
+			stamp = System.currentTimeMillis() + reuse;
 		}
 
 		public int getSkill()
@@ -13686,19 +13676,18 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			return reuse;
 		}
 
+		public long getRemaining()
+		{
+			return Math.max(stamp - System.currentTimeMillis(), 0);
+		}
+
 		/* Check if the reuse delay has passed and
 		 * if it has not then update the stored reuse time
 		 * according to what is currently remaining on
 		 * the delay. */
 		public boolean hasNotPassed()
 		{
-			Date d = new Date();
-			if(d.before(stamp))
-			{
-				reuse -= d.getTime() - (stamp.getTime() - reuse);
-				return true;
-			}
-			return false;
+			return System.currentTimeMillis() < stamp;
 		}
 	}
 
@@ -14336,7 +14325,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
                 return getAccessLevel().FullClassMaster();
         }
 
-	public void checkPlayerSkills()
+	/*public void checkPlayerSkills()
 	{
 		for (int id : _skills.keySet())
 		{
@@ -14356,9 +14345,9 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 				}
 			}
 		}
-	}
+	}*/
 
-	private void deacreaseSkillLevel(int id)
+	/*private void deacreaseSkillLevel(int id)
 	{
 		int nextLevel = -1;
 		for (L2SkillLearn sl : SkillTreeTable.getInstance().getAllowedSkills(getClassId()))
@@ -14380,7 +14369,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			//_log.info("Decreasing skill id " + id + " from " + getSkillLevel(id) + " to " + nextLevel + " for " + this);
 			addSkill(SkillTable.getInstance().getInfo(id, nextLevel), true);
 		}
-	}
+	}*/
 
 	public int getPartyRoomRequestId()
 	{

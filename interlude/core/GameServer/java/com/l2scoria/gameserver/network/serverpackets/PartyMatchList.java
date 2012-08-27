@@ -48,7 +48,7 @@ public class PartyMatchList extends L2GameServerPacket
 
 		for(PartyMatchRoom room : PartyMatchRoomList.getInstance().getRooms())
 		{
-			if (room.getMembers() < 1 || room.getOwner() == null || room.getOwner().isOnline()==0 || room.getOwner().getPartyRoom() != room.getId())
+			if (room.getMembersCount() < 1 || room.getOwner() == null || room.getOwner().isOnline()==0 || room.getOwner().getPartyRoom() != room.getId())
 			{
 				PartyMatchRoomList.getInstance().deleteRoom(room.getId());
 				continue;
@@ -76,7 +76,7 @@ public class PartyMatchList extends L2GameServerPacket
 			writeD(_rooms.get(count).getLocation());
 			writeD(_rooms.get(count).getMinLvl());
 			writeD(_rooms.get(count).getMaxLvl());
-			writeD(_rooms.get(count).getMembers());
+			writeD(_rooms.get(count).getMembersCount());
 			writeD(_rooms.get(count).getMaxMembers());
 			writeS(_rooms.get(count).getOwner().getName());
 			count++;

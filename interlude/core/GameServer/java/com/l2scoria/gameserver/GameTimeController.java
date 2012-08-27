@@ -23,12 +23,12 @@ import com.l2scoria.gameserver.managers.DayNightSpawnManager;
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import javolution.util.FastList;
+import org.apache.log4j.Logger;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
-import java.util.logging.Logger;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -39,7 +39,7 @@ import java.util.jar.JarFile;
  */
 public class GameTimeController
 {
-	static final Logger _log = Logger.getLogger(GameTimeController.class.getName());
+	static final Logger _log = Logger.getLogger(GameTimeController.class);
 
 	public static final int TICKS_PER_SECOND = 10;
 	public static final int MILLIS_IN_TICK = 1000 / TICKS_PER_SECOND;
@@ -240,7 +240,7 @@ public class GameTimeController
 			if(!_timer.isAlive())
 			{
 				String time = new SimpleDateFormat("HH:mm:ss").format(new Date());
-				_log.warning(time + " TimerThread stop with following error. restart it.");
+				_log.error(time + " TimerThread stop with following error. restart it.");
 				if(_timer._error != null)
 				{
 					_timer._error.printStackTrace();

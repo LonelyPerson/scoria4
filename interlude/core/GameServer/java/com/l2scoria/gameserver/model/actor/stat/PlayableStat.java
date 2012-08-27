@@ -17,8 +17,6 @@
  */
 package com.l2scoria.gameserver.model.actor.stat;
 
-import com.l2scoria.Config;
-import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PlayableInstance;
 import com.l2scoria.gameserver.model.base.Experience;
 
@@ -156,10 +154,10 @@ public class PlayableStat extends CharStat
 			setExp(getExpForLevel(getLevel()));
 		}
 
-		if (!levelIncreased && getActiveChar() instanceof L2PcInstance && !((L2PcInstance) (getActiveChar())).isGM() && Config.DECREASE_SKILL_LEVEL)
+		/*if (!levelIncreased && getActiveChar() instanceof L2PcInstance && !((L2PcInstance) (getActiveChar())).isGM() && Config.DECREASE_SKILL_LEVEL)
 		{
 			((L2PcInstance) (getActiveChar())).checkPlayerSkills();
-		}
+		}*/
 
 		if(!levelIncreased)
 			return false;

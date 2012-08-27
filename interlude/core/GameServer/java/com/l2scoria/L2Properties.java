@@ -1,17 +1,14 @@
 package com.l2scoria;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
+
+import java.io.*;
 import java.util.Properties;
 
 @SuppressWarnings("serial")
 public final class L2Properties extends Properties
 {
-	private static final Logger _log = Logger.getLogger(L2Properties.class.getName());
+	private static final Logger _log = Logger.getLogger(L2Properties.class);
 	private boolean _warn = false;
 
 	public L2Properties()
@@ -89,7 +86,7 @@ public final class L2Properties extends Properties
 		{
 			if(_warn)
 			{
-				_log.warning("L2Properties: Missing property for key - " + key);
+				_log.error("L2Properties: Missing property for key - " + key);
 			}
 
 			return null;
@@ -107,7 +104,7 @@ public final class L2Properties extends Properties
 		{
 			if(_warn)
 			{
-				_log.warning("L2Properties: Missing defaultValue for key - " + key);
+				_log.error("L2Properties: Missing defaultValue for key - " + key);
 			}
 
 			return null;
