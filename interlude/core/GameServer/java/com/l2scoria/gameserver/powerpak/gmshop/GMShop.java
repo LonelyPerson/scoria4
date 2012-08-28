@@ -25,7 +25,6 @@ import com.l2scoria.gameserver.handler.IVoicedCommandHandler;
 import com.l2scoria.gameserver.managers.TownManager;
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import com.l2scoria.gameserver.model.entity.event.TvTEvent;
 import com.l2scoria.gameserver.model.entity.olympiad.Olympiad;
 import com.l2scoria.gameserver.model.multisell.L2Multisell;
 import com.l2scoria.gameserver.network.serverpackets.NpcHtmlMessage;
@@ -78,7 +77,7 @@ public class GMShop implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 				activeChar.isInsideZone(L2Character.ZONE_OLY) || Olympiad.getInstance().isRegistered(activeChar) ||
 				Olympiad.getInstance().isRegisteredInComp(activeChar))) 
 			msg = "GMShop не доступен на Великой Олимпиаде";
-		else if(PowerPakConfig.GMSHOP_EXCLUDE_ON.contains("EVENT") && (TvTEvent.isPlayerParticipant(activeChar.getObjectId()) || activeChar.atEvent))
+		else if(PowerPakConfig.GMSHOP_EXCLUDE_ON.contains("EVENT") && false)
 			msg = "GMShop не доступен на эвенте";
 		
 		if(msg!=null)

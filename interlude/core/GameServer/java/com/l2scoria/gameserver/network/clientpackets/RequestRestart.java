@@ -23,7 +23,6 @@ import com.l2scoria.gameserver.communitybbs.Manager.RegionBBSManager;
 import com.l2scoria.gameserver.datatables.SkillTable;
 import com.l2scoria.gameserver.model.L2Party;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import com.l2scoria.gameserver.model.entity.event.TvTEvent;
 import com.l2scoria.gameserver.model.entity.olympiad.Olympiad;
 import com.l2scoria.gameserver.model.entity.sevensigns.SevenSignsFestival;
 import com.l2scoria.gameserver.network.L2GameClient;
@@ -80,18 +79,6 @@ public final class RequestRestart extends L2GameClientPacket
 		{
 			player.abortCast();
 			player.setIsTeleporting(false);
-		}
-		
-		if(player.atEvent && !Config.EVENT_ALLOW_LOGOUT)
-		{
-			player.sendPacket(SystemMessage.sendString("A superior power doesn't allow you to leave the event"));
-			return;
-		}
-
-		if(TvTEvent.isStarted() && TvTEvent.isPlayerParticipant(player.getObjectId()))
-		{
-			player.sendMessage("You cant logout in TvT mode");
-			return;
 		}
 
 		player.getInventory().updateDatabase();
@@ -155,8 +142,6 @@ public final class RequestRestart extends L2GameClientPacket
 		{
 			player.removeSkill(SkillTable.getInstance().getInfo(4289, 1));
 		}
-
-		TvTEvent.onLogout(player);
 
 		L2GameClient client = getClient();
 

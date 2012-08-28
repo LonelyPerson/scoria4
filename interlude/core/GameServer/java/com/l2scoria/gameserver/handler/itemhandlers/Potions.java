@@ -18,29 +18,23 @@
  */
 package com.l2scoria.gameserver.handler.itemhandlers;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.SkillTable;
 import com.l2scoria.gameserver.handler.IItemHandler;
 import com.l2scoria.gameserver.handler.ISkillHandler;
 import com.l2scoria.gameserver.handler.SkillHandler;
 import com.l2scoria.gameserver.model.L2Effect;
-import com.l2scoria.gameserver.model.L2Skill;
 import com.l2scoria.gameserver.model.L2Effect.EffectType;
-import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2PetInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2PlayableInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2StaticObjectInstance;
-import com.l2scoria.gameserver.model.entity.event.TvTEvent;
+import com.l2scoria.gameserver.model.L2Skill;
+import com.l2scoria.gameserver.model.actor.instance.*;
 import com.l2scoria.gameserver.network.SystemMessageId;
-import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
+import com.l2scoria.gameserver.network.serverpackets.ExUseSharedGroupItem;
 import com.l2scoria.gameserver.network.serverpackets.MagicSkillUser;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
-import com.l2scoria.gameserver.network.serverpackets.ExUseSharedGroupItem;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This class ...
@@ -172,18 +166,6 @@ public class Potions implements IItemHandler
 		else
 			return;
 
-		if(activeChar.atEvent && !Config.EVENT_ALLOW_POTIONS)
-		{
-			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
-			return;
-		}
-
-		if(!TvTEvent.onPotionUse(playable.getObjectId()))
-		{
-			playable.sendPacket(ActionFailed.STATIC_PACKET);
-			return;
-		}
-
 		if(activeChar.isInOlympiadMode())
 		{
 			activeChar.sendPacket(new SystemMessage(SystemMessageId.THIS_ITEM_IS_NOT_AVAILABLE_FOR_THE_OLYMPIAD_EVENT));
@@ -199,15 +181,6 @@ public class Potions implements IItemHandler
 		if(!Config.ALLOW_POTS_IN_PVP && (activeChar.isInDuel() || activeChar.getPvpFlag() != 0))
 		{
 			activeChar.sendMessage("You Cannot Use Potions In PvP!");
-			return;
-		}
-
-		if (activeChar.isFightingInEvent() &&
-			((activeChar.getEventName().equals("BW") && !Config.BW_ALLOW_POTIONS) || 
-			(activeChar.getEventName().equals("CTF") && !Config.CTF_ALLOW_POTIONS) ||
-			(activeChar.getEventName().equals("DM") && !Config.DM_ALLOW_POTIONS)))
-		{
-			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
 

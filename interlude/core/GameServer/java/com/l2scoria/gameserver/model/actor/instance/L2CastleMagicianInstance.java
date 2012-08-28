@@ -17,22 +17,17 @@
  */
 package com.l2scoria.gameserver.model.actor.instance;
 
-import java.util.StringTokenizer;
-
 import com.l2scoria.gameserver.ai.CtrlIntention;
 import com.l2scoria.gameserver.managers.CastleManager;
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.L2World;
 import com.l2scoria.gameserver.model.actor.position.L2CharPosition;
-import com.l2scoria.gameserver.model.entity.event.TvTEvent;
 import com.l2scoria.gameserver.model.entity.siege.Castle;
-import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
-import com.l2scoria.gameserver.network.serverpackets.MyTargetSelected;
-import com.l2scoria.gameserver.network.serverpackets.NpcHtmlMessage;
-import com.l2scoria.gameserver.network.serverpackets.SocialAction;
-import com.l2scoria.gameserver.network.serverpackets.ValidateLocation;
+import com.l2scoria.gameserver.network.serverpackets.*;
 import com.l2scoria.gameserver.templates.L2NpcTemplate;
 import com.l2scoria.util.random.Rnd;
+
+import java.util.StringTokenizer;
 
 /**
  * @author  Kerberos
@@ -180,12 +175,6 @@ public class L2CastleMagicianInstance extends L2FolkInstance
 		if(leader.isInsideZone(L2Character.ZONE_NOSUMMONFRIEND))
 		{
 			player.sendMessage("Your Leader is in zone which blocking summon.");
-			return false;
-		}
-
-		if(leader.atEvent || TvTEvent.isPlayerParticipant(leader.getObjectId()))
-		{
-			player.sendMessage("Your leader is in an event.");
 			return false;
 		}
 		

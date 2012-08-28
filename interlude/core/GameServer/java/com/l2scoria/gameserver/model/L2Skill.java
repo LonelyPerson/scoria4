@@ -18,7 +18,6 @@
  */
 package com.l2scoria.gameserver.model;
 
-import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.HeroSkillTable;
 import com.l2scoria.gameserver.datatables.SkillTable;
 import com.l2scoria.gameserver.datatables.sql.SkillTreeTable;
@@ -26,7 +25,6 @@ import com.l2scoria.gameserver.geodata.GeoEngine;
 import com.l2scoria.gameserver.managers.SiegeManager;
 import com.l2scoria.gameserver.model.actor.instance.*;
 import com.l2scoria.gameserver.model.base.ClassId;
-import com.l2scoria.gameserver.model.entity.event.TvTEvent;
 import com.l2scoria.gameserver.model.entity.siege.Siege;
 import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.EtcStatusUpdate;
@@ -2692,11 +2690,6 @@ public abstract class L2Skill
 			if(activeCh.isInDuel() && targetChar.isInDuel() && activeCh.getDuelId() == targetChar.getDuelId())
 				return false;
 
-			if(Config.TVT_EVENT_ENABLED && TvTEvent.getParticipantTeamId(activeCh.getObjectId()) != -1 && TvTEvent.getParticipantTeamId(targetChar.getObjectId()) != -1)
-			{
-				return TvTEvent.getParticipantTeamId(activeCh.getObjectId()) == TvTEvent.getParticipantTeamId(targetChar.getObjectId());
-			}
-
 			if(activeCh.getParty() != null && targetChar.getParty() != null && //Is in the same party???
 				activeCh.getParty().getPartyLeaderOID() == targetChar.getParty().getPartyLeaderOID())
 				return true;
@@ -2765,10 +2758,6 @@ public abstract class L2Skill
 						&& player.getParty().getCommandChannel() == targetPlayer.getParty().getCommandChannel())
 					return false;
 			}
-
-			if(Config.TVT_EVENT_ENABLED && TvTEvent.getParticipantTeamId(targetPlayer.getObjectId()) != -1
-				&& TvTEvent.getParticipantTeamId(targetPlayer.getObjectId()) == TvTEvent.getParticipantTeamId(player.getObjectId()))
-				return false;
 
 			if (!sourceInArena && !(targetPlayer.isInsideZone(L2Character.ZONE_PVP) && !targetPlayer.isInsideZone(L2Character.ZONE_SIEGE)))
 			{

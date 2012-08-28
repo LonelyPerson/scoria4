@@ -19,11 +19,24 @@
 
 package com.l2scoria.gameserver.model.entity.olympiad;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import com.l2scoria.Config;
+import com.l2scoria.crypt.nProtect;
+import com.l2scoria.crypt.nProtect.RestrictionType;
+import com.l2scoria.gameserver.managers.OlympiadStadiaManager;
+import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
+import com.l2scoria.gameserver.model.entity.Announcements;
+import com.l2scoria.gameserver.model.entity.Hero;
+import com.l2scoria.gameserver.network.SystemMessageId;
+import com.l2scoria.gameserver.network.serverpackets.NpcHtmlMessage;
+import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
+import com.l2scoria.gameserver.templates.StatsSet;
+import com.l2scoria.gameserver.thread.ThreadPoolManager;
+import com.l2scoria.util.L2FastList;
+import com.l2scoria.util.database.L2DatabaseFactory;
+import javolution.text.TextBuilder;
+import javolution.util.FastMap;
+
+import java.io.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -33,25 +46,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ScheduledFuture;
 import java.util.logging.Logger;
-
-import javolution.text.TextBuilder;
-import javolution.util.FastMap;
-
-import com.l2scoria.Config;
-import com.l2scoria.crypt.nProtect;
-import com.l2scoria.crypt.nProtect.RestrictionType;
-import com.l2scoria.gameserver.managers.OlympiadStadiaManager;
-import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import com.l2scoria.gameserver.model.entity.Announcements;
-import com.l2scoria.gameserver.model.entity.Hero;
-import com.l2scoria.gameserver.model.entity.event.TvTEvent;
-import com.l2scoria.gameserver.network.SystemMessageId;
-import com.l2scoria.gameserver.network.serverpackets.NpcHtmlMessage;
-import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
-import com.l2scoria.gameserver.templates.StatsSet;
-import com.l2scoria.gameserver.thread.ThreadPoolManager;
-import com.l2scoria.util.L2FastList;
-import com.l2scoria.util.database.L2DatabaseFactory;
 
 public class Olympiad
 {
@@ -433,20 +427,6 @@ public class Olympiad
 		    return false;
 		}
 		*/
-		if(TvTEvent.isParticipating())
-		{
-			if(TvTEvent.getParticipantTeamId(noble.getObjectId()) != -1)
-			{
-				noble.sendMessage("You can't participate to Olympiad with TvT Event mode.");
-				return false;
-			}
-		}
-
-		if(noble.atEvent)
-		{
-			noble.sendMessage("You can't participate to Olympiad while in an event.");
-			return false;
-		}
 
 		if(noble.getKarma() > 0)
 		{
@@ -998,19 +978,13 @@ public class Olympiad
 				}
 			}
 		}
+
 		if(spectator.getOlympiadGameId() != -1)
 		{
 			spectator.sendMessage("You are already registered for a competition");
 			return;
 		}
-		if(TvTEvent.isParticipating())
-		{
-			if(TvTEvent.getParticipantTeamId(spectator.getObjectId()) != -1)
-			{
-				spectator.sendMessage("You can't spectate olympiad fight with TvT Event mode.");
-				return;
-			}
-		}
+
 		if(!_inCompPeriod)
 		{
 			spectator.sendPacket(new SystemMessage(SystemMessageId.THE_OLYMPIAD_GAME_IS_NOT_CURRENTLY_IN_PROGRESS));

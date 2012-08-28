@@ -18,7 +18,6 @@
  */
 package com.l2scoria.gameserver.handler.itemhandlers;
 
-import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.SkillTable;
 import com.l2scoria.gameserver.handler.IItemHandler;
 import com.l2scoria.gameserver.managers.CastleManager;
@@ -65,14 +64,6 @@ public class ScrollOfResurrection implements IItemHandler
 		if(activeChar.isInOlympiadMode())
 		{
 			activeChar.sendMessage("This Item Cannot Be Used On Olympiad Games.");
-			return;
-		}
-
-		if ((activeChar.isFightingInEvent()) &&
-			((activeChar.getEventName().equals("CTF") && !Config.CTF_ALLOW_SCROLL) ||
-			(activeChar.getEventName().equals("BW") && !Config.BW_ALLOW_SCROLL) ||
-			(activeChar.getEventName().equals("DM") && !Config.DM_ALLOW_SCROLL)))
-		{
 			return;
 		}
 

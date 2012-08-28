@@ -25,7 +25,6 @@
 
 package com.l2scoria.gameserver.handler.itemhandlers;
 
-import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.csv.SummonItemsData;
 import com.l2scoria.gameserver.datatables.sql.NpcTable;
 import com.l2scoria.gameserver.handler.IItemHandler;
@@ -36,15 +35,9 @@ import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PetInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PlayableInstance;
-import com.l2scoria.gameserver.model.entity.event.TvTEvent;
 import com.l2scoria.gameserver.model.spawn.L2Spawn;
 import com.l2scoria.gameserver.network.SystemMessageId;
-import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
-import com.l2scoria.gameserver.network.serverpackets.MagicSkillLaunched;
-import com.l2scoria.gameserver.network.serverpackets.MagicSkillUser;
-import com.l2scoria.gameserver.network.serverpackets.PetInfo;
-import com.l2scoria.gameserver.network.serverpackets.Ride;
-import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
+import com.l2scoria.gameserver.network.serverpackets.*;
 import com.l2scoria.gameserver.templates.L2NpcTemplate;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.util.random.Rnd;
@@ -57,9 +50,6 @@ public class SummonItems implements IItemHandler
 			return;
 
 		L2PcInstance activeChar = (L2PcInstance) playable;
-
-		if(!TvTEvent.onItemSummon(playable.getObjectId()))
-			return;
 
 		if(activeChar.isSitting())
 		{
@@ -100,15 +90,6 @@ public class SummonItems implements IItemHandler
 		if(activeChar.isCursedWeaponEquiped() && sitem.isPetSummon())
 		{
 			activeChar.sendPacket(new SystemMessage(SystemMessageId.STRIDER_CANT_BE_RIDDEN_WHILE_IN_BATTLE));
-			return;
-		}
-		
-		if (activeChar.isFightingInEvent() && 
-			((activeChar.getEventName().equals("CTF") && !Config.CTF_ALLOW_SUMMON) || 
-			(activeChar.getEventName().equals("BW") && !Config.BW_ALLOW_SUMMON) ||
-			(activeChar.getEventName().equals("DM") && !Config.DM_ALLOW_SUMMON)))
-		{
-			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
 

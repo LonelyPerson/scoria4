@@ -54,7 +54,6 @@ import com.l2scoria.gameserver.model.actor.status.PcStatus;
 import com.l2scoria.gameserver.model.base.*;
 import com.l2scoria.gameserver.model.entity.Announcements;
 import com.l2scoria.gameserver.model.entity.Duel;
-import com.l2scoria.gameserver.model.entity.event.TvTEvent;
 import com.l2scoria.gameserver.model.entity.olympiad.Olympiad;
 import com.l2scoria.gameserver.model.entity.sevensigns.SevenSigns;
 import com.l2scoria.gameserver.model.entity.sevensigns.SevenSignsFestival;
@@ -193,19 +192,6 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 
 	public boolean _inWorld = false;
 
-	// events
-	private String eventState = null;
-	public String _eventName = "";
-	public int _eventTeamId;
-	public String _eventOriginalTitle;
-	public boolean _eventTeleported;
-	public int _eventOriginalNameColor;
-	public int _eventOriginalKarma;
-	public int _eventCountKills;
-	public int _CTFHaveFlagOfTeam;
-	public int _CTFCountFlags;
-	private int _event_points;
-
 	/** The table containing all minimum level needed for each Expertise (None, D, C, B, A, S) */
 	private static final int[] EXPERTISE_LEVELS =
 	{
@@ -223,7 +209,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 	};
 
 	private boolean _sitdowntask;
-        public boolean _WrongHwid = false;
+    public boolean _WrongHwid = false;
 
 	public void setSitdownTask(boolean act)
 	{
@@ -403,10 +389,6 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 
 	/** character away mode **/
 	private boolean _isAway = false;
-	public int _originalTitleColorAway;
-	public String _originalTitleAway;
-
-	public boolean atEvent = false;
 
 	public int _correctWord = -1;
 	public boolean _stopKickBotTask = false;
@@ -435,8 +417,6 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 	private int _mountObjectID = 0;
 
 	public int _telemode = 0;
-
-	public boolean _exploring = false;
 
 	private boolean _isSilentMoving = false;
 
@@ -2850,16 +2830,13 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 	 */
 	public void standUp()
 	{
-		if(getEventState() != null)
-		{
-			sendMessage("You cannot stand up if you registered on event.");
-			sendMessage("Use command .leave_event to unregister from event.");
-		}
-		else if(isAway())
+		if(isAway())
 		{
 			sendMessage("You can't stand up if your Status is Away.");
+			return;
 		}
-		else if(_waitTypeSitting && !isInStoreMode() && !isAlikeDead())
+
+		if(_waitTypeSitting && !isInStoreMode() && !isAlikeDead())
 		{
 			if(_relax)
 			{
@@ -4034,23 +4011,6 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		}
 
 		_protectEndTime = protect ? GameTimeController.getGameTicks() + Config.PLAYER_SPAWN_PROTECTION * GameTimeController.TICKS_PER_SECOND : 0;
-
-		if(TvTEvent.isStarted())
-		{
-			if(TvTEvent.isPlayerParticipant(getObjectId()))
-			{
-				_protectEndTime = 0;
-			}
-			else
-			{
-				_protectEndTime = protect ? GameTimeController.getGameTicks() + Config.PLAYER_SPAWN_PROTECTION * GameTimeController.TICKS_PER_SECOND : 0;
-			}
-		}
-		else
-		{
-			_protectEndTime = protect ? GameTimeController.getGameTicks() + Config.PLAYER_SPAWN_PROTECTION * GameTimeController.TICKS_PER_SECOND : 0;
-		}
-
 	}
 
 	/**
@@ -4128,12 +4088,6 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 	@Override
 	public void onAction(L2PcInstance player)
 	{
-		if(!TvTEvent.onAction(player, getObjectId()))
-		{
-			player.sendPacket(ActionFailed.STATIC_PACKET);
-			return;
-		}
-
 		// Check if the L2PcInstance is confused
 		if(player.isOutOfControl())
 		{
@@ -4259,12 +4213,6 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		}
 		else
 		{
-			if(!TvTEvent.onAction(player, getObjectId()))
-			{
-				player.sendPacket(ActionFailed.STATIC_PACKET);
-				return;
-			}
-
 			// Check if the L2PcInstance is confused
 			if(player.isOutOfControl())
 			{
@@ -4427,11 +4375,6 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 				}
 			}
 		}
-	}
-
-	public boolean isInFunEvent()
-	{
-		return atEvent;
 	}
 
 	/**
@@ -5397,13 +5340,6 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 					doPkInfo(pk);
 				}
 			}
-			if(TvTEvent.isPlayerParticipant(getObjectId()))
-				TvTEvent.onKill(killer, this);
-
-			if ((pk != null) && (pk.isFightingInEvent()))
-			{
-				FunEventsManager.getInstance().notifyPlayerKilled(this, killer);
-			}
 
 			// Clear resurrect xp calculation
 			setExpBeforeDeath(0);
@@ -5493,7 +5429,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 
 	private void onDieDropItem(L2Character killer)
 	{
-		if(atEvent || killer == null)
+		if(killer == null)
 			return;
 
 		if(getKarma() <= 0 && killer instanceof L2PcInstance && ((L2PcInstance) killer).getClan() != null && getClan() != null && ((L2PcInstance) killer).getClan().isAtWarWith(getClanId()))
@@ -6194,15 +6130,15 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 
 		// Calculate the Experience loss
 		long lostExp = 0;
-		if(!atEvent)
-			if(lvl < Experience.MAX_LEVEL)
-			{
-				lostExp = Math.round((getStat().getExpForLevel(lvl + 1) - getStat().getExpForLevel(lvl)) * percentLost / 100);
-			}
-			else
-			{
-				lostExp = Math.round((getStat().getExpForLevel(Experience.MAX_LEVEL) - getStat().getExpForLevel(Experience.MAX_LEVEL - 1)) * percentLost / 100);
-			}
+
+		if(lvl < Experience.MAX_LEVEL)
+		{
+			lostExp = Math.round((getStat().getExpForLevel(lvl + 1) - getStat().getExpForLevel(lvl)) * percentLost / 100);
+		}
+		else
+		{
+			lostExp = Math.round((getStat().getExpForLevel(Experience.MAX_LEVEL) - getStat().getExpForLevel(Experience.MAX_LEVEL - 1)) * percentLost / 100);
+		}
 
 		// Get the Experience before applying penalty
 		setExpBeforeDeath(getExp());
@@ -6223,27 +6159,6 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 
 		// Set the new Experience value of the L2PcInstance
 		getStat().addExp(-lostExp);
-	}
-
-	/**
-	 * Manage the increase level task of a L2PcInstance (Max MP, Max MP, Recommandation, Expertise and beginner
-	 * skills...).<BR>
-	 * <BR>
-	 * <B><U> Actions</U> :</B><BR>
-	 * <BR>
-	 * <li>Send a Server->Client System Message to the L2PcInstance : YOU_INCREASED_YOUR_LEVEL</li> <li>Send a
-	 * Server->Client packet StatusUpdate to the L2PcInstance with new LEVEL, MAX_HP and MAX_MP</li> <li>Set the current
-	 * HP and MP of the L2PcInstance, Launch/Stop a HP/MP/CP Regeneration Task and send StatusUpdate packet to all other
-	 * L2PcInstance to inform (exclusive broadcast)</li> <li>Recalculate the party level</li> <li>Recalculate the number
-	 * of Recommandation that the L2PcInstance can give</li> <li>Give Expertise skill of this level and remove beginner
-	 * Lucky skill</li><BR>
-	 * <BR>
-	 */
-	public void increaseLevel()
-	{
-		// Set the current HP and MP of the L2Character, Launch/Stop a HP/MP/CP Regeneration Task and send StatusUpdate packet to all other L2PcInstance to inform (exclusive broadcast)
-		setCurrentHpMp(getMaxHp(), getMaxMp());
-		setCurrentCp(getMaxCp());
 	}
 
 	/**
@@ -8973,10 +8888,6 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		if(getParty() != null && getParty().getPartyMembers().contains(attacker))
 			return false;
 
-		// Check if the attacker is in TvT and TvT is started
-		if(TvTEvent.isStarted() && TvTEvent.isPlayerParticipant(getObjectId()))
-			return true;
-
 		// Check if the attacker is in olympia and olympia start
 		if(attacker instanceof L2PcInstance)
 		{
@@ -10636,16 +10547,6 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		return _dietMode;
 	}
 
-	public void setExchangeRefusal(boolean mode)
-	{
-		_exchangeRefusal = mode;
-	}
-
-	public boolean getExchangeRefusal()
-	{
-		return _exchangeRefusal;
-	}
-
 	public BlockList getBlockList()
 	{
 		return _blockList;
@@ -10688,11 +10589,6 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			return _count;
 		else
 			return 0;
-	}
-
-	public void reloadPVPHeroAura()
-	{
-		sendPacket(new UserInfo(this));
 	}
 
 	public void setIsHero(boolean hero)
@@ -11629,10 +11525,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 
 	public boolean isInWater()
 	{
-		if(_taskWater != null)
-			return true;
-
-		return false;
+		return _taskWater != null;
 	}
 
 	public void checkWaterState()
@@ -13292,11 +13185,6 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 				sendMessage("You are in jail for " + delayInMinutes + " minutes.");
 			}
 
-			if(!TvTEvent.isInactive() && TvTEvent.isPlayerParticipant(getObjectId()))
-			{
-				TvTEvent.removeParticipant(getObjectId());
-			}
-
 			// Open a Html message to inform the player
 			NpcHtmlMessage htmlMsg = new NpcHtmlMessage(0);
 			String jailInfos = HtmCache.getInstance().getHtm("data/html/jail_in.htm");
@@ -14290,31 +14178,6 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		return _partyroom > 0;
 	}
 
-	public boolean isFightingInEvent()
-	{
-		return FunEventsManager.getInstance().isFightingInEvent(this);
-	}
-
-	public boolean isInSameTeam(L2PcInstance player)
-	{
-		return isInSameEvent(player) && _eventTeamId == player._eventTeamId;
-	}
-
-	public boolean isInSameEvent(L2PcInstance player)
-	{
-		return isFightingInEvent() && player.isFightingInEvent() && getEventName().equals(player.getEventName());
-	}
-
-	public String getEventName()
-	{
-		return _eventName == null ? "" : _eventName;
-	}
-
-	public String getLang()
-	{
-		return "en";
-	}
-
 	public boolean HeroVoice()
 	{
 		return getAccessLevel().HeroVoice();
@@ -14410,16 +14273,6 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		}
 		_summonRequestTarget = null;
 		_summonRequestSkill = null;
-	}
-
-	public String getEventState()
-	{
-		return eventState;
-	}
-
-	public String setEventState(String s)
-	{
-		return eventState = s;
 	}
 
 	public void restoreProfileBuffs()
@@ -14767,16 +14620,6 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			sendPacket(new ItemList(this, true));
 			sendPacket(new UserInfo(this));
 		}
-	}
-	
-	public void setEventPoints(int points)
-	{
-		_event_points = points;
-	}
-
-	public int getEventPoints()
-	{
-		return _event_points;
 	}
 	
 	public void setRaidAnswear(int answer)

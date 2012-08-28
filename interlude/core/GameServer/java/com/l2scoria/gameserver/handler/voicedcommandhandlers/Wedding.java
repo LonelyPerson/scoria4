@@ -1,11 +1,6 @@
 /* This program is free software; you can redistribute it and/or modify */
 package com.l2scoria.gameserver.handler.voicedcommandhandlers;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.GameTimeController;
 import com.l2scoria.gameserver.ai.CtrlIntention;
@@ -18,7 +13,6 @@ import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.L2Skill;
 import com.l2scoria.gameserver.model.L2World;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import com.l2scoria.gameserver.model.entity.event.TvTEvent;
 import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.ConfirmDlg;
 import com.l2scoria.gameserver.network.serverpackets.MagicSkillUser;
@@ -27,6 +21,11 @@ import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.gameserver.util.Broadcast;
 import com.l2scoria.util.database.L2DatabaseFactory;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.logging.Logger;
 
 /**
  * @author L2Scoria
@@ -311,16 +310,6 @@ public class Wedding implements IVoicedCommandHandler
 			activeChar.sendMessage("Your partner is in siege, you can't go to your partner.");
 			return false;
 		}
-		else if(partner.atEvent && !Config.EVENT_ALLOW_SUMMON)
-		{
-			activeChar.sendMessage("Your partner is in an event.");
-			return false;
-		}
-		else if(!TvTEvent.onEscapeUse(partner.getObjectId()))
-		{
-			activeChar.sendMessage("Your partner is in an event.");
-			return false;
-		}
 		else if(activeChar.isInJail())
 		{
 			activeChar.sendMessage("You are in Jail!");
@@ -329,11 +318,6 @@ public class Wedding implements IVoicedCommandHandler
 		else if(activeChar.isInOlympiadMode())
 		{
 			activeChar.sendMessage("You are in the Olympiad now.");
-			return false;
-		}
-		else if(!TvTEvent.onEscapeUse(activeChar.getObjectId()))
-		{
-			activeChar.sendMessage("You're in an event.");
 			return false;
 		}
 		else if(activeChar.isInDuel())
@@ -364,11 +348,6 @@ public class Wedding implements IVoicedCommandHandler
 		else if(activeChar.isCursedWeaponEquiped())
 		{
 			activeChar.sendMessage("You have a cursed weapon, you can't go to your partner.");
-			return false;
-		}
-		else if(activeChar.atEvent)
-		{
-			activeChar.sendMessage("You're in an event.");
 			return false;
 		}
 		else if(activeChar.isInsideZone(L2Character.ZONE_NOSUMMONFRIEND))

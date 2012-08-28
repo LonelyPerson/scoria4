@@ -11,7 +11,6 @@ import com.l2scoria.gameserver.managers.TownManager;
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.L2TeleportLocation;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import com.l2scoria.gameserver.model.entity.event.TvTEvent;
 import com.l2scoria.gameserver.network.serverpackets.MagicSkillUser;
 import com.l2scoria.gameserver.network.serverpackets.NpcHtmlMessage;
 import com.l2scoria.gameserver.network.serverpackets.SetupGauge;
@@ -72,7 +71,7 @@ public class GKHandler implements IVoicedCommandHandler,ICustomByPassHandler, IB
 			msg = "Гейткипер не доступен в данной зоне";
 		else if(PowerPakConfig.GLOBALGK_EXCLUDE_ON.contains("OLYMPIAD") && activeChar.isInOlympiadMode())
 			msg = "Гейткипер не доступен в данной зоне";
-		else if(PowerPakConfig.GLOBALGK_EXCLUDE_ON.contains("EVENT") && (TvTEvent.isPlayerParticipant(activeChar.getObjectId()) || activeChar.atEvent))
+		else if(PowerPakConfig.GLOBALGK_EXCLUDE_ON.contains("EVENT") && false)
 			msg = "Гейткипер не доступен на эвенте";
 
 		if(msg!=null)

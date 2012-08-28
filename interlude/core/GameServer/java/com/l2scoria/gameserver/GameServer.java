@@ -347,9 +347,8 @@ public class GameServer
 			Hero.getInstance();
 
 			Util.printSection("L2Scoria Event Manager");
-			FunEventsManager.getInstance().autoStartEvents();
+			// TODO
 
-			TvTManager.getInstance();
 			if(Config.PCB_ENABLE)
 			{
 				ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(PcPoint.getInstance(), Config.PCB_INTERVAL * 1000, Config.PCB_INTERVAL * 1000);

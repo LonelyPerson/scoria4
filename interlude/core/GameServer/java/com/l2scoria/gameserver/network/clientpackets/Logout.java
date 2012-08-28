@@ -18,19 +18,18 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.model.L2Party;
 import com.l2scoria.gameserver.model.L2World;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import com.l2scoria.gameserver.model.entity.event.TvTEvent;
 import com.l2scoria.gameserver.model.entity.olympiad.Olympiad;
 import com.l2scoria.gameserver.model.entity.sevensigns.SevenSignsFestival;
 import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
 import com.l2scoria.gameserver.taskmanager.AttackStanceTaskManager;
+
+import java.util.logging.Logger;
 
 /**
  * This class ...
@@ -82,12 +81,6 @@ public final class Logout extends L2GameClientPacket
 			return;
 		}
 
-		if(player.atEvent && !Config.EVENT_ALLOW_LOGOUT)
-		{
-			player.sendPacket(SystemMessage.sendString("A superior power doesn't allow you to leave the event"));
-			return;
-		}
-
 		if(player.isInOlympiadMode() || Olympiad.getInstance().isRegistered(player) || Olympiad.getInstance().isRegisteredInComp(player))
 		{
 			player.sendMessage("You cant logout in olympiad mode");
@@ -111,8 +104,6 @@ public final class Logout extends L2GameClientPacket
 				player.getParty().broadcastToPartyMembers(SystemMessage.sendString(player.getName() + " has been removed from the upcoming festival."));
 			}
 		}
-
-		TvTEvent.onLogout(player);
 
 		if(player.isOnline() == 1 && L2World.getInstance().getPlayer(player.getName()) != null)
 		{

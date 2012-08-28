@@ -18,7 +18,6 @@
  */
 package com.l2scoria.gameserver.network.serverpackets;
 
-import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.AccessLevel;
 import com.l2scoria.gameserver.datatables.sql.AccessLevels;
 import com.l2scoria.gameserver.managers.CastleManager;
@@ -27,7 +26,6 @@ import com.l2scoria.gameserver.model.L2Attackable;
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.L2SiegeClan;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import com.l2scoria.gameserver.model.entity.event.TvTEvent;
 import com.l2scoria.gameserver.model.entity.siege.Castle;
 import com.l2scoria.gameserver.model.entity.siege.Fort;
 
@@ -43,7 +41,6 @@ public class Die extends L2GameServerPacket
 	private int _charObjId;
 	private boolean _fake;
 	private boolean _sweepable;
-	private boolean _inFunEvent;
 	private AccessLevel _access = AccessLevels._userAccessLevel;
 	private com.l2scoria.gameserver.model.L2Clan _clan;
 	L2Character _activeChar;
@@ -59,9 +56,6 @@ public class Die extends L2GameServerPacket
 			L2PcInstance player = (L2PcInstance) cha;
 			_access = player.getAccessLevel();
 			_clan = player.getClan();
-			_inFunEvent = TvTEvent.isPlayerParticipant(player.getObjectId()) && (TvTEvent.isStarting() || TvTEvent.isStarted())
-							|| (player.atEvent && !Config.EVENT_SHOW_DIE_WINDOW)
-							|| player.isFightingInEvent();
 		}
 		_charObjId = cha.getObjectId();
 		_fake = !cha.isDead();
@@ -88,17 +82,6 @@ public class Die extends L2GameServerPacket
 		// 6d 03 00 00 00 - to siege HQ
 		// sweepable
 		// 6d 04 00 00 00 - FIXED
-
-		if(_inFunEvent)
-		{
-			writeD(0x00);
-			writeD(0x00);
-			writeD(0x00);
-			writeD(0x00);
-			writeD(0x00);
-			writeD(_access.allowFixedRes() ? 0x01 : 0x00);
-			return;
-		}
 
 		writeD(0x01);
 

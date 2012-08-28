@@ -18,8 +18,6 @@
  */
 package com.l2scoria.gameserver.handler.itemhandlers;
 
-import java.util.Iterator;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.SkillTable;
 import com.l2scoria.gameserver.handler.IItemHandler;
@@ -28,10 +26,11 @@ import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PetInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PlayableInstance;
-import com.l2scoria.gameserver.model.entity.event.TvTEvent;
 import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
+
+import java.util.Iterator;
 
 public class CustomPotions implements IItemHandler
 {
@@ -64,18 +63,6 @@ public class CustomPotions implements IItemHandler
 		}
 		else
 			return;
-
-		if(activeChar.atEvent && !Config.EVENT_ALLOW_POTIONS)
-		{
-			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
-			return;
-		}
-
-		if(!TvTEvent.onPotionUse(playable.getObjectId()))
-		{
-			playable.sendPacket(ActionFailed.STATIC_PACKET);
-			return;
-		}
 
 		if(activeChar.isInOlympiadMode())
 		{

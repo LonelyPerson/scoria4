@@ -18,15 +18,6 @@
  */
 package com.l2scoria.gameserver.powerpak.Buffer;
 
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
-
-import javolution.util.FastMap;
-
 import com.l2scoria.gameserver.cache.HtmCache;
 import com.l2scoria.gameserver.communitybbs.Manager.BaseBBSManager;
 import com.l2scoria.gameserver.datatables.SkillTable;
@@ -39,13 +30,20 @@ import com.l2scoria.gameserver.model.L2Effect;
 import com.l2scoria.gameserver.model.L2Skill;
 import com.l2scoria.gameserver.model.actor.instance.L2NpcInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import com.l2scoria.gameserver.model.entity.event.TvTEvent;
 import com.l2scoria.gameserver.model.entity.olympiad.Olympiad;
 import com.l2scoria.gameserver.network.serverpackets.NpcHtmlMessage;
-import com.l2scoria.gameserver.powerpak.PowerPakConfig;
 import com.l2scoria.gameserver.powerpak.Buffer.BuffTable.Buff;
+import com.l2scoria.gameserver.powerpak.PowerPakConfig;
 import com.l2scoria.gameserver.taskmanager.AttackStanceTaskManager;
 import com.l2scoria.gameserver.util.Util;
+import javolution.util.FastMap;
+
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 /**
  * 
@@ -110,7 +108,7 @@ public class BuffHandler implements IVoicedCommandHandler, ICustomByPassHandler,
 				activeChar.isInsideZone(L2Character.ZONE_OLY) || Olympiad.getInstance().isRegistered(activeChar) ||
 				Olympiad.getInstance().isRegisteredInComp(activeChar))) 
 			msg = PowerPakConfig.BUFF_NOT_ALLOWED_OLY;
-		else if(PowerPakConfig.BUFFER_EXCLUDE_ON.contains("EVENT") && (TvTEvent.isPlayerParticipant(activeChar.getObjectId()) || activeChar.atEvent))
+		else if(PowerPakConfig.BUFFER_EXCLUDE_ON.contains("EVENT") && false)
 			msg = PowerPakConfig.BUFF_NOT_ALLOWED_EVENT;
 		
 		if(msg!=null)

@@ -26,9 +26,7 @@ import com.l2scoria.gameserver.model.L2Object;
 import com.l2scoria.gameserver.model.L2Skill;
 import com.l2scoria.gameserver.model.L2Skill.SkillType;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import com.l2scoria.gameserver.model.entity.event.TvTEvent;
 import com.l2scoria.gameserver.network.SystemMessageId;
-import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
 
 public class Recall implements ISkillHandler
@@ -74,18 +72,6 @@ public class Recall implements ISkillHandler
 					{
 						targetChar.sendPacket(SystemMessage.sendString("You may not use an escape skill in a festival."));
 						continue;
-					}
-
-					if(!TvTEvent.onEscapeUse((targetChar).getObjectId()))
-					{
-						targetChar.sendPacket(ActionFailed.STATIC_PACKET);
-						return;
-					}
-					
-					if(targetChar.atEvent && !Config.EVENT_ALLOW_SUMMON)
-					{
-						targetChar.sendPacket(ActionFailed.STATIC_PACKET);
-						return;
 					}
 
 					if(targetChar.isInJail())

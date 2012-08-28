@@ -130,12 +130,6 @@ public final class UseItem extends L2GameClientPacket
 			return;
 		}
 
-		if (activeChar.isFightingInEvent() && activeChar.getEventName().equals("CTF") && activeChar._CTFHaveFlagOfTeam > 0 &&
-			item.isEquipable() && (item.getItem().getBodyPart() == L2Item.SLOT_LR_HAND || item.getItem().getBodyPart() == L2Item.SLOT_R_HAND))
-		{
-			return;
-		}
-
 		if(item.getItem().getType2() == L2Item.TYPE2_QUEST)
 		{
 			SystemMessage sm = new SystemMessage(SystemMessageId.CANNOT_USE_QUEST_ITEMS);

@@ -24,8 +24,6 @@ package com.l2scoria.gameserver.model.actor.instance;
  *
  */
 
-import java.util.StringTokenizer;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.sql.TeleportLocationTable;
 import com.l2scoria.gameserver.managers.CastleManager;
@@ -36,6 +34,8 @@ import com.l2scoria.gameserver.model.entity.siege.Castle;
 import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
 import com.l2scoria.gameserver.network.serverpackets.NpcHtmlMessage;
 import com.l2scoria.gameserver.templates.L2NpcTemplate;
+
+import java.util.StringTokenizer;
 
 public final class L2CastleTeleporterInstance extends L2FolkInstance
 {
@@ -77,11 +77,6 @@ public final class L2CastleTeleporterInstance extends L2FolkInstance
 				html.replace("%npcname%", getName());
 				player.sendPacket(html);
 				html = null;
-				return;
-			}
-			else if(leader.atEvent)
-			{
-				player.sendMessage("Your leader is in an event.");
 				return;
 			}
 			else if(leader == null)

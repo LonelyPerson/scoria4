@@ -25,14 +25,13 @@ import com.l2scoria.gameserver.datatables.csv.MapRegionTable;
 import com.l2scoria.gameserver.handler.IUserCommandHandler;
 import com.l2scoria.gameserver.model.L2Effect;
 import com.l2scoria.gameserver.model.L2Skill;
-//import com.l2scoria.gameserver.managers.GrandBossManager;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import com.l2scoria.gameserver.model.entity.event.TvTEvent;
-import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
 import com.l2scoria.gameserver.network.serverpackets.MagicSkillUser;
 import com.l2scoria.gameserver.network.serverpackets.SetupGauge;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.gameserver.util.Broadcast;
+
+//import com.l2scoria.gameserver.managers.GrandBossManager;
 
 /**
  *
@@ -60,18 +59,6 @@ public class Escape implements IUserCommandHandler
 		if(activeChar.isFestivalParticipant())
 		{
 			activeChar.sendMessage("You may not use an escape command in a festival.");
-			return false;
-		}
-
-		if(activeChar.atEvent && !Config.EVENT_ALLOW_SUMMON)
-		{
-			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
-			return false;
-		}
-
-		if(!TvTEvent.onEscapeUse(activeChar.getObjectId()))
-		{
-			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
 			return false;
 		}
 

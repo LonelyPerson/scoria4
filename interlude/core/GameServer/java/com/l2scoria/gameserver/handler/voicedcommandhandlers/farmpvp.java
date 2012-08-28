@@ -84,11 +84,6 @@ public class farmpvp implements IVoicedCommandHandler
 			activeChar.sendMessage("Sorry,you are in the Olympiad now.");
 			return false;
 		}
-		else if(activeChar.atEvent)
-		{
-			activeChar.sendMessage("Sorry,you are in an event.");
-			return false;
-		}
 		else if(activeChar.isInDuel())
 		{
 			activeChar.sendMessage("Sorry,you are in a duel!");

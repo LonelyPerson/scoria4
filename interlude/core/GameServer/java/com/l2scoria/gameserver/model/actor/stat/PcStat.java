@@ -17,10 +17,7 @@
  */
 package com.l2scoria.gameserver.model.actor.stat;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
-import com.l2scoria.gameserver.managers.FunEventsManager;
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.actor.instance.L2ClassMasterInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
@@ -30,11 +27,9 @@ import com.l2scoria.gameserver.model.base.Experience;
 import com.l2scoria.gameserver.model.base.PlayerClass;
 import com.l2scoria.gameserver.model.quest.QuestState;
 import com.l2scoria.gameserver.network.SystemMessageId;
-import com.l2scoria.gameserver.network.serverpackets.PledgeShowMemberListUpdate;
-import com.l2scoria.gameserver.network.serverpackets.SocialAction;
-import com.l2scoria.gameserver.network.serverpackets.StatusUpdate;
-import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
-import com.l2scoria.gameserver.network.serverpackets.UserInfo;
+import com.l2scoria.gameserver.network.serverpackets.*;
+
+import java.util.logging.Logger;
 
 public class PcStat extends PlayableStat
 {
@@ -244,8 +239,6 @@ public class PcStat extends PlayableStat
 		{
 			getActiveChar().getParty().recalculatePartyLevel(); // Recalculate the party level
 		}
-
-		FunEventsManager.getInstance().notifyLevelChanged(getActiveChar());
 
 		StatusUpdate su = new StatusUpdate(getActiveChar().getObjectId());
 		su.addAttribute(StatusUpdate.LEVEL, getLevel());

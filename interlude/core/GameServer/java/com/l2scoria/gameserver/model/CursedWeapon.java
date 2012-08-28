@@ -17,31 +17,24 @@
  */
 package com.l2scoria.gameserver.model;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.concurrent.ScheduledFuture;
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.SkillTable;
 import com.l2scoria.gameserver.managers.CursedWeaponsManager;
-import com.l2scoria.gameserver.managers.FunEventsManager;
 import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.SystemMessageId;
-import com.l2scoria.gameserver.network.serverpackets.Earthquake;
-import com.l2scoria.gameserver.network.serverpackets.ExRedSky;
-import com.l2scoria.gameserver.network.serverpackets.InventoryUpdate;
-import com.l2scoria.gameserver.network.serverpackets.ItemList;
-import com.l2scoria.gameserver.network.serverpackets.Ride;
-import com.l2scoria.gameserver.network.serverpackets.SocialAction;
-import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
+import com.l2scoria.gameserver.network.serverpackets.*;
 import com.l2scoria.gameserver.templates.L2Item;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.util.Point3D;
 import com.l2scoria.util.database.L2DatabaseFactory;
 import com.l2scoria.util.random.Rnd;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.concurrent.ScheduledFuture;
+import java.util.logging.Logger;
 
 public class CursedWeapon
 {
@@ -494,8 +487,6 @@ public class CursedWeapon
 		CursedWeaponsManager.announce(sm);
 		sm = null;
 		atk = null;
-
-		FunEventsManager.getInstance().notifyJoinCursed(_player);
 	}
 
 	public void saveData()

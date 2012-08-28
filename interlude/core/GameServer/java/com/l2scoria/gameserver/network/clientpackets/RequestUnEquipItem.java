@@ -92,11 +92,6 @@ public class RequestUnEquipItem extends L2GameClientPacket
 		if(activeChar.isAttackingNow() && (_slot == L2Item.SLOT_LR_HAND || _slot == L2Item.SLOT_R_HAND))
 			return;
 
-		if (activeChar.isFightingInEvent() && activeChar.getEventName().equals("CTF") && activeChar._CTFHaveFlagOfTeam > 0)
-		{
-			return;
-		}
-
 		// Remove augmentation bonus
 		if(item.isAugmented())
 		{

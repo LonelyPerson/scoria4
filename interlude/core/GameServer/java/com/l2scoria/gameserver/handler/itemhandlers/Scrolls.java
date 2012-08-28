@@ -17,7 +17,6 @@
 */
 package com.l2scoria.gameserver.handler.itemhandlers;
 
-import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.SkillTable;
 import com.l2scoria.gameserver.handler.IItemHandler;
 import com.l2scoria.gameserver.model.L2Skill;
@@ -25,7 +24,6 @@ import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PetInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PlayableInstance;
-import com.l2scoria.gameserver.model.entity.event.TvTEvent;
 import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
 import com.l2scoria.gameserver.network.serverpackets.MagicSkillUser;
@@ -93,27 +91,6 @@ public class Scrolls implements IItemHandler
 		if(activeChar.isInOlympiadMode())
 		{
 			activeChar.sendPacket(new SystemMessage(SystemMessageId.THIS_ITEM_IS_NOT_AVAILABLE_FOR_THE_OLYMPIAD_EVENT));
-			return;
-		}
-
-		if(activeChar.atEvent && !Config.EVENT_ALLOW_SCROOLS)
-		{
-			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
-			return;
-		}
-
-		if(!TvTEvent.onScrollUse(playable.getObjectId()))
-		{
-			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
-			return;
-		}
-
-		if ((activeChar.isFightingInEvent()) &&
-			((activeChar.getEventName().equals("CTF") && !Config.CTF_ALLOW_SCROLL) ||
-			(activeChar.getEventName().equals("BW") && !Config.BW_ALLOW_SCROLL) ||
-			(activeChar.getEventName().equals("DM") && !Config.DM_ALLOW_SCROLL)))
-		{
-			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
 

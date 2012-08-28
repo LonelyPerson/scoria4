@@ -18,8 +18,6 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.csv.MapRegionTable;
 import com.l2scoria.gameserver.managers.CastleManager;
@@ -29,13 +27,14 @@ import com.l2scoria.gameserver.model.L2SiegeClan;
 import com.l2scoria.gameserver.model.Location;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.entity.ClanHall;
-import com.l2scoria.gameserver.model.entity.event.TvTEvent;
 import com.l2scoria.gameserver.model.entity.siege.Castle;
 import com.l2scoria.gameserver.model.entity.siege.Fort;
 import com.l2scoria.gameserver.network.serverpackets.Revive;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.gameserver.util.IllegalPlayerAction;
 import com.l2scoria.gameserver.util.Util;
+
+import java.util.logging.Logger;
 
 /**
  * This class ...
@@ -217,9 +216,6 @@ public final class RequestRestartPoint extends L2GameClientPacket
 		L2PcInstance activeChar = getClient().getActiveChar();
 
 		if(activeChar == null)
-			return;
-
-		if(TvTEvent.isStarted() && TvTEvent.isPlayerParticipant(activeChar.getObjectId()))
 			return;
 
 		if(activeChar.isFakeDeath())

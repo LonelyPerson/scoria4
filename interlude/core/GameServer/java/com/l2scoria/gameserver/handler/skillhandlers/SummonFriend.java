@@ -18,24 +18,21 @@
  */
 package com.l2scoria.gameserver.handler.skillhandlers;
 
-import javolution.util.FastList;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.handler.ISkillHandler;
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.L2Object;
 import com.l2scoria.gameserver.model.L2Skill;
-import com.l2scoria.gameserver.model.L2World;
 import com.l2scoria.gameserver.model.L2Skill.SkillType;
-import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
+import com.l2scoria.gameserver.model.L2World;
 import com.l2scoria.gameserver.model.actor.instance.L2GrandBossInstance;
+import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2RaidBossInstance;
-import com.l2scoria.gameserver.model.entity.event.TvTEvent;
 import com.l2scoria.gameserver.network.SystemMessageId;
-import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
 import com.l2scoria.gameserver.network.serverpackets.ConfirmDlg;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
 import com.l2scoria.gameserver.util.Util;
+import javolution.util.FastList;
 
 /**
  * @authors L2Scoria
@@ -145,18 +142,6 @@ public class SummonFriend implements ISkillHandler
 		if(targetChar.isInsideZone(L2Character.ZONE_NOSUMMONFRIEND) || targetChar.isInsideZone(L2Character.ZONE_PVP))
 		{
 			summonerChar.sendPacket(new SystemMessage(SystemMessageId.YOUR_TARGET_IS_IN_AN_AREA_WHICH_BLOCKS_SUMMONING));
-			return false;
-		}
-
-		if(!TvTEvent.onEscapeUse((targetChar).getObjectId()))
-		{
-			summonerChar.sendPacket(new SystemMessage(SystemMessageId.YOUR_TARGET_IS_IN_AN_AREA_WHICH_BLOCKS_SUMMONING));
-			return false;
-		}
-		
-		if(targetChar.atEvent && !Config.EVENT_ALLOW_SUMMON)
-		{
-			summonerChar.sendPacket(ActionFailed.STATIC_PACKET);
 			return false;
 		}
 

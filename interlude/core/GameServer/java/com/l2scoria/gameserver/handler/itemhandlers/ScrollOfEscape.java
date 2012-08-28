@@ -33,9 +33,7 @@ import com.l2scoria.gameserver.model.L2Skill;
 import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PlayableInstance;
-import com.l2scoria.gameserver.model.entity.event.TvTEvent;
 import com.l2scoria.gameserver.network.SystemMessageId;
-import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
 import com.l2scoria.gameserver.network.serverpackets.MagicSkillUser;
 import com.l2scoria.gameserver.network.serverpackets.SetupGauge;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
@@ -105,27 +103,6 @@ public class ScrollOfEscape implements IItemHandler
 		if(activeChar.isSitting())
 		{
 			activeChar.sendPacket(new SystemMessage(SystemMessageId.CANT_MOVE_SITTING));
-			return;
-		}
-
-		if(activeChar.atEvent && !Config.EVENT_ALLOW_SUMMON)
-		{
-			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
-			return;
-		}
-
-		if(!TvTEvent.onEscapeUse(activeChar.getObjectId()))
-		{
-			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
-			return;
-		}
-
-		if ((activeChar.isFightingInEvent()) &&
-			((activeChar.getEventName().equals("CTF") && !Config.CTF_ALLOW_SCROLL) ||
-			(activeChar.getEventName().equals("BW") && !Config.BW_ALLOW_SCROLL) ||
-			(activeChar.getEventName().equals("DM") && !Config.DM_ALLOW_SCROLL)))
-		{
-			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
 

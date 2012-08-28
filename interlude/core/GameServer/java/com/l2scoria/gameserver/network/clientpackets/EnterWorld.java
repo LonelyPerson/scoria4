@@ -29,8 +29,11 @@ import com.l2scoria.gameserver.datatables.csv.MapRegionTable;
 import com.l2scoria.gameserver.datatables.sql.AdminCommandAccessRights;
 import com.l2scoria.gameserver.handler.custom.CustomWorldHandler;
 import com.l2scoria.gameserver.managers.*;
-import com.l2scoria.gameserver.model.*;
+import com.l2scoria.gameserver.model.L2Character;
+import com.l2scoria.gameserver.model.L2Clan;
+import com.l2scoria.gameserver.model.L2Effect;
 import com.l2scoria.gameserver.model.L2Skill.SkillType;
+import com.l2scoria.gameserver.model.L2World;
 import com.l2scoria.gameserver.model.actor.instance.L2ClassMasterInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
@@ -40,7 +43,6 @@ import com.l2scoria.gameserver.model.entity.Announcements;
 import com.l2scoria.gameserver.model.entity.ClanHall;
 import com.l2scoria.gameserver.model.entity.Hero;
 import com.l2scoria.gameserver.model.entity.Wedding;
-import com.l2scoria.gameserver.model.entity.event.TvTEvent;
 import com.l2scoria.gameserver.model.entity.olympiad.Olympiad;
 import com.l2scoria.gameserver.model.entity.sevensigns.SevenSigns;
 import com.l2scoria.gameserver.model.entity.siege.Castle;
@@ -372,8 +374,6 @@ public class EnterWorld extends L2GameClientPacket
 
 		RegionBBSManager.getInstance().changeCommunityBoard();
 		CustomWorldHandler.getInstance().enterWorld(activeChar);
-
-		TvTEvent.onLogin(activeChar);
 
 		if (Config.ALLOW_REMOTE_CLASS_MASTERS)
 		{
