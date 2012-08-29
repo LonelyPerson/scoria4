@@ -1,0 +1,6 @@
+CREATE TABLE `delay_item` (
+`id` INT( 24 ) NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+`char_name` VARCHAR( 42 ) NOT NULL ,
+`item_id` INT( 11 ) NOT NULL ,
+`count` BIGINT NOT NULL 
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
