@@ -24,6 +24,7 @@ import com.l2scoria.gameserver.cache.HtmCache;
 import com.l2scoria.gameserver.handler.ICustomByPassHandler;
 import com.l2scoria.gameserver.handler.IVoicedCommandHandler;
 import com.l2scoria.gameserver.handler.VoicedCommandHandler;
+import com.l2scoria.gameserver.handler.voicedcommandhandlers.Configurator;
 import com.l2scoria.gameserver.managers.QuestManager;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.quest.Quest;
@@ -54,16 +55,55 @@ public class Personal implements ICustomByPassHandler
 
 	public void useCommand(L2PcInstance activeChar, String params)
 	{
+                boolean is_main = false;
 		if(activeChar==null)
 			return;
 		String index = "";
 		if(params!=null && params.length()!=0)
-			if(!params.equals("0"))
+                {
+			if(!params.equals("0")) 
+                        {
 				index= "-"+params; 
+                        }
+                        else 
+                        {
+                            is_main = true;
+                        }
+                }
 		String text = HtmCache.getInstance().getHtm("data/html/custom/menu"+index+".htm");
+                if(is_main)
+                {
+                    text.replace("%xprate%", getExpRate(activeChar));
+                    text.replace("%autoloot%", getLootMode(activeChar));
+                    text.replace("%learnskills%", getAutoLearnMode(activeChar));
+                }
 		activeChar.sendPacket(new NpcHtmlMessage(5,text));
 	}
+        
+	private String getLootMode(L2PcInstance activeChar)
+	{
+		String result = "<font color=FF0000>OFF</font>";
+		if (activeChar.getAutoLoot())
+			result = "<font color=00FF00>ON</font>";
+		return result;
+	}
+
+	private String getAutoLearnMode(L2PcInstance activeChar)
+	{
+		String result = "<font color=FF0000>OFF</font>";
+		if (activeChar.getAutoLearnSkill())
+			result = "<font color=00FF00>ON</font>";
+		return result;
+	}
 	
+	private String getExpRate(L2PcInstance activeChar)
+	{
+		if(activeChar.isDonator())
+			return "<font color=FF8000>" + activeChar.getXpRate() * Config.DONATOR_XPSP_RATE + "</font>";
+		else
+			return "<font color=00FF00>" + activeChar.getXpRate() + "</font>";
+	}
+        
 	public void changePass(L2PcInstance activeChar, String params)
 	{
 		if(activeChar==null)
@@ -619,6 +659,10 @@ public class Personal implements ICustomByPassHandler
 			return;
 	 	if(parameters.startsWith("chat"))
 		{
+                        String menu_action = parameters.substring(4);
+                        if(menu_action == null || menu_action.equals("0")) {
+
+                        }
 	 		useCommand(player,parameters.substring(4).trim());
 		}
 		else if(parameters.startsWith("setpassword"))
