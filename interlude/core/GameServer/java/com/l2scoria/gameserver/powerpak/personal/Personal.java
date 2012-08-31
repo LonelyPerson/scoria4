@@ -73,9 +73,9 @@ public class Personal implements ICustomByPassHandler
 		String text = HtmCache.getInstance().getHtm("data/html/custom/menu"+index+".htm");
                 if(is_main)
                 {
-                    text.replace("%xprate%", getExpRate(activeChar));
-                    text.replace("%autoloot%", getLootMode(activeChar));
-                    text.replace("%learnskills%", getAutoLearnMode(activeChar));
+                    text = text.replace("%xprate%", getExpRate(activeChar));
+                    text = text.replace("%autoloot%", getLootMode(activeChar));
+                    text = text.replace("%learnskills%", getAutoLearnMode(activeChar));
                 }
 		activeChar.sendPacket(new NpcHtmlMessage(5,text));
 	}
@@ -659,10 +659,6 @@ public class Personal implements ICustomByPassHandler
 			return;
 	 	if(parameters.startsWith("chat"))
 		{
-                        String menu_action = parameters.substring(4);
-                        if(menu_action == null || menu_action.equals("0")) {
-
-                        }
 	 		useCommand(player,parameters.substring(4).trim());
 		}
 		else if(parameters.startsWith("setpassword"))
