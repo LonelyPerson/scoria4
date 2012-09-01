@@ -1,14 +1,15 @@
--- ---------------------------
+-- ----------------------------
 -- Table structure for accounts
--- ---------------------------
+-- ----------------------------
 CREATE TABLE IF NOT EXISTS `accounts` (
-  `login` VARCHAR(45) NOT NULL default '',
-  `password` VARCHAR(45) ,
-  `lastactive` DECIMAL(20),
-  `access_level` INT NOT NULL default '0',
-  `lastIP` VARCHAR(20),
-  `lastServer` int(4) default 1,
-  `allowed_ip` varchar(20) NOT NULL default '*',
-  `hwid` VARCHAR(32) NOT NULL default '*',
+  `login` varchar(45) NOT NULL DEFAULT '',
+  `password` varchar(45),
+  `lastactive` decimal(20,0),
+  `accessLevel` INT NOT NULL DEFAULT '0', 
+  `lastIP` varchar(20),
+  `lastServerId` INT NOT NULL DEFAULT '1',
+  `allowed_ip` varchar(20) NOT NULL DEFAULT '*',
+  `hwid` varchar(250) NOT NULL DEFAULT '*',
+  `premium` BIGINT NOT NULL DEFAULT '0',
   PRIMARY KEY (`login`)
-);
+) DEFAULT CHARSET=utf8;

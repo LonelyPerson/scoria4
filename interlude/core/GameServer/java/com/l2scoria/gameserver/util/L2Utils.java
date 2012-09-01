@@ -51,10 +51,10 @@ public class L2Utils
 		{
 			try
 			{
-				PreparedStatement stm = con.prepareStatement("insert into character_items select charId,?,?,0 from characters where char_name=?");
-				stm.setInt(1, _item[0]);
-				stm.setInt(2, _item[1]);
-				stm.setString(3, _charName);
+				PreparedStatement stm = con.prepareStatement("insert into delay_item (`char_name`, `item_id`, `count`) VALUES (?,?,?)");
+				stm.setString(1, _charName);
+                                stm.setInt(2, _item[0]);
+                                stm.setInt(3, _item[1]);
 				stm.execute();
 				stm.close();
 			} catch (SQLException e)

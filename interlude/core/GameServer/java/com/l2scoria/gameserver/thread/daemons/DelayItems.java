@@ -53,6 +53,9 @@ public class DelayItems implements Runnable {
                         remove.setInt(1, transId);
                         remove.execute();
                         remove.close();
+                        if(Config.DEBUG) {
+                            _log.info("Taking delayed items to: "+char_name+". Transaction id: "+transId);
+                        }
                         character.addItem("DelayItem", item_id, item_count, null, true);
                     }
                 }
