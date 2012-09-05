@@ -1,402 +1,334 @@
 package com.l2scoria.gameserver.geodata;
 
+import com.l2scoria.Config;
 import com.l2scoria.gameserver.model.Location;
-import com.l2scoria.util.GArray;
 import com.l2scoria.util.StrTable;
+import com.l2scoria.util.lang.ArrayUtils;
+import gnu.trove.TIntIntHashMap;
+import gnu.trove.TIntIntIterator;
+import gnu.trove.TIntObjectHashMap;
 
-import java.util.HashMap;
+import java.util.Arrays;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * @Author: Drin
+ * @Author: Drin, Akumu
  * @Date: 27/04/2009
+ * @date 04.09.2012
  */
 public class PathFindBuffers
 {
-	/**
-	 * буффер размером 100x100 занимает примерно 0.5 мб
-	 * буффер размером 128x128 занимает примерно 1.0 мб
-	 * буффер размером 192x192 занимает примерно 1.5 мб
-	 * буффер размером 256x256 занимает примерно 3.0 мб
-	 * буффер размером 320x320 занимает примерно 4.5 мб
-	 * буффер размером 384x384 занимает примерно 6.5 мб
-	 */
+	public final static int MIN_MAP_SIZE = 1 << 6;
+	public final static int STEP_MAP_SIZE = 1 << 5;
+	public final static int MAX_MAP_SIZE = 1 << 9;
 
-	private static BufferInfo[] all_buffers;
+	private static TIntObjectHashMap<PathFindBuffer[]> buffers = new TIntObjectHashMap<PathFindBuffer[]>();
+	private static int[] sizes = new int[0];
+	private static Lock lock = new ReentrantLock();
 
-	public static void initBuffers(String s)
+	static
 	{
-		HashMap<Integer, Integer> conf_data = new HashMap<Integer, Integer>();
+		TIntIntHashMap config = new TIntIntHashMap();
 		String[] k;
-		for (String e : s.split(";"))
+
+		for (String e : Config.PATHFIND_BUFFERS.split(";"))
 		{
 			if (!e.isEmpty() && (k = e.split("x")).length == 2)
 			{
-				conf_data.put(Integer.valueOf(k[1]), Integer.valueOf(k[0]));
+				config.put(Integer.valueOf(k[1]), Integer.valueOf(k[0]));
 			}
 		}
 
-		BufferInfo[] _allbuffers = new BufferInfo[conf_data.size()];
+		TIntIntIterator itr = config.iterator();
 
-		int idx = 0;
-		Integer lowestKey;
-		while (!conf_data.isEmpty())
+		while (itr.hasNext())
 		{
-			lowestKey = null;
-			for (Integer ke : conf_data.keySet())
+			itr.advance();
+			int size = itr.key();
+			int count = itr.value();
+
+			PathFindBuffer[] buff = new PathFindBuffer[count];
+			for (int i = 0; i < count; i++)
 			{
-				if (lowestKey == null || lowestKey > ke)
-				{
-					lowestKey = ke;
-				}
+				buff[i] = new PathFindBuffer(size);
 			}
 
-			_allbuffers[idx] = new BufferInfo(lowestKey, idx, conf_data.remove(lowestKey));
-			idx++;
+			buffers.put(size, buff);
 		}
 
-		all_buffers = _allbuffers;
+		sizes = config.keys();
+		Arrays.sort(sizes);
 	}
 
-	public static boolean resizeBuffers(int MapSize, int newCapacity)
+	private static PathFindBuffer create(int mapSize)
 	{
-		if (newCapacity < 1)
+		lock.lock();
+		try
 		{
-			return false;
-		}
-
-		for (BufferInfo all_buffer : all_buffers)
-		{
-			if (MapSize == all_buffer.MapSize)
+			PathFindBuffer buffer;
+			PathFindBuffer[] buff = buffers.get(mapSize);
+			if (buff != null)
 			{
-				if (newCapacity == all_buffer.buffers.getCapacity())
-				{
-					return true;
-				}
-
-				GArray<PathFindBuffer> new_buffers = new GArray<PathFindBuffer>(newCapacity);
-				synchronized (all_buffer)
-				{
-					while (all_buffer.buffers.size() > newCapacity)
-					{
-						all_buffer.buffers.removeLast();
-					}
-					new_buffers.addAll(all_buffer.buffers);
-					all_buffer.buffers = new_buffers;
-				}
-
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	private static PathFindBuffer alloc(BufferInfo fine_buffer)
-	{
-		synchronized (fine_buffer)
-		{
-			// ищем свободный буффер
-			for (PathFindBuffer b : fine_buffer.buffers)
-			{
-				if (!b.inUse)
-				{
-					b.inUse = true;
-					return b;
-				}
-			}
-			// если нет свободного буффера то создаем новый
-
-			PathFindBuffer result = new PathFindBuffer(fine_buffer);
-			// и если для него еще есть место то ложим его в список что бы заюзать потом снова
-			if (fine_buffer.buffers.size() < fine_buffer.buffers.getCapacity())
-			{
-				result.inUse = true;
-				fine_buffer.buffers.add(result);
+				buff = ArrayUtils.add(buff, buffer = new PathFindBuffer(mapSize));
 			}
 			else
 			{
-				fine_buffer.overBuffers++;
+				buff = new PathFindBuffer[]{buffer = new PathFindBuffer(mapSize)};
+				sizes = ArrayUtils.add(sizes, mapSize);
+				Arrays.sort(sizes);
 			}
-			return result;
+			buffers.put(mapSize, buff);
+			buffer.inUse = true;
+			return buffer;
+		} finally
+		{
+			lock.unlock();
 		}
 	}
 
-	public static PathFindBuffer alloc(int mapSize, boolean isPlayer, Location startpoint, Location endpoint, Location native_endpoint)
+	private static PathFindBuffer get(int mapSize)
 	{
-		if (mapSize % 2 > 0)
+		lock.lock();
+		try
 		{
-			mapSize--; // для четности
+			PathFindBuffer[] buff = buffers.get(mapSize);
+			for (PathFindBuffer buffer : buff)
+			{
+				if (!buffer.inUse)
+				{
+					buffer.inUse = true;
+					return buffer;
+				}
+			}
+			return null;
+		} finally
+		{
+			lock.unlock();
+		}
+	}
+
+	public static PathFindBuffer alloc(int mapSize)
+	{
+		if (mapSize > MAX_MAP_SIZE)
+		{
+			return null;
+		}
+		mapSize += STEP_MAP_SIZE;
+		if (mapSize < MIN_MAP_SIZE)
+		{
+			mapSize = MIN_MAP_SIZE;
 		}
 
-		BufferInfo fine_buffer = null;
-		for (BufferInfo all_buffer : all_buffers)
+		PathFindBuffer buffer = null;
+		for (int size1 : sizes)
 		{
-			if (mapSize <= all_buffer.MapSize)
+			if (size1 >= mapSize)
 			{
-				fine_buffer = all_buffer;
-				mapSize = all_buffer.MapSize;
+				mapSize = size1;
+				buffer = get(mapSize);
 				break;
 			}
 		}
 
-		if (fine_buffer == null)
+		//Не найден свободный буффер, или буфферов под такой размер нет
+		if (buffer == null)
 		{
-			return null; // запрошен слишком большой буффер
-		}
-
-		PathFindBuffer result = alloc(fine_buffer);
-		result.useStartedNanos = System.nanoTime();
-		result.isPlayer = isPlayer;
-		result.startpoint = startpoint;
-		result.endpoint = endpoint;
-		result.native_endpoint = native_endpoint;
-		result.offsetX = startpoint.x - mapSize / 2;
-		result.offsetY = startpoint.y - mapSize / 2;
-
-		return result;
-	}
-
-	public static class PathFindBuffer
-	{
-		final short[] hNSWE = new short[2];
-		final GeoNode[][] nodes;
-		final BufferInfo info;
-
-		boolean isPlayer, inUse;
-		Location startpoint, endpoint, native_endpoint;
-		int offsetX, offsetY;
-		public long useStartedNanos;
-
-		GeoNode firstNode, currentNode, tempNode;
-
-		public PathFindBuffer(BufferInfo inf)
-		{
-			nodes = new GeoNode[inf.MapSize][inf.MapSize];
-			tempNode = new GeoNode();
-			info = inf;
-		}
-
-		public void free()
-		{
-			if (!inUse)
+			for (int size = MIN_MAP_SIZE; size < MAX_MAP_SIZE; size += STEP_MAP_SIZE)
 			{
-				return;
-			}
-
-			for (GeoNode[] node : nodes)
-			{
-				for (GeoNode aNode : node)
+				if (size >= mapSize)
 				{
-					if (aNode != null)
-					{
-						aNode.free();
-					}
+					mapSize = size;
+					buffer = create(mapSize);
+					break;
 				}
 			}
-
-			firstNode = null;
-			currentNode = null;
-			endpoint = null;
-			currentNode = null;
-
-			info.totalUses++;
-			if (isPlayer)
-			{
-				info.playableUses++;
-			}
-			info.useTimeMillis += (System.nanoTime() - useStartedNanos) / 1000000.0;
-
-			inUse = false;
 		}
+
+		return buffer;
 	}
 
-	public static class GeoNode
+	public static void recycle(PathFindBuffer buffer)
 	{
-		public int _x, _y;
-		public short _z, _nswe;
-		public double score = 0., moveCost = 0.;
-		public boolean closed = false;
-
-		public GeoNode link = null, parent = null;
-
-		public void free()
+		lock.lock();
+		try
 		{
-			score = -1;
-			link = null;
-			parent = null;
-			_z = 0;
-		}
-
-		public static GeoNode initNode(PathFindBuffer buff, int bx, int by, int x, int y, short z, GeoNode parentNode)
+			buffer.inUse = false;
+		} finally
 		{
-			GeoNode result;
-
-			if (buff == null)
-			{
-				result = new GeoNode();
-				result._x = x;
-				result._y = y;
-				result._z = z;
-				result.moveCost = 0.;
-				result.parent = parentNode;
-				result.score = 0;
-				result.closed = false;
-				return result;
-			}
-
-			if (buff.nodes[bx][by] == null)
-			{
-				buff.nodes[bx][by] = new GeoNode();
-			}
-			result = buff.nodes[bx][by];
-
-			if (result._x != x || result._y != y || result._z == 0 || Math.abs(z - result._z) > 64)
-			{
-				GeoEngine.NgetHeightAndNSWE(x, y, z, buff.hNSWE);
-				result._x = x;
-				result._y = y;
-				result._z = buff.hNSWE[0];
-				result._nswe = buff.hNSWE[1];
-			}
-
-			result.moveCost = 0.;
-			result.parent = parentNode;
-			result.score = 0;
-			result.closed = false;
-			return result;
-		}
-
-		public static GeoNode initNode(PathFindBuffer buff, int bx, int by, Location loc)
-		{
-			return initNode(buff, bx, by, loc.x, loc.y, (short) loc.z, null);
-		}
-
-		public static boolean isNull(GeoNode node)
-		{
-			return node == null || node.score == -1;
-		}
-
-		public static GeoNode initNodeGeo(PathFindBuffer buff, int bx, int by, int x, int y, short z)
-		{
-			GeoNode result;
-
-			if (buff.nodes[bx][by] == null)
-			{
-				buff.nodes[bx][by] = new GeoNode();
-			}
-			result = buff.nodes[bx][by];
-
-			GeoEngine.NgetHeightAndNSWE(x, y, z, buff.hNSWE);
-			result._x = x;
-			result._y = y;
-			result._z = buff.hNSWE[0];
-			result._nswe = buff.hNSWE[1];
-
-			result.score = -1;
-
-			return result;
-		}
-
-		public GeoNode reuse(GeoNode old, GeoNode parentNode)
-		{
-			_x = old._x;
-			_y = old._y;
-			_z = old._z;
-			_nswe = old._nswe;
-			moveCost = 0.;
-			closed = old.closed;
-			parent = parentNode;
-			return this;
-		}
-
-		public void copy(GeoNode old)
-		{
-			_x = old._x;
-			_y = old._y;
-			_z = old._z;
-			_nswe = old._nswe;
-			moveCost = old.moveCost;
-			score = old.score;
-			closed = old.closed;
-		}
-
-		public Location getLoc()
-		{
-			return new Location(_x, _y, _z);
-		}
-
-		@Override
-		public String toString()
-		{
-			return "GeoNode: " + _x + "\t" + _y + "\t" + _z;
-		}
-	}
-
-	public static class BufferInfo
-	{
-		final int MapSize, sqMapSize, maxIterations, index;
-		private int overBuffers = 0, totalUses = 0, playableUses = 0;
-		private double useTimeMillis = 0;
-		private GArray<PathFindBuffer> buffers;
-
-		public BufferInfo(int mapSize, int idx, int buffersCount)
-		{
-			buffers = new GArray<PathFindBuffer>(buffersCount);
-			MapSize = mapSize;
-			sqMapSize = mapSize * mapSize;
-			index = idx;
-			if (sqMapSize <= 10000) //TODO оттюнить
-			{
-				maxIterations = sqMapSize / 2;
-			}
-			else if (sqMapSize < 30000)
-			{
-				maxIterations = sqMapSize / 3;
-			}
-			else
-			{
-				maxIterations = sqMapSize / 4;
-			}
+			lock.unlock();
 		}
 	}
 
 	public static StrTable getStats()
 	{
 		StrTable table = new StrTable("PathFind Buffers Stats");
-		long inUse, pathFindsTotal = 0, pathFindsPlayable = 0;
-		double allTimeMillis = 0;
-
-		for (BufferInfo buff : all_buffers)
+		lock.lock();
+		try
 		{
-			pathFindsTotal += buff.totalUses;
-			pathFindsPlayable += buff.playableUses;
-			allTimeMillis += buff.useTimeMillis;
+			long totalUses = 0, totalPlayable = 0, totalTime = 0;
+			int index = 0;
+			int count;
+			long uses;
+			long playable;
+			long itrs;
+			long success;
+			long overtime;
+			long time;
 
-			inUse = 0;
-			synchronized (buff)
+			for (int size : sizes)
 			{
-				for (PathFindBuffer b : buff.buffers)
+				index++;
+				count = 0;
+				uses = 0;
+				playable = 0;
+				itrs = 0;
+				success = 0;
+				overtime = 0;
+				time = 0;
+				for (PathFindBuffer buff : buffers.get(size))
 				{
-					if (b.inUse)
-					{
-						inUse++;
-					}
+					count++;
+					uses += buff.totalUses;
+					playable += buff.playableUses;
+					success += buff.successUses;
+					overtime += buff.overtimeUses;
+					time += buff.totalTime / 1000000;
+					itrs += buff.totalItr;
 				}
+
+				totalUses += uses;
+				totalPlayable += playable;
+				totalTime += time;
+
+				table.set(index, "Size", size);
+				table.set(index, "Count", count);
+				table.set(index, "Uses (success%)", uses + "(" + String.format("%2.2f", (uses > 0) ? success * 100. / uses : 0) + "%)");
+				table.set(index, "Uses, playble", playable + "(" + String.format("%2.2f", (uses > 0) ? playable * 100. / uses : 0) + "%)");
+				table.set(index, "Uses, overtime", overtime + "(" + String.format("%2.2f", (uses > 0) ? overtime * 100. / uses : 0) + "%)");
+				table.set(index, "Iter., avg", (uses > 0) ? itrs / uses : 0);
+				table.set(index, "Time, avg (ms)", String.format("%1.3f", (uses > 0) ? (double) time / uses : 0.));
 			}
-			table.set(buff.index, "Size", buff.MapSize);
-			table.set(buff.index, "Use", inUse);
-			table.set(buff.index, "Uses", buff.totalUses);
-			table.set(buff.index, "Alloc", buff.buffers.size() + " of " + buff.buffers.getCapacity());
-			table.set(buff.index, "unbuf", buff.overBuffers);
-			if (buff.totalUses > 0)
+
+			table.addTitle("Uses, total / playable  : " + totalUses + " / " + totalPlayable);
+			table.addTitle("Uses, total time / avg (ms) : " + totalTime + " / " + String.format("%1.3f", totalUses > 0 ? (double) totalTime / totalUses : 0));
+		} finally
+		{
+			lock.unlock();
+		}
+
+		return table;
+	}
+
+	public static class PathFindBuffer
+	{
+		final int mapSize;
+		final GeoNode[][] nodes;
+		final Queue<GeoNode> open;
+		int offsetX, offsetY;
+		boolean inUse;
+
+		//статистика
+		long totalUses;
+		long successUses;
+		long overtimeUses;
+		long playableUses;
+		long totalTime;
+		long totalItr;
+
+		public PathFindBuffer(int mapSize)
+		{
+			open = new PriorityQueue<GeoNode>(mapSize);
+			this.mapSize = mapSize;
+			nodes = new GeoNode[mapSize][mapSize];
+			for (int i = 0; i < nodes.length; i++)
 			{
-				table.set(buff.index, "Avg ms", String.format("%1.3f", buff.useTimeMillis / buff.totalUses));
+				for (int j = 0; j < nodes[i].length; j++)
+				{
+					nodes[i][j] = new GeoNode();
+				}
 			}
 		}
 
-		table.addTitle("Total / Playable  : " + pathFindsTotal + " / " + pathFindsPlayable);
-		table.addTitle("Total(s) / Avg(ms): " + String.format("%1.2f", allTimeMillis / 1000) + " / " + String.format("%1.3f", allTimeMillis / pathFindsTotal));
+		public void free()
+		{
+			open.clear();
+			for (GeoNode[] node : nodes)
+			{
+				for (GeoNode aNode : node)
+				{
+					aNode.free();
+				}
+			}
+		}
+	}
 
-		return table;
+	public static class GeoNode implements Comparable<GeoNode>
+	{
+		public final static int NONE = 0;
+		public final static int OPENED = 1;
+		public final static int CLOSED = -1;
+
+		public int x, y;
+		public short z, nswe;
+		public float totalCost, costFromStart, costToEnd;
+		public int state;
+
+		public GeoNode parent;
+
+		public GeoNode()
+		{
+			nswe = -1;
+		}
+
+		public GeoNode set(int x, int y, short z)
+		{
+			this.x = x;
+			this.y = y;
+			this.z = z;
+			return this;
+		}
+
+		public boolean isSet()
+		{
+			return nswe != -1;
+		}
+
+		public void free()
+		{
+			nswe = -1;
+			costFromStart = 0f;
+			totalCost = 0f;
+			costToEnd = 0f;
+			parent = null;
+			state = NONE;
+		}
+
+		public Location getLoc()
+		{
+			return new Location(x, y, z);
+		}
+
+		@Override
+		public String toString()
+		{
+			return "[" + x + "," + y + "," + z + "] f: " + totalCost;
+		}
+
+		@Override
+		public int compareTo(GeoNode o)
+		{
+			if (totalCost > o.totalCost)
+			{
+				return 1;
+			}
+			if (totalCost < o.totalCost)
+			{
+				return -1;
+			}
+			return 0;
+		}
 	}
 }

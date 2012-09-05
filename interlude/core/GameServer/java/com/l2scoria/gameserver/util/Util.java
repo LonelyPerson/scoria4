@@ -28,13 +28,14 @@
  */
 package com.l2scoria.gameserver.util;
 
-import java.io.File;
-import java.util.Collection;
-
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.L2Object;
+import com.l2scoria.gameserver.model.Location;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
+
+import java.io.File;
+import java.util.Collection;
 
 /**
  * General Utility functions related to Gameserver
@@ -168,6 +169,8 @@ public final class Util
 	public static boolean checkIfInRange(int range, L2Object obj1, L2Object obj2, boolean includeZAxis)
 	{
 		if(obj1 == null || obj2 == null)
+			return false;
+		if (obj1.getInstanceId() != obj2.getInstanceId())
 			return false;
 		if(range == -1)
 			return true; // not limited
@@ -333,6 +336,21 @@ public final class Util
 	public static int convertMinutesToMiliseconds(int minutesToConvert)
 	{
 		return minutesToConvert * 60000;
+	}
+
+	public static int[] convertLocationToGeoRegion(Location loc)
+	{
+		return convertLocationToGeoRegion(loc.x, loc.y);
+	}
+
+	public static int[] convertLocationToGeoRegion(int x, int y)
+	{
+		int[] result = new int[2];
+
+		result[0] = 20 + ((x - x % 32768) / 32768);
+		result[1] = 18 + ((y - y % 32768) / 32768);
+
+		return result;
 	}
 
 }

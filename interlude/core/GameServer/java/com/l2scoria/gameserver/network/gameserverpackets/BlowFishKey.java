@@ -18,12 +18,12 @@
  */
 package com.l2scoria.gameserver.network.gameserverpackets;
 
+import org.apache.log4j.Logger;
+
+import javax.crypto.Cipher;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.interfaces.RSAPublicKey;
-import java.util.logging.Logger;
-
-import javax.crypto.Cipher;
 
 /**
  * @author -Wooden-
@@ -48,7 +48,7 @@ public class BlowFishKey extends GameServerBasePacket
 		}
 		catch(GeneralSecurityException e)
 		{
-			_log.severe("Error While encrypting blowfish key for transmision (Crypt error)");
+			_log.fatal("Error While encrypting blowfish key for transmision (Crypt error)");
 			e.printStackTrace();
 		}
 		writeD(encrypted.length);

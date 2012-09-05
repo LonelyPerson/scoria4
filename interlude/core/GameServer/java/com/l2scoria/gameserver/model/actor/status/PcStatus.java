@@ -22,11 +22,7 @@ import com.l2scoria.gameserver.ai.CtrlIntention;
 import com.l2scoria.gameserver.managers.DuelManager;
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.L2Summon;
-import com.l2scoria.gameserver.model.actor.instance.L2NpcInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2PlayableInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2SiegeGuardInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2SummonInstance;
+import com.l2scoria.gameserver.model.actor.instance.*;
 import com.l2scoria.gameserver.model.entity.Duel;
 import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
@@ -154,7 +150,7 @@ public class PcStatus extends PlayableStatus
 
 			if(Config.DEBUG)
 			{
-				_log.fine("Attacker:" + attacker.getName());
+				_log.info("Attacker:" + attacker.getName());
 			}
 
 			if(attacker instanceof L2NpcInstance)
@@ -163,7 +159,7 @@ public class PcStatus extends PlayableStatus
 
 				if(Config.DEBUG)
 				{
-					_log.fine("mob id:" + mobId);
+					_log.info("mob id:" + mobId);
 				}
 
 				smsg.addNpcName(mobId);
@@ -231,7 +227,7 @@ public class PcStatus extends PlayableStatus
 			// then overhit may be calculated
 			if(Config.DEBUG)
 			{
-				_log.fine("char is dead.");
+				_log.info("char is dead.");
 			}
 
 			// Start the doDie process

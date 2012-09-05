@@ -17,19 +17,17 @@
  */
 package com.l2scoria.gameserver.model.zone.type;
 
-import javolution.util.FastList;
-
-import org.w3c.dom.Node;
-
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import com.l2scoria.gameserver.model.zone.L2ZoneType;
+import com.l2scoria.gameserver.model.zone.L2ZoneDefault;
 import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
 import com.l2scoria.util.random.Rnd;
+import javolution.util.FastList;
+import org.w3c.dom.Node;
 
 
-public class L2FightZone extends L2ZoneType
+public class L2FightZone extends L2ZoneDefault
 {
 	private FastList<int[]> _spawnLoc;
 
@@ -72,10 +70,7 @@ public class L2FightZone extends L2ZoneType
 			ai[2] = Integer.parseInt(node1.getNodeValue());
 		}
 
-		if(ai != null)
-		{
-			_spawnLoc.add(ai);
-		}
+		_spawnLoc.add(ai);
 
 		node1 = null;
 	}
@@ -88,8 +83,10 @@ public class L2FightZone extends L2ZoneType
 
 		if(character instanceof L2PcInstance)
 		{
-			((L2PcInstance) character).sendPacket(new SystemMessage(SystemMessageId.ENTERED_COMBAT_ZONE));
+			character.sendPacket(new SystemMessage(SystemMessageId.ENTERED_COMBAT_ZONE));
 		}
+
+		super.onEnter(character);
 	}
 
 	@Override
@@ -100,17 +97,11 @@ public class L2FightZone extends L2ZoneType
 
 		if(character instanceof L2PcInstance)
 		{
-			((L2PcInstance) character).sendPacket(new SystemMessage(SystemMessageId.LEFT_COMBAT_ZONE));
+			character.sendPacket(new SystemMessage(SystemMessageId.LEFT_COMBAT_ZONE));
 		}
+
+		super.onExit(character);
 	}
-
-	@Override
-	protected void onDieInside(L2Character character)
-	{}
-
-	@Override
-	protected void onReviveInside(L2Character character)
-	{}
 
 	public final int[] getSpawnLoc()
 	{

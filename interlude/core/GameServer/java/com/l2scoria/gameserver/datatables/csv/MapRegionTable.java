@@ -18,32 +18,25 @@
  */
 package com.l2scoria.gameserver.datatables.csv;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.LineNumberReader;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.StringTokenizer;
-import java.util.logging.Logger;
-
-import com.l2scoria.gameserver.managers.ArenaManager;
-import com.l2scoria.gameserver.managers.CastleManager;
-import com.l2scoria.gameserver.managers.ClanHallManager;
-import com.l2scoria.gameserver.managers.FortManager;
-import com.l2scoria.gameserver.managers.TownManager;
+import com.l2scoria.gameserver.instancemanager.InstanceManager;
+import com.l2scoria.gameserver.managers.*;
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.Location;
 import com.l2scoria.gameserver.model.actor.instance.L2NpcInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.entity.ClanHall;
+import com.l2scoria.gameserver.model.entity.Instance;
 import com.l2scoria.gameserver.model.entity.siege.Castle;
 import com.l2scoria.gameserver.model.entity.siege.Fort;
 import com.l2scoria.gameserver.model.zone.type.L2ArenaZone;
 import com.l2scoria.gameserver.model.zone.type.L2ClanHallZone;
 import com.l2scoria.gameserver.model.zone.type.L2FightZone;
+import org.apache.log4j.Logger;
+
+import java.io.*;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.StringTokenizer;
 
 /**
  * @version $Revision: 1.2 $ $Date: 2009/04/29 13:58:30 $
@@ -111,16 +104,16 @@ public class MapRegionTable
 		}
 		catch(FileNotFoundException e)
 		{
-			_log.warning("mapregion.csv is missing in data folder");
+			_log.warn("mapregion.csv is missing in data folder");
 		}
 		catch(NoSuchElementException e1)
 		{
-			_log.warning("Error for structure CSV file: ");
+			_log.warn("Error for structure CSV file: ");
 			e1.printStackTrace();
 		}
 		catch(IOException e0)
 		{
-			_log.warning("Error while creating table: " + e0);
+			_log.warn("Error while creating table: " + e0);
 			e0.printStackTrace();
 		}
 		finally
@@ -384,6 +377,20 @@ public class MapRegionTable
 			if(player.isInsideZone(L2Character.ZONE_MONSTERTRACK))
 				return new Location(12661, 181687, -3560);
 
+			// Checking if in an instance
+			if (player.getInstanceId() > 0)
+			{
+				Instance playerInstance = InstanceManager.getInstance().getInstance(player.getInstanceId());
+				if (playerInstance != null)
+				{
+					if (playerInstance.getSpawnLoc() != null)
+					{
+						coord = playerInstance.getSpawnLoc();
+						return new Location(coord[0], coord[1], coord[2]);
+					}
+				}
+			}
+
 			Castle castle = null;
 			Fort fort = null;
 			ClanHall clanhall = null;
@@ -430,7 +437,7 @@ public class MapRegionTable
 				{
 					// If Teleporting to castle or
 					// If is on caslte with siege and player's clan is defender
-					if(teleportWhere == TeleportWhereType.Castle || teleportWhere == TeleportWhereType.Castle && castle.getSiege().getIsInProgress() && castle.getSiege().getDefenderClan(player.getClan()) != null)
+					if(teleportWhere == TeleportWhereType.Castle)
 					{
 						coord = castle.getZone().getSpawn();
 						return new Location(coord[0], coord[1], coord[2]);

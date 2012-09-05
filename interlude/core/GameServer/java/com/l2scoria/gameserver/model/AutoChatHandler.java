@@ -18,16 +18,6 @@
  */
 package com.l2scoria.gameserver.model;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ScheduledFuture;
-import java.util.logging.Logger;
-
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.model.actor.instance.L2NpcInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
@@ -37,9 +27,18 @@ import com.l2scoria.gameserver.model.spawn.L2Spawn;
 import com.l2scoria.gameserver.model.spawn.SpawnListener;
 import com.l2scoria.gameserver.network.serverpackets.CreatureSay;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
-import java.sql.Connection;
 import com.l2scoria.util.database.L2DatabaseFactory;
 import com.l2scoria.util.random.Rnd;
+import javolution.util.FastList;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ScheduledFuture;
 
 /**
  * Auto Chat Handler Allows NPCs to automatically send messages to nearby players at a set time interval.
@@ -111,12 +110,12 @@ public class AutoChatHandler implements SpawnListener
 
 			if(Config.DEBUG)
 			{
-				_log.config("AutoChatHandler: Loaded " + numLoaded + " chat group(s) from the database.");
+				_log.info("AutoChatHandler: Loaded " + numLoaded + " chat group(s) from the database.");
 			}
 		}
 		catch(Exception e)
 		{
-			_log.warning("AutoSpawnHandler: Could not restore chat data: " + e);
+			_log.warn("AutoSpawnHandler: Could not restore chat data: " + e);
 		}
 		finally
 		{
@@ -226,7 +225,7 @@ public class AutoChatHandler implements SpawnListener
 
 		if(Config.DEBUG)
 		{
-			_log.config("AutoChatHandler: Removed auto chat for NPC ID " + chatInst.getNPCId());
+			_log.info("AutoChatHandler: Removed auto chat for NPC ID " + chatInst.getNPCId());
 		}
 
 		return true;
@@ -325,7 +324,7 @@ public class AutoChatHandler implements SpawnListener
 
 			if(Config.DEBUG)
 			{
-				_log.config("AutoChatHandler: Registered auto chat for NPC ID " + _npcId + " (Global Chat = " + _globalChat + ").");
+				_log.info("AutoChatHandler: Registered auto chat for NPC ID " + _npcId + " (Global Chat = " + _globalChat + ").");
 			}
 
 			setActive(true);
@@ -754,7 +753,7 @@ public class AutoChatHandler implements SpawnListener
 
 					if(chatDef == null)
 					{
-						_log.warning("AutoChatHandler: Auto chat definition is NULL for NPC ID " + _npcId + ".");
+						_log.warn("AutoChatHandler: Auto chat definition is NULL for NPC ID " + _npcId + ".");
 						return;
 					}
 
@@ -891,7 +890,7 @@ public class AutoChatHandler implements SpawnListener
 
 						if(Config.DEBUG)
 						{
-							_log.fine("AutoChatHandler: Chat propogation for object ID " + chatNpc.getObjectId() + " (" + creatureName + ") with text '" + text + "' sent to " + nearbyPlayers.size() + " nearby players.");
+							_log.info("AutoChatHandler: Chat propogation for object ID " + chatNpc.getObjectId() + " (" + creatureName + ") with text '" + text + "' sent to " + nearbyPlayers.size() + " nearby players.");
 						}
 
 						text = null;

@@ -18,15 +18,15 @@
  */
 package com.l2scoria.gameserver.skills.effects;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.logging.Logger;
-
 import com.l2scoria.gameserver.model.L2Effect;
 import com.l2scoria.gameserver.skills.Env;
 import com.l2scoria.gameserver.skills.conditions.Condition;
 import com.l2scoria.gameserver.skills.funcs.FuncTemplate;
 import com.l2scoria.gameserver.skills.funcs.Lambda;
+import org.apache.log4j.Logger;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * @author mkizub TODO To change the template for this generated type comment go to Window - Preferences - Java - Code
@@ -103,7 +103,7 @@ public final class EffectTemplate
 		}
 		catch(InvocationTargetException e)
 		{
-			_log.warning("Error creating new instance of Class " + _func + " Exception was:");
+			_log.warn("Error creating new instance of Class " + _func + " Exception was:");
 			e.getTargetException().printStackTrace();
 			return null;
 		}

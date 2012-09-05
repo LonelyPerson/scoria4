@@ -18,12 +18,6 @@
 
 package com.l2scoria.gameserver.model;
 
-import java.sql.PreparedStatement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javolution.util.FastList;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.SkillTable;
 import com.l2scoria.gameserver.datatables.xml.AugmentationData;
@@ -33,8 +27,12 @@ import com.l2scoria.gameserver.skills.Stats;
 import com.l2scoria.gameserver.skills.funcs.FuncAdd;
 import com.l2scoria.gameserver.skills.funcs.LambdaConst;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
-import java.sql.Connection;
 import com.l2scoria.util.database.L2DatabaseFactory;
+import javolution.util.FastList;
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 
 /**
  * Used to store an augmentation and its boni
@@ -151,7 +149,7 @@ public final class L2Augmentation
 		}
 		catch(Exception e)
 		{
-			_log.log(Level.SEVERE, "Could not save augmentation for item: " + _item.getObjectId() + " from DB:", e);
+			_log.fatal("Could not save augmentation for item: " + _item.getObjectId() + " from DB:", e);
 		}
 		finally
 		{
@@ -178,7 +176,7 @@ public final class L2Augmentation
 		}
 		catch(Exception e)
 		{
-			_log.log(Level.SEVERE, "Could not delete augmentation for item: " + _item.getObjectId() + " from DB:", e);
+			_log.fatal("Could not delete augmentation for item: " + _item.getObjectId() + " from DB:", e);
 		}
 		finally
 		{

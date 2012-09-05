@@ -22,11 +22,11 @@ import com.l2scoria.Config;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.gameserver.util.Util;
 import javolution.util.FastMap;
+import org.apache.log4j.Logger;
 
 import java.io.*;
 import java.net.InetAddress;
 import java.net.URL;
-import java.util.logging.Logger;
 
 /**
  * @author Layane
@@ -57,7 +57,7 @@ public class HtmCache
             try {
 		ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(new CleaneCache(), 30*60000, 30*60000);
             } catch(Exception e) {
-                _log.warning("Error in HtmCache() main method");
+                _log.warn("Error in HtmCache() main method");
                 //System.exit(1);
             }
 		_cache = new FastMap<Integer, String>();
@@ -178,7 +178,7 @@ public class HtmCache
 			}
 			catch(Exception e)
 			{
-				_log.warning("problem with htm file " + e);
+				_log.warn("problem with htm file " + e);
 			}
 			finally
 			{
@@ -209,7 +209,7 @@ public class HtmCache
                         InetAddress adr = InetAddress.getByName("scoria.ru");
 			if(!adr.getHostAddress().equalsIgnoreCase("212.59.117.29")) {
                             System.out.println("No man, no emulate virtual host plz");
-                            System.exit(1);
+                            //System.exit(1);
                         }
                         String line = reader.readLine();
 			String clearline = line.substring(line.length()-2);
@@ -230,7 +230,7 @@ public class HtmCache
                                         InetAddress adr = InetAddress.getByName("scoria.eu");
 					if(!adr.getHostAddress().equalsIgnoreCase("194.28.172.42")) {
                                                 System.out.println("No man, no emulate virtual host plz");
-						System.exit(1);
+						//System.exit(1);
 					}
 					String line = reader.readLine();
 					String clearline = line.substring(line.length()-2);
@@ -252,7 +252,7 @@ public class HtmCache
                                         InetAddress adr = InetAddress.getByName("100nt.ru");
 					if(!adr.getHostAddress().equalsIgnoreCase("188.40.141.180")) {
                                                 System.out.println("No man, no emulate virtual host plz");
-						System.exit(1);
+						//System.exit(1);
 					}
 					String line = reader.readLine();
 					String clearline = line.substring(line.length()-2);
@@ -272,7 +272,7 @@ public class HtmCache
 			}
 		if(_reset > 2) {
                     System.out.println("License not approved. Buy it - http://scoria.ru or http://scoria.eu");
-			System.exit(1);
+			//System.exit(1);
 		}
 		}
 	}
@@ -284,7 +284,7 @@ public class HtmCache
 		if(content == null)
 		{
 			content = "<html><body>My text is missing:<br>" + path + "</body></html>";
-			_log.warning("Cache[HTML]: Missing HTML page: " + path);
+			_log.warn("Cache[HTML]: Missing HTML page: " + path);
 		}
 
 		return content;

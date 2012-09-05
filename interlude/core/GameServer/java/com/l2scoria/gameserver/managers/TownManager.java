@@ -17,14 +17,12 @@
  */
 package com.l2scoria.gameserver.managers;
 
-import java.util.logging.Logger;
-
-import javolution.util.FastList;
-
 import com.l2scoria.gameserver.datatables.csv.MapRegionTable;
 import com.l2scoria.gameserver.model.L2Object;
 import com.l2scoria.gameserver.model.entity.siege.Castle;
 import com.l2scoria.gameserver.model.zone.type.L2TownZone;
+import javolution.util.FastList;
+import org.apache.log4j.Logger;
 
 public class TownManager
 {

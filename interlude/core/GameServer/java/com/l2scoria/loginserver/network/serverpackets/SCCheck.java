@@ -12,7 +12,7 @@ public class SCCheck extends L2LoginServerPacket
 	}
 
 	@Override
-	protected void write()
+	protected void writeImpl()
 	{
 		writeC(0x0A);
 		writeD(1);

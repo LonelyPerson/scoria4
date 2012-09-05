@@ -19,10 +19,9 @@
 
 package com.l2scoria.gameserver.model;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.gameserver.datatables.SkillTable;
 import com.l2scoria.gameserver.skills.effects.EffectForce;
+import org.apache.log4j.Logger;
 
 /**
  * @author ProGramMoS, l2scoria
@@ -67,7 +66,7 @@ public final class ForceBuff
 			}
 			else
 			{
-				_log.warning("Triggered skill [" + _forceId + ";" + _forceLevel + "] not found!");
+				_log.warn("Triggered skill [" + _forceId + ";" + _forceLevel + "] not found!");
 			}
 		}
 		effect = null;

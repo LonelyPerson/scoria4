@@ -17,13 +17,11 @@
  */
 package com.l2scoria.gameserver.util;
 
-import java.util.logging.Logger;
-
-import javolution.util.FastMap;
-import javolution.util.FastMap.Entry;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.GameTimeController;
+import javolution.util.FastMap;
+import javolution.util.FastMap.Entry;
+import org.apache.log4j.Logger;
 
 /**
  * Flood protector

@@ -19,14 +19,14 @@ package com.l2scoria.gameserver.model.zone.type;
 
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import com.l2scoria.gameserver.model.zone.L2ZoneType;
+import com.l2scoria.gameserver.model.zone.L2ZoneDefault;
 
 /**
  * Bighead zones give entering players big heads
  * 
  * @author durgus
  */
-public class L2BigheadZone extends L2ZoneType
+public class L2BigheadZone extends L2ZoneDefault
 {
 	public L2BigheadZone(int id)
 	{
@@ -36,14 +36,30 @@ public class L2BigheadZone extends L2ZoneType
 	@Override
 	protected void onEnter(L2Character character)
 	{
-		if(character instanceof L2PcInstance)
-		{
-			character.startAbnormalEffect(0x2000);
-		}
+		startEffect(character);
+		super.onEnter(character);
 	}
 
 	@Override
 	protected void onExit(L2Character character)
+	{
+		stopEffect(character);
+		super.onExit(character);
+	}
+
+	@Override
+	protected void onDieInside(L2Character character)
+	{
+		stopEffect(character);
+	}
+
+	@Override
+	protected void onReviveInside(L2Character character)
+	{
+		startEffect(character);
+	}
+
+	private void startEffect(L2Character character)
 	{
 		if(character instanceof L2PcInstance)
 		{
@@ -51,16 +67,12 @@ public class L2BigheadZone extends L2ZoneType
 		}
 	}
 
-	@Override
-	protected void onDieInside(L2Character character)
-	{
-		onExit(character);
-	}
 
-	@Override
-	protected void onReviveInside(L2Character character)
+	private void stopEffect(L2Character character)
 	{
-		onEnter(character);
+		if(character instanceof L2PcInstance)
+		{
+			character.startAbnormalEffect(0x2000);
+		}
 	}
-
 }

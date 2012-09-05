@@ -17,13 +17,12 @@
  */
 package com.l2scoria.gameserver.taskmanager.tasks;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.gameserver.model.entity.olympiad.Olympiad;
 import com.l2scoria.gameserver.taskmanager.Task;
 import com.l2scoria.gameserver.taskmanager.TaskManager;
-import com.l2scoria.gameserver.taskmanager.TaskTypes;
 import com.l2scoria.gameserver.taskmanager.TaskManager.ExecutedTask;
+import com.l2scoria.gameserver.taskmanager.TaskTypes;
+import org.apache.log4j.Logger;
 
 
 /**
@@ -52,7 +51,7 @@ public class TaskOlympiadSave extends Task
         }
         catch (Exception e)
 		{
-            _log.warning("Olympiad System: Failed to save Olympiad configuration: " + e);
+            _log.warn("Olympiad System: Failed to save Olympiad configuration: " + e);
         }
     }
 

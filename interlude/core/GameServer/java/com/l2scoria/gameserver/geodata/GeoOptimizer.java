@@ -3,13 +3,13 @@ package com.l2scoria.gameserver.geodata;
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.model.L2World;
 import com.l2scoria.util.GArray;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.FileChannel;
-import java.util.logging.Logger;
 import java.util.zip.CRC32;
 
 public class GeoOptimizer
@@ -80,12 +80,12 @@ public class GeoOptimizer
 			}
 
 			int startIdx2;
-			for (int blockIdx = 0; blockIdx < GeoEngine.BlocksInMap; blockIdx++)
+			for (int blockIdx = 0; blockIdx < GeoEngine.BLOCKS_IN_MAP; blockIdx++)
 			{
 				if (notready[blockIdx])
 				{
 					startIdx2 = next_checkSums == curr_checkSums ? blockIdx + 1 : 0;
-					for (int blockIdx2 = startIdx2; blockIdx2 < GeoEngine.BlocksInMap; blockIdx2++)
+					for (int blockIdx2 = startIdx2; blockIdx2 < GeoEngine.BLOCKS_IN_MAP; blockIdx2++)
 					{
 						if (curr_checkSums[blockIdx] == next_checkSums[blockIdx2])
 						{
@@ -106,8 +106,8 @@ public class GeoOptimizer
 			log.info("Searching matches for " + rx + "_" + ry);
 			long started = System.currentTimeMillis();
 
-			boolean[] notready = new boolean[GeoEngine.BlocksInMap];
-			for (int i = 0; i < GeoEngine.BlocksInMap; i++)
+			boolean[] notready = new boolean[GeoEngine.BLOCKS_IN_MAP];
+			for (int i = 0; i < GeoEngine.BLOCKS_IN_MAP; i++)
 			{
 				notready[i] = true;
 			}
@@ -174,7 +174,7 @@ public class GeoOptimizer
 			try
 			{
 				FileChannel roChannel = new RandomAccessFile(GeoCrc, "r").getChannel();
-				if (roChannel.size() != GeoEngine.BlocksInMap * 4)
+				if (roChannel.size() != GeoEngine.BLOCKS_IN_MAP * 4)
 				{
 					roChannel.close();
 					return false;
@@ -183,8 +183,8 @@ public class GeoOptimizer
 				ByteBuffer buffer = roChannel.map(FileChannel.MapMode.READ_ONLY, 0, roChannel.size());
 				roChannel.close();
 				buffer.order(ByteOrder.LITTLE_ENDIAN);
-				int[] _checkSums = new int[GeoEngine.BlocksInMap];
-				for (int i = 0; i < GeoEngine.BlocksInMap; i++)
+				int[] _checkSums = new int[GeoEngine.BLOCKS_IN_MAP];
+				for (int i = 0; i < GeoEngine.BLOCKS_IN_MAP; i++)
 				{
 					_checkSums[i] = buffer.getInt();
 				}
@@ -212,10 +212,10 @@ public class GeoOptimizer
 				}
 
 				wChannel = new RandomAccessFile(f, "rw").getChannel();
-				ByteBuffer buffer = wChannel.map(FileChannel.MapMode.READ_WRITE, 0, GeoEngine.BlocksInMap * 4);
+				ByteBuffer buffer = wChannel.map(FileChannel.MapMode.READ_WRITE, 0, GeoEngine.BLOCKS_IN_MAP * 4);
 				buffer.order(ByteOrder.LITTLE_ENDIAN);
 				int[] _checkSums = checkSums[geoX][geoY];
-				for (int i = 0; i < GeoEngine.BlocksInMap; i++)
+				for (int i = 0; i < GeoEngine.BLOCKS_IN_MAP; i++)
 				{
 					buffer.putInt(_checkSums[i]);
 				}
@@ -229,9 +229,9 @@ public class GeoOptimizer
 		private void gen()
 		{
 			log.info("Generating checksums for " + rx + "_" + ry);
-			int[] _checkSums = new int[GeoEngine.BlocksInMap];
+			int[] _checkSums = new int[GeoEngine.BLOCKS_IN_MAP];
 			CRC32 crc32 = new CRC32();
-			for (int i = 0; i < GeoEngine.BlocksInMap; i++)
+			for (int i = 0; i < GeoEngine.BLOCKS_IN_MAP; i++)
 			{
 				crc32.update(region[i]);
 				_checkSums[i] = (int) (~crc32.getValue());

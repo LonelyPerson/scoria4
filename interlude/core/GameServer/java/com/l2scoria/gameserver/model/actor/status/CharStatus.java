@@ -17,12 +17,6 @@
  */
 package com.l2scoria.gameserver.model.actor.status;
 
-import java.util.Set;
-import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.concurrent.Future;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.model.L2Attackable;
 import com.l2scoria.gameserver.model.L2Character;
@@ -34,6 +28,11 @@ import com.l2scoria.gameserver.model.entity.Duel;
 import com.l2scoria.gameserver.skills.Formulas;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.util.random.Rnd;
+import org.apache.log4j.Logger;
+
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.Future;
 
 public class CharStatus
 {
@@ -196,7 +195,7 @@ public class CharStatus
 			// then overhit may be calculated
 			if(Config.DEBUG)
 			{
-				_log.fine("char is dead.");
+				_log.info("char is dead.");
 			}
 
 			// Start the doDie process
@@ -262,7 +261,7 @@ public class CharStatus
 		{
 			if(Config.DEBUG)
 			{
-				_log.fine("HP/MP/CP regen started");
+				_log.info("HP/MP/CP regen started");
 			}
 
 			// Get the Regeneration periode
@@ -287,7 +286,7 @@ public class CharStatus
 		{
 			if(Config.DEBUG)
 			{
-				_log.fine("HP/MP/CP regen stop");
+				_log.info("HP/MP/CP regen stop");
 			}
 
 			// Stop the HP/MP/CP Regeneration task
@@ -536,7 +535,7 @@ public class CharStatus
 			}
 			catch(Throwable e)
 			{
-				_log.log(Level.SEVERE, "RegenTask failed for " + getActiveChar().getName(), e);
+				_log.fatal("RegenTask failed for " + getActiveChar().getName(), e);
 			}
 		}
 	}

@@ -18,27 +18,21 @@
  */
 package com.l2scoria.gameserver.script.faenor;
 
+import com.l2scoria.Config;
+import com.l2scoria.gameserver.script.*;
+import com.l2scoria.gameserver.scripting.L2ScriptEngineManager;
+import org.apache.log4j.Logger;
+import org.w3c.dom.Node;
+
+import javax.script.ScriptContext;
+import javax.script.ScriptException;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Logger;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
-
-import javax.script.ScriptContext;
-import javax.script.ScriptException;
-
-import org.w3c.dom.Node;
-
-import com.l2scoria.Config;
-import com.l2scoria.gameserver.script.Parser;
-import com.l2scoria.gameserver.script.ParserNotCreatedException;
-import com.l2scoria.gameserver.script.ScriptDocument;
-import com.l2scoria.gameserver.script.ScriptEngine;
-import com.l2scoria.gameserver.script.ScriptPackage;
-import com.l2scoria.gameserver.scripting.L2ScriptEngineManager;
 
 /**
  * @author Luis Arias
@@ -175,7 +169,7 @@ public class FaenorScriptEngine extends ScriptEngine
 	{
 		if(DEBUG)
 		{
-			_log.fine("Parsing Script: " + script.getName());
+			_log.info("Parsing Script: " + script.getName());
 		}
 
 		Node node = script.getDocument().getFirstChild();
@@ -188,25 +182,25 @@ public class FaenorScriptEngine extends ScriptEngine
 		}
 		catch(ParserNotCreatedException e)
 		{
-			_log.warning("ERROR: No parser registered for Script: " + parserClass);
+			_log.warn("ERROR: No parser registered for Script: " + parserClass);
 			e.printStackTrace();
 		}
 
 		if(parser == null)
 		{
-			_log.warning("Unknown Script Type: " + script.getName());
+			_log.warn("Unknown Script Type: " + script.getName());
 			return;
 		}
 
 		try
 		{
 			parser.parseScript(node, context);
-			_log.fine(script.getName() + "Script Sucessfullty Parsed.");
+			_log.info(script.getName() + "Script Sucessfullty Parsed.");
 		}
 		catch(Exception e)
 		{
 			e.printStackTrace();
-			_log.warning("Script Parsing Failed.");
+			_log.warn("Script Parsing Failed.");
 		}
 	}
 

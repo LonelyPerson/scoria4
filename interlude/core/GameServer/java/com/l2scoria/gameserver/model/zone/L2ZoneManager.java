@@ -17,9 +17,8 @@
  */
 package com.l2scoria.gameserver.model.zone;
 
-import javolution.util.FastList;
-
 import com.l2scoria.gameserver.model.L2Character;
+import javolution.util.FastList;
 
 /**
  * This class manages all zones for a given world region
@@ -28,14 +27,14 @@ import com.l2scoria.gameserver.model.L2Character;
  */
 public class L2ZoneManager
 {
-	private FastList<L2ZoneType> _zones;
+	private FastList<L2ZoneDefault> _zones;
 
 	/**
 	 * The Constructor creates an initial zone list use registerNewZone() / unregisterZone() to change the zone list
 	 */
 	public L2ZoneManager()
 	{
-		_zones = new FastList<L2ZoneType>();
+		_zones = new FastList<L2ZoneDefault>();
 	}
 
 	/**
@@ -43,7 +42,7 @@ public class L2ZoneManager
 	 * 
 	 * @param zone
 	 */
-	public void registerNewZone(L2ZoneType zone)
+	public void registerNewZone(L2ZoneDefault zone)
 	{
 		_zones.add(zone);
 	}
@@ -53,21 +52,21 @@ public class L2ZoneManager
 	 * 
 	 * @param zone
 	 */
-	public void unregisterZone(L2ZoneType zone)
+	public void unregisterZone(L2ZoneDefault zone)
 	{
 		_zones.remove(zone);
 	}
 
 	public void revalidateZones(L2Character character)
 	{
-		for(L2ZoneType e : _zones)
+		for(L2ZoneDefault e : _zones)
 		{
 			if(e != null)
 			{
 				e.revalidateInZone(character, false);
 			}
 		}
-		for(L2ZoneType e : _zones)
+		for(L2ZoneDefault e : _zones)
 		{
 			if(e != null)
 			{
@@ -78,7 +77,7 @@ public class L2ZoneManager
 
 	public void removeCharacter(L2Character character)
 	{
-		for(L2ZoneType e : _zones)
+		for(L2ZoneDefault e : _zones)
 		{
 			if(e != null)
 			{
@@ -89,7 +88,7 @@ public class L2ZoneManager
 
 	public void onDeath(L2Character character)
 	{
-		for(L2ZoneType e : _zones)
+		for(L2ZoneDefault e : _zones)
 		{
 			if(e != null)
 			{
@@ -100,7 +99,7 @@ public class L2ZoneManager
 
 	public void onRevive(L2Character character)
 	{
-		for(L2ZoneType e : _zones)
+		for(L2ZoneDefault e : _zones)
 		{
 			if(e != null)
 			{

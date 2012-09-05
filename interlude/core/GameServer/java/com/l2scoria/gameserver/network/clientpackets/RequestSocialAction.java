@@ -18,8 +18,6 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.ai.CtrlIntention;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
@@ -27,6 +25,7 @@ import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.SocialAction;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
 import com.l2scoria.gameserver.util.Util;
+import org.apache.log4j.Logger;
 
 /**
  * This class ...
@@ -74,7 +73,7 @@ public class RequestSocialAction extends L2GameClientPacket
 		{
 			if(Config.DEBUG)
 			{
-				_log.fine("Social Action:" + _actionId);
+				_log.info("Social Action:" + _actionId);
 			}
 
 			SocialAction atk = new SocialAction(activeChar.getObjectId(), _actionId);

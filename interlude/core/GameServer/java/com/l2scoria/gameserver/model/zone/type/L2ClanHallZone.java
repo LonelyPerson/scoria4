@@ -17,23 +17,22 @@
  */
 package com.l2scoria.gameserver.model.zone.type;
 
-import javolution.util.FastMap;
-
 import com.l2scoria.gameserver.datatables.csv.MapRegionTable;
 import com.l2scoria.gameserver.managers.ClanHallManager;
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.Location;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.entity.ClanHall;
-import com.l2scoria.gameserver.model.zone.L2ZoneType;
+import com.l2scoria.gameserver.model.zone.L2ZoneDefault;
 import com.l2scoria.gameserver.network.serverpackets.ClanHallDecoration;
+import javolution.util.FastMap;
 
 /**
  * A clan hall zone
  * 
  * @author durgus
  */
-public class L2ClanHallZone extends L2ZoneType
+public class L2ClanHallZone extends L2ZoneDefault
 {
 	private int _clanHallId;
 	private int[] _spawnLoc;
@@ -87,7 +86,7 @@ public class L2ClanHallZone extends L2ZoneType
 
 			// Send decoration packet
 			ClanHallDecoration deco = new ClanHallDecoration(clanHall);
-			((L2PcInstance) character).sendPacket(deco);
+			character.sendPacket(deco);
 
 			// Send a message
 			if(clanHall.getOwnerId() != 0 && clanHall.getOwnerId() == ((L2PcInstance) character).getClanId())
@@ -97,6 +96,8 @@ public class L2ClanHallZone extends L2ZoneType
 
 			clanHall = null;
 		}
+
+		super.onEnter(character);
 	}
 
 	@Override
@@ -113,15 +114,9 @@ public class L2ClanHallZone extends L2ZoneType
 				((L2PcInstance) character).sendMessage("You have left your clan hall");
 			}
 		}
+
+		super.onExit(character);
 	}
-
-	@Override
-	protected void onDieInside(L2Character character)
-	{}
-
-	@Override
-	protected void onReviveInside(L2Character character)
-	{}
 
 	/**
 	 * Removes all foreigners from the clan hall
@@ -142,7 +137,7 @@ public class L2ClanHallZone extends L2ZoneType
 				continue;
 			}
 
-			((L2PcInstance) temp).teleToLocation(MapRegionTable.TeleportWhereType.Town);
+			temp.teleToLocation(MapRegionTable.TeleportWhereType.Town);
 		}
 	}
 

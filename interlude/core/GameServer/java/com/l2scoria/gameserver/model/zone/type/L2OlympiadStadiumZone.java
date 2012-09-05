@@ -20,16 +20,16 @@ package com.l2scoria.gameserver.model.zone.type;
 import com.l2scoria.gameserver.datatables.csv.MapRegionTable;
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import com.l2scoria.gameserver.model.zone.L2ZoneType;
+import com.l2scoria.gameserver.model.zone.L2ZoneDefault;
 import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
 
 /**
  * An olympiad stadium
- * 
+ *
  * @author L2Scoria
  */
-public class L2OlympiadStadiumZone extends L2ZoneType
+public class L2OlympiadStadiumZone extends L2ZoneDefault
 {
 	private int _stadiumId;
 
@@ -41,7 +41,7 @@ public class L2OlympiadStadiumZone extends L2ZoneType
 	@Override
 	public void setParameter(String name, String value)
 	{
-		if(name.equals("stadiumId"))
+		if (name.equals("stadiumId"))
 		{
 			_stadiumId = Integer.parseInt(value);
 		}
@@ -54,73 +54,68 @@ public class L2OlympiadStadiumZone extends L2ZoneType
 	@Override
 	protected void onEnter(L2Character character)
 	{
-		if(character instanceof L2PcInstance)
+		if (character instanceof L2PcInstance)
 		{
-			if(!((L2PcInstance) character).isGM() && (((L2PcInstance) character).isFlying() || ((L2PcInstance) character).getOlympiadGameId() == -1))
+			if (!((L2PcInstance) character).isGM() && (character.isFlying() || ((L2PcInstance) character).getOlympiadGameId() == -1))
 			{
-				((L2PcInstance) character).teleToLocation(MapRegionTable.TeleportWhereType.Town);
-				return;
+				character.teleToLocation(MapRegionTable.TeleportWhereType.Town);
+			}
+			else
+			{
+				character.setInsideZone(L2Character.ZONE_PVP, true);
+				character.setInsideZone(L2Character.ZONE_NOLANDING, true);
+
+				character.sendPacket(new SystemMessage(SystemMessageId.ENTERED_COMBAT_ZONE));
 			}
 		}
 
-		character.setInsideZone(L2Character.ZONE_PVP, true);
-		character.setInsideZone(L2Character.ZONE_NOLANDING, true);
-
-		if(character instanceof L2PcInstance)
-		{
-			((L2PcInstance) character).sendPacket(new SystemMessage(SystemMessageId.ENTERED_COMBAT_ZONE));
-		}
+		super.onEnter(character);
 	}
 
 	@Override
 	protected void onExit(L2Character character)
 	{
-		if(character instanceof L2PcInstance)
+		if (character instanceof L2PcInstance)
 		{
-			if(((L2PcInstance) character).isInOlympiadMode() && ((L2PcInstance) character).isOlympiadStart())
+			if (((L2PcInstance) character).isInOlympiadMode() && ((L2PcInstance) character).isOlympiadStart())
 			{
 				int loc[] = ((L2PcInstance) character).getOlympiadPosition();
-				((L2PcInstance) character).teleToLocation(loc[0], loc[1], loc[2]);
+				character.teleToLocation(loc[0], loc[1], loc[2]);
 			}
+
+			character.setInsideZone(L2Character.ZONE_PVP, false);
+			character.setInsideZone(L2Character.ZONE_NOLANDING, false);
+
+			character.sendPacket(new SystemMessage(SystemMessageId.LEFT_COMBAT_ZONE));
 		}
 
-		character.setInsideZone(L2Character.ZONE_PVP, false);
-		character.setInsideZone(L2Character.ZONE_NOLANDING, false);
-
-		if(character instanceof L2PcInstance)
-		{
-			((L2PcInstance) character).sendPacket(new SystemMessage(SystemMessageId.LEFT_COMBAT_ZONE));
-		}
+		super.onExit(character);
 	}
-
-	@Override
-	protected void onDieInside(L2Character character)
-	{}
-
-	@Override
-	protected void onReviveInside(L2Character character)
-	{}
 
 	public void oustAllPlayers()
 	{
-		if(_characterList == null)
-			return;
-
-		if(_characterList.isEmpty())
-			return;
-
-		for(L2Character character : _characterList.values())
+		if (_characterList == null)
 		{
-			if(character == null)
+			return;
+		}
+
+		if (_characterList.isEmpty())
+		{
+			return;
+		}
+
+		for (L2Character character : _characterList.values())
+		{
+			if (character == null)
 			{
 				continue;
 			}
 
-			if(character instanceof L2PcInstance)
+			if (character instanceof L2PcInstance)
 			{
 				L2PcInstance player = (L2PcInstance) character;
 
-				if(player.isOnline() == 1 && !player.isGM() && !player.inObserverMode())
+				if (player.isOnline() == 1 && !player.isGM() && !player.inObserverMode())
 				{
 					player.teleToLocation(MapRegionTable.TeleportWhereType.Town);
 				}
@@ -132,7 +127,7 @@ public class L2OlympiadStadiumZone extends L2ZoneType
 
 	/**
 	 * Returns this zones stadium id (if any)
-	 * 
+	 *
 	 * @return
 	 */
 	public int getStadiumId()

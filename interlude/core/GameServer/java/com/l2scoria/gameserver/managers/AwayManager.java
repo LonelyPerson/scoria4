@@ -14,19 +14,18 @@
  */
 package com.l2scoria.gameserver.managers;
 
-import java.util.Collections;
-import java.util.logging.Logger;
-import java.util.Map;
-import java.util.WeakHashMap;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.ai.CtrlIntention;
-import com.l2scoria.gameserver.managers.SiegeManager;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.entity.siege.Siege;
 import com.l2scoria.gameserver.network.serverpackets.SetupGauge;
 import com.l2scoria.gameserver.network.serverpackets.SocialAction;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
+import org.apache.log4j.Logger;
+
+import java.util.Collections;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 /**
  * @author Michiru

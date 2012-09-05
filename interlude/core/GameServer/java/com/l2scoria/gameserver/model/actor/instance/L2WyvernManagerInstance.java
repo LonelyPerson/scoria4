@@ -22,13 +22,8 @@ import com.l2scoria.gameserver.datatables.SkillTable;
 import com.l2scoria.gameserver.managers.ClanHallManager;
 import com.l2scoria.gameserver.model.entity.ClanHall;
 import com.l2scoria.gameserver.network.SystemMessageId;
-import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
-import com.l2scoria.gameserver.network.serverpackets.MyTargetSelected;
-import com.l2scoria.gameserver.network.serverpackets.NpcHtmlMessage;
-import com.l2scoria.gameserver.network.serverpackets.Ride;
-import com.l2scoria.gameserver.network.serverpackets.SocialAction;
-import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
-import com.l2scoria.gameserver.network.serverpackets.ValidateLocation;
+import com.l2scoria.gameserver.network.clientpackets.RequestActionUse;
+import com.l2scoria.gameserver.network.serverpackets.*;
 import com.l2scoria.gameserver.templates.L2NpcTemplate;
 import com.l2scoria.util.random.Rnd;
 
@@ -85,6 +80,11 @@ public class L2WyvernManagerInstance extends L2CastleChamberlainInstance
 					}
 					else
 					{
+						if (player._event!=null && !player._event.canDoAction(player, RequestActionUse.ACTION_MOUNT))
+						{
+							return;
+						}
+
 						if(!player.disarmWeapons())
 							return;
 						player.getPet().unSummon(player);

@@ -17,8 +17,6 @@
  */
 package com.l2scoria.gameserver.ai;
 
-import javolution.util.FastList;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.csv.NpcWalkerRoutesTable;
 import com.l2scoria.gameserver.model.L2Character;
@@ -26,6 +24,7 @@ import com.l2scoria.gameserver.model.L2NpcWalkerNode;
 import com.l2scoria.gameserver.model.actor.instance.L2NpcWalkerInstance;
 import com.l2scoria.gameserver.model.actor.position.L2CharPosition;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
+import javolution.util.FastList;
 
 public class L2NpcWalkerAI extends L2CharacterAI implements Runnable
 {
@@ -95,7 +94,7 @@ public class L2NpcWalkerAI extends L2CharacterAI implements Runnable
 	@Override
 	protected void onEvtArrivedBlocked(L2CharPosition blocked_at_pos)
 	{
-		_log.warning("NpcWalker ID: " + getActor().getNpcId() + ": Blocked at rote position [" + _currentPos + "], coords: " + blocked_at_pos.x + ", " + blocked_at_pos.y + ", " + blocked_at_pos.z + ". Teleporting to next point");
+		_log.warn("NpcWalker ID: " + getActor().getNpcId() + ": Blocked at rote position [" + _currentPos + "], coords: " + blocked_at_pos.x + ", " + blocked_at_pos.y + ", " + blocked_at_pos.z + ". Teleporting to next point");
 
 		int destinationX = _route.get(_currentPos).getMoveX();
 		int destinationY = _route.get(_currentPos).getMoveY();
@@ -137,7 +136,7 @@ public class L2NpcWalkerAI extends L2CharacterAI implements Runnable
 				delay = DEFAULT_MOVE_DELAY;
 				if(Config.DEVELOPER)
 				{
-					_log.warning("Wrong Delay Set in Npc Walker Functions = " + delay + " secs, using default delay: " + DEFAULT_MOVE_DELAY + " secs instead.");
+					_log.warn("Wrong Delay Set in Npc Walker Functions = " + delay + " secs, using default delay: " + DEFAULT_MOVE_DELAY + " secs instead.");
 				}
 			}
 

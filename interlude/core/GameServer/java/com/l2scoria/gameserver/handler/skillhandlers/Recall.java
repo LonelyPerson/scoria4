@@ -32,61 +32,69 @@ import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
 public class Recall implements ISkillHandler
 {
 	//private static Logger _log = Logger.getLogger(Recall.class.getName());
-	private static final SkillType[] SKILL_IDS = { SkillType.RECALL };
+	private static final SkillType[] SKILL_IDS = {SkillType.RECALL};
 
 	public void useSkill(L2Character activeChar, L2Skill skill, L2Object[] targets)
 	{
 		try
 		{
-			if(activeChar instanceof L2PcInstance)
+			if (activeChar instanceof L2PcInstance)
 			{
-				if(((L2PcInstance) activeChar).isInOlympiadMode() || ((L2PcInstance) activeChar).inObserverMode())
+				if (((L2PcInstance) activeChar).isInOlympiadMode() || ((L2PcInstance) activeChar).inObserverMode())
 				{
 					activeChar.sendPacket(new SystemMessage(SystemMessageId.THIS_ITEM_IS_NOT_AVAILABLE_FOR_THE_OLYMPIAD_EVENT));
 					return;
 				}
-				if(activeChar.isInsideZone(L2Character.ZONE_PVP))
+				if (activeChar.isInsideZone(L2Character.ZONE_PVP))
 				{
 					activeChar.sendPacket(new SystemMessage(SystemMessageId.YOU_CANNOT_SUMMON_IN_COMBAT));
 					return;
 				}
-				if(activeChar.isInsideZone(L2Character.ZONE_NOSUMMONFRIEND))
+				if (activeChar.isInsideZone(L2Character.ZONE_NOSUMMONFRIEND))
 				{
 					activeChar.sendPacket(new SystemMessage(SystemMessageId.YOU_MAY_NOT_SUMMON_FROM_YOUR_CURRENT_LOCATION));
 					return;
 				}
 			}
 
-			for(int index = 0; index < targets.length; index++)
+			for (L2Object target1 : targets)
 			{
-				if(!(targets[index] instanceof L2Character))
+				if (!(target1 instanceof L2Character))
+				{
 					continue;
+				}
 
-				L2Character target = (L2Character) targets[index];
+				L2Character target = (L2Character) target1;
 
-				if(target instanceof L2PcInstance)
+				if (target instanceof L2PcInstance)
 				{
 					L2PcInstance targetChar = (L2PcInstance) target;
 
-					if(targetChar.isFestivalParticipant())
+					if (targetChar.isFestivalParticipant())
 					{
 						targetChar.sendPacket(SystemMessage.sendString("You may not use an escape skill in a festival."));
 						continue;
 					}
 
-					if(targetChar.isInJail())
+					if (targetChar.isInJail())
 					{
 						targetChar.sendPacket(SystemMessage.sendString("You can not escape from jail."));
 						continue;
 					}
 
-					if(targetChar.isInDuel())
+					if (targetChar.isInDuel())
 					{
 						targetChar.sendPacket(SystemMessage.sendString("You cannot use escape skills during a duel."));
 						continue;
 					}
 
-					if(targetChar.isAlikeDead())
+					if (targetChar._event != null && targetChar._event.isRunning())
+					{
+						targetChar.sendPacket(SystemMessage.sendString("You cannot use escape skills during an event."));
+						continue;
+					}
+
+					if (targetChar.isAlikeDead())
 					{
 						SystemMessage sm = new SystemMessage(SystemMessageId.S1_IS_DEAD_AT_THE_MOMENT_AND_CANNOT_BE_SUMMONED);
 						sm.addString(targetChar.getName());
@@ -95,7 +103,7 @@ public class Recall implements ISkillHandler
 						continue;
 					}
 
-					if(targetChar.isInStoreMode())
+					if (targetChar.isInStoreMode())
 					{
 						SystemMessage sm = new SystemMessage(SystemMessageId.S1_CURRENTLY_TRADING_OR_OPERATING_PRIVATE_STORE_AND_CANNOT_BE_SUMMONED);
 						sm.addString(targetChar.getName());
@@ -104,7 +112,7 @@ public class Recall implements ISkillHandler
 						continue;
 					}
 
-					if(targetChar.isRooted() || targetChar.isInCombat())
+					if (targetChar.isRooted() || targetChar.isInCombat())
 					{
 						SystemMessage sm = new SystemMessage(SystemMessageId.S1_IS_ENGAGED_IN_COMBAT_AND_CANNOT_BE_SUMMONED);
 						sm.addString(targetChar.getName());
@@ -113,19 +121,19 @@ public class Recall implements ISkillHandler
 						continue;
 					}
 
-					if(targetChar.isInsideZone(L2Character.ZONE_NOSUMMONFRIEND))
+					if (targetChar.isInsideZone(L2Character.ZONE_NOSUMMONFRIEND))
 					{
 						activeChar.sendPacket(new SystemMessage(SystemMessageId.YOUR_TARGET_IS_IN_AN_AREA_WHICH_BLOCKS_SUMMONING));
 						continue;
 					}
 
-					if(targetChar.isInOlympiadMode() || targetChar.inObserverMode())
+					if (targetChar.isInOlympiadMode() || targetChar.inObserverMode())
 					{
 						activeChar.sendPacket(new SystemMessage(SystemMessageId.YOU_CANNOT_SUMMON_PLAYERS_WHO_ARE_IN_OLYMPIAD));
 						continue;
 					}
 
-					if(targetChar.isInsideZone(L2Character.ZONE_PVP))
+					if (targetChar.isInsideZone(L2Character.ZONE_PVP))
 					{
 						activeChar.sendPacket(new SystemMessage(SystemMessageId.YOUR_TARGET_IS_IN_AN_AREA_WHICH_BLOCKS_SUMMONING));
 						continue;
@@ -135,11 +143,12 @@ public class Recall implements ISkillHandler
 				target.teleToLocation(MapRegionTable.TeleportWhereType.Town);
 				target = null;
 			}
-		}
-		catch(Throwable e)
+		} catch (Throwable e)
 		{
-			if(Config.DEBUG)
+			if (Config.DEBUG)
+			{
 				e.printStackTrace();
+			}
 		}
 	}
 

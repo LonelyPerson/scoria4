@@ -14,22 +14,21 @@
  */
 package com.l2scoria.gameserver.managers;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Map;
-import java.util.logging.Logger;
-
-import javolution.util.FastMap;
-
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.L2Object;
 import com.l2scoria.gameserver.model.actor.instance.L2GrandBossInstance;
 import com.l2scoria.gameserver.model.zone.type.L2BossZone;
 import com.l2scoria.gameserver.templates.StatsSet;
 import com.l2scoria.util.L2FastList;
-import java.sql.Connection;
 import com.l2scoria.util.database.L2DatabaseFactory;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Map;
 
 /**
  * @author DaRkRaGe Revised by Emperorc
@@ -152,7 +151,7 @@ public class GrandBossManager
 		}
 		catch(SQLException e)
 		{
-			_log.warning("GrandBossManager: Could not load grandboss_data table");
+			_log.warn("GrandBossManager: Could not load grandboss_data table");
 		}
 		catch(Exception e)
 		{
@@ -177,7 +176,7 @@ public class GrandBossManager
 
 		if(_zones == null)
 		{
-			_log.warning("GrandBossManager: Could not read Grand Boss zone data");
+			_log.warn("GrandBossManager: Could not read Grand Boss zone data");
 			return;
 		}
 
@@ -213,7 +212,7 @@ public class GrandBossManager
 		}
 		catch(SQLException e)
 		{
-			_log.warning("GrandBossManager: Could not load grandboss_list table");
+			_log.warn("GrandBossManager: Could not load grandboss_list table");
 			e.getMessage();
 		}
 		catch(Exception e)
@@ -377,7 +376,7 @@ public class GrandBossManager
 		}
 		catch(SQLException e)
 		{
-			_log.warning("GrandBossManager[fastStoreToDb]: Couldn't store grandbosses to database:" + e);
+			_log.warn("GrandBossManager[fastStoreToDb]: Couldn't store grandbosses to database:" + e);
 		}
 		finally
 		{
@@ -457,7 +456,7 @@ public class GrandBossManager
 		}
 		catch(SQLException e)
 		{
-			_log.warning("GrandBossManager: Couldn't store grandbosses to database:" + e);
+			_log.warn("GrandBossManager: Couldn't store grandbosses to database:" + e);
 		}
 		finally
 		{

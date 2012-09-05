@@ -18,18 +18,6 @@
  */
 package com.l2scoria.gameserver.datatables.sql;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Map;
-import java.util.concurrent.ScheduledFuture;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
-import java.util.logging.Logger;
-
-import javolution.util.FastMap;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.Item;
 import com.l2scoria.gameserver.idfactory.IdFactory;
@@ -38,20 +26,24 @@ import com.l2scoria.gameserver.model.L2Object;
 import com.l2scoria.gameserver.model.L2World;
 import com.l2scoria.gameserver.model.actor.instance.L2GrandBossInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
+import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance.ItemLocation;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2RaidBossInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance.ItemLocation;
 import com.l2scoria.gameserver.skills.SkillsEngine;
-import com.l2scoria.gameserver.templates.L2Armor;
-import com.l2scoria.gameserver.templates.L2ArmorType;
-import com.l2scoria.gameserver.templates.L2EtcItem;
-import com.l2scoria.gameserver.templates.L2EtcItemType;
-import com.l2scoria.gameserver.templates.L2Item;
-import com.l2scoria.gameserver.templates.L2Weapon;
-import com.l2scoria.gameserver.templates.L2WeaponType;
-import com.l2scoria.gameserver.templates.StatsSet;
+import com.l2scoria.gameserver.templates.*;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.util.database.L2DatabaseFactory;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Map;
+import java.util.concurrent.ScheduledFuture;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
 
 /**
  * This class ...
@@ -231,7 +223,7 @@ public class ItemTable
 		}
 		catch(Exception e)
 		{
-			_log.log(Level.WARNING, "data error on item: ", e);
+			_log.warn("data error on item: ", e);
 		}
 		finally
 		{
@@ -298,7 +290,7 @@ public class ItemTable
 			}
 			catch(Exception e)
 			{
-				_log.log(Level.WARNING, "data error on custom_item: ", e);
+				_log.warn("data error on custom_item: ", e);
 			}
 			finally
 			{
@@ -311,19 +303,19 @@ public class ItemTable
 		{
 			_armors.put(armor.getItemId(), armor);
 		}
-		_log.config("ItemTable: Loaded " + _armors.size() + " Armors.");
+		_log.info("ItemTable: Loaded " + _armors.size() + " Armors.");
 
 		for(L2EtcItem item : SkillsEngine.getInstance().loadItems(itemData))
 		{
 			_etcItems.put(item.getItemId(), item);
 		}
-		_log.config("ItemTable: Loaded " + _etcItems.size() + " Items.");
+		_log.info("ItemTable: Loaded " + _etcItems.size() + " Items.");
 
 		for(L2Weapon weapon : SkillsEngine.getInstance().loadWeapons(weaponData))
 		{
 			_weapons.put(weapon.getItemId(), weapon);
 		}
-		_log.config("ItemTable: Loaded " + _weapons.size() + " Weapons.");
+		_log.info("ItemTable: Loaded " + _weapons.size() + " Weapons.");
 
 		//fillEtcItemsTable();
 		//fillArmorsTable();
@@ -585,7 +577,7 @@ public class ItemTable
 		}
 		else
 		{
-			_log.fine("unknown etcitem type:" + itemType);
+			_log.info("unknown etcitem type:" + itemType);
 			item.type = L2EtcItemType.OTHER;
 		}
 		itemType = null;
@@ -720,7 +712,7 @@ public class ItemTable
 		// Create a FastLookUp Table called _allTemplates of size : value of the highest item ID
 		if(Config.DEBUG)
 		{
-			_log.fine("highest item id used:" + highestId);
+			_log.info("highest item id used:" + highestId);
 		}
 
 		_allTemplates = new L2Item[highestId + 1];
@@ -817,7 +809,7 @@ public class ItemTable
 
 		if(Config.DEBUG)
 		{
-			_log.fine("ItemTable: Item created  oid:" + item.getObjectId() + " itemid:" + itemId);
+			_log.info("ItemTable: Item created  oid:" + item.getObjectId() + " itemid:" + itemId);
 		}
 
 		// Add the L2ItemInstance object to _allObjects of L2world
@@ -837,7 +829,7 @@ public class ItemTable
 			{
 					item, actor, reference
 			});
-			_logItems.log(record);
+			_logItems.info(record);
 			record = null;
 		}
 
@@ -879,7 +871,7 @@ public class ItemTable
 
 		if(temp.getItem() == null)
 		{
-			_log.warning("ItemTable: Item Template missing for Id: " + itemId);
+			_log.warn("ItemTable: Item Template missing for Id: " + itemId);
 		}
 
 		return temp;
@@ -920,7 +912,7 @@ public class ItemTable
 				{
 						item, actor, reference
 				});
-				_logItems.log(record);
+				_logItems.info(record);
 			}
 
 			// if it's a pet control item, delete the pet as well
@@ -939,7 +931,7 @@ public class ItemTable
 				}
 				catch(Exception e)
 				{
-					_log.log(Level.WARNING, "could not delete pet objectid:", e);
+					_log.warn("could not delete pet objectid:", e);
 				}
 				finally
 				{

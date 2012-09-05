@@ -28,6 +28,7 @@ import com.l2scoria.gameserver.datatables.GmListTable;
 import com.l2scoria.gameserver.datatables.csv.MapRegionTable;
 import com.l2scoria.gameserver.datatables.sql.AdminCommandAccessRights;
 import com.l2scoria.gameserver.handler.custom.CustomWorldHandler;
+import com.l2scoria.gameserver.instancemanager.InstanceManager;
 import com.l2scoria.gameserver.managers.*;
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.L2Clan;
@@ -43,6 +44,8 @@ import com.l2scoria.gameserver.model.entity.Announcements;
 import com.l2scoria.gameserver.model.entity.ClanHall;
 import com.l2scoria.gameserver.model.entity.Hero;
 import com.l2scoria.gameserver.model.entity.Wedding;
+import com.l2scoria.gameserver.model.entity.event.GameEvent;
+import com.l2scoria.gameserver.model.entity.event.GameEventManager;
 import com.l2scoria.gameserver.model.entity.olympiad.Olympiad;
 import com.l2scoria.gameserver.model.entity.sevensigns.SevenSigns;
 import com.l2scoria.gameserver.model.entity.siege.Castle;
@@ -56,9 +59,9 @@ import com.l2scoria.gameserver.network.serverpackets.*;
 import com.l2scoria.gameserver.thread.TaskPriority;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.gameserver.util.FloodProtector;
+import org.apache.log4j.Logger;
 
 import java.util.Collection;
-import java.util.logging.Logger;
 
 /**
  * Enter World Packet Handler
@@ -96,7 +99,7 @@ public class EnterWorld extends L2GameClientPacket
 
 		if (activeChar == null)
 		{
-			_log.warning("EnterWorld failed! activeChar is null...");
+			_log.warn("EnterWorld failed! activeChar is null...");
 			getClient().closeNow();
 			return;
 		}
@@ -108,7 +111,7 @@ public class EnterWorld extends L2GameClientPacket
 		{
 			if (Config.DEBUG)
 			{
-				_log.warning("User already exist in OID map! User " + activeChar.getName() + " is cheater!");
+				_log.warn("User already exist in OID map! User " + activeChar.getName() + " is cheater!");
 				//activeChar.closeNetConnection();
 			}
 			//getClient().closeNow();
@@ -365,11 +368,23 @@ public class EnterWorld extends L2GameClientPacket
 			}
 		}
 
+		int instanceId = InstanceManager.getInstance().getPlayerInstance(activeChar.getObjectId());
+		if (instanceId > 0)
+			InstanceManager.getInstance().getInstance(instanceId).removePlayer(activeChar.getObjectId());
+
 		if (!activeChar.isGM() && activeChar.getSiegeState() < 2 && activeChar.isInsideZone(L2Character.ZONE_SIEGE) && !activeChar.isDead())
 		{
 			// Attacker or spectator logging in to a siege zone. Actually should be checked for inside castle only?
 			activeChar.teleToLocation(MapRegionTable.TeleportWhereType.Town);
 			activeChar.sendMessage("You have been teleported to the nearest town due to you being in siege zone");
+		}
+
+		GameEvent evt = GameEventManager.getInstance().participantOf(activeChar);
+
+		if(evt != null)
+		{
+			activeChar._event = evt;
+			activeChar._event.onLogin(activeChar);
 		}
 
 		RegionBBSManager.getInstance().changeCommunityBoard();
@@ -415,6 +430,11 @@ public class EnterWorld extends L2GameClientPacket
 
 		Hellows(activeChar);
 		activeChar.restoreProfileBuffs();
+
+		if(activeChar._event!=null && activeChar._event.getState()==GameEvent.STATE_ACTIVE)
+		{
+			sendPacket(new NpcHtmlMessage(1, "<html><body><br>Не забудьте, вы участник эвента <font color=\"LEVEL\">"+activeChar._event.getName()+"</font>!</body></html>"));
+		}
 
 		if (!nProtect.getInstance().checkRestriction(activeChar, RestrictionType.RESTRICT_ENTER))
 		{

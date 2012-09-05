@@ -18,8 +18,6 @@
  */
 package com.l2scoria.gameserver.model.actor.instance;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.ai.CtrlIntention;
 import com.l2scoria.gameserver.ai.L2CharacterAI;
@@ -30,13 +28,10 @@ import com.l2scoria.gameserver.model.L2Summon;
 import com.l2scoria.gameserver.model.actor.knownlist.SiegeGuardKnownList;
 import com.l2scoria.gameserver.model.actor.position.L2CharPosition;
 import com.l2scoria.gameserver.model.entity.siege.DevastatedCastle;
-import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
-import com.l2scoria.gameserver.network.serverpackets.MyTargetSelected;
-import com.l2scoria.gameserver.network.serverpackets.SocialAction;
-import com.l2scoria.gameserver.network.serverpackets.StatusUpdate;
-import com.l2scoria.gameserver.network.serverpackets.ValidateLocation;
+import com.l2scoria.gameserver.network.serverpackets.*;
 import com.l2scoria.gameserver.templates.L2NpcTemplate;
 import com.l2scoria.util.random.Rnd;
+import org.apache.log4j.Logger;
 
 /**
  * This class represents all guards in the world. It inherits all methods from L2Attackable and adds some more such as
@@ -110,7 +105,7 @@ public class L2SiegeGuardInstance extends L2Attackable
 
 		if(Config.DEBUG)
 		{
-			_log.finer(getObjectId() + ": Home location set to" + " X:" + _homeX + " Y:" + _homeY + " Z:" + _homeZ);
+			_log.info(getObjectId() + ": Home location set to" + " X:" + _homeX + " Y:" + _homeY + " Z:" + _homeZ);
 		}
 	}
 
@@ -133,7 +128,7 @@ public class L2SiegeGuardInstance extends L2Attackable
 		{
 			if(Config.DEBUG)
 			{
-				_log.fine(getObjectId() + ": moving home");
+				_log.info(getObjectId() + ": moving home");
 			}
 			setisReturningToSpawnPoint(true);
 			clearAggroList();
@@ -160,7 +155,7 @@ public class L2SiegeGuardInstance extends L2Attackable
 		{
 			if(Config.DEBUG)
 			{
-				_log.fine("new target selected:" + getObjectId());
+				_log.info("new target selected:" + getObjectId());
 			}
 
 			// Set the target of the L2PcInstance player

@@ -35,6 +35,7 @@ import com.l2scoria.gameserver.templates.L2EtcItem;
 import com.l2scoria.gameserver.templates.L2Item;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.util.database.L2DatabaseFactory;
+import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -42,7 +43,6 @@ import java.sql.ResultSet;
 import java.util.concurrent.ScheduledFuture;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
-import java.util.logging.Logger;
 
 /**
  * This class manages items.
@@ -225,7 +225,7 @@ public final class L2ItemInstance extends L2Object
 			{
 					this, creator, reference
 			});
-			_logItems.log(record);
+			_logItems.info(record);
 			record = null;
 		}
 	}
@@ -336,7 +336,7 @@ public final class L2ItemInstance extends L2Object
 			{
 					this, creator, reference
 			});
-			_logItems.log(record);
+			_logItems.info(record);
 			record = null;
 		}
 	}
@@ -855,7 +855,7 @@ public final class L2ItemInstance extends L2Object
 			}
 			catch (Exception e)
 			{
-				_log.log(Level.SEVERE, "", e);
+				_log.fatal("", e);
 			}
 		}
 	}
@@ -1196,7 +1196,7 @@ public final class L2ItemInstance extends L2Object
 
 				if(item == null)
 				{
-					_log.severe("Item item_id=" + item_id + " not known, object_id=" + objectId);
+					_log.fatal("Item item_id=" + item_id + " not known, object_id=" + objectId);
 					rs.close();
 					statement.close();
 					return null;
@@ -1236,7 +1236,7 @@ public final class L2ItemInstance extends L2Object
 			}
 			else
 			{
-				_log.severe("Item object_id=" + objectId + " not found");
+				_log.fatal("Item object_id=" + objectId + " not found");
 
 				rs.close();
 				statement.close();
@@ -1271,7 +1271,7 @@ public final class L2ItemInstance extends L2Object
 		}
 		catch(Exception e)
 		{
-			_log.log(Level.SEVERE, "Could not restore item " + objectId + " from DB:", e);
+			_log.fatal("Could not restore item " + objectId + " from DB:", e);
 		}
 		finally
 		{
@@ -1309,7 +1309,7 @@ public final class L2ItemInstance extends L2Object
 
 		if(Config.GEODATA && dropper != null)
 		{
-			Location dropDest = GeoEngine.moveCheck(dropper.getX(), dropper.getY(), dropper.getZ(), x, y, false);
+			Location dropDest = GeoEngine.moveCheck(dropper.getX(), dropper.getY(), dropper.getZ(), x, y, false, dropper.getInstanceId());
 			x = dropDest.getX();
 			y = dropDest.getY();
 			z = dropDest.getZ();
@@ -1348,7 +1348,7 @@ public final class L2ItemInstance extends L2Object
 			{
 				"GM: " + dropper.getName(), " to target [null] "
 			});
-			_logAudit.log(record);
+			_logAudit.info(record);
 		}
 	}
 
@@ -1397,7 +1397,7 @@ public final class L2ItemInstance extends L2Object
 		}
 		catch(Exception e)
 		{
-			_log.log(Level.SEVERE, "Could not update item " + getObjectId() + " in DB: Reason: " + "Duplicate itemId");
+			_log.fatal("Could not update item " + getObjectId() + " in DB: Reason: " + "Duplicate itemId");
 		}
 		finally
 		{
@@ -1446,7 +1446,7 @@ public final class L2ItemInstance extends L2Object
 		}
 		catch(Exception e)
 		{
-			_log.log(Level.SEVERE, "Could not insert item " + getObjectId() + " into DB: Reason: " + "Duplicate itemId");
+			_log.fatal("Could not insert item " + getObjectId() + " into DB: Reason: " + "Duplicate itemId");
 		}
 		finally
 		{
@@ -1492,7 +1492,7 @@ public final class L2ItemInstance extends L2Object
 		}
 		catch(Exception e)
 		{
-			_log.log(Level.SEVERE, "Could not delete item " + getObjectId() + " in DB:", e);
+			_log.fatal("Could not delete item " + getObjectId() + " in DB:", e);
 		}
 		finally
 		{

@@ -18,12 +18,11 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.network.L2GameClient;
 import com.l2scoria.gameserver.thread.LoginServerThread;
 import com.l2scoria.gameserver.thread.LoginServerThread.SessionKey;
+import org.apache.log4j.Logger;
 
 /**
  * This class ...

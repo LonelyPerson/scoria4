@@ -21,8 +21,6 @@
  */
 package com.l2scoria.gameserver.model.actor.instance;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.gameserver.ai.CtrlIntention;
 import com.l2scoria.gameserver.cache.HtmCache;
 import com.l2scoria.gameserver.model.L2Character;
@@ -32,6 +30,7 @@ import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
 import com.l2scoria.gameserver.network.serverpackets.MyTargetSelected;
 import com.l2scoria.gameserver.network.serverpackets.NpcHtmlMessage;
 import com.l2scoria.gameserver.network.serverpackets.ShowTownMap;
+import org.apache.log4j.Logger;
 
 /**
  * GODSON ROX!

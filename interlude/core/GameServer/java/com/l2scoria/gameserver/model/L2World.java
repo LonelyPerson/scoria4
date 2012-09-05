@@ -27,12 +27,12 @@ import com.l2scoria.util.Point3D;
 import com.l2scoria.util.object.L2ObjectMap;
 import javolution.util.FastList;
 import javolution.util.FastMap;
+import org.apache.log4j.Logger;
 
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 /**
  * This class ...
@@ -51,10 +51,10 @@ public final class L2World
 	public static final int SHIFT_BY = 12;
 
 	/** Map dimensions */
-	public static final int MAP_MIN_X = 15 - 20 << 15;
-	public static final int MAP_MAX_X = (26 - 19 << 15) - 1;
-	public static final int MAP_MIN_Y = 10 - 18 << 15;
-	public static final int MAP_MAX_Y = (26 - 17 << 15) - 1;
+	public static final int MAP_MIN_X = Config.GEO_X_FIRST - 20 << 15;
+	public static final int MAP_MAX_X = (Config.GEO_X_LAST - 19 << 15) - 1;
+	public static final int MAP_MIN_Y = Config.GEO_Y_FIRST - 18 << 15;
+	public static final int MAP_MAX_Y = (Config.GEO_Y_LAST - 17 << 15) - 1;
 	public static final int MAP_MIN_Z = -32768;
 	public static final int MAP_MAX_Z = 32767;
 
@@ -128,7 +128,7 @@ public final class L2World
 			_allObjects.remove(tmp);
 			if(Config.DEBUG)
 			{
-				_log.warning("[L2World] objectId " + object.getObjectId() + " already exist in OID map!");
+				_log.warn("[L2World] objectId " + object.getObjectId() + " already exist in OID map!");
 			}
 			//return;
 		}
@@ -395,7 +395,7 @@ public final class L2World
 				L2PcInstance tmp = _allPlayers.get(player.getName().toLowerCase());
 				if(tmp != null)
 				{
-					_log.warning("Duplicate character!? Closing both characters (" + player.getName() + ")");
+					_log.warn("Duplicate character!? Closing both characters (" + player.getName() + ")");
 					player.store();
 					player.closeNetConnection();
 					tmp.store();
@@ -418,7 +418,7 @@ public final class L2World
                 
 		if(Config.DEBUG)
 		{
-			_log.finest("objects in range:" + visibles.size());
+			_log.info("objects in range:" + visibles.size());
 		}
 
 		// tell the player about the surroundings
@@ -896,7 +896,7 @@ public final class L2World
 	 */
 	private void initRegions()
 	{
-		_log.config("L2World: Setting up World Regions");
+		_log.info("L2World: Setting up World Regions");
 
 		_worldRegions = new L2WorldRegion[REGIONS_X + 1][REGIONS_Y + 1];
 
@@ -925,7 +925,7 @@ public final class L2World
 			}
 		}
 
-		_log.config("L2World: (" + REGIONS_X + " by " + REGIONS_Y + ") World Region Grid set up.");
+		_log.info("L2World: (" + REGIONS_X + " by " + REGIONS_Y + ") World Region Grid set up.");
 
 	}
 

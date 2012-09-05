@@ -28,12 +28,12 @@
  */
 package com.l2scoria.gameserver.idfactory;
 
-import java.util.BitSet;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Logger;
-
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.util.PrimeFinder;
+import org.apache.log4j.Logger;
+
+import java.util.BitSet;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * This class ..
@@ -87,7 +87,7 @@ public class BitSetIDFactory extends IdFactory
 
 				if(objectID < 0)
 				{
-					_log.warning("Object ID " + usedObjectId + " in DB is less than minimum ID of " + FIRST_OID);
+					_log.warn("Object ID " + usedObjectId + " in DB is less than minimum ID of " + FIRST_OID);
 					continue;
 				}
 
@@ -101,7 +101,7 @@ public class BitSetIDFactory extends IdFactory
 		catch(Exception e)
 		{
 			_initialized = false;
-			_log.severe("BitSet ID Factory could not be initialized correctly");
+			_log.fatal("BitSet ID Factory could not be initialized correctly");
 			e.printStackTrace();
 		}
 	}
@@ -116,7 +116,7 @@ public class BitSetIDFactory extends IdFactory
 		}
 		else
 		{
-			_log.warning("BitSet ID Factory: release objectID " + objectID + " failed (< " + FIRST_OID + ")");
+			_log.warn("BitSet ID Factory: release objectID " + objectID + " failed (< " + FIRST_OID + ")");
 		}
 	}
 

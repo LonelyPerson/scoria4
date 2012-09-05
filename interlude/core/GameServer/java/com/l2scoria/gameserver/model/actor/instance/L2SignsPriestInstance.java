@@ -18,10 +18,6 @@
  */
 package com.l2scoria.gameserver.model.actor.instance;
 
-import java.util.StringTokenizer;
-
-import javolution.text.TextBuilder;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.cache.HtmCache;
 import com.l2scoria.gameserver.datatables.sql.ClanTable;
@@ -33,6 +29,9 @@ import com.l2scoria.gameserver.network.serverpackets.NpcHtmlMessage;
 import com.l2scoria.gameserver.network.serverpackets.StatusUpdate;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
 import com.l2scoria.gameserver.templates.L2NpcTemplate;
+import javolution.text.TextBuilder;
+
+import java.util.StringTokenizer;
 
 /**
  * Dawn/Dusk Seven Signs Priest Instance
@@ -96,7 +95,7 @@ public class L2SignsPriestInstance extends L2FolkInstance
 						}
 						catch(Exception e3)
 						{
-							_log.warning("Failed to retrieve cabal from bypass command. NpcId: " + getNpcId() + "; Command: " + command);
+							_log.warn("Failed to retrieve cabal from bypass command. NpcId: " + getNpcId() + "; Command: " + command);
 						}
 					}
 				}
@@ -445,7 +444,7 @@ public class L2SignsPriestInstance extends L2FolkInstance
 					}
 					catch(Exception e)
 					{
-						_log.warning("SevenSigns: Error occurred while teleporting player: " + e);
+						_log.warn("SevenSigns: Error occurred while teleporting player: " + e);
 					}
 					break;
 				case 17: // Exchange Seal Stones for Ancient Adena (Type Choice) - SevenSigns 17 x
@@ -500,7 +499,7 @@ public class L2SignsPriestInstance extends L2FolkInstance
 					}
 					else
 					{
-						_log.warning("Problem with HTML text " + SevenSigns.SEVEN_SIGNS_HTML_PATH + "signs_17.htm: " + path);
+						_log.warn("Problem with HTML text " + SevenSigns.SEVEN_SIGNS_HTML_PATH + "signs_17.htm: " + path);
 					}
 
 					stoneInstance = null;

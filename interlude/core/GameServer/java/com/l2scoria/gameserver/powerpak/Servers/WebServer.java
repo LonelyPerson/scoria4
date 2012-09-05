@@ -1,13 +1,13 @@
 package com.l2scoria.gameserver.powerpak.Servers;
 
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.util.logging.Logger;
-
 import com.l2scoria.L2Properties;
 import com.l2scoria.gameserver.powerpak.PowerPakConfig;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
+import org.apache.log4j.Logger;
+
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 
 public class WebServer extends Thread
 {
@@ -36,7 +36,7 @@ public class WebServer extends Thread
 						handlers++;
 					}
 				} catch(Exception e ) {
-					_log.warning("WebServer: Error while creating handler "+contextHandlerName+" for '"+s.toString()+"': "+e);
+					_log.warn("WebServer: Error while creating handler "+contextHandlerName+" for '"+s.toString()+"': "+e);
 					continue;
 				}
 				
@@ -48,7 +48,7 @@ public class WebServer extends Thread
 				_log.info("WebServer: "+handlers+" context handler(s) registred");
 			}
 		} catch(Exception e) {
-			_log.warning("WebServer: Error "+e+" while staring");
+			_log.warn("WebServer: Error "+e+" while staring");
 			_server = null;
 		}
 	}

@@ -18,8 +18,6 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.model.L2Skill;
 import com.l2scoria.gameserver.model.L2World;
@@ -27,14 +25,11 @@ import com.l2scoria.gameserver.model.PcInventory;
 import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.SystemMessageId;
-import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
-import com.l2scoria.gameserver.network.serverpackets.InventoryUpdate;
-import com.l2scoria.gameserver.network.serverpackets.ItemList;
-import com.l2scoria.gameserver.network.serverpackets.StatusUpdate;
-import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
+import com.l2scoria.gameserver.network.serverpackets.*;
 import com.l2scoria.gameserver.templates.L2Item;
 import com.l2scoria.gameserver.util.IllegalPlayerAction;
 import com.l2scoria.gameserver.util.Util;
+import org.apache.log4j.Logger;
 
 /**
  * This class ...
@@ -64,7 +59,7 @@ public final class RequestCrystallizeItem extends L2GameClientPacket
 
 		if(activeChar == null)
 		{
-			_log.fine("RequestCrystalizeItem: activeChar was null");
+			_log.info("RequestCrystalizeItem: activeChar was null");
 			return;
 		}
 
@@ -132,7 +127,7 @@ public final class RequestCrystallizeItem extends L2GameClientPacket
 
 		if(!itemToRemove.getItem().isCrystallizable() || itemToRemove.getItem().getCrystalCount() <= 0 || itemToRemove.getItem().getCrystalType() == L2Item.CRYSTAL_NONE)
 		{
-			_log.warning("" + activeChar.getObjectId() + " tried to crystallize " + itemToRemove.getItem().getItemId());
+			_log.warn("" + activeChar.getObjectId() + " tried to crystallize " + itemToRemove.getItem().getItemId());
 			return;
 		}
 

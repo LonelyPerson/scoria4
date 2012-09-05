@@ -18,11 +18,11 @@
  */
 package com.l2scoria.gameserver.model;
 
-import java.util.concurrent.Future;
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
+import org.apache.log4j.Logger;
+
+import java.util.concurrent.Future;
 
 /**
  * This class ...
@@ -76,7 +76,7 @@ public class L2Potion extends L2Object
 			}
 			catch(Exception e)
 			{
-				_log.warning("Error in hp potion task:" + e);
+				_log.warn("Error in hp potion task:" + e);
 			}
 		}
 	}
@@ -97,7 +97,7 @@ public class L2Potion extends L2Object
 
 		if(Config.DEBUG)
 		{
-			_log.fine("Potion HP regen stop");
+			_log.info("Potion HP regen stop");
 		}
 	}
 
@@ -184,7 +184,7 @@ public class L2Potion extends L2Object
 			}
 			catch(Exception e)
 			{
-				_log.warning("error in mp potion task:" + e);
+				_log.warn("error in mp potion task:" + e);
 			}
 		}
 	}
@@ -195,7 +195,7 @@ public class L2Potion extends L2Object
 
 		if(Config.DEBUG)
 		{
-			_log.fine("Potion MP regen Started");
+			_log.info("Potion MP regen Started");
 		}
 	}
 
@@ -210,7 +210,7 @@ public class L2Potion extends L2Object
 
 		if(Config.DEBUG)
 		{
-			_log.fine("Potion MP regen stop");
+			_log.info("Potion MP regen stop");
 		}
 	}
 

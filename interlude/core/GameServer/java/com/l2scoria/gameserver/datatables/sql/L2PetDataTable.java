@@ -18,17 +18,16 @@
  */
 package com.l2scoria.gameserver.datatables.sql;
 
+import com.l2scoria.gameserver.model.L2PetData;
+import com.l2scoria.gameserver.model.actor.instance.L2PetInstance;
+import com.l2scoria.util.database.L2DatabaseFactory;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Map;
-import java.util.logging.Logger;
-
-import javolution.util.FastMap;
-
-import com.l2scoria.gameserver.model.L2PetData;
-import com.l2scoria.gameserver.model.actor.instance.L2PetInstance;
-import java.sql.Connection;
-import com.l2scoria.util.database.L2DatabaseFactory;
 
 public class L2PetDataTable
 {
@@ -115,7 +114,7 @@ public class L2PetDataTable
 		}
 		catch(Exception e)
 		{
-			_log.warning("Could not load pets stats: " + e);
+			_log.warn("Could not load pets stats: " + e);
 		}
 		finally
 		{

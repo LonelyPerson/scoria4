@@ -17,8 +17,6 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.sql.L2PetDataTable;
 import com.l2scoria.gameserver.handler.IItemHandler;
@@ -30,6 +28,7 @@ import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.PetInfo;
 import com.l2scoria.gameserver.network.serverpackets.PetItemList;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
+import org.apache.log4j.Logger;
 
 public final class RequestPetUseItem extends L2GameClientPacket
 {
@@ -78,7 +77,7 @@ public final class RequestPetUseItem extends L2GameClientPacket
 
 		if(Config.DEBUG)
 		{
-			_log.finest(activeChar.getObjectId() + ": pet use item " + _objectId);
+			_log.info(activeChar.getObjectId() + ": pet use item " + _objectId);
 		}
 
 		//check if the item matches the pet
@@ -186,12 +185,12 @@ public final class RequestPetUseItem extends L2GameClientPacket
 		}
 		else
 		{
-			//_log.finest("item not equipable id:"+ item.getItemId());
+			//_log.info("item not equipable id:"+ item.getItemId());
 			IItemHandler handler = ItemHandler.getInstance().getItemHandler(item.getItemId());
 
 			if(handler == null)
 			{
-				_log.warning("no itemhandler registered for itemId:" + item.getItemId());
+				_log.warn("no itemhandler registered for itemId:" + item.getItemId());
 			}
 			else
 			{

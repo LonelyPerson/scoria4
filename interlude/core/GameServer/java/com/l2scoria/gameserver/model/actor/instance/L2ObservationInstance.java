@@ -18,8 +18,6 @@
  */
 package com.l2scoria.gameserver.model.actor.instance;
 
-import java.util.StringTokenizer;
-
 import com.l2scoria.gameserver.managers.SiegeManager;
 import com.l2scoria.gameserver.model.entity.olympiad.Olympiad;
 import com.l2scoria.gameserver.network.SystemMessageId;
@@ -27,6 +25,8 @@ import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
 import com.l2scoria.gameserver.network.serverpackets.ItemList;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
 import com.l2scoria.gameserver.templates.L2NpcTemplate;
+
+import java.util.StringTokenizer;
 
 /**
  * @author NightMarez
@@ -47,6 +47,12 @@ public final class L2ObservationInstance extends L2FolkInstance
 	@Override
 	public void onBypassFeedback(L2PcInstance player, String command)
 	{
+		if(player._event != null)
+		{
+			player.sendMessage("Вы не можете наблюдать, если зарегистрированы на эвент");
+			return;
+		}
+
 		if(command.startsWith("observeSiege"))
 		{
 			if(Olympiad.getInstance().isRegisteredInComp(player))

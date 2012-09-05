@@ -14,16 +14,16 @@
  */
 package com.l2scoria.gameserver.model.zone.type;
 
-import java.util.Collection;
-
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.actor.instance.L2NpcInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import com.l2scoria.gameserver.model.zone.L2ZoneType;
+import com.l2scoria.gameserver.model.zone.L2ZoneDefault;
 import com.l2scoria.gameserver.network.serverpackets.CustomNpcInfo;
 import com.l2scoria.gameserver.network.serverpackets.NpcInfo;
 
-public class L2WaterZone extends L2ZoneType
+import java.util.Collection;
+
+public class L2WaterZone extends L2ZoneDefault
 {
 	public L2WaterZone(int id)
 	{
@@ -64,6 +64,8 @@ public class L2WaterZone extends L2ZoneType
 		 * 	((L2PcInstance)character).sendMessage("You entered water!");
 		 *}
 		 */
+
+		super.onEnter(character);
 	}
 
 	@Override
@@ -101,15 +103,9 @@ public class L2WaterZone extends L2ZoneType
 
 			plrs = null;
 		}
+
+		super.onExit(character);
 	}
-
-	@Override
-	public void onDieInside(L2Character character)
-	{}
-
-	@Override
-	public void onReviveInside(L2Character character)
-	{}
 
 	public int getWaterZ()
 	{

@@ -17,21 +17,16 @@
  */
 package com.l2scoria.gameserver.model.actor.instance;
 
-import java.util.StringTokenizer;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.TradeController;
 import com.l2scoria.gameserver.ai.CtrlIntention;
 import com.l2scoria.gameserver.model.L2Clan;
 import com.l2scoria.gameserver.model.L2TradeList;
-import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
-import com.l2scoria.gameserver.network.serverpackets.BuyList;
-import com.l2scoria.gameserver.network.serverpackets.MyTargetSelected;
-import com.l2scoria.gameserver.network.serverpackets.NpcHtmlMessage;
-import com.l2scoria.gameserver.network.serverpackets.SocialAction;
-import com.l2scoria.gameserver.network.serverpackets.ValidateLocation;
+import com.l2scoria.gameserver.network.serverpackets.*;
 import com.l2scoria.gameserver.templates.L2NpcTemplate;
 import com.l2scoria.util.random.Rnd;
+
+import java.util.StringTokenizer;
 
 public final class L2MercManagerInstance extends L2FolkInstance
 {
@@ -131,7 +126,7 @@ public final class L2MercManagerInstance extends L2FolkInstance
 		player.tempInvetoryDisable();
 		if(Config.DEBUG)
 		{
-			_log.fine("Showing buylist");
+			_log.info("Showing buylist");
 		}
 		L2TradeList list = TradeController.getInstance().getBuyList(val);
 		if(list != null && list.getNpcId().equals(String.valueOf(getNpcId())))
@@ -143,8 +138,8 @@ public final class L2MercManagerInstance extends L2FolkInstance
 		}
 		else
 		{
-			_log.warning("possible client hacker: " + player.getName() + " attempting to buy from GM shop! < Ban him!");
-			_log.warning("buylist id:" + val);
+			_log.warn("possible client hacker: " + player.getName() + " attempting to buy from GM shop! < Ban him!");
+			_log.warn("buylist id:" + val);
 		}
 	}
 

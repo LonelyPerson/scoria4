@@ -18,19 +18,19 @@
 
 package com.l2scoria.gameserver.model.zone.type;
 
-import java.util.concurrent.Future;
-
 import com.l2scoria.gameserver.datatables.SkillTable;
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.L2Skill;
 import com.l2scoria.gameserver.model.actor.instance.L2MonsterInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PlayableInstance;
-import com.l2scoria.gameserver.model.zone.L2ZoneType;
+import com.l2scoria.gameserver.model.zone.L2ZoneDefault;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.util.random.Rnd;
 
-public class L2PoisonZone extends L2ZoneType
+import java.util.concurrent.Future;
+
+public class L2PoisonZone extends L2ZoneDefault
 {
 	private int _skillId;
 	private int _chance;
@@ -97,6 +97,8 @@ public class L2PoisonZone extends L2ZoneType
 		{
 			_task = ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(new ApplySkill(/*this*/), _initialDelay, _reuse);
 		}
+
+		super.onEnter(character);
 	}
 
 	@Override
@@ -107,6 +109,8 @@ public class L2PoisonZone extends L2ZoneType
 			_task.cancel(true);
 			_task = null;
 		}
+
+		super.onExit(character);
 	}
 
 	public L2Skill getSkill()
@@ -134,20 +138,8 @@ public class L2PoisonZone extends L2ZoneType
 		_enabled = val;
 	}
 
-	/*protected Collection getCharacterList()
-	{
-	    return _characterList.values();
-	}*/
-
 	class ApplySkill implements Runnable
 	{
-//		private L2PoisonZone _poisonZone;
-
-//		ApplySkill(/*L2PoisonZone zone*/)
-//		{
-//			_poisonZone = zone;
-//		}
-
 		public void run()
 		{
 			if(isEnabled())
@@ -165,12 +157,4 @@ public class L2PoisonZone extends L2ZoneType
 			}
 		}
 	}
-
-	@Override
-	public void onDieInside(L2Character l2character)
-	{}
-
-	@Override
-	public void onReviveInside(L2Character l2character)
-	{}
 }

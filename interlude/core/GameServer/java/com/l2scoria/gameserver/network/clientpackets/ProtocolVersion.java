@@ -22,10 +22,8 @@ import com.l2scoria.Config;
 import com.l2scoria.gameserver.network.L2GameClient;
 import com.l2scoria.gameserver.network.serverpackets.KeyPacket;
 import com.l2scoria.gameserver.network.serverpackets.SendStatus;
-import java.util.logging.Level;
+import org.apache.log4j.Logger;
 import ru.catssoftware.protection.LameStub;
-
-import java.util.logging.Logger;
 
 /**
  * This class ...
@@ -100,7 +98,7 @@ public final class ProtocolVersion extends L2GameClientPacket
 
 				}
 			} else {
-                        _log.warning("TEMPLARE DEBUG: unknown protocol version from readD() bytes => " + _version);
+                        _log.warn("TEMPLARE DEBUG: unknown protocol version from readD() bytes => " + _version);
 			client.close(KeyPacket.UNKNOWN_PROTOCOL_VERSION);
                         }
 		}
@@ -123,14 +121,14 @@ public final class ProtocolVersion extends L2GameClientPacket
 		else if(_version < Config.MIN_PROTOCOL_REVISION || _version > Config.MAX_PROTOCOL_REVISION)
 		{
 			_log.info("Client: " + getClient().toString() + " -> Protocol Revision: " + _version + " is invalid. Minimum is " + Config.MIN_PROTOCOL_REVISION + " and Maximum is " + Config.MAX_PROTOCOL_REVISION + " are supported. Closing connection.");
-			_log.warning("Wrong Protocol Version " + _version);
+			_log.warn("Wrong Protocol Version " + _version);
 			getClient().closeNow();
 		}
 		else
 		{
 			if(Config.DEBUG)
 			{
-				_log.fine("Client Protocol Revision is ok: " + _version);
+				_log.info("Client Protocol Revision is ok: " + _version);
 			}
 
 			KeyPacket pk = new KeyPacket(getClient().enableCrypt());

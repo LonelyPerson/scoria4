@@ -28,14 +28,6 @@
  */
 package com.l2scoria.gameserver.util;
 
-import java.util.List;
-import java.util.Set;
-import java.util.logging.Logger;
-
-import javolution.util.FastList;
-import javolution.util.FastMap;
-import javolution.util.FastSet;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.sql.NpcTable;
 import com.l2scoria.gameserver.idfactory.IdFactory;
@@ -44,6 +36,13 @@ import com.l2scoria.gameserver.model.actor.instance.L2MinionInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2MonsterInstance;
 import com.l2scoria.gameserver.templates.L2NpcTemplate;
 import com.l2scoria.util.random.Rnd;
+import javolution.util.FastList;
+import javolution.util.FastMap;
+import javolution.util.FastSet;
+import org.apache.log4j.Logger;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * This class ...
@@ -175,7 +174,7 @@ public class MinionList
 
 				if(current - deathTime > delay)
 				{
-					spawnSingleMinion(_respawnTasks.get(deathTime));
+					spawnSingleMinion(_respawnTasks.get(deathTime), master.getInstanceId());
 					_respawnTasks.remove(deathTime);
 				}
 			}
@@ -213,7 +212,7 @@ public class MinionList
 
 				for(int i = 0; i < minionsToSpawn; i++)
 				{
-					spawnSingleMinion(minionId);
+					spawnSingleMinion(minionId, master.getInstanceId());
 				}
 			}
 		}
@@ -231,13 +230,15 @@ public class MinionList
 	 * 
 	 * @param minionid The I2NpcTemplate Identifier of the Minion to spawn
 	 */
-	public void spawnSingleMinion(int minionid)
+	public void spawnSingleMinion(int minionid, int instanceId)
 	{
 		// Get the template of the Minion to spawn
 		L2NpcTemplate minionTemplate = NpcTable.getInstance().getTemplate(minionid);
 
 		// Create and Init the Minion and generate its Identifier
 		L2MinionInstance monster = new L2MinionInstance(IdFactory.getInstance().getNextId(), minionTemplate);
+
+		monster.setInstanceId(instanceId);
 
 		// Set the Minion HP, MP and Heading
 		monster.setCurrentHpMp(monster.getMaxHp(), monster.getMaxMp());
@@ -274,7 +275,7 @@ public class MinionList
 
 		if(Config.DEBUG)
 		{
-			_log.fine("Spawned minion template " + minionTemplate.npcId + " with objid: " + monster.getObjectId() + " to boss " + master.getObjectId() + " ,at: " + monster.getX() + " x, " + monster.getY() + " y, " + monster.getZ() + " z");
+			_log.info("Spawned minion template " + minionTemplate.npcId + " with objid: " + monster.getObjectId() + " to boss " + master.getObjectId() + " ,at: " + monster.getX() + " x, " + monster.getY() + " y, " + monster.getZ() + " z");
 		}
 	}
 }

@@ -18,13 +18,13 @@
  */
 package com.l2scoria.gameserver.util;
 
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.GmListTable;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
+import org.apache.log4j.Logger;
+
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
 
 /**
  * This class ...
@@ -74,7 +74,7 @@ public final class IllegalPlayerAction implements Runnable
 		{
 				_actor, _punishment
 		});
-		_logAudit.log(record);
+		_logAudit.info(record);
 
 		GmListTable.broadcastMessageToGMs(_message);
 

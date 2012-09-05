@@ -39,6 +39,7 @@ public class L2DerbyTrackZone extends L2PeaceZone
 		{
 			character.setInsideZone(L2Character.ZONE_MONSTERTRACK, true);
 		}
+
 		super.onEnter(character);
 	}
 
@@ -49,15 +50,8 @@ public class L2DerbyTrackZone extends L2PeaceZone
 		{
 			character.setInsideZone(L2Character.ZONE_MONSTERTRACK, false);
 		}
+
 		super.onExit(character);
 	}
-
-	@Override
-	protected void onDieInside(L2Character character)
-	{}
-
-	@Override
-	protected void onReviveInside(L2Character character)
-	{}
 
 }

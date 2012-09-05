@@ -18,12 +18,6 @@
  */
 package com.l2scoria.gameserver.model.quest;
 
-import java.util.Map;
-import java.util.logging.Logger;
-
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.GameTimeController;
 import com.l2scoria.gameserver.cache.HtmCache;
@@ -35,18 +29,14 @@ import com.l2scoria.gameserver.model.actor.instance.L2MonsterInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2NpcInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.SystemMessageId;
-import com.l2scoria.gameserver.network.serverpackets.ExShowQuestMark;
-import com.l2scoria.gameserver.network.serverpackets.ItemList;
-import com.l2scoria.gameserver.network.serverpackets.PlaySound;
-import com.l2scoria.gameserver.network.serverpackets.QuestList;
-import com.l2scoria.gameserver.network.serverpackets.StatusUpdate;
-import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
-import com.l2scoria.gameserver.network.serverpackets.TutorialCloseHtml;
-import com.l2scoria.gameserver.network.serverpackets.TutorialEnableClientEvent;
-import com.l2scoria.gameserver.network.serverpackets.TutorialShowHtml;
-import com.l2scoria.gameserver.network.serverpackets.TutorialShowQuestionMark;
+import com.l2scoria.gameserver.network.serverpackets.*;
 import com.l2scoria.gameserver.skills.Stats;
 import com.l2scoria.util.random.Rnd;
+import javolution.util.FastList;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
+
+import java.util.Map;
 
 /**
  * @author Luis Arias
@@ -281,7 +271,7 @@ public final class QuestState
 			}
 			catch(Exception e)
 			{
-				_log.finer(getPlayer().getName() + ", " + getQuestName() + " cond [" + val + "] is not an integer.  Value stored, but no packet was sent: " + e);
+				_log.info(getPlayer().getName() + ", " + getQuestName() + " cond [" + val + "] is not an integer.  Value stored, but no packet was sent: " + e);
 			}
 		}
 
@@ -448,7 +438,7 @@ public final class QuestState
 		}
 		catch(Exception e)
 		{
-			_log.finer(getPlayer().getName() + ": variable " + var + " isn't an integer: " + varint + e);
+			_log.info(getPlayer().getName() + ": variable " + var + " isn't an integer: " + varint + e);
 			//TODO: comments
 			if(Config.AUTODELETE_INVALID_QUEST_DATA)
 			{
@@ -938,7 +928,7 @@ public final class QuestState
 
 		if(text == null)
 		{
-			_log.warning("missing html page data/scripts/quests/255_Tutorial/" + html);
+			_log.warn("missing html page data/scripts/quests/255_Tutorial/" + html);
 			text = "<html><body>File data/scripts/quests/255_Tutorial/" + html + " not found or file is empty.</body></html>";
 		}
 

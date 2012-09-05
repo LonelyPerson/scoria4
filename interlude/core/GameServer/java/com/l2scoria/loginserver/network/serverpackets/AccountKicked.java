@@ -53,7 +53,7 @@ public final class AccountKicked extends L2LoginServerPacket
 	 * @see com.l2jserver.mmocore.network.SendablePacket#write()
 	 */
 	@Override
-	protected void write()
+	protected void writeImpl()
 	{
 		writeC(0x02);
 		writeD(_reason);

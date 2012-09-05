@@ -18,10 +18,9 @@
 
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.serverpackets.NpcHtmlMessage;
+import org.apache.log4j.Logger;
 
 /**
  * @author zabbix Lets drink to code!
@@ -47,7 +46,7 @@ public final class RequestLinkHtml extends L2GameClientPacket
 
 		if(_link.contains("..") || !_link.contains(".htm"))
 		{
-			_log.warning("[RequestLinkHtml] hack? link contains prohibited characters: '" + _link + "', skipped");
+			_log.warn("[RequestLinkHtml] hack? link contains prohibited characters: '" + _link + "', skipped");
 			return;
 		}
 

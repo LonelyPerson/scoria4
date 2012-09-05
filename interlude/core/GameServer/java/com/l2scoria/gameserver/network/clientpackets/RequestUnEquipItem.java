@@ -21,12 +21,12 @@ package com.l2scoria.gameserver.network.clientpackets;
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
+import com.l2scoria.gameserver.model.entity.event.CTF.CTF;
 import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.InventoryUpdate;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
 import com.l2scoria.gameserver.templates.L2Item;
-
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 /**
  * This class ...
@@ -57,7 +57,7 @@ public class RequestUnEquipItem extends L2GameClientPacket
 	{
 		if(Config.DEBUG)
 		{
-			_log.fine("request unequip slot " + _slot);
+			_log.info("request unequip slot " + _slot);
 		}
 
 		L2PcInstance activeChar = getClient().getActiveChar();
@@ -77,6 +77,9 @@ public class RequestUnEquipItem extends L2GameClientPacket
 		// Prevent of unequiping a cursed weapon
 		if(_slot == L2Item.SLOT_LR_HAND && activeChar.isCursedWeaponEquiped())
 			// Message ?
+			return;
+
+		if( item.getItemId() == 6718 && activeChar._event == CTF.getInstance())
 			return;
 
 		// Prevent player from unequipping items in special conditions

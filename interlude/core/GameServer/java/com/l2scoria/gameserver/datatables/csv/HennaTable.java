@@ -18,20 +18,14 @@
  */
 package com.l2scoria.gameserver.datatables.csv;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.LineNumberReader;
-import java.util.Map;
-import java.util.StringTokenizer;
-import java.util.logging.Logger;
-
-import javolution.util.FastMap;
-
 import com.l2scoria.gameserver.templates.L2Henna;
 import com.l2scoria.gameserver.templates.StatsSet;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
+
+import java.io.*;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 /**
  * This class ...
@@ -104,15 +98,15 @@ public class HennaTable
 				template = null;
 			}
 
-			_log.config("HennaTable: Loaded " + _henna.size() + " Templates.");
+			_log.info("HennaTable: Loaded " + _henna.size() + " Templates.");
 		}
 		catch(FileNotFoundException e)
 		{
-			_log.warning("armorsets.csv is missing in data folder");
+			_log.warn("armorsets.csv is missing in data folder");
 		}
 		catch(IOException e0)
 		{
-			_log.warning("Error while creating table: " + e0.getMessage() + "\n" + e0);
+			_log.warn("Error while creating table: " + e0.getMessage() + "\n" + e0);
 		}
 		finally
 		{

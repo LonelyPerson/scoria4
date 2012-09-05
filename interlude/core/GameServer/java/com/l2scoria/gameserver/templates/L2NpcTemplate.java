@@ -18,13 +18,6 @@
  */
 package com.l2scoria.gameserver.templates;
 
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
-
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 import com.l2scoria.gameserver.ai.special.AIExtend;
 import com.l2scoria.gameserver.model.L2DropCategory;
 import com.l2scoria.gameserver.model.L2DropData;
@@ -33,6 +26,12 @@ import com.l2scoria.gameserver.model.L2Skill;
 import com.l2scoria.gameserver.model.base.ClassId;
 import com.l2scoria.gameserver.model.quest.Quest;
 import com.l2scoria.gameserver.skills.Stats;
+import javolution.util.FastList;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * This cl contains all generic data of a L2Spawn object.<BR>
@@ -360,7 +359,7 @@ public final class L2NpcTemplate extends L2CharTemplate
 				}
 				else
 				{
-					_log.warning("Quest event not allowed in multiple quests.  Skipped addition of Event Type \"" + EventType + "\" for NPC \"" + name + "\" and quest \"" + q.getName() + "\".");
+					_log.warn("Quest event not allowed in multiple quests.  Skipped addition of Event Type \"" + EventType + "\" for NPC \"" + name + "\" and quest \"" + q.getName() + "\".");
 				}
 			}
 			else
@@ -425,7 +424,7 @@ public final class L2NpcTemplate extends L2CharTemplate
 				}
 				else
 				{
-					_log.warning("Skipped AI: \"" + ai.getID() + "\".");
+					_log.warn("Skipped AI: \"" + ai.getID() + "\".");
 				}
 			}
 			else

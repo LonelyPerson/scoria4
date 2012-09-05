@@ -18,11 +18,10 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.cache.CrestCache;
 import com.l2scoria.gameserver.network.serverpackets.AllyCrest;
+import org.apache.log4j.Logger;
 
 /**
  * This class ...
@@ -52,7 +51,7 @@ public final class RequestAllyCrest extends L2GameClientPacket
 	{
 		if(Config.DEBUG)
 		{
-			_log.fine("allycrestid " + _crestId + " requested");
+			_log.info("allycrestid " + _crestId + " requested");
 		}
 
 		byte[] data = CrestCache.getInstance().getAllyCrest(_crestId);
@@ -66,7 +65,7 @@ public final class RequestAllyCrest extends L2GameClientPacket
 		{
 			if(Config.DEBUG)
 			{
-				_log.fine("allycrest is missing:" + _crestId);
+				_log.info("allycrest is missing:" + _crestId);
 			}
 		}
 	}

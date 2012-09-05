@@ -23,6 +23,7 @@ import com.l2scoria.gameserver.managers.CastleManager;
 import com.l2scoria.gameserver.model.actor.instance.L2DoorInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.entity.siege.Castle;
+import com.l2scoria.gameserver.network.clientpackets.RequestActionUse;
 import com.l2scoria.gameserver.network.serverpackets.Ride;
 
 /**
@@ -73,6 +74,11 @@ public class castle implements IVoicedCommandHandler
 		{
 			if(activeChar.getClan().getHasCastle() > 0 && activeChar.isClanLeader())
 			{
+				if (activeChar._event!=null && !activeChar._event.canDoAction(activeChar, RequestActionUse.ACTION_MOUNT))
+				{
+					return false;
+				}
+
 				if(!activeChar.disarmWeapons())
 					return false;
 

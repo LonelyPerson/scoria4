@@ -17,19 +17,19 @@
  */
 package com.l2scoria.gameserver.model.zone.type;
 
+import com.l2scoria.gameserver.model.L2Character;
+import com.l2scoria.gameserver.model.zone.L2ZoneDefault;
+import com.l2scoria.gameserver.thread.ThreadPoolManager;
+
 import java.util.Collection;
 import java.util.concurrent.Future;
-
-import com.l2scoria.gameserver.model.L2Character;
-import com.l2scoria.gameserver.model.zone.L2ZoneType;
-import com.l2scoria.gameserver.thread.ThreadPoolManager;
 
 /**
  * A damage zone
  * 
  * @author durgus
  */
-public class L2DamageZone extends L2ZoneType
+public class L2DamageZone extends L2ZoneDefault
 {
 	private int _damagePerSec;
 	private Future<?> _task;
@@ -62,6 +62,8 @@ public class L2DamageZone extends L2ZoneType
 		{
 			_task = ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(new ApplyDamage(this), 10, 1000);
 		}
+
+		super.onEnter(character);
 	}
 
 	@Override
@@ -72,6 +74,8 @@ public class L2DamageZone extends L2ZoneType
 			_task.cancel(true);
 			_task = null;
 		}
+
+		super.onExit(character);
 	}
 
 	protected Collection<L2Character> getCharacterList()
@@ -104,13 +108,4 @@ public class L2DamageZone extends L2ZoneType
 			}
 		}
 	}
-
-	@Override
-	protected void onDieInside(L2Character character)
-	{}
-
-	@Override
-	protected void onReviveInside(L2Character character)
-	{}
-
 }

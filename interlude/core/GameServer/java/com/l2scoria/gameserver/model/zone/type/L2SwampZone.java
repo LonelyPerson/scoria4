@@ -16,14 +16,14 @@ package com.l2scoria.gameserver.model.zone.type;
 
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import com.l2scoria.gameserver.model.zone.L2ZoneType;
+import com.l2scoria.gameserver.model.zone.L2ZoneDefault;
 
 /**
  * another type of zone where your speed is changed
  * 
  * @author kerberos
  */
-public class L2SwampZone extends L2ZoneType
+public class L2SwampZone extends L2ZoneDefault
 {
 	private int _move_bonus;
 
@@ -56,6 +56,8 @@ public class L2SwampZone extends L2ZoneType
 		{
 			((L2PcInstance) character).broadcastUserInfo();
 		}
+
+		super.onEnter(character);
 	}
 
 	@Override
@@ -66,19 +68,13 @@ public class L2SwampZone extends L2ZoneType
 		{
 			((L2PcInstance) character).broadcastUserInfo();
 		}
+
+		super.onExit(character);
 	}
 
 	public int getMoveBonus()
 	{
 		return _move_bonus;
 	}
-
-	@Override
-	public void onDieInside(L2Character character)
-	{}
-
-	@Override
-	public void onReviveInside(L2Character character)
-	{}
 
 }

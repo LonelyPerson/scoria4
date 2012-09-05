@@ -28,8 +28,7 @@ import com.l2scoria.gameserver.model.base.PlayerClass;
 import com.l2scoria.gameserver.model.quest.QuestState;
 import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.*;
-
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 public class PcStat extends PlayableStat
 {

@@ -24,8 +24,7 @@ import com.l2scoria.gameserver.network.serverpackets.PartyMemberPosition;
 import com.l2scoria.gameserver.network.serverpackets.ValidateLocation;
 import com.l2scoria.gameserver.network.serverpackets.ValidateLocationInVehicle;
 import com.l2scoria.gameserver.thread.TaskPriority;
-
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 /**
  * This class ...
@@ -78,8 +77,8 @@ public class ValidatePosition extends L2GameClientPacket
 
                 if(Config.DEBUG)
                 {
-                        _log.fine("client pos: " + _x + " " + _y + " " + _z + " head " + _heading);
-                        _log.fine("server pos: " + realX + " " + realY + " " + realZ + " head " + realHeading);
+                        _log.info("client pos: " + _x + " " + _y + " " + _z + " head " + _heading);
+                        _log.info("server pos: " + realX + " " + realY + " " + realZ + " head " + realHeading);
                 }
 
                 if(activeChar.isFlying() || activeChar.isInWater())

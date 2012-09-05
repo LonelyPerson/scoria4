@@ -18,18 +18,6 @@
  */
 package com.l2scoria.gameserver.communitybbs.Manager;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.StringTokenizer;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
-import java.util.logging.Logger;
-
-import javolution.text.TextBuilder;
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.GameServer;
 import com.l2scoria.gameserver.model.BlockList;
@@ -41,6 +29,17 @@ import com.l2scoria.gameserver.network.clientpackets.Say2;
 import com.l2scoria.gameserver.network.serverpackets.CreatureSay;
 import com.l2scoria.gameserver.network.serverpackets.ShowBoard;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
+import javolution.text.TextBuilder;
+import javolution.util.FastList;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
 
 public class RegionBBSManager extends BaseBBSManager
 {
@@ -268,7 +267,7 @@ public class RegionBBSManager extends BaseBBSManager
 					{
 							"TELL ", "[" + activeChar.getName() + " to " + receiver.getName() + "]"
 					});
-					_logChat.log(record);
+					_logChat.info(record);
 					record = null;
 				}
 

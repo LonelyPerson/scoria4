@@ -18,24 +18,23 @@
  */
 package com.l2scoria.gameserver.model;
 
+import com.l2scoria.Config;
+import com.l2scoria.gameserver.GameTimeController;
+import com.l2scoria.gameserver.datatables.sql.ItemTable;
+import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
+import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance.ItemLocation;
+import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
+import com.l2scoria.gameserver.templates.L2Item;
+import com.l2scoria.util.database.L2DatabaseFactory;
+import javolution.util.FastList;
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
-import java.util.logging.Logger;
-
-import javolution.util.FastList;
-
-import com.l2scoria.Config;
-import com.l2scoria.gameserver.GameTimeController;
-import com.l2scoria.gameserver.datatables.sql.ItemTable;
-import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance.ItemLocation;
-import com.l2scoria.gameserver.templates.L2Item;
-import java.sql.Connection;
-import com.l2scoria.util.database.L2DatabaseFactory;
 
 /**
  * @author Advi
@@ -270,7 +269,7 @@ public abstract class ItemContainer
 
 				if(template == null)
 				{
-					_log.log(Level.WARNING, (actor != null ? "[" + actor.getName() + "] " : "") + "Invalid ItemId requested: ", itemId);
+					_log.warn((actor != null ? "[" + actor.getName() + "] " : "") + "Invalid ItemId requested: ");
 					return null;
 				}
 
@@ -368,7 +367,7 @@ public abstract class ItemContainer
 				{
 					"GM: " + actor.getName(), " to target [" + target.getOwner() + "] "
 				});
-				_logAudit.log(record);
+				_logAudit.info(record);
 			}
 			else if(target.getOwner() instanceof L2PcInstance && ((L2PcInstance)target.getOwner()).isGM())
 			{
@@ -378,7 +377,7 @@ public abstract class ItemContainer
 				{
 					"GM: " + target.getOwner().getName(), " from target [" + actor + "] "
 				});
-				_logAudit.log(record);
+				_logAudit.info(record);
 			}
 		}
 
@@ -620,7 +619,7 @@ public abstract class ItemContainer
 		}
 		catch(Throwable t)
 		{
-			_log.log(Level.SEVERE, "deletedMe()", t);
+			_log.fatal("deletedMe()", t);
 		}
 
 		List<L2Object> items = new FastList<L2Object>(_items);
@@ -697,7 +696,7 @@ public abstract class ItemContainer
 		}
 		catch(Exception e)
 		{
-			_log.log(Level.WARNING, "could not restore container:", e);
+			_log.warn("could not restore container:", e);
 		}
 		finally
 		{

@@ -18,13 +18,12 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.SkillTable;
 import com.l2scoria.gameserver.model.L2Skill;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
+import org.apache.log4j.Logger;
 
 /**
  * This class ...
@@ -89,7 +88,7 @@ public final class RequestMagicSkillUse extends L2GameClientPacket
 		else
 		{
 			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
-			_log.warning("No skill found!!");
+			_log.warn("No skill found!!");
 		}
 	}
 

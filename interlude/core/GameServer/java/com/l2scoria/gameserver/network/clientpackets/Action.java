@@ -18,14 +18,13 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.L2Object;
 import com.l2scoria.gameserver.model.L2World;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
+import org.apache.log4j.Logger;
 
 /**
  * This class ...
@@ -56,8 +55,8 @@ public final class Action extends L2GameClientPacket
 	{
 		if(Config.DEBUG)
 		{
-			_log.fine("Action:" + _actionId);
-			_log.fine("oid:" + _objectId);
+			_log.info("Action:" + _actionId);
+			_log.info("oid:" + _objectId);
 		}
 
 		// Get the current L2PcInstance of the player
@@ -81,7 +80,7 @@ public final class Action extends L2GameClientPacket
 		if(obj == null)
 		{
 			// pressing e.g. pickup many times quickly would get you here
-			// _log.warning("Character: " + activeChar.getName() + " request action with non existent ObjectID:" + _objectId);
+			// _log.warn("Character: " + activeChar.getName() + " request action with non existent ObjectID:" + _objectId);
 			getClient().sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
@@ -106,7 +105,7 @@ public final class Action extends L2GameClientPacket
 					break;
 				default:
 					// Ivalid action detected (probably client cheating), log this
-					_log.warning("Character: " + activeChar.getName() + " requested invalid action: " + _actionId);
+					_log.warn("Character: " + activeChar.getName() + " requested invalid action: " + _actionId);
 					getClient().sendPacket(ActionFailed.STATIC_PACKET);
 					break;
 			}

@@ -18,35 +18,32 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.Collection;
-import java.util.StringTokenizer;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
+import com.l2scoria.Config.ChatMode;
 import com.l2scoria.gameserver.datatables.csv.MapRegionTable;
 import com.l2scoria.gameserver.handler.IVoicedCommandHandler;
 import com.l2scoria.gameserver.handler.VoicedCommandHandler;
 import com.l2scoria.gameserver.managers.PetitionManager;
-import com.l2scoria.gameserver.model.BlockList;
-import com.l2scoria.gameserver.model.L2Character;
-import com.l2scoria.gameserver.model.L2Object;
-import com.l2scoria.gameserver.model.L2World;
-import com.l2scoria.gameserver.model.PartyMatchRoom;
-import com.l2scoria.gameserver.model.PartyMatchRoomList;
+import com.l2scoria.gameserver.model.*;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.CreatureSay;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
 import com.l2scoria.gameserver.powerpak.PowerPak;
 import com.l2scoria.gameserver.util.FloodProtector;
+import org.apache.log4j.Logger;
+
+import java.util.Collection;
+import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
 
 /**
  * This class ...
  * 
  * @version $Revision: 1.16.2.12.2.7 $ $Date: 2005/04/11 10:06:11 $
  */
+@SuppressWarnings("UnusedDeclaration")
 public final class Say2 extends L2GameClientPacket
 {
 	private static final String _C__38_SAY2 = "[C] 38 Say2";
@@ -116,7 +113,7 @@ public final class Say2 extends L2GameClientPacket
 
 		if(_type < 0 || _type >= CHAT_NAMES.length)
 		{
-			_log.warning("Say2: Invalid type: " + _type);
+			_log.warn("Say2: Invalid type: " + _type);
 			return;
 		}
 
@@ -124,7 +121,7 @@ public final class Say2 extends L2GameClientPacket
 
 		if(activeChar == null)
 		{
-			_log.warning("[Say2.java] Active Character is null.");
+			_log.warn("[Say2.java] Active Character is null.");
 			return;
 		}
 
@@ -209,7 +206,7 @@ public final class Say2 extends L2GameClientPacket
 				});
 			}
 
-			_logChat.log(record);
+			_logChat.info(record);
 		}
 
 		_text = _text.replaceAll("\\\\n", "");
@@ -241,7 +238,6 @@ public final class Say2 extends L2GameClientPacket
 				L2Character chara = (L2Character) obj;
 				chara.sendPacket(cs);
 			}
-			return;
 		}
 		else
 		{
@@ -289,6 +285,7 @@ public final class Say2 extends L2GameClientPacket
 						sm = null;
 					}
 					break;
+
 				case SHOUT:
 					if(!FloodProtector.getInstance().tryPerformAction(activeChar.getObjectId(), FloodProtector.PROTECTED_CHAT))
 					{
@@ -303,7 +300,8 @@ public final class Say2 extends L2GameClientPacket
 					{
 						activeChar.clearFastSpeak();
 					}
-					if(Config.DEFAULT_GLOBAL_CHAT.equalsIgnoreCase("on") || Config.DEFAULT_GLOBAL_CHAT.equalsIgnoreCase("gm") && activeChar.SeeAllChat())
+
+					if(Config.DEFAULT_GLOBAL_CHAT == ChatMode.REGION || Config.DEFAULT_GLOBAL_CHAT == ChatMode.GM && activeChar.SeeAllChat())
 					{
 						int region = MapRegionTable.getInstance().getMapRegion(activeChar.getX(), activeChar.getY());
 
@@ -313,14 +311,14 @@ public final class Say2 extends L2GameClientPacket
 							{
 							     player.sendPacket(cs);
 							}
-							
-							else if(region == MapRegionTable.getInstance().getMapRegion(player.getX(), player.getY()))
+
+							else if(region == MapRegionTable.getInstance().getMapRegion(player.getX(), player.getY()) && activeChar.getInstanceId() == player.getInstanceId())
 							{
 								player.sendPacket(cs);
 							}
 						}
 					}
-					else if(Config.DEFAULT_GLOBAL_CHAT.equalsIgnoreCase("global"))
+					else if(Config.DEFAULT_GLOBAL_CHAT == ChatMode.GLOBAL)
 					{
 						for(L2PcInstance player : L2World.getInstance().getAllPlayers())
 						{
@@ -342,7 +340,8 @@ public final class Say2 extends L2GameClientPacket
 					{
 						activeChar.clearFastSpeak();
 					}
-					if(Config.DEFAULT_TRADE_CHAT.equalsIgnoreCase("on") || Config.DEFAULT_TRADE_CHAT.equalsIgnoreCase("gm") && activeChar.isGM())
+
+					if(Config.DEFAULT_TRADE_CHAT == ChatMode.GLOBAL || Config.DEFAULT_TRADE_CHAT == ChatMode.GM && activeChar.isGM())
 					{
 						if(Config.TRADE_CHAT_IS_NOOBLE)
 						{
@@ -351,25 +350,24 @@ public final class Say2 extends L2GameClientPacket
 								activeChar.sendMessage("Only nobles can post in trade mass chat");
 								return;
 							}
-							for(L2PcInstance player : L2World.getInstance().getAllPlayers())
-							{
-								player.sendPacket(cs);
-							}
 						}
-						else
+
+						for(L2PcInstance player : L2World.getInstance().getAllPlayers())
 						{
-							for(L2PcInstance player : L2World.getInstance().getAllPlayers())
+							if(player.getInstanceId() != activeChar.getInstanceId())
 							{
-								player.sendPacket(cs);
+								continue;
 							}
+
+							player.sendPacket(cs);
 						}
 					}
-					else if(Config.DEFAULT_TRADE_CHAT.equalsIgnoreCase("limited"))
+					else if(Config.DEFAULT_TRADE_CHAT == ChatMode.REGION)
 					{
 						int region = MapRegionTable.getInstance().getMapRegion(activeChar.getX(), activeChar.getY());
 						for(L2PcInstance player : L2World.getInstance().getAllPlayers())
 						{
-							if(region == MapRegionTable.getInstance().getMapRegion(player.getX(), player.getY()))
+							if(region == MapRegionTable.getInstance().getMapRegion(player.getX(), player.getY()) && player.getInstanceId() == activeChar.getInstanceId())
 							{
 								player.sendPacket(cs);
 							}
@@ -394,6 +392,7 @@ public final class Say2 extends L2GameClientPacket
 					{
 						activeChar.clearFastSpeak();
 					}
+
 					if(_text.startsWith("."))
 					{
 						StringTokenizer st = new StringTokenizer(_text);
@@ -425,6 +424,11 @@ public final class Say2 extends L2GameClientPacket
 						{
 							for(L2PcInstance player : activeChar.getKnownList().getKnownPlayers().values())
 							{
+								if(player.getInstanceId() != activeChar.getInstanceId())
+								{
+									continue;
+								}
+
 								if(player != null && activeChar.isInsideRadius(player, 1250, false, true))
 								{
 									player.sendPacket(cs);
@@ -434,7 +438,7 @@ public final class Say2 extends L2GameClientPacket
 
 							if(Config.DEBUG)
 							{
-								_log.warning("No handler registered for bypass '" + command + "'");
+								_log.warn("No handler registered for bypass '" + command + "'");
 							}
 						}
 					}

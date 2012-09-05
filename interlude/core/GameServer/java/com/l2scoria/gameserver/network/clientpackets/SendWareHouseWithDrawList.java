@@ -18,8 +18,6 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.model.ClanWarehouse;
 import com.l2scoria.gameserver.model.ItemContainer;
@@ -29,13 +27,10 @@ import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2NpcInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.SystemMessageId;
-import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
-import com.l2scoria.gameserver.network.serverpackets.InventoryUpdate;
-import com.l2scoria.gameserver.network.serverpackets.ItemList;
-import com.l2scoria.gameserver.network.serverpackets.StatusUpdate;
-import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
+import com.l2scoria.gameserver.network.serverpackets.*;
 import com.l2scoria.gameserver.util.FloodProtector;
 import com.l2scoria.gameserver.util.Util;
+import org.apache.log4j.Logger;
 
 /**
  * This class ... 32 SendWareHouseWithDrawList cd (dd) WootenGil rox :P
@@ -105,7 +100,7 @@ public final class SendWareHouseWithDrawList extends L2GameClientPacket
 
 		if(!FloodProtector.getInstance().tryPerformAction(player.getObjectId(), FloodProtector.PROTECTED_WEREHOUSE))
 		{
-			_log.warning("Player " + player.getName() + " has performed a werehouse action too fast");
+			_log.warn("Player " + player.getName() + " has performed a werehouse action too fast");
 			return;
 		}
 
@@ -188,7 +183,7 @@ public final class SendWareHouseWithDrawList extends L2GameClientPacket
 			L2ItemInstance newItem = warehouse.transferItem("Warehouse", objectId, count, player.getInventory(), player, player.getLastFolkNPC());
 			if(newItem == null)
 			{
-				_log.warning("Error withdrawing a warehouse object for char " + player.getName());
+				_log.warn("Error withdrawing a warehouse object for char " + player.getName());
 				continue;
 			}
 

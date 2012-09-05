@@ -18,16 +18,11 @@
  */
 package com.l2scoria.gameserver.datatables.sts;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.LineNumberReader;
-import java.util.StringTokenizer;
-import java.util.logging.Logger;
-
 import com.l2scoria.gameserver.model.base.Experience;
+import org.apache.log4j.Logger;
+
+import java.io.*;
+import java.util.StringTokenizer;
 
 public class ExpTable
 {
@@ -80,12 +75,12 @@ public class ExpTable
 		}
 		catch(FileNotFoundException e)
 		{
-			_log.warning("ExpTable is missing in sts folder");
+			_log.warn("ExpTable is missing in sts folder");
 			System.exit(1);
 		}
 		catch(IOException e0)
 		{
-			_log.warning("Error while creating exp table: " + e0.getMessage());
+			_log.warn("Error while creating exp table: " + e0.getMessage());
 			System.exit(1);
 		}
 		finally

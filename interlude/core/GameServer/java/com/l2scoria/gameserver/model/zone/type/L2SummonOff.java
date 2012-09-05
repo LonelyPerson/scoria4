@@ -20,9 +20,9 @@ package com.l2scoria.gameserver.model.zone.type;
 
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import com.l2scoria.gameserver.model.zone.L2ZoneType;
+import com.l2scoria.gameserver.model.zone.L2ZoneDefault;
 
-public class L2SummonOff extends L2ZoneType
+public class L2SummonOff extends L2ZoneDefault
 {
 
 	public L2SummonOff(int id)
@@ -30,14 +30,6 @@ public class L2SummonOff extends L2ZoneType
 		super(id);
 		_IsFlyingEnable = true;
 	}
-
-	@Override
-	protected void onDieInside(L2Character l2character)
-	{}
-
-	@Override
-	protected void onReviveInside(L2Character l2character)
-	{}
 
 	@Override
 	public void setParameter(String name, String value)
@@ -63,6 +55,8 @@ public class L2SummonOff extends L2ZoneType
 		{
 			character.setInsideZone(L2Character.ZONE_NOSUMMONFRIEND, true);
 		}
+
+		super.onEnter(character);
 	}
 
 	@Override
@@ -72,6 +66,8 @@ public class L2SummonOff extends L2ZoneType
 		{
 			character.setInsideZone(L2Character.ZONE_NOSUMMONFRIEND, false);
 		}
+
+		super.onExit(character);
 	}
 	
 	

@@ -23,6 +23,7 @@ package com.l2scoria.gameserver.network.serverpackets;
 public class ServerClose extends L2GameServerPacket
 {
 	private static final String _S__26_SERVERCLOSE = "[S] 26 ServerClose";
+	public static ServerClose STATIC_PACKET = new ServerClose();
 
 	/**
 	 * @see com.l2scoria.gameserver.network.serverpackets.L2GameServerPacket#writeImpl()

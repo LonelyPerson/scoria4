@@ -18,37 +18,12 @@
  */
 package com.l2scoria.gameserver.model;
 
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.ItemsAutoDestroy;
-import com.l2scoria.gameserver.ai.CtrlEvent;
-import com.l2scoria.gameserver.ai.CtrlIntention;
-import com.l2scoria.gameserver.ai.L2AttackableAI;
-import com.l2scoria.gameserver.ai.L2CharacterAI;
-import com.l2scoria.gameserver.ai.L2FortSiegeGuardAI;
-import com.l2scoria.gameserver.ai.L2SiegeGuardAI;
+import com.l2scoria.gameserver.ai.*;
 import com.l2scoria.gameserver.datatables.sql.ItemTable;
 import com.l2scoria.gameserver.managers.CursedWeaponsManager;
-import com.l2scoria.gameserver.model.actor.instance.L2DoorInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2FolkInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2FortSiegeGuardInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2GrandBossInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2MinionInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2MonsterInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2NpcInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2PetInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2PlayableInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2RaidBossInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2SiegeGuardInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2SummonInstance;
+import com.l2scoria.gameserver.model.actor.instance.*;
 import com.l2scoria.gameserver.model.actor.knownlist.AttackableKnownList;
 import com.l2scoria.gameserver.model.base.SoulCrystal;
 import com.l2scoria.gameserver.model.quest.Quest;
@@ -65,6 +40,11 @@ import com.l2scoria.gameserver.templates.L2NpcTemplate;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.gameserver.util.Util;
 import com.l2scoria.util.random.Rnd;
+import javolution.util.FastList;
+import javolution.util.FastMap;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * This class manages all NPC that can be attacked.<BR>
@@ -501,6 +481,8 @@ public class L2Attackable extends L2NpcInstance
 
 	public synchronized boolean getMustRewardExpSP()
 	{
+		if(_event!=null && _event.isRunning())
+			return _event.canGaveExp(this);
 		return _mustGiveExpSp;
 	}
 
@@ -526,6 +508,9 @@ public class L2Attackable extends L2NpcInstance
 		if(!super.doDie(killer))
 			return false;
 
+		if(_event!=null)
+			_event.onKill(killer, this);
+
 		// Enhance soul crystals of the attacker if this L2Attackable had its soul absorbed
 		try
 		{
@@ -536,7 +521,7 @@ public class L2Attackable extends L2NpcInstance
 		}
 		catch(Exception e)
 		{
-			_log.log(Level.SEVERE, "", e);
+			_log.fatal("", e);
 		}
 
 		// Notify the Quest Engine of the L2Attackable death if necessary
@@ -563,7 +548,7 @@ public class L2Attackable extends L2NpcInstance
 		}
 		catch(Exception e)
 		{
-			_log.log(Level.SEVERE, "", e);
+			_log.fatal("", e);
 		}
 
 		setChampion(false);
@@ -981,7 +966,7 @@ public class L2Attackable extends L2NpcInstance
 		}
 		catch(Exception e)
 		{
-			_log.log(Level.SEVERE, "", e);
+			_log.fatal("", e);
 		}
 	}
 
@@ -1072,7 +1057,7 @@ public class L2Attackable extends L2NpcInstance
 			}
 			catch(Exception e)
 			{
-				_log.log(Level.SEVERE, "", e);
+				_log.fatal("", e);
 			}
 		}
 	}
@@ -1475,7 +1460,7 @@ public class L2Attackable extends L2NpcInstance
 			return new RewardItem(drop.getItemId(), itemCount);
 		else if(itemCount == 0 && Config.DEBUG)
 		{
-			_log.fine("Roll produced 0 items to drop...");
+			_log.info("Roll produced 0 items to drop...");
 		}
 
 		return null;
@@ -1702,7 +1687,7 @@ public class L2Attackable extends L2NpcInstance
 				return new RewardItem(drop.getItemId(), itemCount);
 			else if(itemCount == 0 && Config.DEBUG)
 			{
-				_log.fine("Roll produced 0 items to drop...");
+				_log.info("Roll produced 0 items to drop...");
 			}
 
 			drop = null;
@@ -1784,6 +1769,10 @@ public class L2Attackable extends L2NpcInstance
 		if(player == null)
 			return;
 
+		if(player._event!=null && player._event == _event && _event.isRunning())
+			if(!_event.canDropItems(this,player))
+				return;
+
 		int levelModifier = calculateLevelModifierForDrop(player); // level modifier in %'s (will be subtracted from drop chance)
 
 		// Check the drop of a cursed weapon
@@ -1814,7 +1803,7 @@ public class L2Attackable extends L2NpcInstance
 
 						if(Config.DEBUG)
 						{
-							_log.fine("Item id to spoil: " + item.getItemId() + " amount: " + item.getCount());
+							_log.info("Item id to spoil: " + item.getItemId() + " amount: " + item.getCount());
 						}
 
 						sweepList.add(item);
@@ -1854,7 +1843,7 @@ public class L2Attackable extends L2NpcInstance
 				{
 					if(Config.DEBUG)
 					{
-						_log.fine("Item id to drop: " + item.getItemId() + " amount: " + item.getCount());
+						_log.info("Item id to drop: " + item.getItemId() + " amount: " + item.getCount());
 					}
 
 					// Check if the autoLoot mode is active
@@ -2688,7 +2677,7 @@ public class L2Attackable extends L2NpcInstance
 							}
 							catch(NumberFormatException nfe)
 							{
-								_log.log(Level.WARNING, "An attempt to identify a soul crystal failed, " + "verify the names have not changed in etcitem table.", nfe);
+								_log.warn("An attempt to identify a soul crystal failed, " + "verify the names have not changed in etcitem table.", nfe);
 
 								player.sendMessage("There has been an error handling your soul crystal." + " Please notify your server admin.");
 

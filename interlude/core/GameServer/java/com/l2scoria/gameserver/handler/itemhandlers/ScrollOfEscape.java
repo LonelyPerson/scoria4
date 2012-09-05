@@ -24,6 +24,7 @@ import com.l2scoria.gameserver.ai.CtrlIntention;
 import com.l2scoria.gameserver.datatables.SkillTable;
 import com.l2scoria.gameserver.datatables.csv.MapRegionTable;
 import com.l2scoria.gameserver.handler.IItemHandler;
+import com.l2scoria.gameserver.instancemanager.InstanceManager;
 import com.l2scoria.gameserver.managers.CastleManager;
 import com.l2scoria.gameserver.managers.ClanHallManager;
 import com.l2scoria.gameserver.managers.FortManager;
@@ -33,6 +34,7 @@ import com.l2scoria.gameserver.model.L2Skill;
 import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PlayableInstance;
+import com.l2scoria.gameserver.model.entity.Instance;
 import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.MagicSkillUser;
 import com.l2scoria.gameserver.network.serverpackets.SetupGauge;
@@ -41,114 +43,88 @@ import com.l2scoria.gameserver.thread.ThreadPoolManager;
 
 /**
  * This class ...
- * 
+ *
  * @version $Revision: 1.2.3 $ $Date: 2009/04/29 14:01:12 $
  */
 
 public class ScrollOfEscape implements IItemHandler
 {
 	// all the items ids that this handler knowns
-	private static final int[] ITEM_IDS =
-	{
-			736,
-			1830,
-			1829,
-			1538,
-			3958,
-			5858,
-			5859,
-			7117,
-			7118,
-			7119,
-			7120,
-			7121,
-			7122,
-			7123,
-			7124,
-			7125,
-			7126,
-			7127,
-			7128,
-			7129,
-			7130,
-			7131,
-			7132,
-			7133,
-			7134,
-			7135,
-			7554,
-			7555,
-			7556,
-			7557,
-			7558,
-			7559,
-			7618,
-			7619
-	};
+	private static final int[] ITEM_IDS = {736, 1830, 1829, 1538, 3958, 5858, 5859, 7117, 7118, 7119, 7120, 7121, 7122, 7123, 7124, 7125, 7126, 7127, 7128, 7129, 7130, 7131, 7132, 7133, 7134, 7135, 7554, 7555, 7556, 7557, 7558, 7559, 7618, 7619};
 
 	/* (non-Javadoc)
 	 * @see com.l2scoria.gameserver.handler.IItemHandler#useItem(com.l2scoria.gameserver.model.L2PcInstance, com.l2scoria.gameserver.model.L2ItemInstance)
 	 */
 	public void useItem(L2PlayableInstance playable, L2ItemInstance item)
 	{
-		if(!(playable instanceof L2PcInstance))
+		if (!(playable instanceof L2PcInstance))
+		{
 			return;
+		}
 
 		L2PcInstance activeChar = (L2PcInstance) playable;
 
-		if(checkConditions(activeChar))
+		if (checkConditions(activeChar))
+		{
 			return;
+		}
 
 		//Check to see if player is sitting
-		if(activeChar.isSitting())
+		if (activeChar.isSitting())
 		{
 			activeChar.sendPacket(new SystemMessage(SystemMessageId.CANT_MOVE_SITTING));
 			return;
 		}
 
-		if(GrandBossManager.getInstance().getZone(activeChar) != null && !activeChar.isGM())
+		if (GrandBossManager.getInstance().getZone(activeChar) != null && !activeChar.isGM())
 		{
 			activeChar.sendMessage("You Can't Use SOE In Grand boss zone!");
 			return;
 		}
 
 		// Check to see if player is on olympiad
-		if(activeChar.isInOlympiadMode() || activeChar.inObserverMode())
+		if (activeChar.isInOlympiadMode() || activeChar.inObserverMode())
 		{
 			activeChar.sendPacket(new SystemMessage(SystemMessageId.THIS_ITEM_IS_NOT_AVAILABLE_FOR_THE_OLYMPIAD_EVENT));
 			return;
 		}
 
-		if(!Config.ALLOW_SOE_IN_PVP && activeChar.getPvpFlag() != 0)
+		if (!Config.ALLOW_SOE_IN_PVP && activeChar.getPvpFlag() != 0)
 		{
 			activeChar.sendMessage("You Can't Use SOE In PvP!");
 			return;
 		}
 
 		// Check to see if the player is in a festival.
-		if(activeChar.isFestivalParticipant())
+		if (activeChar.isFestivalParticipant())
 		{
 			activeChar.sendPacket(SystemMessage.sendString("You may not use an escape skill in a festival."));
 			return;
 		}
 
 		// Check to see if player is in jail
-		if(activeChar.isInJail())
+		if (activeChar.isInJail())
 		{
 			activeChar.sendPacket(SystemMessage.sendString("You can not escape from jail."));
 			return;
 		}
 
 		// Check to see if player is in a duel
-		if(activeChar.isInDuel())
+		if (activeChar.isInDuel())
 		{
 			activeChar.sendPacket(SystemMessage.sendString("You cannot use escape skills during a duel."));
 			return;
 		}
 
-		if(activeChar.isParalyzed())
+		if (activeChar.isParalyzed())
 		{
 			activeChar.sendPacket(SystemMessage.sendString("You may not use an escape skill in a paralyzed."));
+			return;
+		}
+
+		if((activeChar._event!=null && activeChar._event.isRunning()) && !activeChar._event.canLogout(activeChar))
+		{
+			activeChar.sendPacket(SystemMessage.sendString("You cannot use escape skills during an event."));
 			return;
 		}
 
@@ -160,8 +136,10 @@ public class ScrollOfEscape implements IItemHandler
 		int itemId = item.getItemId();
 		int escapeSkill = itemId == 1538 || itemId == 5858 || itemId == 5859 || itemId == 3958 ? 2036 : 2013;
 
-		if(!activeChar.destroyItem("Consume", item.getObjectId(), 1, null, false))
+		if (!activeChar.destroyItem("Consume", item.getObjectId(), 1, null, false))
+		{
 			return;
+		}
 
 		activeChar.disableAllSkills();
 
@@ -206,48 +184,61 @@ public class ScrollOfEscape implements IItemHandler
 
 		public void run()
 		{
-			if(_activeChar.isDead())
+			if (_activeChar.isDead())
+			{
 				return;
+			}
 
 			_activeChar.enableAllSkills();
 
 			_activeChar.setIsIn7sDungeon(false);
 
+			if (_activeChar.getInstanceId() > 0)
+			{
+				Instance inst = InstanceManager.getInstance().getInstance(_activeChar.getInstanceId());
+				if (inst != null)
+				{
+					inst.ejectPlayer(_activeChar.getObjectId());
+					return;
+				}
+			}
+			_activeChar.setInstanceId(0);
+
 			try
 			{
 				// escape to castle if own's one
-				if((_itemId == 1830 || _itemId == 5859) && CastleManager.getInstance().getCastleByOwner(_activeChar.getClan()) != null)
+				if ((_itemId == 1830 || _itemId == 5859) && CastleManager.getInstance().getCastleByOwner(_activeChar.getClan()) != null)
 				{
 					_activeChar.teleToLocation(MapRegionTable.TeleportWhereType.Castle);
 				}
 				// escape to fortress if own's one if own's one
-				else if((_itemId == 1830 || _itemId == 5859) && FortManager.getInstance().getFortByOwner(_activeChar.getClan()) != null)
+				else if ((_itemId == 1830 || _itemId == 5859) && FortManager.getInstance().getFortByOwner(_activeChar.getClan()) != null)
 				{
 					_activeChar.teleToLocation(MapRegionTable.TeleportWhereType.Fortress);
 				}
-				else if((_itemId == 1829 || _itemId == 5858) && _activeChar.getClan() != null && ClanHallManager.getInstance().getClanHallByOwner(_activeChar.getClan()) != null) // escape to clan hall if own's one
+				else if ((_itemId == 1829 || _itemId == 5858) && _activeChar.getClan() != null && ClanHallManager.getInstance().getClanHallByOwner(_activeChar.getClan()) != null) // escape to clan hall if own's one
 				{
 					_activeChar.teleToLocation(MapRegionTable.TeleportWhereType.ClanHall);
 				}
-				else if(_itemId == 5858) // do nothing
+				else if (_itemId == 5858) // do nothing
 				{
 					_activeChar.sendPacket(new SystemMessage(SystemMessageId.CLAN_HAS_NO_CLAN_HALL));
 					return;
 				}
-				else if(_itemId == 5859) // do nothing
+				else if (_itemId == 5859) // do nothing
 				{
 					_activeChar.sendPacket(SystemMessage.sendString("Your clan does not own castle or fortress."));
 					return;
 				}
 				else
 				{
-					if(_itemId < 7117)
+					if (_itemId < 7117)
 					{
 						_activeChar.teleToLocation(MapRegionTable.TeleportWhereType.Town);
 					}
 					else
 					{
-						switch(_itemId)
+						switch (_itemId)
 						{
 							case 7117:
 								_activeChar.teleToLocation(-84318, 244579, -3730, true); // Talking Island
@@ -336,10 +327,9 @@ public class ScrollOfEscape implements IItemHandler
 						}
 					}
 				}
-			}
-			catch(Throwable e)
+			} catch (Throwable e)
 			{
-				if(Config.DEBUG)
+				if (Config.DEBUG)
 				{
 					e.printStackTrace();
 				}

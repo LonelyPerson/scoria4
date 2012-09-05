@@ -29,12 +29,12 @@ import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.util.Point3D;
 import com.l2scoria.util.database.L2DatabaseFactory;
 import com.l2scoria.util.random.Rnd;
+import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.concurrent.ScheduledFuture;
-import java.util.logging.Logger;
 
 public class CursedWeapon
 {
@@ -136,7 +136,7 @@ public class CursedWeapon
 
 					if(statement.executeUpdate() != 1)
 					{
-						_log.warning("Error while deleting itemId " + _itemId + " from userId " + _playerId);
+						_log.warn("Error while deleting itemId " + _itemId + " from userId " + _playerId);
 					}
 
 					statement.close();
@@ -149,7 +149,7 @@ public class CursedWeapon
 					statement.setInt(2, _skillId);
 					if (statement.executeUpdate() != 1)
 					{
-						_log.warning("Error while deleting skillId "+ _skillId +" from userId "+_playerId);
+						_log.warn("Error while deleting skillId "+ _skillId +" from userId "+_playerId);
 					}
 					*/
 
@@ -161,7 +161,7 @@ public class CursedWeapon
 
 					if(statement.executeUpdate() != 1)
 					{
-						_log.warning("Error while updating karma & pkkills for userId " + _playerId);
+						_log.warn("Error while updating karma & pkkills for userId " + _playerId);
 					}
 
 					statement.close();
@@ -169,7 +169,7 @@ public class CursedWeapon
 				}
 				catch(Exception e)
 				{
-					_log.warning("Could not delete : " + e);
+					_log.warn("Could not delete : " + e);
 				}
 				finally
 				{
@@ -421,6 +421,9 @@ public class CursedWeapon
 			}
 		}
 
+		if(player._event!=null)
+			player._event.remove(player);
+
 		_isActivated = true;
 
 		// Player holding it data
@@ -524,7 +527,7 @@ public class CursedWeapon
 		}
 		catch(SQLException e)
 		{
-			_log.severe("CursedWeapon: Failed to save data: " + e);
+			_log.fatal("CursedWeapon: Failed to save data: " + e);
 		}
 		finally
 		{

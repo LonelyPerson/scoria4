@@ -18,20 +18,6 @@
  */
 package com.l2scoria.gameserver.model.entity;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.LineNumberReader;
-import java.util.Date;
-import java.util.List;
-import java.util.StringTokenizer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javolution.text.TextBuilder;
-import javolution.util.FastList;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.cache.HtmCache;
 import com.l2scoria.gameserver.model.L2World;
@@ -39,9 +25,18 @@ import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.clientpackets.Say2;
 import com.l2scoria.gameserver.network.serverpackets.CreatureSay;
+import com.l2scoria.gameserver.network.serverpackets.L2GameServerPacket;
 import com.l2scoria.gameserver.network.serverpackets.NpcHtmlMessage;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
 import com.l2scoria.gameserver.script.DateRange;
+import javolution.text.TextBuilder;
+import javolution.util.FastList;
+import org.apache.log4j.Logger;
+
+import java.io.*;
+import java.util.Date;
+import java.util.List;
+import java.util.StringTokenizer;
 
 /**
  * Р“Р»Р°РІРЅС‹Р№ РєР»Р°СЃСЃ Р°РЅРѕРЅСЃРѕРІ:<br>
@@ -91,7 +86,7 @@ public class Announcements
 		}
 		else
 		{
-			_log.config("data/announcements.txt doesn't exist");
+			_log.info("data/announcements.txt doesn't exist");
 		}
 
 		file = null;
@@ -99,26 +94,24 @@ public class Announcements
 
 	public void showAnnouncements(L2PcInstance activeChar)
 	{
-		for(int i = 0; i < _announcements.size(); i++)
+		for (String _announcement : _announcements)
 		{
-			CreatureSay cs = new CreatureSay(0, Say2.ANNOUNCEMENT, activeChar.getName(), _announcements.get(i));
+			CreatureSay cs = new CreatureSay(0, Say2.ANNOUNCEMENT, activeChar.getName(), _announcement);
 			activeChar.sendPacket(cs);
 			cs = null;
 		}
 
-		for(int i = 0; i < _eventAnnouncements.size(); i++)
+		for (List<Object> entry : _eventAnnouncements)
 		{
-			List<Object> entry = _eventAnnouncements.get(i);
-
 			DateRange validDateRange = (DateRange) entry.get(0);
 			String[] msg = (String[]) entry.get(1);
 			Date currentDate = new Date();
 
-			if(!validDateRange.isValid() || validDateRange.isWithinRange(currentDate))
+			if (!validDateRange.isValid() || validDateRange.isWithinRange(currentDate))
 			{
 				SystemMessage sm = new SystemMessage(SystemMessageId.S1_S2);
 
-				for(String element : msg)
+				for (String element : msg)
 				{
 					sm.addString(element);
 				}
@@ -153,8 +146,8 @@ public class Announcements
 
 		for(int i = 0; i < _announcements.size(); i++)
 		{
-			replyMSG.append("<table width=260><tr><td width=220>" + _announcements.get(i) + "</td><td width=40>");
-			replyMSG.append("<button value=\"Delete\" action=\"bypass -h admin_del_announcement " + i + "\" width=60 height=15 back=\"sek.cbui94\" fore=\"sek.cbui92\"></td></tr></table>");
+			replyMSG.append("<table width=260><tr><td width=220>").append(_announcements.get(i)).append("</td><td width=40>");
+			replyMSG.append("<button value=\"Delete\" action=\"bypass -h admin_del_announcement ").append(i).append("\" width=60 height=15 back=\"sek.cbui94\" fore=\"sek.cbui92\"></td></tr></table>");
 		}
 
 		adminReply.replace("%announces%", replyMSG.toString());
@@ -200,13 +193,13 @@ public class Announcements
 				}
 				st = null;
 			}
-			_log.config("Announcements: Loaded " + i + " Announcements.");
+			_log.info("Announcements: Loaded " + i + " Announcements.");
 
 			line = null;
 		}
 		catch(IOException e1)
 		{
-			_log.log(Level.SEVERE, "Error reading announcements", e1);
+			_log.fatal("Error reading announcements", e1);
 		}
 		finally
 		{
@@ -230,9 +223,9 @@ public class Announcements
 		try
 		{
 			save = new FileWriter(file);
-			for(int i = 0; i < _announcements.size(); i++)
+			for (String _announcement : _announcements)
 			{
-				save.write(_announcements.get(i));
+				save.write(_announcement);
 				save.write("\r\n");
 			}
 			save.flush();
@@ -240,7 +233,7 @@ public class Announcements
 		}
 		catch(IOException e)
 		{
-			_log.warning("saving the announcements file has failed: " + e);
+			_log.warn("saving the announcements file has failed: " + e);
 		}
 
 		file = null;
@@ -276,6 +269,22 @@ public class Announcements
 		for(L2PcInstance player : L2World.getInstance().getAllPlayers())
 		{
 			player.sendPacket(sm);
+		}
+	}
+
+	public void criticalAnnounceToAll(String text)
+	{
+		CreatureSay cs = new CreatureSay(0, CreatureSay.SystemChatChannelId.Chat_Critical_Announce, "", text);
+		for (L2PcInstance player : L2World.getInstance().getAllPlayers())
+			player.sendPacket(cs);
+	}
+
+	public void announceToInstance(L2GameServerPacket gsp, int instanceId)
+	{
+		for (L2PcInstance player : L2World.getInstance().getAllPlayers())
+		{
+			if (player.getInstanceId() == instanceId)
+				player.sendPacket(gsp);
 		}
 	}
 

@@ -6,11 +6,6 @@
 
 package com.l2scoria.gameserver.handler.itemhandlers;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.handler.IItemHandler;
 import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
@@ -18,6 +13,11 @@ import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PlayableInstance;
 import com.l2scoria.gameserver.network.serverpackets.SocialAction;
 import com.l2scoria.util.database.L2DatabaseFactory;
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 public class HeroCustomItem implements IItemHandler
 {
@@ -111,7 +111,7 @@ public class HeroCustomItem implements IItemHandler
 		}
 		catch(Exception e)
 		{
-			_log.warning("Error: could not update database: " + e);
+			_log.warn("Error: could not update database: " + e);
 		}
 		finally
 		{

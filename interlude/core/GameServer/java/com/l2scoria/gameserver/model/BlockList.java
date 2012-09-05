@@ -18,22 +18,18 @@
  */
 package com.l2scoria.gameserver.model;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 import com.l2scoria.gameserver.datatables.sql.CharNameTable;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
 import com.l2scoria.util.database.L2DatabaseFactory;
+import javolution.util.FastList;
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.List;
 
 /**
  * This class ...
@@ -92,7 +88,7 @@ public class BlockList
 		}
 		catch (Exception e)
 		{
-			_log.log(Level.WARNING, "Error found in " + ObjId + " FriendList while loading BlockList: " + e.getMessage(), e);
+			_log.warn("Error found in " + ObjId + " FriendList while loading BlockList: " + e.getMessage(), e);
 		}
 		finally
 		{
@@ -127,7 +123,7 @@ public class BlockList
 		}
 		catch (Exception e)
 		{
-			_log.log(Level.WARNING, "Could not add block player: " + e.getMessage(), e);
+			_log.warn("Could not add block player: " + e.getMessage(), e);
 		}
 		finally
 		{

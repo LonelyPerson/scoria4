@@ -18,15 +18,6 @@
  */
 package com.l2scoria.gameserver.script.faenor;
 
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
-
-import javax.script.ScriptContext;
-import javax.script.ScriptException;
-
-import javolution.util.FastList;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.model.L2DropCategory;
 import com.l2scoria.gameserver.model.L2DropData;
@@ -37,6 +28,13 @@ import com.l2scoria.gameserver.script.EngineInterface;
 import com.l2scoria.gameserver.script.EventDroplist;
 import com.l2scoria.gameserver.script.Expression;
 import com.l2scoria.gameserver.templates.L2NpcTemplate;
+import javolution.util.FastList;
+import org.apache.log4j.Logger;
+
+import javax.script.ScriptContext;
+import javax.script.ScriptException;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Luis Arias TODO To change the template for this generated type comment go to Window - Preferences - Java -
@@ -92,7 +90,7 @@ public class FaenorInterface implements EngineInterface
 		{
 			if(Config.DEBUG)
 			{
-				_log.warning("Npc doesnt Exist");
+				_log.warn("Npc doesnt Exist");
 			}
 			throw new NullPointerException();
 		}

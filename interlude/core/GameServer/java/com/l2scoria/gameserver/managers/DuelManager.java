@@ -17,14 +17,12 @@
  */
 package com.l2scoria.gameserver.managers;
 
-import java.util.logging.Logger;
-
-import javolution.util.FastList;
-
 import com.l2scoria.gameserver.model.L2Effect;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.entity.Duel;
 import com.l2scoria.gameserver.network.serverpackets.L2GameServerPacket;
+import javolution.util.FastList;
+import org.apache.log4j.Logger;
 
 public class DuelManager
 {

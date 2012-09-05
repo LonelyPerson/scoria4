@@ -18,8 +18,6 @@
  */
 package com.l2scoria.gameserver.ai.special;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.GameTimeController;
 import com.l2scoria.gameserver.ai.CtrlIntention;
@@ -39,6 +37,7 @@ import com.l2scoria.gameserver.network.serverpackets.PlaySound;
 import com.l2scoria.gameserver.templates.StatsSet;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.util.random.Rnd;
+import org.apache.log4j.Logger;
 
 /**
  * Zaken AI
@@ -111,7 +110,7 @@ public class Zaken extends Quest
 								catch (Throwable e)
 								{
 									e.printStackTrace();
-									log.warning("Cannot close door ID: 21240006 " + e);
+									log.warn("Cannot close door ID: 21240006 " + e);
 								}
 							}
 						}, 300000L);
@@ -120,7 +119,7 @@ public class Zaken extends Quest
 				catch (Throwable e)
 				{
 					e.printStackTrace();
-					log.warning("Cannot open door ID: 21240006 " + e);
+					log.warn("Cannot open door ID: 21240006 " + e);
 				}
 			}
 		}, 2000L, 600000L);
@@ -174,7 +173,7 @@ public class Zaken extends Quest
 	{
 		if (npc == null)
 		{
-			log.warning("Zaken AI failed to load, missing Zaken in grandboss_data.sql");
+			log.warn("Zaken AI failed to load, missing Zaken in grandboss_data.sql");
 			return;
 		}
 		GrandBossManager.getInstance().addBoss(npc);
@@ -189,7 +188,7 @@ public class Zaken extends Quest
 		_quest2 = 3;
 		if (_Zone == null)
 		{
-			log.warning("Zaken AI failed to load, missing zone for Zaken");
+			log.warn("Zaken AI failed to load, missing zone for Zaken");
 			return;
 		}
 

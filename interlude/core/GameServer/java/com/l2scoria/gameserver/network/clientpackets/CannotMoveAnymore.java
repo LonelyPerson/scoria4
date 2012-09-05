@@ -24,8 +24,7 @@ import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.actor.position.L2CharPosition;
 import com.l2scoria.gameserver.network.serverpackets.PartyMemberPosition;
-
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 /**
  * This class ...
@@ -62,7 +61,7 @@ public final class CannotMoveAnymore extends L2GameClientPacket
 
 		if(Config.DEBUG)
 		{
-			_log.fine("client: x:" + _x + " y:" + _y + " z:" + _z + " server x:" + player.getX() + " y:" + player.getY() + " z:" + player.getZ());
+			_log.info("client: x:" + _x + " y:" + _y + " z:" + _z + " server x:" + player.getX() + " y:" + player.getY() + " z:" + player.getZ());
 		}
 
 		if(player.getAI() != null)

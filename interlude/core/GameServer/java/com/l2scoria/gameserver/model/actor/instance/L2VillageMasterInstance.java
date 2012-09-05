@@ -18,11 +18,6 @@
  */
 package com.l2scoria.gameserver.model.actor.instance;
 
-import java.util.Iterator;
-import java.util.Set;
-
-import javolution.text.TextBuilder;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.sql.CharTemplateTable;
 import com.l2scoria.gameserver.datatables.sql.ClanTable;
@@ -32,28 +27,24 @@ import com.l2scoria.gameserver.managers.FortManager;
 import com.l2scoria.gameserver.managers.FortSiegeManager;
 import com.l2scoria.gameserver.managers.SiegeManager;
 import com.l2scoria.gameserver.model.L2Clan;
+import com.l2scoria.gameserver.model.L2Clan.SubPledge;
 import com.l2scoria.gameserver.model.L2ClanMember;
 import com.l2scoria.gameserver.model.L2PledgeSkillLearn;
-import com.l2scoria.gameserver.model.L2Clan.SubPledge;
-import com.l2scoria.gameserver.model.base.ClassId;
-import com.l2scoria.gameserver.model.base.ClassType;
-import com.l2scoria.gameserver.model.base.PlayerClass;
-import com.l2scoria.gameserver.model.base.PlayerRace;
-import com.l2scoria.gameserver.model.base.SubClass;
+import com.l2scoria.gameserver.model.base.*;
 import com.l2scoria.gameserver.model.entity.olympiad.Olympiad;
 import com.l2scoria.gameserver.model.entity.siege.Castle;
 import com.l2scoria.gameserver.model.entity.siege.Fort;
 import com.l2scoria.gameserver.model.entity.siege.Siege;
 import com.l2scoria.gameserver.model.quest.QuestState;
 import com.l2scoria.gameserver.network.SystemMessageId;
-import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
-import com.l2scoria.gameserver.network.serverpackets.AquireSkillList;
-import com.l2scoria.gameserver.network.serverpackets.NpcHtmlMessage;
-import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
-import com.l2scoria.gameserver.network.serverpackets.UserInfo;
+import com.l2scoria.gameserver.network.serverpackets.*;
 import com.l2scoria.gameserver.templates.L2NpcTemplate;
 import com.l2scoria.gameserver.util.FloodProtector;
 import com.l2scoria.gameserver.util.Util;
+import javolution.text.TextBuilder;
+
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * This class ...
@@ -318,6 +309,12 @@ public final class L2VillageMasterInstance extends L2FolkInstance
 						allowAddition = false;
 					}
 
+					if (player._event != null)
+					{
+						player.sendMessage("Недоступно в данный момент.");
+						return;
+					}
+
 					if(Olympiad.getInstance().isRegisteredInComp(player) || player.getOlympiadGameId() > 0)
 					{
 						player.sendPacket(new SystemMessage(SystemMessageId.YOU_HAVE_ALREADY_BEEN_REGISTERED_IN_A_WAITING_LIST_OF_AN_EVENT));
@@ -352,7 +349,7 @@ public final class L2VillageMasterInstance extends L2FolkInstance
 					if(!Config.ALT_GAME_SUBCLASS_WITHOUT_QUESTS)
 					{
 						QuestState qs = player.getQuestState("235_MimirsElixir");
-						if(qs == null || qs.getState().getName() != "Completed")
+						if(qs == null || !qs.getState().getName().equalsIgnoreCase("Completed"))
 						{
 							player.sendMessage("You must have completed the Mimir's Elixir quest to continue adding your sub class.");
 							return;
@@ -448,7 +445,7 @@ public final class L2VillageMasterInstance extends L2FolkInstance
 
 					if(!FloodProtector.getInstance().tryPerformAction(player.getObjectId(), FloodProtector.PROTECTED_SUBCLASS))
 					{
-						_log.warning("Player " + player.getName() + " has performed a subclass change too fast");
+						_log.warn("Player " + player.getName() + " has performed a subclass change too fast");
 						player.sendMessage("You can change Subclass only every " + Config.PROTECTED_SUBCLASS_C + " Millisecond(s)");
 						return;
 					}
@@ -533,7 +530,7 @@ public final class L2VillageMasterInstance extends L2FolkInstance
 	{
 		if(Config.DEBUG)
 		{
-			_log.fine(player.getObjectId() + "(" + player.getName() + ") requested dissolve a clan from " + getObjectId() + "(" + getName() + ")");
+			_log.info(player.getObjectId() + "(" + player.getName() + ") requested dissolve a clan from " + getObjectId() + "(" + getName() + ")");
 		}
 
 		if(!player.isClanLeader())
@@ -606,7 +603,7 @@ public final class L2VillageMasterInstance extends L2FolkInstance
 	{
 		if(Config.DEBUG)
 		{
-			_log.fine(player.getObjectId() + "(" + player.getName() + ") requested recover a clan from " + getObjectId() + "(" + getName() + ")");
+			_log.info(player.getObjectId() + "(" + player.getName() + ") requested recover a clan from " + getObjectId() + "(" + getName() + ")");
 		}
 
 		if(!player.isClanLeader())
@@ -626,7 +623,7 @@ public final class L2VillageMasterInstance extends L2FolkInstance
 	{
 		if(Config.DEBUG)
 		{
-			_log.fine(player.getObjectId() + "(" + player.getName() + ") requested change a clan leader from " + getObjectId() + "(" + getName() + ")");
+			_log.info(player.getObjectId() + "(" + player.getName() + ") requested change a clan leader from " + getObjectId() + "(" + getName() + ")");
 		}
 
 		if(!player.isClanLeader())
@@ -691,7 +688,7 @@ public final class L2VillageMasterInstance extends L2FolkInstance
 	{
 		if(Config.DEBUG)
 		{
-			_log.fine(player.getObjectId() + "(" + player.getName() + ") requested sub clan creation from " + getObjectId() + "(" + getName() + ")");
+			_log.info(player.getObjectId() + "(" + player.getName() + ") requested sub clan creation from " + getObjectId() + "(" + getName() + ")");
 		}
 
 		if(!player.isClanLeader())
@@ -802,7 +799,7 @@ public final class L2VillageMasterInstance extends L2FolkInstance
 	{
 		if(Config.DEBUG)
 		{
-			_log.fine(player.getObjectId() + "(" + player.getName() + ") requested to assign sub clan" + clanName + "leader " + "(" + leaderName + ")");
+			_log.info(player.getObjectId() + "(" + player.getName() + ") requested to assign sub clan" + clanName + "leader " + "(" + leaderName + ")");
 		}
 
 		if(!player.isClanLeader())
@@ -963,7 +960,7 @@ public final class L2VillageMasterInstance extends L2FolkInstance
 	{
 		if(Config.DEBUG)
 		{
-			_log.fine("PledgeSkillList activated on: " + getObjectId());
+			_log.info("PledgeSkillList activated on: " + getObjectId());
 		}
 		if(player.getClan() == null)
 			return;

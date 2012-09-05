@@ -21,31 +21,8 @@ import com.l2scoria.Config;
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.L2Object;
 import com.l2scoria.gameserver.model.L2Summon;
-import com.l2scoria.gameserver.model.actor.instance.L2BoatInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2DoorInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2NpcInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2PetInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2StaticObjectInstance;
-import com.l2scoria.gameserver.network.serverpackets.CharInfo;
-import com.l2scoria.gameserver.network.serverpackets.CustomNpcInfo;
-import com.l2scoria.gameserver.network.serverpackets.DeleteObject;
-import com.l2scoria.gameserver.network.serverpackets.DoorInfo;
-import com.l2scoria.gameserver.network.serverpackets.DoorStatusUpdate;
-import com.l2scoria.gameserver.network.serverpackets.DropItem;
-import com.l2scoria.gameserver.network.serverpackets.GetOnVehicle;
-import com.l2scoria.gameserver.network.serverpackets.NpcInfo;
-import com.l2scoria.gameserver.network.serverpackets.PetInfo;
-import com.l2scoria.gameserver.network.serverpackets.PetItemList;
-import com.l2scoria.gameserver.network.serverpackets.PrivateStoreMsgBuy;
-import com.l2scoria.gameserver.network.serverpackets.PrivateStoreMsgSell;
-import com.l2scoria.gameserver.network.serverpackets.RecipeShopMsg;
-import com.l2scoria.gameserver.network.serverpackets.RelationChanged;
-import com.l2scoria.gameserver.network.serverpackets.SpawnItem;
-import com.l2scoria.gameserver.network.serverpackets.SpawnItemPoly;
-import com.l2scoria.gameserver.network.serverpackets.StaticObject;
-import com.l2scoria.gameserver.network.serverpackets.VehicleInfo;
+import com.l2scoria.gameserver.model.actor.instance.*;
+import com.l2scoria.gameserver.network.serverpackets.*;
 
 public class PcKnownList extends PlayableKnownList
 {
@@ -128,7 +105,7 @@ public class PcKnownList extends PlayableKnownList
 			}
 			else if(object instanceof L2DoorInstance)
 			{
-				getActiveChar().sendPacket(new DoorInfo((L2DoorInstance) object, false));
+				getActiveChar().sendPacket(new DoorInfo((L2DoorInstance) object));
 				getActiveChar().sendPacket(new DoorStatusUpdate((L2DoorInstance) object));
 			}
 			else if(object instanceof L2BoatInstance)
@@ -286,22 +263,18 @@ public class PcKnownList extends PlayableKnownList
 	@Override
 	public int getDistanceToForgetObject(L2Object object)
 	{
-		// when knownlist grows, the distance to forget should be at least
-		// the same as the previous watch range, or it becomes possible that
-		// extra charinfo packets are being sent (watch-forget-watch-forget)
 		int knownlistSize = getKnownObjects().size();
 
 		if(knownlistSize <= 25)
-			return 4200;
+			return 4000;
 
 		if(knownlistSize <= 35)
-			return 3600;
+			return 3500;
 
 		if(knownlistSize <= 70)
 			return 2910;
 
-		else
-			return 2310;
+		return 2310;
 	}
 
 	@Override
@@ -310,7 +283,7 @@ public class PcKnownList extends PlayableKnownList
 		int knownlistSize = getKnownObjects().size();
 
 		if(knownlistSize <= 25)
-			return 3500; // empty field
+			return 3400; // empty field
 
 		if(knownlistSize <= 35)
 			return 2900;
@@ -318,7 +291,6 @@ public class PcKnownList extends PlayableKnownList
 		if(knownlistSize <= 70)
 			return 2300;
 
-		else
-			return 1700; // Siege, TOI, city
+		return 1700;
 	}
 }

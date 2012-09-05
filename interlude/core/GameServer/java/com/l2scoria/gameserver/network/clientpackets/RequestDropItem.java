@@ -18,8 +18,6 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.GmListTable;
 import com.l2scoria.gameserver.managers.CursedWeaponsManager;
@@ -35,6 +33,7 @@ import com.l2scoria.gameserver.templates.L2Item;
 import com.l2scoria.gameserver.util.FloodProtector;
 import com.l2scoria.gameserver.util.IllegalPlayerAction;
 import com.l2scoria.gameserver.util.Util;
+import org.apache.log4j.Logger;
 
 /**
  * This class ...
@@ -89,7 +88,7 @@ public final class RequestDropItem extends L2GameClientPacket
 		{
 			if(Config.DEBUG)
 			{
-				_log.warning("Player " + activeChar.getName() + " has performed drop too fast");
+				_log.warn("Player " + activeChar.getName() + " has performed drop too fast");
 			}
 			activeChar.sendPacket(new SystemMessage(SystemMessageId.CANNOT_DISCARD_THIS_ITEM));
 			return;
@@ -174,7 +173,7 @@ public final class RequestDropItem extends L2GameClientPacket
 		{
 			if(Config.DEBUG)
 			{
-				_log.finest(activeChar.getObjectId() + ":player tried to drop quest item");
+				_log.info(activeChar.getObjectId() + ":player tried to drop quest item");
 			}
 			activeChar.sendPacket(new SystemMessage(SystemMessageId.CANNOT_DISCARD_EXCHANGE_ITEM));
 			return;
@@ -184,7 +183,7 @@ public final class RequestDropItem extends L2GameClientPacket
 		{
 			if(Config.DEBUG)
 			{
-				_log.finest(activeChar.getObjectId() + ": trying to drop too far away");
+				_log.info(activeChar.getObjectId() + ": trying to drop too far away");
 			}
 			activeChar.sendPacket(new SystemMessage(SystemMessageId.CANNOT_DISCARD_DISTANCE_TOO_FAR));
 			return;
@@ -192,7 +191,7 @@ public final class RequestDropItem extends L2GameClientPacket
 
 		if(Config.DEBUG)
 		{
-			_log.fine("requested drop item " + _objectId + "(" + item.getCount() + ") at " + _x + "/" + _y + "/" + _z);
+			_log.info("requested drop item " + _objectId + "(" + item.getCount() + ") at " + _x + "/" + _y + "/" + _z);
 		}
 
 		if(item.isEquipped())
@@ -223,13 +222,13 @@ public final class RequestDropItem extends L2GameClientPacket
 
 		if(Config.DEBUG)
 		{
-			_log.fine("dropping " + _objectId + " item(" + _count + ") at: " + _x + " " + _y + " " + _z);
+			_log.info("dropping " + _objectId + " item(" + _count + ") at: " + _x + " " + _y + " " + _z);
 		}
 
 		if(dropedItem != null && dropedItem.getItemId() == 57 && dropedItem.getCount() >= 1000000)
 		{
 			String msg = "Character (" + activeChar.getName() + ") has dropped (" + dropedItem.getCount() + ")adena at (" + _x + "," + _y + "," + _z + ")";
-			_log.warning(msg);
+			_log.warn(msg);
 			GmListTable.broadcastMessageToGMs(msg);
 		}
 	}

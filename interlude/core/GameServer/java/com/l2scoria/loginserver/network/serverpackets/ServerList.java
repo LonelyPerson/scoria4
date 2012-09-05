@@ -18,12 +18,12 @@
  */
 package com.l2scoria.loginserver.network.serverpackets;
 
+import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.GameServerTable;
 import com.l2scoria.gameserver.datatables.GameServerTable.GameServerInfo;
 import com.l2scoria.loginserver.L2LoginClient;
 import com.l2scoria.loginserver.network.gameserverpackets.ServerStatus;
 import javolution.util.FastList;
-import com.l2scoria.Config;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -100,7 +100,7 @@ public final class ServerList extends L2LoginServerPacket
 	}
 
 	@Override
-	public void write()
+	public void writeImpl()
 	{
 		writeC(0x04);
 		writeC(_servers.size());

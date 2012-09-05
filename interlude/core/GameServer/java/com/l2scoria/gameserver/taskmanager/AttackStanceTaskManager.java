@@ -25,14 +25,13 @@
  */
 package com.l2scoria.gameserver.taskmanager;
 
-import java.util.Map;
-import java.util.logging.Logger;
-
-import javolution.util.FastMap;
-
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.network.serverpackets.AutoAttackStop;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
+
+import java.util.Map;
 
 /**
  * This class ...
@@ -109,7 +108,7 @@ public class AttackStanceTaskManager
 			catch(Throwable e)
 			{
 				// TODO: Find out the reason for exception. Unless caught here, players remain in attack positions.
-				_log.warning(e.toString());
+				_log.warn(e.toString());
 			}
 		}
 	}

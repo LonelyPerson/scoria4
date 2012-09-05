@@ -18,12 +18,12 @@
  */
 package com.l2scoria.gameserver.handler;
 
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.logging.Logger;
-
 import com.l2scoria.gameserver.GameServer;
 import com.l2scoria.gameserver.handler.itemhandlers.*;
+import org.apache.log4j.Logger;
+
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * This class manages handlers of items
@@ -111,7 +111,7 @@ public class ItemHandler
 		registerItemHandler(new BreakingArrow());
 		registerItemHandler(new ChristmasTree());
 		registerItemHandler(new Crystals());
-		_log.config("ItemHandler: Loaded " + _datatable.size() + " handlers.");
+		_log.info("ItemHandler: Loaded " + _datatable.size() + " handlers.");
 	}
 
 	/**

@@ -18,8 +18,6 @@
  */
 package com.l2scoria.gameserver.handler.skillhandlers;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.gameserver.handler.ISkillHandler;
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.L2Object;
@@ -27,6 +25,7 @@ import com.l2scoria.gameserver.model.L2Skill;
 import com.l2scoria.gameserver.model.L2Skill.SkillType;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.util.random.Rnd;
+import org.apache.log4j.Logger;
 
 /**
  * @author evill33t
@@ -76,7 +75,7 @@ public class SummonTreasureKey implements ISkillHandler
 		}
 		catch(Exception e)
 		{
-			_log.warning("Error using skill summon Treasure Key:" + e);
+			_log.warn("Error using skill summon Treasure Key:" + e);
 		}
 	}
 

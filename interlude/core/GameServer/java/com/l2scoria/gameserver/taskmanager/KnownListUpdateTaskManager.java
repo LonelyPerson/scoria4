@@ -1,13 +1,12 @@
 package com.l2scoria.gameserver.taskmanager;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.L2Object;
 import com.l2scoria.gameserver.model.L2World;
 import com.l2scoria.gameserver.model.L2WorldRegion;
 import com.l2scoria.gameserver.model.actor.instance.L2PlayableInstance;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
+import org.apache.log4j.Logger;
 
 public class KnownListUpdateTaskManager
 {
@@ -70,7 +69,7 @@ public class KnownListUpdateTaskManager
 			}
 			catch(Throwable e)
 			{
-				_log.warning(e.toString());
+				_log.warn(e.toString());
 			}
 		}
 	}

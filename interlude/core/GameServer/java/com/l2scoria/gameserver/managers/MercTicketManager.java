@@ -17,13 +17,6 @@
  */
 package com.l2scoria.gameserver.managers;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.List;
-import java.util.logging.Logger;
-
-import javolution.util.FastList;
-
 import com.l2scoria.gameserver.datatables.sql.NpcTable;
 import com.l2scoria.gameserver.idfactory.IdFactory;
 import com.l2scoria.gameserver.model.AutoChatHandler;
@@ -34,8 +27,14 @@ import com.l2scoria.gameserver.model.actor.instance.L2SiegeGuardInstance;
 import com.l2scoria.gameserver.model.entity.siege.Castle;
 import com.l2scoria.gameserver.templates.L2NpcTemplate;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
-import java.sql.Connection;
 import com.l2scoria.util.database.L2DatabaseFactory;
+import javolution.util.FastList;
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.List;
 
 /**
  * @author yellowperil & Fulminus This class is similar to the SiegeGuardManager, except it handles the loading of the

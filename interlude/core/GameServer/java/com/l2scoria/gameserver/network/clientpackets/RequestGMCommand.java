@@ -18,17 +18,10 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.gameserver.model.L2World;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import com.l2scoria.gameserver.network.serverpackets.GMViewHennaInfo;
-import com.l2scoria.gameserver.network.serverpackets.GMViewCharacterInfo;
-import com.l2scoria.gameserver.network.serverpackets.GMViewItemList;
-import com.l2scoria.gameserver.network.serverpackets.GMViewPledgeInfo;
-import com.l2scoria.gameserver.network.serverpackets.GMViewQuestList;
-import com.l2scoria.gameserver.network.serverpackets.GMViewSkillInfo;
-import com.l2scoria.gameserver.network.serverpackets.GMViewWarehouseWithdrawList;
+import com.l2scoria.gameserver.network.serverpackets.*;
+import org.apache.log4j.Logger;
 
 /**
  * This class ...

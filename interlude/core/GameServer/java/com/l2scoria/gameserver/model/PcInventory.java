@@ -17,20 +17,18 @@
  */
 package com.l2scoria.gameserver.model;
 
+import com.l2scoria.gameserver.model.TradeList.TradeItem;
+import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
+import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance.ItemLocation;
+import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
+import com.l2scoria.gameserver.templates.L2EtcItemType;
+import com.l2scoria.util.database.L2DatabaseFactory;
+import javolution.util.FastList;
+
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.List;
-import java.util.logging.Level;
-
-import javolution.util.FastList;
-
-import com.l2scoria.gameserver.model.TradeList.TradeItem;
-import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance.ItemLocation;
-import com.l2scoria.gameserver.templates.L2EtcItemType;
-import java.sql.Connection;
-import com.l2scoria.util.database.L2DatabaseFactory;
 
 public class PcInventory extends Inventory
 {
@@ -689,7 +687,7 @@ public class PcInventory extends Inventory
 		}
 		catch(Exception e)
 		{
-			_log.log(Level.WARNING, "could not restore inventory:", e);
+			_log.warn("could not restore inventory:", e);
 		}
 		finally
 		{

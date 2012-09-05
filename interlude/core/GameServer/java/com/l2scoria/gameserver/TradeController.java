@@ -18,28 +18,26 @@
  */
 package com.l2scoria.gameserver;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.LineNumberReader;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.List;
-import java.util.Map;
-import java.util.StringTokenizer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.sql.ItemTable;
 import com.l2scoria.gameserver.model.L2TradeList;
 import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
-import java.sql.Connection;
 import com.l2scoria.util.database.L2DatabaseFactory;
+import javolution.util.FastList;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.LineNumberReader;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.List;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 /**
  * This class ...
@@ -97,7 +95,7 @@ public class TradeController
 
 		if(buylistData.exists())
 		{
-			_log.warning("Do, please, remove buylists from data folder and use SQL buylist instead");
+			_log.warn("Do, please, remove buylists from data folder and use SQL buylist instead");
 			String line = null;
 			LineNumberReader lnr = null;
 			int dummyItemCount = 0;
@@ -117,21 +115,21 @@ public class TradeController
 
 				if(Config.DEBUG)
 				{
-					_log.fine("created " + dummyItemCount + " Dummy-Items for buylists");
+					_log.info("created " + dummyItemCount + " Dummy-Items for buylists");
 				}
 
-				_log.config("TradeController: Loaded " + _lists.size() + " Buylists.");
+				_log.info("TradeController: Loaded " + _lists.size() + " Buylists.");
 			}
 			catch(Exception e)
 			{
-				_log.log(Level.WARNING, "error while creating trade controller in linenr: " + lnr.getLineNumber(), e);
+				_log.warn("error while creating trade controller in linenr: " + lnr.getLineNumber(), e);
 			}
 			lnr = null;
 			buylistData = null;
 		}
 		else
 		{
-			_log.finer("No buylists were found in data folder, using SQL buylist instead");
+			_log.info("No buylists were found in data folder, using SQL buylist instead");
 			Connection con = null;
 
 			/**
@@ -247,7 +245,7 @@ public class TradeController
 						}
 						catch(Exception e)
 						{
-							_log.warning("TradeController: Problem with buylist " + buy1.getListId() + " item " + itemId);
+							_log.warn("TradeController: Problem with buylist " + buy1.getListId() + " item " + itemId);
 						}
 						if(LimitedItem)
 						{
@@ -276,11 +274,11 @@ public class TradeController
 
 				if(Config.DEBUG)
 				{
-					_log.fine("created " + dummyItemCount + " Dummy-Items for buylists");
+					_log.info("created " + dummyItemCount + " Dummy-Items for buylists");
 				}
 
-				_log.config("TradeController: Loaded " + _lists.size() + " Buylists.");
-				_log.config("TradeController: Loaded " + _listsTaskItem.size() + " Limited Buylists.");
+				_log.info("TradeController: Loaded " + _lists.size() + " Buylists.");
+				_log.info("TradeController: Loaded " + _listsTaskItem.size() + " Limited Buylists.");
 				/*
 				 *  Restore Task for reinitialyze count of buy item
 				 */
@@ -314,14 +312,14 @@ public class TradeController
 				}
 				catch(Exception e)
 				{
-					_log.warning("TradeController: Could not restore Timer for Item count.");
+					_log.warn("TradeController: Could not restore Timer for Item count.");
 					e.printStackTrace();
 				}
 			}
 			catch(Exception e)
 			{
 				// problem with initializing spawn, go to next one
-				_log.warning("TradeController: Buylists could not be initialized.");
+				_log.warn("TradeController: Buylists could not be initialized.");
 				e.printStackTrace();
 			}
 			finally
@@ -440,7 +438,7 @@ public class TradeController
 							}
 							catch(Exception e)
 							{
-								_log.warning("TradeController: Problem with buylist " + buy1.getListId() + " item " + itemId);
+								_log.warn("TradeController: Problem with buylist " + buy1.getListId() + " item " + itemId);
 							}
 							if(LimitedItem)
 							{
@@ -469,10 +467,10 @@ public class TradeController
 
 					if(Config.DEBUG)
 					{
-						_log.fine("created " + dummyItemCount + " Dummy-Items for buylists");
+						_log.info("created " + dummyItemCount + " Dummy-Items for buylists");
 					}
 
-					_log.config("TradeController: Loaded " + (_lists.size() - initialSize) + " Custom Buylists.");
+					_log.info("TradeController: Loaded " + (_lists.size() - initialSize) + " Custom Buylists.");
 
 					/**
 					 * Restore Task for reinitialyze count of buy item
@@ -508,14 +506,14 @@ public class TradeController
 					}
 					catch(Exception e)
 					{
-						_log.warning("TradeController: Could not restore Timer for Item count.");
+						_log.warn("TradeController: Could not restore Timer for Item count.");
 						e.printStackTrace();
 					}
 				}
 				catch(Exception e)
 				{
 					// problem with initializing spawn, go to next one
-					_log.warning("TradeController: Buylists could not be initialized.");
+					_log.warn("TradeController: Buylists could not be initialized.");
 					e.printStackTrace();
 				}
 				finally
@@ -616,7 +614,7 @@ public class TradeController
 		}
 		catch(Exception e)
 		{
-			_log.log(Level.SEVERE, "TradeController: Could not update Timer save in Buylist");
+			_log.fatal("TradeController: Could not update Timer save in Buylist", e);
 		}
 		finally
 		{
@@ -665,7 +663,7 @@ public class TradeController
 		}
 		catch(Exception e)
 		{
-			_log.log(Level.SEVERE, "TradeController: Could not store Count Item");
+			_log.fatal("TradeController: Could not store Count Item", e);
 		}
 		finally
 		{

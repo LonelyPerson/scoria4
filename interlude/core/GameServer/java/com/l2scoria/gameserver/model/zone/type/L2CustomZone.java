@@ -18,16 +18,16 @@
 
 package com.l2scoria.gameserver.model.zone.type;
 
-import java.util.StringTokenizer;
-import javolution.util.FastList;
-
 import com.l2scoria.gameserver.datatables.SkillTable;
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.L2Skill;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import com.l2scoria.gameserver.model.zone.L2ZoneType;
+import com.l2scoria.gameserver.model.zone.L2ZoneDefault;
+import javolution.util.FastList;
 
-public class L2CustomZone extends L2ZoneType
+import java.util.StringTokenizer;
+
+public class L2CustomZone extends L2ZoneDefault
 {
 
 	public L2CustomZone(int id)
@@ -96,6 +96,8 @@ public class L2CustomZone extends L2ZoneType
 					player.stopSkillEffects(sk.getId());
 			}
 		}
+
+		super.onEnter(character);
 	}
 
 	@Override
@@ -111,6 +113,8 @@ public class L2CustomZone extends L2ZoneType
 				player.setTradeDisabled(false);
 			}
 		}
+
+		super.onExit(character);
 	}
 
 	public String getZoneName()

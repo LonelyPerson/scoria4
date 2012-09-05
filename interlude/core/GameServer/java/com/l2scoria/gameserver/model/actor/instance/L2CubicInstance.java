@@ -18,13 +18,6 @@
  */
 package com.l2scoria.gameserver.model.actor.instance;
 
-import java.util.List;
-import java.util.concurrent.Future;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javolution.util.FastList;
-
 import com.l2scoria.gameserver.datatables.SkillTable;
 import com.l2scoria.gameserver.handler.ISkillHandler;
 import com.l2scoria.gameserver.handler.SkillHandler;
@@ -35,6 +28,11 @@ import com.l2scoria.gameserver.network.serverpackets.MagicSkillUser;
 import com.l2scoria.gameserver.taskmanager.AttackStanceTaskManager;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.util.random.Rnd;
+import javolution.util.FastList;
+import org.apache.log4j.Logger;
+
+import java.util.List;
+import java.util.concurrent.Future;
 
 public class L2CubicInstance
 {
@@ -67,7 +65,7 @@ public class L2CubicInstance
 		_id = id;
 		_level = level;
 
-		switch(_id)
+		switch (_id)
 		{
 			case STORM_CUBIC:
 				_skills.add(4049);
@@ -102,7 +100,7 @@ public class L2CubicInstance
 				_skills.add(5116);
 				break;
 		}
-		if(_disappearTask == null)
+		if (_disappearTask == null)
 		{
 			_disappearTask = ThreadPoolManager.getInstance().scheduleGeneral(new Disappear(), 1200000); // disappear in 20 mins
 		}
@@ -110,11 +108,13 @@ public class L2CubicInstance
 
 	public void doAction(L2Character target)
 	{
-		if(_target == target)
+		if (_target == target)
+		{
 			return;
+		}
 		stopAction();
 		_target = target;
-		switch(_id)
+		switch (_id)
 		{
 			case AQUA_CUBIC:
 				_actionTask = ThreadPoolManager.getInstance().scheduleEffectAtFixedRate(new Action(20), 0, 30000);
@@ -153,7 +153,7 @@ public class L2CubicInstance
 	public void stopAction()
 	{
 		_target = null;
-		if(_actionTask != null)
+		if (_actionTask != null)
 		{
 			_actionTask.cancel(true);
 			_actionTask = null;
@@ -162,7 +162,7 @@ public class L2CubicInstance
 
 	public void cancelDisappear()
 	{
-		if(_disappearTask != null)
+		if (_disappearTask != null)
 		{
 			_disappearTask.cancel(true);
 			_disappearTask = null;
@@ -181,10 +181,10 @@ public class L2CubicInstance
 
 		public void run()
 		{
-			if(_owner.isDead() || _target.isDead() || _owner.getTarget() != _target)
+			if (_owner.isDead() || _target.isDead() || _owner.getTarget() != _target)
 			{
 				stopAction();
-				if(_owner.isDead())
+				if (_owner.isDead())
 				{
 					_owner.delCubic(_id);
 					_owner.broadcastUserInfo();
@@ -192,25 +192,29 @@ public class L2CubicInstance
 				}
 				return;
 			}
-			if(!AttackStanceTaskManager.getInstance().getAttackStanceTask(_owner))
+
+			if (!AttackStanceTaskManager.getInstance().getAttackStanceTask(_owner))
 			{
 				stopAction();
 				return;
 			}
-			if(_target != null)
+
+			if (_target != null)
 			{
 				try
 				{
-					if(Rnd.get(1, 100) < _chance)
+					if (Rnd.get(1, 100) < _chance)
 					{
 						L2Skill skill = SkillTable.getInstance().getInfo(_skills.get(Rnd.get(_skills.size())), _level);
 
-						if(skill != null)
+						if (skill != null)
 						{
-							L2Character[] targets =
+							if(_owner != null && _owner._event != null && _target.getActingPlayer() != null)
 							{
-								_target
-							};
+								_owner._event.canBeSkillTarget(_owner, _target.getActingPlayer(), skill);
+							}
+
+							L2Character[] targets = {_target};
 							ISkillHandler handler = SkillHandler.getInstance().getSkillHandler(skill.getSkillType());
 
 							int x, y, z;
@@ -220,9 +224,9 @@ public class L2CubicInstance
 							x = _owner.getX() - _target.getX();
 							y = _owner.getY() - _target.getY();
 							z = _owner.getZ() - _target.getZ();
-							if(x * x + y * y + z * z <= range * range)
+							if (x * x + y * y + z * z <= range * range)
 							{
-								if(handler != null)
+								if (handler != null)
 								{
 									handler.useSkill(_owner, skill, targets);
 								}
@@ -240,10 +244,9 @@ public class L2CubicInstance
 							handler = null;
 						}
 					}
-				}
-				catch(Exception e)
+				} catch (Exception e)
 				{
-					_log.log(Level.SEVERE, "", e);
+					_log.fatal("", e);
 				}
 			}
 		}
@@ -261,7 +264,7 @@ public class L2CubicInstance
 
 		public void run()
 		{
-			if(_owner.isDead())
+			if (_owner.isDead())
 			{
 				stopAction();
 				_owner.delCubic(_id);
@@ -269,21 +272,22 @@ public class L2CubicInstance
 				cancelDisappear();
 				return;
 			}
+
 			try
 			{
 				L2Skill skill = SkillTable.getInstance().getInfo(_skills.get(Rnd.get(_skills.size())), _level);
 
-				if(skill != null)
+				if (skill != null)
 				{
 					L2Character target, caster;
 					target = null;
-					if(_owner.isInParty())
+					if (_owner.isInParty())
 					{
 						caster = _owner;
 						L2PcInstance player = _owner;
 						L2Party party = player.getParty();
 						double percentleft = 100.0;
-						if(party != null)
+						if (party != null)
 						{
 							// Get all visible objects in a spheric area near the L2Character
 							// Get a list of Party Members
@@ -292,24 +296,25 @@ public class L2CubicInstance
 							int x, y, z;
 							// temporary range check until real behavior of cubics is known/coded
 							int range = 400; //skill.getCastRange();
-							for(int i = 0; i < partyList.size(); i++)
+
+							for (L2PcInstance aPartyList : partyList)
 							{
-								partyMember = partyList.get(i);
-								if(!partyMember.isDead())
+								partyMember = aPartyList;
+								if (!partyMember.isDead())
 								{
 									//if party member not dead, check if he is in castrange of heal cubic
 									x = caster.getX() - partyMember.getX();
 									y = caster.getY() - partyMember.getY();
 									z = caster.getZ() - partyMember.getZ();
-									if(x * x + y * y + z * z > range * range)
+									if (x * x + y * y + z * z > range * range)
 									{
 										continue;
 									}
 
 									//member is in cubic casting range, check if he need heal and if he have the lowest HP
-									if(partyMember.getCurrentHp() < partyMember.getMaxHp())
+									if (partyMember.getCurrentHp() < partyMember.getMaxHp())
 									{
-										if(percentleft > partyMember.getCurrentHp() / partyMember.getMaxHp())
+										if (percentleft > partyMember.getCurrentHp() / partyMember.getMaxHp())
 										{
 											percentleft = partyMember.getCurrentHp() / partyMember.getMaxHp();
 											target = partyMember;
@@ -323,28 +328,31 @@ public class L2CubicInstance
 					}
 					else
 					{
-						if(_owner.getCurrentHp() < _owner.getMaxHp())
+						if (_owner.getCurrentHp() < _owner.getMaxHp())
 						{
 							target = _owner;
 						}
 					}
-					if(target != null)
+					if (target != null)
 					{
 						int chan = _chance;
-						if(target.getCurrentHp() < (int) (target.getMaxHp() * 0.3))
-							chan += 40;
-						else if(target.getCurrentHp() < (int) (target.getMaxHp() * 0.6))
-							chan += 20;
-
-						if(Rnd.get(1, 100) >= chan)
-							return;
-
-						L2Character[] targets =
+						if (target.getCurrentHp() < (int) (target.getMaxHp() * 0.3))
 						{
-							target
-						};
+							chan += 40;
+						}
+						else if (target.getCurrentHp() < (int) (target.getMaxHp() * 0.6))
+						{
+							chan += 20;
+						}
+
+						if (Rnd.get(1, 100) >= chan)
+						{
+							return;
+						}
+
+						L2Character[] targets = {target};
 						ISkillHandler handler = SkillHandler.getInstance().getSkillHandler(skill.getSkillType());
-						if(handler != null)
+						if (handler != null)
 						{
 							handler.useSkill(_owner, skill, targets);
 						}
@@ -363,9 +371,9 @@ public class L2CubicInstance
 					target = null;
 					caster = null;
 				}
+			} catch (Exception e)
+			{
 			}
-			catch(Exception e)
-			{}
 		}
 	}
 
@@ -373,7 +381,7 @@ public class L2CubicInstance
 	{
 		Disappear()
 		{
-		// run task
+			// run task
 		}
 
 		public void run()

@@ -1,19 +1,19 @@
 package com.l2scoria.gameserver.geodata.loader;
 
 import com.l2scoria.gameserver.model.L2World;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Scanner;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 public abstract class AbstractGeoLoader implements GeoLoader
 {
 
-	private static final Logger log = Logger.getLogger(AbstractGeoLoader.class.getName());
+	private static final Logger log = Logger.getLogger(AbstractGeoLoader.class);
 
 	private static final Pattern SCANNER_DELIMITER = Pattern.compile("([_|\\.]){1}");
 
@@ -78,7 +78,7 @@ public abstract class AbstractGeoLoader implements GeoLoader
 			int readed = fis.read(data);
 			if (readed != data.length)
 			{
-				log.warning("Not fully readed file?");
+				log.error("Not fully readed file?");
 			}
 		} catch (FileNotFoundException e)
 		{

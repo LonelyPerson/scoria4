@@ -18,14 +18,13 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.gameserver.model.L2World;
 import com.l2scoria.gameserver.model.TradeList;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
+import org.apache.log4j.Logger;
 
 /**
  * This class ...
@@ -55,7 +54,7 @@ public final class TradeDone extends L2GameClientPacket
 		TradeList trade = player.getActiveTradeList();
 		if(trade == null)
 		{
-			_log.warning("player.getTradeList == null in " + getType() + " for player " + player.getName());
+			_log.warn("player.getTradeList == null in " + getType() + " for player " + player.getName());
 			return;
 		}
 		if(trade.isLocked())
@@ -63,7 +62,7 @@ public final class TradeDone extends L2GameClientPacket
 		TradeList trade2 = trade.getPartner().getActiveTradeList();
 		if (trade2 == null)
 		{
-			_log.warning("player.getTradeList == null in " + getType() + " for player " + player.getName());
+			_log.warn("player.getTradeList == null in " + getType() + " for player " + player.getName());
 			return;
 		}
 		if (trade2.isLocked())

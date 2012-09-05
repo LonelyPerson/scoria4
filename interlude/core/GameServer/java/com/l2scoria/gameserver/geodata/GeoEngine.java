@@ -2,6 +2,7 @@ package com.l2scoria.gameserver.geodata;
 
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.ParallelExecutor;
+import com.l2scoria.gameserver.datatables.sql.DoorTable;
 import com.l2scoria.gameserver.geodata.loader.GeoFileInfo;
 import com.l2scoria.gameserver.geodata.loader.GeoLoader;
 import com.l2scoria.gameserver.geodata.loader.GeoLoaderFactory;
@@ -9,10 +10,11 @@ import com.l2scoria.gameserver.model.L2Object;
 import com.l2scoria.gameserver.model.L2Territory;
 import com.l2scoria.gameserver.model.L2World;
 import com.l2scoria.gameserver.model.Location;
-import com.l2scoria.gameserver.taskmanager.MemoryWatchDog;
-import com.l2scoria.util.GArray;
-import com.l2scoria.util.Util;
+import com.l2scoria.gameserver.model.actor.instance.L2DoorInstance;
 import com.l2scoria.util.random.Rnd;
+import gnu.trove.TLongArrayList;
+import gnu.trove.TLongByteHashMap;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.RandomAccessFile;
@@ -20,8 +22,9 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.logging.Logger;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Author: Diamond
@@ -31,113 +34,119 @@ import java.util.logging.Logger;
 @SuppressWarnings({"ResultOfMethodCallIgnored", "UnusedDeclaration"})
 public class GeoEngine
 {
-	private static final Logger log = Logger.getLogger(GeoEngine.class.getName());
+	private static final Logger _log = Logger.getLogger(GeoEngine.class);
 
 	public static final byte EAST = 1, WEST = 2, SOUTH = 4, NORTH = 8, NSWE_ALL = 15, NSWE_NONE = 0;
 	public static final byte BLOCKTYPE_FLAT = 0;
 	public static final byte BLOCKTYPE_COMPLEX = 1;
 	public static final byte BLOCKTYPE_MULTILEVEL = 2;
-	public static final int BlocksInMap = 256 * 256;
+	public static final int BLOCKS_IN_MAP = 256 * 256;
 	public static int MAX_LAYERS = 1; // меньше 1 быть не должно, что бы создавались временные массивы как минимум short[2]
 
 	private static final int Door_MaxZDiff = 256;
 
 	/**
+	 * Даный массив содержит эталонную геодату. <BR>
+	 * Первые 2 [][] (byte[*][*][][]) являются x и y региона.<BR>
+	 */
+	//private static final MappedByteBuffer[][] rawgeo = new MappedByteBuffer[L2World.WORLD_SIZE_X][L2World.WORLD_SIZE_Y];
+
+	/**
 	 * Даный массив содержит всю геодату на сервере. <BR>
 	 * Первые 2 [][] (byte[*][*][][]) являются x и y региона.<BR>
-	 * Третий [] (byte[][][*][]) является контейнером для всех блоков в регионе.<BR>
-	 * Четвертый [] (byte[][][][*]) является блоком геодаты.<BR>
+	 * Третий [] (byte[][][*][]) является блоком геодаты.<BR>
+	 * Четвертый [] (byte[][][][*]) является контейнером для всех блоков в регионе.<BR>
 	 */
-	private static final byte[][][][] geodata = new byte[L2World.WORLD_SIZE_X][L2World.WORLD_SIZE_Y][][];
+	private static final byte[][][][][] geodata = new byte[L2World.WORLD_SIZE_X][L2World.WORLD_SIZE_Y][1][][];
 
-	public static short getType(int x, int y)
+	public static short getType(int x, int y, int instanceId)
 	{
-		return NgetType(x - L2World.MAP_MIN_X >> 4, y - L2World.MAP_MIN_Y >> 4);
+		return NgetType(x - L2World.MAP_MIN_X >> 4, y - L2World.MAP_MIN_Y >> 4, instanceId);
 	}
 
-	public static int getHeight(Location loc)
+	public static int getHeight(Location loc, int instanceId)
 	{
-		return getHeight(loc.x, loc.y, loc.z);
+		return getHeight(loc.x, loc.y, loc.z, instanceId);
 	}
 
-	public static int getHeight(int x, int y, int z)
+	public static int getHeight(int x, int y, int z, int instanceId)
 	{
-		return NgetHeight(x - L2World.MAP_MIN_X >> 4, y - L2World.MAP_MIN_Y >> 4, z, false);
+		return NgetHeight(x - L2World.MAP_MIN_X >> 4, y - L2World.MAP_MIN_Y >> 4, z, false, instanceId);
 	}
 
-	public static int getHeight(int x, int y, int z, boolean get_closest_layer)
+	public static int getHeight(int x, int y, int z, boolean get_closest_layer, int instanceId)
 	{
-		return NgetHeight(x - L2World.MAP_MIN_X >> 4, y - L2World.MAP_MIN_Y >> 4, z, get_closest_layer);
+		return NgetHeight(x - L2World.MAP_MIN_X >> 4, y - L2World.MAP_MIN_Y >> 4, z, get_closest_layer, instanceId);
 	}
 
-	public static boolean canMoveToCoord(int x, int y, int z, int tx, int ty, int tz)
+	public static boolean canMoveToCoord(int x, int y, int z, int tx, int ty, int tz, int instanceId)
 	{
-		return canMove(x, y, z, tx, ty, tz, false) == 0;
+		return canMove(x, y, z, tx, ty, tz, false, instanceId) == 0;
 	}
 
-	public static byte getNSWE(int x, int y, int z)
+	public static byte getNSWE(int x, int y, int z, int instanceId)
 	{
-		return NgetNSWE(x - L2World.MAP_MIN_X >> 4, y - L2World.MAP_MIN_Y >> 4, z);
+		return NgetNSWE(x - L2World.MAP_MIN_X >> 4, y - L2World.MAP_MIN_Y >> 4, z, instanceId);
 	}
 
-	public static Location moveCheck(int x, int y, int z, int tx, int ty)
+	public static Location moveCheck(int x, int y, int z, int tx, int ty, int instanceId)
 	{
-		return MoveCheck(x, y, z, tx, ty, false, false, false);
+		return MoveCheck(x, y, z, tx, ty, false, false, false, instanceId);
 	}
 
-	public static Location moveCheck(int x, int y, int z, int tx, int ty, boolean returnPrev)
+	public static Location moveCheck(int x, int y, int z, int tx, int ty, boolean returnPrev, int instanceId)
 	{
-		return MoveCheck(x, y, z, tx, ty, false, false, returnPrev);
+		return MoveCheck(x, y, z, tx, ty, false, false, returnPrev, instanceId);
 	}
 
-	public static Location moveCheckWithCollision(int x, int y, int z, int tx, int ty)
+	public static Location moveCheckWithCollision(int x, int y, int z, int tx, int ty, int instanceId)
 	{
-		return MoveCheck(x, y, z, tx, ty, true, false, false);
+		return MoveCheck(x, y, z, tx, ty, true, false, false, instanceId);
 	}
 
-	public static Location moveCheckWithCollision(int x, int y, int z, int tx, int ty, boolean returnPrev)
+	public static Location moveCheckWithCollision(int x, int y, int z, int tx, int ty, boolean returnPrev, int instanceId)
 	{
-		return MoveCheck(x, y, z, tx, ty, true, false, returnPrev);
+		return MoveCheck(x, y, z, tx, ty, true, false, returnPrev, instanceId);
 	}
 
-	public static Location moveCheckBackward(int x, int y, int z, int tx, int ty)
+	public static Location moveCheckBackward(int x, int y, int z, int tx, int ty, int instanceId)
 	{
-		return MoveCheck(x, y, z, tx, ty, false, true, false);
+		return MoveCheck(x, y, z, tx, ty, false, true, false, instanceId);
 	}
 
-	public static Location moveCheckBackward(int x, int y, int z, int tx, int ty, boolean returnPrev)
+	public static Location moveCheckBackward(int x, int y, int z, int tx, int ty, boolean returnPrev, int instanceId)
 	{
-		return MoveCheck(x, y, z, tx, ty, false, true, returnPrev);
+		return MoveCheck(x, y, z, tx, ty, false, true, returnPrev, instanceId);
 	}
 
-	public static Location moveCheckBackwardWithCollision(int x, int y, int z, int tx, int ty)
+	public static Location moveCheckBackwardWithCollision(int x, int y, int z, int tx, int ty, int instanceId)
 	{
-		return MoveCheck(x, y, z, tx, ty, true, true, false);
+		return MoveCheck(x, y, z, tx, ty, true, true, false, instanceId);
 	}
 
-	public static Location moveCheckBackwardWithCollision(int x, int y, int z, int tx, int ty, boolean returnPrev)
+	public static Location moveCheckBackwardWithCollision(int x, int y, int z, int tx, int ty, boolean returnPrev, int instanceId)
 	{
-		return MoveCheck(x, y, z, tx, ty, true, true, returnPrev);
+		return MoveCheck(x, y, z, tx, ty, true, true, returnPrev, instanceId);
 	}
 
-	public static Location moveInWaterCheck(int x, int y, int z, int tx, int ty, int tz)
+	public static Location moveInWaterCheck(int x, int y, int z, int tx, int ty, int tz, int instanceId)
 	{
-		return MoveInWaterCheck(x - L2World.MAP_MIN_X >> 4, y - L2World.MAP_MIN_Y >> 4, z, tx - L2World.MAP_MIN_X >> 4, ty - L2World.MAP_MIN_Y >> 4, tz);
+		return MoveInWaterCheck(x - L2World.MAP_MIN_X >> 4, y - L2World.MAP_MIN_Y >> 4, z, tx - L2World.MAP_MIN_X >> 4, ty - L2World.MAP_MIN_Y >> 4, tz, instanceId);
 	}
 
-	public static Location moveCheckForAI(Location loc1, Location loc2)
+	public static Location moveCheckForAI(Location loc1, Location loc2, int instanceId)
 	{
-		return MoveCheckForAI(loc1.x - L2World.MAP_MIN_X >> 4, loc1.y - L2World.MAP_MIN_Y >> 4, loc1.z, loc2.x - L2World.MAP_MIN_X >> 4, loc2.y - L2World.MAP_MIN_Y >> 4);
+		return MoveCheckForAI(loc1.x - L2World.MAP_MIN_X >> 4, loc1.y - L2World.MAP_MIN_Y >> 4, loc1.z, loc2.x - L2World.MAP_MIN_X >> 4, loc2.y - L2World.MAP_MIN_Y >> 4, instanceId);
 	}
 
-	public static Location moveCheckInAir(int x, int y, int z, int tx, int ty, int tz, float ColRadius)
+	public static Location moveCheckInAir(int x, int y, int z, int tx, int ty, int tz, float ColRadius, int geoIndex)
 	{
 		int gx = x - L2World.MAP_MIN_X >> 4;
 		int gy = y - L2World.MAP_MIN_Y >> 4;
 		int tgx = tx - L2World.MAP_MIN_X >> 4;
 		int tgy = ty - L2World.MAP_MIN_Y >> 4;
 
-		int nz = NgetHeight(tgx, tgy, tz, false);
+		int nz = NgetHeight(tgx, tgy, tz, false, geoIndex);
 
 		// Не даем опуститься ниже, чем пол + 32
 		if (tz <= nz + 32)
@@ -145,7 +154,7 @@ public class GeoEngine
 			tz = nz + 32;
 		}
 
-		Location result = canSee(gx, gy, z, tgx, tgy, tz, true);
+		Location result = canSee(gx, gy, z, tgx, tgy, tz, true, geoIndex);
 		if (result.equals(gx, gy, z))
 		{
 			return null;
@@ -163,7 +172,7 @@ public class GeoEngine
 		}
 
 		// Костыль конечно, но решает кучу проблем с дверьми
-		if (target instanceof GeoControl || actor.equals(target))
+		if (target instanceof GeoCollision || actor.equals(target))
 		{
 			return true;
 		}
@@ -173,21 +182,21 @@ public class GeoEngine
 
 	public static boolean canSeeCoord(L2Object actor, int tx, int ty, int tz, boolean air)
 	{
-		return actor != null && canSeeCoord(actor.getX(), actor.getY(), actor.getZ() + (int) actor.getColHeight() + 64, tx, ty, tz, air);
+		return actor != null && canSeeCoord(actor.getX(), actor.getY(), actor.getZ() + (int) actor.getColHeight() + 64, tx, ty, tz, air, actor.getInstanceId());
 	}
 
-	public static boolean canSeeCoord(int x, int y, int z, int tx, int ty, int tz, boolean air)
+	public static boolean canSeeCoord(int x, int y, int z, int tx, int ty, int tz, boolean air, int geoIndex)
 	{
 		int mx = x - L2World.MAP_MIN_X >> 4;
 		int my = y - L2World.MAP_MIN_Y >> 4;
 		int tmx = tx - L2World.MAP_MIN_X >> 4;
 		int tmy = ty - L2World.MAP_MIN_Y >> 4;
-		return canSee(mx, my, z, tmx, tmy, tz, air).equals(tmx, tmy, tz) && canSee(tmx, tmy, tz, mx, my, z, air).equals(mx, my, z);
+		return canSee(mx, my, z, tmx, tmy, tz, air, geoIndex).equals(tmx, tmy, tz) && canSee(tmx, tmy, tz, mx, my, z, air, geoIndex).equals(mx, my, z);
 	}
 
-	public static boolean canMoveWithCollision(int x, int y, int z, int tx, int ty, int tz)
+	public static boolean canMoveWithCollision(int x, int y, int z, int tx, int ty, int tz, int geoIndex)
 	{
-		return canMove(x, y, z, tx, ty, tz, true) == 0;
+		return canMove(x, y, z, tx, ty, tz, true, geoIndex) == 0;
 	}
 
 	/**
@@ -266,10 +275,10 @@ public class GeoEngine
 		return result.isEmpty() ? "X" : result;
 	}
 
-	private static boolean NLOS_WATER(int x, int y, int z, int next_x, int next_y, int next_z)
+	private static boolean NLOS_WATER(int x, int y, int z, int next_x, int next_y, int next_z, int geoIndex)
 	{
-		Layer[] layers1 = NGetLayers(x, y);
-		Layer[] layers2 = NGetLayers(next_x, next_y);
+		Layer[] layers1 = NGetLayers(x, y, geoIndex);
+		Layer[] layers2 = NGetLayers(next_x, next_y, geoIndex);
 		if (layers1.length == 0 || layers2.length == 0)
 		{
 			return true;
@@ -398,7 +407,7 @@ public class GeoEngine
 	 * @return возвращает последнюю точку которую видно (в формате геокоординат)
 	 *         в результате (Location) h является кодом, если >= 0 то успешно достигли последней точки, если меньше то не последней
 	 */
-	public static Location canSee(int _x, int _y, int _z, int _tx, int _ty, int _tz, boolean air)
+	public static Location canSee(int _x, int _y, int _z, int _tx, int _ty, int _tz, boolean air, int geoIndex)
 	{
 		int diff_x = _tx - _x, diff_y = _ty - _y, diff_z = _tz - _z;
 		int dx = Math.abs(diff_x), dy = Math.abs(diff_y);
@@ -406,7 +415,7 @@ public class GeoEngine
 		float steps = Math.max(dx, dy);
 		int curr_x = _x, curr_y = _y, curr_z = _z;
 		short[] curr_layers = new short[MAX_LAYERS + 1];
-		NGetLayers(curr_x, curr_y, curr_layers);
+		NGetLayers(curr_x, curr_y, curr_layers, geoIndex);
 
 		Location result = new Location(_x, _y, _z, -1);
 
@@ -447,7 +456,7 @@ public class GeoEngine
 				return result.setH(-10); // либо есть преграждающая поверхность, либо нет снизу слоя и значит это "пустота", то что за стеной или за колоной
 			}
 
-			NGetLayers(curr_x, curr_y, curr_layers);
+			NGetLayers(curr_x, curr_y, curr_layers, geoIndex);
 			if (curr_layers[0] == 0)
 			{
 				result.set(_tx, _ty, _tz, 0);
@@ -478,7 +487,7 @@ public class GeoEngine
 			else
 			{
 				//движемся по диагонали
-				NGetLayers(curr_x, i_next_y, tmp_layers);
+				NGetLayers(curr_x, i_next_y, tmp_layers, geoIndex);
 				if (tmp_layers[0] == 0)
 				{
 					result.set(_tx, _ty, _tz, 0);
@@ -491,7 +500,7 @@ public class GeoEngine
 
 				if (!(canSeeWallCheck(src_nearest_lower_layer, tmp_nearest_lower_layer, i_next_y > curr_y ? SOUTH : NORTH, curr_z, air) && canSeeWallCheck(tmp_nearest_lower_layer, dst_nearest_lower_layer, i_next_x > curr_x ? EAST : WEST, curr_z, air)))
 				{
-					NGetLayers(i_next_x, curr_y, tmp_layers);
+					NGetLayers(i_next_x, curr_y, tmp_layers, geoIndex);
 					if (tmp_layers[0] == 0)
 					{
 						result.set(_tx, _ty, _tz, 0);
@@ -522,7 +531,7 @@ public class GeoEngine
 		return result;
 	}
 
-	private static Location MoveInWaterCheck(int x, int y, int z, int tx, int ty, int tz)
+	private static Location MoveInWaterCheck(int x, int y, int z, int tx, int ty, int tz, int geoIndex)
 	{
 		int dx = tx - x;
 		int dy = ty - y;
@@ -570,7 +579,7 @@ public class GeoEngine
 					next_x += inc_x;
 					next_z += inc_z_for_x;
 				}
-				if (!NLOS_WATER(x, y, z, next_x, next_y, next_z))
+				if (!NLOS_WATER(x, y, z, next_x, next_y, next_z, geoIndex))
 				{
 					return new Location(prev_x, prev_y, prev_z).geo2world();
 				}
@@ -603,7 +612,7 @@ public class GeoEngine
 					next_y += inc_y;
 					next_z += inc_z_for_y;
 				}
-				if (!NLOS_WATER(x, y, z, next_x, next_y, next_z))
+				if (!NLOS_WATER(x, y, z, next_x, next_y, next_z, geoIndex))
 				{
 					return new Location(prev_x, prev_y, prev_z).geo2world();
 				}
@@ -617,7 +626,7 @@ public class GeoEngine
 	 *
 	 * @return 0 - проходимо, в ином случае код причины непроходимости (используется при отладке)
 	 */
-	public static int canMove(int __x, int __y, int _z, int __tx, int __ty, int _tz, boolean withCollision)
+	public static int canMove(int __x, int __y, int _z, int __tx, int __ty, int _tz, boolean withCollision, int geoIndex)
 	{
 		int _x = __x - L2World.MAP_MIN_X >> 4;
 		int _y = __y - L2World.MAP_MIN_Y >> 4;
@@ -633,7 +642,7 @@ public class GeoEngine
 
 		int curr_x = _x, curr_y = _y, curr_z = _z;
 		short[] curr_layers = new short[MAX_LAYERS + 1];
-		NGetLayers(curr_x, curr_y, curr_layers);
+		NGetLayers(curr_x, curr_y, curr_layers, geoIndex);
 		if (curr_layers[0] == 0)
 		{
 			return 0;
@@ -653,8 +662,8 @@ public class GeoEngine
 			next_y += step_y;
 			i_next_x = (int) (next_x + 0.5f);
 			i_next_y = (int) (next_y + 0.5f);
-			NGetLayers(i_next_x, i_next_y, next_layers);
-			if ((curr_z = NcanMoveNext(curr_x, curr_y, curr_z, curr_layers, i_next_x, i_next_y, next_layers, temp_layers, withCollision)) == Integer.MIN_VALUE)
+			NGetLayers(i_next_x, i_next_y, next_layers, geoIndex);
+			if ((curr_z = NcanMoveNext(curr_x, curr_y, curr_z, curr_layers, i_next_x, i_next_y, next_layers, temp_layers, withCollision, geoIndex)) == Integer.MIN_VALUE)
 			{
 				return 1;
 			}
@@ -670,7 +679,7 @@ public class GeoEngine
 		return diff_z < Config.MAX_Z_DIFF ? 0 : diff_z * 10000;
 	}
 
-	public static Location MoveCheck(int __x, int __y, int _z, int __tx, int __ty, boolean withCollision, boolean backwardMove, boolean returnPrev)
+	public static Location MoveCheck(int __x, int __y, int _z, int __tx, int __ty, boolean withCollision, boolean backwardMove, boolean returnPrev, int geoIndex)
 	{
 		int _x = __x - L2World.MAP_MIN_X >> 4;
 		int _y = __y - L2World.MAP_MIN_Y >> 4;
@@ -694,7 +703,7 @@ public class GeoEngine
 		short[] temp_layers = new short[MAX_LAYERS + 1];
 		short[] curr_layers = new short[MAX_LAYERS + 1];
 		short[] curr_next_switcher;
-		NGetLayers(curr_x, curr_y, curr_layers);
+		NGetLayers(curr_x, curr_y, curr_layers, geoIndex);
 		int prev_x = curr_x, prev_y = curr_y, prev_z = curr_z;
 
 		for (int i = 0; i < steps; i++)
@@ -703,12 +712,12 @@ public class GeoEngine
 			next_y += step_y;
 			i_next_x = (int) (next_x + 0.5f);
 			i_next_y = (int) (next_y + 0.5f);
-			NGetLayers(i_next_x, i_next_y, next_layers);
-			if ((i_next_z = NcanMoveNext(curr_x, curr_y, curr_z, curr_layers, i_next_x, i_next_y, next_layers, temp_layers, withCollision)) == Integer.MIN_VALUE)
+			NGetLayers(i_next_x, i_next_y, next_layers, geoIndex);
+			if ((i_next_z = NcanMoveNext(curr_x, curr_y, curr_z, curr_layers, i_next_x, i_next_y, next_layers, temp_layers, withCollision, geoIndex)) == Integer.MIN_VALUE)
 			{
 				break;
 			}
-			if (backwardMove && NcanMoveNext(i_next_x, i_next_y, i_next_z, next_layers, curr_x, curr_y, curr_layers, temp_layers, withCollision) == Integer.MIN_VALUE)
+			if (backwardMove && NcanMoveNext(i_next_x, i_next_y, i_next_z, next_layers, curr_x, curr_y, curr_layers, temp_layers, withCollision, geoIndex) == Integer.MIN_VALUE)
 			{
 				break;
 			}
@@ -743,7 +752,7 @@ public class GeoEngine
 	/**
 	 * Аналогичен CanMove, но возвращает весь пройденный путь. В гео координатах.
 	 */
-	public static ArrayList<Location> MoveList(int __x, int __y, int _z, int __tx, int __ty, boolean onlyFullPath)
+	public static ArrayList<Location> MoveList(int __x, int __y, int _z, int __tx, int __ty, boolean onlyFullPath, int geoIndex)
 	{
 		int _x = __x - L2World.MAP_MIN_X >> 4;
 		int _y = __y - L2World.MAP_MIN_Y >> 4;
@@ -768,7 +777,7 @@ public class GeoEngine
 		short[] curr_layers = new short[MAX_LAYERS + 1];
 		short[] curr_next_switcher;
 
-		NGetLayers(curr_x, curr_y, curr_layers);
+		NGetLayers(curr_x, curr_y, curr_layers, geoIndex);
 		if (curr_layers[0] == 0)
 		{
 			return null;
@@ -785,8 +794,8 @@ public class GeoEngine
 			i_next_x = (int) (next_x + 0.5f);
 			i_next_y = (int) (next_y + 0.5f);
 
-			NGetLayers(i_next_x, i_next_y, next_layers);
-			if ((i_next_z = NcanMoveNext(curr_x, curr_y, curr_z, curr_layers, i_next_x, i_next_y, next_layers, temp_layers, false)) == Integer.MIN_VALUE)
+			NGetLayers(i_next_x, i_next_y, next_layers, geoIndex);
+			if ((i_next_z = NcanMoveNext(curr_x, curr_y, curr_z, curr_layers, i_next_x, i_next_y, next_layers, temp_layers, false, geoIndex)) == Integer.MIN_VALUE)
 			{
 				if (onlyFullPath)
 				{
@@ -815,7 +824,7 @@ public class GeoEngine
 	/**
 	 * Используется только для антипаровоза в AI
 	 */
-	private static Location MoveCheckForAI(int x, int y, int z, int tx, int ty)
+	private static Location MoveCheckForAI(int x, int y, int z, int tx, int ty, int geoIndex)
 	{
 		int dx = tx - x;
 		int dy = ty - y;
@@ -857,7 +866,7 @@ public class GeoEngine
 					d += delta_A;
 					next_x += inc_x;
 				}
-				next_z = NcanMoveNextForAI(x, y, z, next_x, next_y);
+				next_z = NcanMoveNextForAI(x, y, z, next_x, next_y, geoIndex);
 				if (next_z == 0)
 				{
 					return new Location(prev_x, prev_y, prev_z).geo2world();
@@ -888,7 +897,7 @@ public class GeoEngine
 					d += delta_A;
 					next_y += inc_y;
 				}
-				next_z = NcanMoveNextForAI(x, y, z, next_x, next_y);
+				next_z = NcanMoveNextForAI(x, y, z, next_x, next_y, geoIndex);
 				if (next_z == 0)
 				{
 					return new Location(prev_x, prev_y, prev_z).geo2world();
@@ -899,9 +908,9 @@ public class GeoEngine
 	}
 
 	@SuppressWarnings("SimplifiableIfStatement")
-	private static boolean NcanMoveNextExCheck(int x, int y, int h, int nextx, int nexty, int hexth, short[] temp_layers)
+	private static boolean NcanMoveNextExCheck(int x, int y, int h, int nextx, int nexty, int hexth, short[] temp_layers, int geoIndex)
 	{
-		NGetLayers(x, y, temp_layers);
+		NGetLayers(x, y, temp_layers, geoIndex);
 		if (temp_layers[0] == 0)
 		{
 			return true;
@@ -923,7 +932,7 @@ public class GeoEngine
 	/**
 	 * @return возвращает высоту следующего блока, либо Integer.MIN_VALUE если двигатся нельзя
 	 */
-	public static int NcanMoveNext(int x, int y, int z, short[] layers, int next_x, int next_y, short[] next_layers, short[] temp_layers, boolean withCollision)
+	public static int NcanMoveNext(int x, int y, int z, short[] layers, int next_x, int next_y, short[] next_layers, short[] temp_layers, boolean withCollision, int geoIndex)
 	{
 		if (layers[0] == 0 || next_layers[0] == 0)
 		{
@@ -960,13 +969,13 @@ public class GeoEngine
 				//short[] heightNSWE = temp_layers;
 				if (x == next_x)
 				{
-					NgetHeightAndNSWE(x - 1, y, layer_h, temp_layers);
+					NgetHeightAndNSWE(x - 1, y, layer_h, temp_layers, geoIndex);
 					if (Math.abs(temp_layers[0] - layer_h) > 15 || !checkNSWE(layer_nswe, x - 1, y, x, y) || !checkNSWE((byte) temp_layers[1], x - 1, y, x - 1, next_y))
 					{
 						return Integer.MIN_VALUE;
 					}
 
-					NgetHeightAndNSWE(x + 1, y, layer_h, temp_layers);
+					NgetHeightAndNSWE(x + 1, y, layer_h, temp_layers, geoIndex);
 					if (Math.abs(temp_layers[0] - layer_h) > 15 || !checkNSWE(layer_nswe, x + 1, y, x, y) || !checkNSWE((byte) temp_layers[1], x + 1, y, x + 1, next_y))
 					{
 						return Integer.MIN_VALUE;
@@ -975,13 +984,13 @@ public class GeoEngine
 					return next_layer_h;
 				}
 
-				NgetHeightAndNSWE(x, y - 1, layer_h, temp_layers);
+				NgetHeightAndNSWE(x, y - 1, layer_h, temp_layers, geoIndex);
 				if (Math.abs(temp_layers[0] - layer_h) >= Config.MAX_Z_DIFF || !checkNSWE(layer_nswe, x, y - 1, x, y) || !checkNSWE((byte) temp_layers[1], x, y - 1, next_x, y - 1))
 				{
 					return Integer.MIN_VALUE;
 				}
 
-				NgetHeightAndNSWE(x, y + 1, layer_h, temp_layers);
+				NgetHeightAndNSWE(x, y + 1, layer_h, temp_layers, geoIndex);
 				if (Math.abs(temp_layers[0] - layer_h) >= Config.MAX_Z_DIFF || !checkNSWE(layer_nswe, x, y + 1, x, y) || !checkNSWE((byte) temp_layers[1], x, y + 1, next_x, y + 1))
 				{
 					return Integer.MIN_VALUE;
@@ -991,11 +1000,11 @@ public class GeoEngine
 			return next_layer_h;
 		}
 
-		if (!NcanMoveNextExCheck(x, next_y, layer_h, next_x, next_y, next_layer_h, temp_layers))
+		if (!NcanMoveNextExCheck(x, next_y, layer_h, next_x, next_y, next_layer_h, temp_layers, geoIndex))
 		{
 			return Integer.MIN_VALUE;
 		}
-		if (!NcanMoveNextExCheck(next_x, y, layer_h, next_x, next_y, next_layer_h, temp_layers))
+		if (!NcanMoveNextExCheck(next_x, y, layer_h, next_x, next_y, next_layer_h, temp_layers, geoIndex))
 		{
 			return Integer.MIN_VALUE;
 		}
@@ -1008,10 +1017,10 @@ public class GeoEngine
 	/**
 	 * Используется только для антипаровоза в AI
 	 */
-	public static int NcanMoveNextForAI(int x, int y, int z, int next_x, int next_y)
+	public static int NcanMoveNextForAI(int x, int y, int z, int next_x, int next_y, int geoIndex)
 	{
-		Layer[] layers1 = NGetLayers(x, y);
-		Layer[] layers2 = NGetLayers(next_x, next_y);
+		Layer[] layers1 = NGetLayers(x, y, geoIndex);
+		Layer[] layers2 = NGetLayers(next_x, next_y, geoIndex);
 
 		if (layers1.length == 0 || layers2.length == 0)
 		{
@@ -1097,10 +1106,10 @@ public class GeoEngine
 	 * @param geoY
 	 * @param result
 	 */
-	public static void NGetLayers(int geoX, int geoY, short[] result)
+	public static void NGetLayers(int geoX, int geoY, short[] result, int geoIndex)
 	{
 		result[0] = 0;
-		byte[] block = getGeoBlockFromGeoCoords(geoX, geoY);
+		byte[] block = getGeoBlockFromGeoCoords(geoX, geoY, geoIndex);
 		if (block == null)
 		{
 			return;
@@ -1153,13 +1162,13 @@ public class GeoEngine
 				}
 				return;
 			default:
-				log.severe("GeoEngine: Unknown block type");
+				_log.fatal("GeoEngine: Unknown block type");
 		}
 	}
 
-	public static Layer[] NGetLayers(int geoX, int geoY)
+	public static Layer[] NGetLayers(int geoX, int geoY, int geoIndex)
 	{
-		byte[] block = getGeoBlockFromGeoCoords(geoX, geoY);
+		byte[] block = getGeoBlockFromGeoCoords(geoX, geoY, geoIndex);
 
 		if (block == null)
 		{
@@ -1210,14 +1219,14 @@ public class GeoEngine
 				}
 				return layers;
 			default:
-				log.severe("GeoEngine: Unknown block type");
+				_log.fatal("GeoEngine: Unknown block type");
 				return new Layer[0];
 		}
 	}
 
-	private static short NgetType(int geoX, int geoY)
+	private static short NgetType(int geoX, int geoY, int geoIndex)
 	{
-		byte[] block = getGeoBlockFromGeoCoords(geoX, geoY);
+		byte[] block = getGeoBlockFromGeoCoords(geoX, geoY, geoIndex);
 
 		if (block == null)
 		{
@@ -1227,9 +1236,9 @@ public class GeoEngine
 		return block[0];
 	}
 
-	public static int NgetHeight(int geoX, int geoY, int z, boolean get_closest_layer)
+	public static int NgetHeight(int geoX, int geoY, int z, boolean get_closest_layer, int geoIndex)
 	{
-		byte[] block = getGeoBlockFromGeoCoords(geoX, geoY);
+		byte[] block = getGeoBlockFromGeoCoords(geoX, geoY, geoIndex);
 
 		if (block == null)
 		{
@@ -1279,9 +1288,9 @@ public class GeoEngine
 				{
 					height = (short) ((short) (makeShort(block[index + 1], block[index]) & 0x0fff0) >> 1);
 
-					if(get_closest_layer)
+					if (get_closest_layer)
 					{
-						if(z_nearest == Integer.MIN_VALUE || Math.abs(z - z_nearest) > Math.abs(z - height))
+						if (z_nearest == Integer.MIN_VALUE || Math.abs(z - z_nearest) > Math.abs(z - height))
 						{
 							z_nearest = height;
 						}
@@ -1305,14 +1314,14 @@ public class GeoEngine
 
 				int temph = z_nearest_lower != Integer.MIN_VALUE ? z_nearest_lower : z_nearest;
 
-				if(get_closest_layer)
+				if (get_closest_layer)
 				{
 
 				}
 
 				return temph;
 			default:
-				log.severe("GeoEngine: Unknown blockType");
+				_log.fatal("GeoEngine: Unknown blockType");
 				return z;
 		}
 	}
@@ -1323,9 +1332,9 @@ public class GeoEngine
 	 * @param z    координата без изменений
 	 * @return NSWE: 0-15
 	 */
-	public static byte NgetNSWE(int geoX, int geoY, int z)
+	public static byte NgetNSWE(int geoX, int geoY, int z, int geoIndex)
 	{
-		byte[] block = getGeoBlockFromGeoCoords(geoX, geoY);
+		byte[] block = getGeoBlockFromGeoCoords(geoX, geoY, geoIndex);
 
 		if (block == null)
 		{
@@ -1405,14 +1414,14 @@ public class GeoEngine
 
 				return NSWE_ALL;
 			default:
-				log.severe("GeoEngine: Unknown block type.");
+				_log.fatal("GeoEngine: Unknown block type.");
 				return NSWE_ALL;
 		}
 	}
 
-	public static void NgetHeightAndNSWE(int geoX, int geoY, short z, short[] result)
+	public static void NgetHeightAndNSWE(int geoX, int geoY, short z, short[] result, int geoIndex)
 	{
-		byte[] block = getGeoBlockFromGeoCoords(geoX, geoY);
+		byte[] block = getGeoBlockFromGeoCoords(geoX, geoY, geoIndex);
 
 		if (block == null)
 		{
@@ -1504,7 +1513,7 @@ public class GeoEngine
 				result[1] = NSWE;
 				return;
 			default:
-				log.severe("GeoEngine: Unknown block type.");
+				_log.fatal("GeoEngine: Unknown block type.");
 				result[0] = z;
 				result[1] = NSWE_ALL;
 		}
@@ -1562,7 +1571,7 @@ public class GeoEngine
 	 * @param geoY геокоордината
 	 * @return текущий блок геодаты, или null если нет геодаты.
 	 */
-	private static byte[] getGeoBlockFromGeoCoords(int geoX, int geoY)
+	private static byte[] getGeoBlockFromGeoCoords(int geoX, int geoY, int geoIndex)
 	{
 		int ix = geoX >> 11;
 		int iy = geoY >> 11;
@@ -1572,7 +1581,7 @@ public class GeoEngine
 			return null;
 		}
 
-		byte[][] region = geodata[ix][iy];
+		byte[][][] region = geodata[ix][iy];
 
 		if (region == null)
 		{
@@ -1582,7 +1591,22 @@ public class GeoEngine
 		int blockX = getBlock(geoX);
 		int blockY = getBlock(geoY);
 
-		return region[getBlockIndex(blockX, blockY)];
+		int regIndex = 0;
+
+		//Рефлект с геодатой
+		if ((geoIndex & 0x0f000000) == 0x0f000000)
+		{
+			int x = (geoIndex & 0x00ff0000) >> 16;
+			int y = (geoIndex & 0x0000ff00) >> 8;
+
+			//Проверяем регион
+			if (ix == x && iy == y)
+			{
+				regIndex = (geoIndex & 0x000000ff);
+			}
+		}
+
+		return region[regIndex][getBlockIndex(blockX, blockY)];
 	}
 
 	/**
@@ -1647,7 +1671,7 @@ public class GeoEngine
 			for(L2DoorInstance door : DoorTable.getInstance().getDoors())
 				if(!door.isOpen() && door.getGeodata())
 				{
-					applyControl(door);
+					applyGeoCollision(door);
 					door.geoOpen = false;
 				}
 	}*/
@@ -1658,13 +1682,13 @@ public class GeoEngine
 	@SuppressWarnings("ConstantConditions")
 	public static void loadGeo()
 	{
-		log.info("Geo Engine: - Loading Geodata...");
+		_log.info("Geo Engine: - Loading Geodata...");
 
 		File f = new File("./data/geodata");
 
 		if (!f.exists() || !f.isDirectory())
 		{
-			log.info("Geo Engine: Files missing, loading aborted.");
+			_log.info("Geo Engine: Files missing, loading aborted.");
 			return;
 		}
 
@@ -1687,25 +1711,26 @@ public class GeoEngine
 					int x = geoFileInfo.getX() - Config.GEO_X_FIRST;
 					int y = geoFileInfo.getY() - Config.GEO_Y_FIRST;
 
-					if (geodata[x][y] != null && geodata[x][y].length > 0)
+					if (geodata[x][y][0] != null && geodata[x][y][0].length > 0)
 					{
-						log.warning("Geodata in region " + geoFileInfo.getX() + "_" + geoFileInfo.getY() + " was replased by " + geoLoader.getClass().getSimpleName());
+						_log.error("Geodata in region " + geoFileInfo.getX() + "_" + geoFileInfo.getY() + " was replased by " + geoLoader.getClass().getSimpleName());
 					}
-					geodata[x][y] = geoFileInfo.getData();
+
+					geodata[x][y][0] = geoFileInfo.getData();
 				}
 			}
 		}
 
 		if (Config.COMPACT_GEO)
 		{
-			compact(true);
+			compact();
 		}
 
 		/*if(Config.ALLOW_DOORS)
 			for(L2DoorInstance door : DoorTable.getInstance().getDoors())
 				if(!door.isOpen() && door.getGeodata())
 				{
-					applyControl(door);
+					applyGeoCollision(door);
 					door.geoOpen = false;
 				}*/
 	}
@@ -1724,7 +1749,7 @@ public class GeoEngine
 				int rx = mapX + Config.GEO_X_FIRST;
 				int ry = mapY + Config.GEO_Y_FIRST;
 				String fName = dir + "/" + rx + "_" + ry + ".l2j";
-				log.info("Dumping geo: " + fName);
+				_log.info("Dumping geo: " + fName);
 				DumpGeodataFile(fName, (byte) rx, (byte) ry);
 			}
 		}
@@ -1746,7 +1771,7 @@ public class GeoEngine
 		int ix = rx - Config.GEO_X_FIRST;
 		int iy = ry - Config.GEO_Y_FIRST;
 
-		byte[][] geoblocks = geodata[ix][iy];
+		byte[][] geoblocks = geodata[ix][iy][0];
 		if (geoblocks == null)
 		{
 			return false;
@@ -1790,7 +1815,7 @@ public class GeoEngine
 
 		if (ix < 0 || iy < 0 || ix > (L2World.MAP_MAX_X >> 15) + Math.abs(L2World.MAP_MIN_X >> 15) || iy > (L2World.MAP_MAX_Y >> 15) + Math.abs(L2World.MAP_MIN_Y >> 15))
 		{
-			log.info("Geo Engine: File " + fname + " was not loaded!!! ");
+			_log.info("Geo Engine: File " + fname + " was not loaded!!! ");
 			return false;
 		}
 
@@ -1812,9 +1837,10 @@ public class GeoEngine
 				geo = new byte[buffer.remaining()];
 				buffer.get(geo, 0, geo.length);
 			}
-			if (size >= BlocksInMap * 3)
+
+			if (size >= BLOCKS_IN_MAP * 3)
 			{
-				byte[][] blocks = new byte[BlocksInMap][]; // 256 * 256 блоков в регионе геодаты
+				byte[][] blocks = new byte[BLOCKS_IN_MAP][]; // 256 * 256 блоков в регионе геодаты
 
 				// Indexing geo files, so we will know where each block starts
 				for (block = 0; block < blocks.length; block++)
@@ -1888,13 +1914,13 @@ public class GeoEngine
 							blocks[block] = geoBlock;
 							break;
 						default:
-							log.severe("GeoEngine: invalid block type: " + type);
+							_log.fatal("GeoEngine: invalid block type: " + type);
 					}
 				}
 
 				synchronized (geodata)
 				{
-					geodata[ix][iy] = blocks;
+					geodata[ix][iy][0] = blocks;
 				}
 				return true;
 			}
@@ -1902,56 +1928,8 @@ public class GeoEngine
 		} catch (Exception e)
 		{
 			e.printStackTrace();
-			log.warning("Failed to Load GeoFile at block: " + block + "\n");
+			_log.fatal("Failed to Load GeoFile at block: " + block + "\n");
 			return false;
-		}
-	}
-
-	/**
-	 * Преобразовывает FLAT блоки в COMPLEX<br>
-	 *
-	 * @param ix         регион x
-	 * @param iy         регион y
-	 * @param blockIndex индекс блока в регионе
-	 */
-	private static void copyBlock(int ix, int iy, int blockIndex)
-	{
-		byte[][] region = geodata[ix][iy];
-
-		if (region == null)
-		{
-			System.out.println("door at null region? [" + ix + "][" + iy + "]");
-			return;
-		}
-
-		byte[] block = region[blockIndex];
-		byte blockType = block[0];
-
-		switch (blockType)
-		{
-			case BLOCKTYPE_FLAT:
-				short height = makeShort(block[2], block[1]);
-				height &= 0x0fff0;
-				height <<= 1;
-				height |= NORTH;
-				height |= SOUTH;
-				height |= WEST;
-				height |= EAST;
-				byte[] newblock = new byte[129];
-				newblock[0] = BLOCKTYPE_COMPLEX;
-				for (int i = 1; i < 129; i += 2)
-				{
-					newblock[i + 1] = (byte) (height >> 8);
-					newblock[i] = (byte) (height & 0x00ff);
-				}
-				region[blockIndex] = newblock;
-				break;
-			default:
-				if (Config.COMPACT_GEO)
-				{
-					region[blockIndex] = region[blockIndex].clone();
-				}
-				break;
 		}
 	}
 
@@ -1978,17 +1956,16 @@ public class GeoEngine
 	}
 
 	@SuppressWarnings("SynchronizationOnLocalVariableOrMethodParameter")
-	public static void returnGeoAtControl(GeoControl control)
+	public static void removeGeoCollision(GeoCollision control, int geoIndex)
 	{
+		//_log.info("GeoIndex: " + geoIndex);
+
 		L2Territory pos = control.getGeoPos();
-		HashMap<Long, Byte> around = control.getGeoAround();
+		TLongByteHashMap around = control.getGeoAround();
 
-		//System.out.println("GeoEngine: Removing geo at the door");
-
-		if (around == null)
+		if(around == null)
 		{
-			System.out.println("GeoEngine: Attempt to open 'not closed' door");
-			Thread.dumpStack();
+			_log.warn("GeoEngine: Attempt to open 'not closed' door");
 			return;
 		}
 
@@ -1997,8 +1974,12 @@ public class GeoEngine
 
 		synchronized (around)
 		{
-			for (long geoXY : around.keySet())
+			//_log.info("===========================================");
+
+			for(long geoXY : around.keys())
 			{
+				//_log.info("geoXY: " + geoXY);
+
 				int geoX = (int) geoXY;
 				int geoY = (int) (geoXY >> 32);
 
@@ -2011,10 +1992,10 @@ public class GeoEngine
 				int blockY = getBlock(geoY);
 				int blockIndex = getBlockIndex(blockX, blockY);
 
-				byte[][] region = geodata[ix][iy];
-				if (region == null)
+				byte[][] region = geodata[ix][iy][geoIndex];
+				if(region == null)
 				{
-					System.out.println("GeoEngine: Attempt to open door at block with no geodata");
+					_log.warn("GeoEngine: Attempt to open door at block with no geodata");
 					return;
 				}
 
@@ -2027,7 +2008,7 @@ public class GeoEngine
 				byte blockType = block[index];
 				index++;
 
-				switch (blockType)
+				switch(blockType)
 				{
 					case BLOCKTYPE_COMPLEX:
 						index += (cellX << 3) + cellY << 1;
@@ -2042,14 +2023,15 @@ public class GeoEngine
 						height <<= 1;
 						height &= 0xfff0;
 						height |= old_nswe;
-						if (control.isGeoCloser())
-						{
+
+						//_log.info(" - hiegh bef.: " + height);
+
+						if(control.isGeoCloser())
 							height |= around.get(geoXY);
-						}
 						else
-						{
 							height &= ~around.get(geoXY);
-						}
+
+						//_log.info(" - hiegh aft.: " + height);
 
 						// Записываем высоту в массив
 						block[index + 1] = (byte) (height >> 8);
@@ -2061,7 +2043,7 @@ public class GeoEngine
 
 						// Далее следует стандартный механизм получения высоты
 						int offset = (cellX << 3) + cellY;
-						while (offset > 0)
+						while(offset > 0)
 						{
 							byte lc = block[index];
 							index += (lc << 1) + 1;
@@ -2069,13 +2051,11 @@ public class GeoEngine
 						}
 						byte layers = block[index];
 						index++;
-						if (layers <= 0 || layers > MAX_LAYERS)
-						{
+						if(layers <= 0 || layers > MAX_LAYERS)
 							break;
-						}
 						short temph = Short.MIN_VALUE;
 						old_nswe = NSWE_ALL;
-						while (layers > 0)
+						while(layers > 0)
 						{
 							height = makeShort(block[index + 1], block[index]);
 							byte tmp_nswe = (byte) (height & 0x0F);
@@ -2083,7 +2063,7 @@ public class GeoEngine
 							height >>= 1;
 							int z_diff_last = Math.abs(pos.getZmin() - temph);
 							int z_diff_curr = Math.abs(pos.getZmin() - height);
-							if (z_diff_last > z_diff_curr)
+							if(z_diff_last > z_diff_curr)
 							{
 								old_nswe = tmp_nswe;
 								temph = height;
@@ -2096,14 +2076,15 @@ public class GeoEngine
 						temph <<= 1;
 						temph &= 0xfff0;
 						temph |= old_nswe;
-						if (control.isGeoCloser())
-						{
+
+						//_log.info(" - hiegh bef.: " + temph);
+
+						if(control.isGeoCloser())
 							temph |= around.get(geoXY);
-						}
 						else
-						{
 							temph &= ~around.get(geoXY);
-						}
+
+						//_log.info(" - hiegh aft.: " + temph);
 
 						// записываем высоту
 						block[neededIndex + 1] = (byte) (temph >> 8);
@@ -2115,35 +2096,27 @@ public class GeoEngine
 	}
 
 	@SuppressWarnings("SynchronizationOnLocalVariableOrMethodParameter")
-	public static void applyControl(GeoControl control)
+	public static void applyGeoCollision(GeoCollision control, int geoIndex)
 	{
 		L2Territory pos = control.getGeoPos();
-		HashMap<Long, Byte> around = control.getGeoAround();
-
-		//System.out.println("GeoEngine: Putting geo to the door");
+		TLongByteHashMap around = control.getGeoAround();
 
 		boolean first_time = around == null;
 
-		if (around == null)
+		if(around == null)
 		{
-			around = new HashMap<Long, Byte>();
-			GArray<Long> around_blocks = new GArray<Long>();
+			around = new TLongByteHashMap();
+			TLongArrayList around_blocks = new TLongArrayList();
 			int minX = pos.getXmin() - L2World.MAP_MIN_X >> 4;
 			int maxX = pos.getXmax() - L2World.MAP_MIN_X >> 4;
 			int minY = pos.getYmin() - L2World.MAP_MIN_Y >> 4;
 			int maxY = pos.getYmax() - L2World.MAP_MIN_Y >> 4;
-			for (int geoX = minX; geoX <= maxX; geoX++)
-			{
-				for (int geoY = minY; geoY <= maxY; geoY++)
-				{
-					if (check_cell_in_door(geoX, geoY, pos))
-					{
+			for(int geoX = minX; geoX <= maxX; geoX++)
+				for(int geoY = minY; geoY <= maxY; geoY++)
+					if(check_cell_in_door(geoX, geoY, pos))
 						around_blocks.add(makeLong(geoX, geoY));
-					}
-				}
-			}
 
-			for (long geoXY : around_blocks)
+			for(long geoXY : around_blocks.toNativeArray())
 			{
 				int geoX = (int) geoXY;
 				int geoY = (int) (geoXY >> 32);
@@ -2153,25 +2126,25 @@ public class GeoEngine
 				long aroundE_geoXY = makeLong(geoX + 1, geoY); // close W
 				around.put(geoXY, NSWE_ALL);
 				byte _nswe;
-				if (!around_blocks.contains(aroundN_geoXY))
+				if(!around_blocks.contains(aroundN_geoXY))
 				{
 					_nswe = around.containsKey(aroundN_geoXY) ? around.remove(aroundN_geoXY) : 0;
 					_nswe |= SOUTH;
 					around.put(aroundN_geoXY, _nswe);
 				}
-				if (!around_blocks.contains(aroundS_geoXY))
+				if(!around_blocks.contains(aroundS_geoXY))
 				{
 					_nswe = around.containsKey(aroundS_geoXY) ? around.remove(aroundS_geoXY) : 0;
 					_nswe |= NORTH;
 					around.put(aroundS_geoXY, _nswe);
 				}
-				if (!around_blocks.contains(aroundW_geoXY))
+				if(!around_blocks.contains(aroundW_geoXY))
 				{
 					_nswe = around.containsKey(aroundW_geoXY) ? around.remove(aroundW_geoXY) : 0;
 					_nswe |= EAST;
 					around.put(aroundW_geoXY, _nswe);
 				}
-				if (!around_blocks.contains(aroundE_geoXY))
+				if(!around_blocks.contains(aroundE_geoXY))
 				{
 					_nswe = around.containsKey(aroundE_geoXY) ? around.remove(aroundE_geoXY) : 0;
 					_nswe |= WEST;
@@ -2187,9 +2160,11 @@ public class GeoEngine
 
 		synchronized (around)
 		{
-			Long[] around_keys = around.keySet().toArray(new Long[around.size()]);
-			for (long geoXY : around_keys)
+			long[] around_keys = around.keys();
+			for(long geoXY : around_keys)
 			{
+				//_log.info("geoXY: " + geoXY);
+
 				int geoX = (int) geoXY;
 				int geoY = (int) (geoXY >> 32);
 
@@ -2203,13 +2178,11 @@ public class GeoEngine
 				int blockIndex = getBlockIndex(blockX, blockY);
 
 				// Попытка скопировать блок геодаты, если уже существует, то не скопируется
-				if (first_time)
-				{
-					copyBlock(ix, iy, blockIndex);
-				}
+				if(first_time)
+					copyBlock(ix, iy, blockIndex, geoIndex);
 
-				byte[][] region = geodata[ix][iy];
-				if (region == null)
+				byte[][] region = geodata[ix][iy][geoIndex];
+				if(region == null)
 				{
 					System.out.println("GeoEngine: Attempt to close door at block with no geodata");
 					return;
@@ -2223,7 +2196,7 @@ public class GeoEngine
 				byte blockType = block[index];
 				index++;
 
-				switch (blockType)
+				switch(blockType)
 				{
 					case BLOCKTYPE_COMPLEX:
 						index += (cellX << 3) + cellY << 1;
@@ -2234,41 +2207,34 @@ public class GeoEngine
 						height &= 0xfff0;
 						height >>= 1;
 
-						if (first_time)
+						if(first_time)
 						{
 							close_nswe = around.remove(geoXY);
 							// подходящий слой не найден
-							if (!check_door_z(pos.getZmin(), pos.getZmax(), height))
-							{
+							if(!check_door_z(pos.getZmin(), pos.getZmax(), height))
 								break;
-							}
-							if (control.isGeoCloser())
-							{
+							if(control.isGeoCloser())
 								close_nswe &= old_nswe;
-							}
 							else
-							{
 								close_nswe &= ~old_nswe;
-							}
 							around.put(geoXY, close_nswe);
 						}
 						else
-						{
 							close_nswe = around.get(geoXY);
-						}
 
 						// around
 						height <<= 1;
 						height &= 0xfff0;
 						height |= old_nswe;
-						if (control.isGeoCloser())
-						{
+
+						//_log.info(" - hiegh bef.: " + height);
+
+						if(control.isGeoCloser())
 							height &= ~close_nswe;
-						}
 						else
-						{
 							height |= close_nswe;
-						}
+
+						//_log.info(" - hiegh aft.: " + height);
 
 						// Записываем высоту в массив
 						block[index + 1] = (byte) (height >> 8);
@@ -2280,7 +2246,7 @@ public class GeoEngine
 
 						// Далее следует стандартный механизм получения высоты
 						int offset = (cellX << 3) + cellY;
-						while (offset > 0)
+						while(offset > 0)
 						{
 							byte lc = block[index];
 							index += (lc << 1) + 1;
@@ -2288,13 +2254,11 @@ public class GeoEngine
 						}
 						byte layers = block[index];
 						index++;
-						if (layers <= 0 || layers > MAX_LAYERS)
-						{
+						if(layers <= 0 || layers > MAX_LAYERS)
 							break;
-						}
 						short temph = Short.MIN_VALUE;
 						old_nswe = NSWE_ALL;
-						while (layers > 0)
+						while(layers > 0)
 						{
 							height = makeShort(block[index + 1], block[index]);
 							byte tmp_nswe = (byte) (height & 0x0F);
@@ -2302,7 +2266,7 @@ public class GeoEngine
 							height >>= 1;
 							int z_diff_last = Math.abs(pos.getZmin() - temph);
 							int z_diff_curr = Math.abs(pos.getZmin() - height);
-							if (z_diff_last > z_diff_curr)
+							if(z_diff_last > z_diff_curr)
 							{
 								old_nswe = tmp_nswe;
 								temph = height;
@@ -2312,41 +2276,34 @@ public class GeoEngine
 							index += 2;
 						}
 
-						if (first_time)
+						if(first_time)
 						{
 							close_nswe = around.remove(geoXY);
 							// подходящий слой не найден
-							if (temph == Short.MIN_VALUE || !check_door_z(pos.getZmin(), pos.getZmax(), temph))
-							{
+							if(temph == Short.MIN_VALUE || !check_door_z(pos.getZmin(), pos.getZmax(), temph))
 								break;
-							}
-							if (control.isGeoCloser())
-							{
+							if(control.isGeoCloser())
 								close_nswe &= old_nswe;
-							}
 							else
-							{
 								close_nswe &= ~old_nswe;
-							}
 							around.put(geoXY, close_nswe);
 						}
 						else
-						{
 							close_nswe = around.get(geoXY);
-						}
 
 						// around
 						temph <<= 1;
 						temph &= 0xfff0;
 						temph |= old_nswe;
-						if (control.isGeoCloser())
-						{
+
+						//_log.info(" - hiegh bef.: " + temph);
+
+						if(control.isGeoCloser())
 							temph &= ~close_nswe;
-						}
 						else
-						{
 							temph |= close_nswe;
-						}
+
+						//_log.info(" - hiegh aft.: " + temph);
 
 						// записываем высоту
 						block[neededIndex + 1] = (byte) (temph >> 8);
@@ -2358,18 +2315,138 @@ public class GeoEngine
 		}
 	}
 
+	/**
+	 * Преобразовывает FLAT блоки в COMPLEX<br>
+	 *
+	 * @param ix регион x
+	 * @param iy регион y
+	 * @param blockIndex индекс блока в регионе
+	 */
+	private static void copyBlock(int ix, int iy, int blockIndex, int instanceId)
+	{
+		byte[][] region = geodata[ix][iy][instanceId];
+
+		if(region == null)
+		{
+			System.out.println("door at null region? [" + ix + "][" + iy + "]");
+			return;
+		}
+
+		byte[] block = region[blockIndex];
+		byte blockType = block[0];
+
+		switch(blockType)
+		{
+			case BLOCKTYPE_FLAT:
+				short height = makeShort(block[2], block[1]);
+				height &= 0x0fff0;
+				height <<= 1;
+				height |= NORTH;
+				height |= SOUTH;
+				height |= WEST;
+				height |= EAST;
+				byte[] newblock = new byte[129];
+				newblock[0] = BLOCKTYPE_COMPLEX;
+				for(int i = 1; i < 129; i += 2)
+				{
+					newblock[i + 1] = (byte) (height >> 8);
+					newblock[i] = (byte) (height & 0x00ff);
+				}
+				region[blockIndex] = newblock;
+				break;
+			default:
+				if(Config.COMPACT_GEO)
+					region[blockIndex] = region[blockIndex].clone();
+				break;
+		}
+	}
+
+	public static int NextGeoIndex(int rx, int ry, int refId)
+	{
+		if (!Config.GEODATA)
+		{
+			return 0;
+		}
+
+		int ix = rx - Config.GEO_X_FIRST;
+		int iy = ry - Config.GEO_Y_FIRST;
+
+		int regIndex = -1;
+
+		synchronized (geodata)
+		{
+			byte[][][] region = geodata[ix][iy];
+
+			//Ищем свободный блок
+			for (int i = 0; i < region.length; i++)
+			{
+				if (region[i] == null)
+				{
+					regIndex = i;
+					break;
+				}
+			}
+
+			//Свободного блока нет, создаем новый
+			if (regIndex == -1)
+			{
+				byte[][][] resizedRegion = new byte[(regIndex = region.length) + 1][][];
+				System.arraycopy(region, 0, resizedRegion, 0, region.length);
+				geodata[ix][iy] = resizedRegion;
+			}
+
+			LoadGeodata(rx, ry, regIndex);
+		}
+
+		return 0x0f000000 | (ix << 16) | (iy << 8) | regIndex;
+	}
+
+	public static void LoadGeodata(int rx, int ry, int regIndex)
+	{
+		int ix = rx - Config.GEO_X_FIRST;
+		int iy = ry - Config.GEO_Y_FIRST;
+
+		byte[][] geo = geodata[ix][iy][0];
+
+		int index = 0, orgIndex, block = 0, floor = 0;
+
+		byte[][] blocks;
+
+		synchronized (geodata)
+		{
+			if ((blocks = geodata[ix][iy][regIndex]) == null)
+			{
+				geodata[ix][iy][regIndex] = (blocks = new byte[BLOCKS_IN_MAP][]); // 256 * 256 блоков в регионе геодаты
+			}
+		}
+
+		blocks = geo;
+
+		// устанавливаем двери в стандартное положение
+		for (L2DoorInstance door : DoorTable.getInstance().getDoorsInGeoRegion(rx, ry))
+		{
+			if (DoorTable.INITIALLY_OPENED_DOORS.contains(door.getDoorId()))
+			{
+				removeGeoCollision(door, regIndex);
+				continue;
+			}
+
+			applyGeoCollision(door, regIndex);
+		}
+	}
+
 	public static long makeLong(int nLo, int nHi)
 	{
 		return (long) nHi << 32 | nLo & 0x00000000ffffffffL;
 	}
 
-	public static Location findPointToStay(int x, int y, int z, int j, int k)
+	public static Location findPointToStay(int x, int y, int z, int j, int k, int instanceId)
 	{
 		Location pos;
 		for (int i = 0; i < 100; i++)
 		{
 			pos = Rnd.coordsRandomize(x, y, z, 0, j, k);
-			if (canMoveToCoord(x, y, z, pos.x, pos.y, pos.z) && canMoveToCoord(pos.x, pos.y, pos.z, x, y, z))
+			if (canMoveToCoord(x, y, z, pos.x, pos.y, pos.z, instanceId) && canMoveToCoord(pos.x, pos.y, pos.z, x, y, z, instanceId))
 			{
 				return pos;
 			}
@@ -2382,18 +2459,11 @@ public class GeoEngine
 	 *
 	 * @return количество оптимизированых блоков
 	 */
-	public static void compact(boolean andClean)
+	public static void compact()
 	{
-		long freeMemBefore = 0;
 		long total = 0, optimized = 0;
 		GeoOptimizer.BlockLink[] links;
-		byte[][] link_region;
-
-		if (andClean)
-		{
-			Util.gc(2, 100);
-			freeMemBefore = MemoryWatchDog.getMemFree();
-		}
+		byte[][][] link_region;
 
 		for (int mapX = 0; mapX < L2World.WORLD_SIZE_X; mapX++)
 		{
@@ -2403,9 +2473,10 @@ public class GeoEngine
 				{
 					continue;
 				}
-				total += BlocksInMap;
 
-				links = GeoOptimizer.loadBlockMatches("./geodata/matches/" + (mapX + Config.GEO_X_FIRST) + "_" + (mapY + Config.GEO_Y_FIRST) + ".matches");
+				total += BLOCKS_IN_MAP;
+				links = GeoOptimizer.loadBlockMatches("geodata/matches/" + (mapX + Config.GEO_X_FIRST) + "_" + (mapY + Config.GEO_Y_FIRST) + ".matches");
+
 				if (links == null)
 				{
 					continue;
@@ -2424,15 +2495,7 @@ public class GeoEngine
 			}
 		}
 
-		String logStr = String.format("Geo Engine: - Compacted %d of %d blocks...", optimized, total);
-
-		if (andClean)
-		{
-			Util.gc(2, 100);
-			logStr = String.format("%s Optimized ~%d Mb of memory", logStr, (MemoryWatchDog.getMemFree() - freeMemBefore) / 0x100000);
-		}
-
-		log.info(logStr);
+		_log.info(String.format("GeoEngine: - Compacted %d of %d blocks...", optimized, total));
 	}
 
 	/**
@@ -2471,14 +2534,14 @@ public class GeoEngine
 	 */
 	public static boolean compareGeoBlocks(int mapX1, int mapY1, int blockIndex1, int mapX2, int mapY2, int blockIndex2)
 	{
-		return equalsData(geodata[mapX1][mapY1][blockIndex1], geodata[mapX2][mapY2][blockIndex2]);
+		return equalsData(geodata[mapX1][mapY1][blockIndex1][0], geodata[mapX2][mapY2][blockIndex2][0]);
 	}
 
 	private static void initChecksums()
 	{
-		log.info("Geo Engine: - Generating Checksums...");
-		new File("./geodata/checksum").mkdirs();
-		ParallelExecutor executor = new ParallelExecutor("initChecksums", Thread.MIN_PRIORITY);
+		_log.info("GeoEngine: - Generating Checksums...");
+		new File(Config.DATAPACK_ROOT, "geodata/checksum").mkdirs();
+		ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 		GeoOptimizer.checkSums = new int[L2World.WORLD_SIZE_X][L2World.WORLD_SIZE_Y][];
 		for (int mapX = 0; mapX < L2World.WORLD_SIZE_X; mapX++)
 		{
@@ -2486,22 +2549,22 @@ public class GeoEngine
 			{
 				if (geodata[mapX][mapY] != null)
 				{
-					executor.execute(new GeoOptimizer.CheckSumLoader(mapX, mapY, geodata[mapX][mapY]));
+					executor.execute(new GeoOptimizer.CheckSumLoader(mapX, mapY, geodata[mapX][mapY][0]));
 				}
 			}
 		}
 		try
 		{
-			executor.waitForFinishAndDestroy();
+			executor.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
 		} catch (InterruptedException e)
 		{
-			e.printStackTrace();
+			_log.error("", e);
 		}
 	}
 
 	private static void initBlockMatches(int maxScanRegions)
 	{
-		log.info("Geo Engine: - Generating Block Matches...");
+		_log.info("Geo Engine: - Generating Block Matches...");
 		new File("./geodata/matches").mkdirs();
 		ParallelExecutor executor = new ParallelExecutor("initBlockMatches", Thread.NORM_PRIORITY - 1);
 		for (int mapX = 0; mapX < L2World.WORLD_SIZE_X; mapX++)

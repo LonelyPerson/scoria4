@@ -17,14 +17,13 @@
  */
 package com.l2scoria.gameserver.updaters;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.managers.CastleManager;
 import com.l2scoria.gameserver.model.ItemContainer;
 import com.l2scoria.gameserver.model.L2Clan;
 import com.l2scoria.gameserver.model.entity.siege.Castle;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
+import org.apache.log4j.Logger;
 
 /**
  * Thorgrim - 2005 Class managing periodical events with castle

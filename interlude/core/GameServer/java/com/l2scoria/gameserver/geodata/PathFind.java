@@ -1,12 +1,15 @@
 package com.l2scoria.gameserver.geodata;
 
 import com.l2scoria.Config;
+import com.l2scoria.gameserver.geodata.PathFindBuffers.GeoNode;
 import com.l2scoria.gameserver.model.L2Object;
 import com.l2scoria.gameserver.model.Location;
-import com.l2scoria.gameserver.model.actor.instance.L2NpcInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PlayableInstance;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import static com.l2scoria.gameserver.geodata.GeoEngine.*;
 
 /**
  * @Author: Diamond & Drin
@@ -14,102 +17,104 @@ import java.util.ArrayList;
  */
 public class PathFind
 {
-	private static final byte NSWE_NONE = 0, EAST = 1, WEST = 2, SOUTH = 4, NORTH = 8, NSWE_ALL = 15;
+	private int geoIndex = 0;
 
 	private PathFindBuffers.PathFindBuffer buff;
 
-	private ArrayList<Location> path;
+	private List<Location> path;
+	private final short[] hNSWE = new short[2];
+	private final Location startPoint, endPoint;
+	private PathFindBuffers.GeoNode startNode, endNode, currentNode;
 
-	public PathFind(int x, int y, int z, int destX, int destY, int destZ, L2Object obj)
+	public PathFind(int x, int y, int z, int destX, int destY, int destZ, L2Object obj, int instanceId)
 	{
-		Location startpoint = Config.PATHFIND_BOOST == 0 ? new Location(x, y, z) : GeoEngine.moveCheckWithCollision(x, y, z, destX, destY, true);
-		Location native_endpoint = new Location(destX, destY, destZ);
-		Location endpoint = Config.PATHFIND_BOOST != 2 || Math.abs(destZ - z) > 200 ? native_endpoint.clone() : GeoEngine.moveCheckBackwardWithCollision(destX, destY, destZ, startpoint.x, startpoint.y, true);
+		geoIndex = instanceId;
 
-		startpoint.world2geo();
-		native_endpoint.world2geo();
-		endpoint.world2geo();
+		startPoint = Config.PATHFIND_BOOST == 0 ? new Location(x, y, z) : GeoEngine.moveCheckWithCollision(x, y, z, destX, destY, true, geoIndex);
+		endPoint = Config.PATHFIND_BOOST != 2 || Math.abs(destZ - z) > 200 ? new Location(destX, destY, destZ) : GeoEngine.moveCheckBackwardWithCollision(destX, destY, destZ, startPoint.x, startPoint.y, true, geoIndex);
 
-		startpoint.z = GeoEngine.NgetHeight(startpoint.x, startpoint.y, startpoint.z, false);
-		endpoint.z = GeoEngine.NgetHeight(endpoint.x, endpoint.y, endpoint.z, false);
+		startPoint.world2geo();
+		endPoint.world2geo();
 
-		int xdiff = Math.abs(endpoint.x - startpoint.x);
-		int ydiff = Math.abs(endpoint.y - startpoint.y);
+		startPoint.z = GeoEngine.NgetHeight(startPoint.x, startPoint.y, startPoint.z, false, geoIndex);
+		endPoint.z = GeoEngine.NgetHeight(endPoint.x, endPoint.y, endPoint.z, false, geoIndex);
 
-		if (xdiff == 0 && ydiff == 0)
+		int xdiff = Math.abs(endPoint.x - startPoint.x);
+		int ydiff = Math.abs(endPoint.y - startPoint.y);
+
+		if(xdiff == 0 && ydiff == 0)
 		{
-			if (Math.abs(endpoint.z - startpoint.z) < 32)
+			if(Math.abs(endPoint.z - startPoint.z) < 32)
 			{
 				path = new ArrayList<Location>();
-				path.add(0, startpoint);
+				path.add(0, startPoint);
 			}
 			return;
 		}
 
-		if ((buff = PathFindBuffers.alloc(64 + 2 * Math.max(xdiff, ydiff), (obj instanceof L2PlayableInstance), startpoint, endpoint, native_endpoint)) != null)
+		int mapSize = 2 * Math.max(xdiff, ydiff);
+
+		if((buff = PathFindBuffers.alloc(mapSize)) != null)
 		{
-			path = findPath();
+			buff.offsetX = startPoint.x - buff.mapSize / 2;
+			buff.offsetY = startPoint.y - buff.mapSize / 2;
+
+			//статистика
+			buff.totalUses++;
+			if(obj instanceof L2PlayableInstance)
+				buff.playableUses++;
+
+			findPath();
 
 			buff.free();
 
-			if (obj instanceof L2NpcInstance)
-			{
-				L2NpcInstance npc = (L2NpcInstance) obj;
-				npc.pathfindCount++;
-				npc.pathfindTime += (System.nanoTime() - buff.useStartedNanos) / 1000000.0;
-			}
+			PathFindBuffers.recycle(buff);
 		}
 	}
 
-	public ArrayList<Location> findPath()
+	public List<Location> findPath()
 	{
-		buff.firstNode = PathFindBuffers.GeoNode.initNode(buff, buff.startpoint.x - buff.offsetX, buff.startpoint.y - buff.offsetY, buff.startpoint);
-		buff.firstNode.closed = true;
+		startNode = buff.nodes[startPoint.x - buff.offsetX][startPoint.y - buff.offsetY].set(startPoint.x, startPoint.y, (short) startPoint.z);
 
-		PathFindBuffers.GeoNode nextNode = buff.firstNode, finish = null;
-		int i = buff.info.maxIterations;
+		GeoEngine.NgetHeightAndNSWE(startPoint.x, startPoint.y, (short) startPoint.z, hNSWE, geoIndex);
+		startNode.z = hNSWE[0];
+		startNode.nswe = hNSWE[1];
+		startNode.costFromStart = 0f;
+		startNode.state = GeoNode.OPENED;
+		startNode.parent = null;
 
-		while (nextNode != null && i-- > 0)
+		endNode = buff.nodes[endPoint.x - buff.offsetX][endPoint.y - buff.offsetY].set(endPoint.x, endPoint.y, (short) endPoint.z);
+
+		startNode.costToEnd = pathCostEstimate(startNode);
+		startNode.totalCost = startNode.costFromStart + startNode.costToEnd;
+
+		buff.open.add(startNode);
+
+		long nanos = System.nanoTime();
+		long searhTime = 0;
+		int itr = 0;
+
+		while((searhTime = System.nanoTime() - nanos) < Config.PATHFIND_MAX_TIME && (currentNode = buff.open.poll()) != null)
 		{
-			if ((finish = handleNode(nextNode)) != null)
+			itr++;
+			if(currentNode.x == endPoint.x && currentNode.y == endPoint.y && Math.abs(currentNode.z - endPoint.z) < 64)
 			{
-				return tracePath(finish);
+				path = tracePath(currentNode);
+				break;
 			}
-			nextNode = getBestOpenNode();
+
+			handleNode(currentNode);
+			currentNode.state = GeoNode.CLOSED;
 		}
 
-		return null;
-	}
+		buff.totalTime += searhTime;
+		buff.totalItr += itr;
+		if(path != null)
+			buff.successUses++;
+		else if(searhTime > Config.PATHFIND_MAX_TIME)
+			buff.overtimeUses++;
 
-	private PathFindBuffers.GeoNode getBestOpenNode()
-	{
-		PathFindBuffers.GeoNode bestNodeLink = null;
-		PathFindBuffers.GeoNode oldNode = buff.firstNode;
-		PathFindBuffers.GeoNode nextNode = buff.firstNode.link;
-
-		while (nextNode != null)
-		{
-			if (bestNodeLink == null || nextNode.score < bestNodeLink.link.score)
-			{
-				bestNodeLink = oldNode;
-			}
-			oldNode = nextNode;
-			nextNode = oldNode.link;
-		}
-
-		if (bestNodeLink != null)
-		{
-			bestNodeLink.link.closed = true;
-			PathFindBuffers.GeoNode bestNode = bestNodeLink.link;
-			bestNodeLink.link = bestNode.link;
-			if (bestNode == buff.currentNode)
-			{
-				buff.currentNode = bestNodeLink;
-			}
-			return bestNode;
-		}
-
-		return null;
+		return path;
 	}
 
 	private ArrayList<Location> tracePath(PathFindBuffers.GeoNode f)
@@ -123,251 +128,197 @@ public class PathFind
 		return locations;
 	}
 
-	public PathFindBuffers.GeoNode handleNode(PathFindBuffers.GeoNode node)
+	private void handleNode(GeoNode node)
 	{
-		PathFindBuffers.GeoNode result = null;
-
-		int clX = node._x;
-		int clY = node._y;
-		short clZ = node._z;
+		int clX = node.x;
+		int clY = node.y;
+		short clZ = node.z;
 
 		getHeightAndNSWE(clX, clY, clZ);
-		short NSWE = buff.hNSWE[1];
+		short NSWE = hNSWE[1];
 
-		if (Config.PATHFIND_DIAGONAL)
+		if(Config.PATHFIND_DIAGONAL)
 		{
 			// Юго-восток
-			if ((NSWE & SOUTH) == SOUTH && (NSWE & EAST) == EAST)
+			if((NSWE & SOUTH) == SOUTH && (NSWE & EAST) == EAST)
 			{
 				getHeightAndNSWE(clX + 1, clY, clZ);
-				if ((buff.hNSWE[1] & SOUTH) == SOUTH)
+				if((hNSWE[1] & SOUTH) == SOUTH)
 				{
 					getHeightAndNSWE(clX, clY + 1, clZ);
-					if ((buff.hNSWE[1] & EAST) == EAST)
+					if((hNSWE[1] & EAST) == EAST)
 					{
-						result = getNeighbour(clX + 1, clY + 1, node, true);
-						if (result != null)
-						{
-							return result;
-						}
+						handleNeighbour(clX + 1, clY + 1, node, true);
 					}
 				}
 			}
 
 			// Юго-запад
-			if ((NSWE & SOUTH) == SOUTH && (NSWE & WEST) == WEST)
+			if((NSWE & SOUTH) == SOUTH && (NSWE & WEST) == WEST)
 			{
 				getHeightAndNSWE(clX - 1, clY, clZ);
-				if ((buff.hNSWE[1] & SOUTH) == SOUTH)
+				if((hNSWE[1] & SOUTH) == SOUTH)
 				{
 					getHeightAndNSWE(clX, clY + 1, clZ);
-					if ((buff.hNSWE[1] & WEST) == WEST)
+					if((hNSWE[1] & WEST) == WEST)
 					{
-						result = getNeighbour(clX - 1, clY + 1, node, true);
-						if (result != null)
-						{
-							return result;
-						}
+						handleNeighbour(clX - 1, clY + 1, node, true);
 					}
 				}
 			}
 
 			// Северо-восток
-			if ((NSWE & NORTH) == NORTH && (NSWE & EAST) == EAST)
+			if((NSWE & NORTH) == NORTH && (NSWE & EAST) == EAST)
 			{
 				getHeightAndNSWE(clX + 1, clY, clZ);
-				if ((buff.hNSWE[1] & NORTH) == NORTH)
+				if((hNSWE[1] & NORTH) == NORTH)
 				{
 					getHeightAndNSWE(clX, clY - 1, clZ);
-					if ((buff.hNSWE[1] & EAST) == EAST)
+					if((hNSWE[1] & EAST) == EAST)
 					{
-						result = getNeighbour(clX + 1, clY - 1, node, true);
-						if (result != null)
-						{
-							return result;
-						}
+						handleNeighbour(clX + 1, clY - 1, node, true);
 					}
 				}
 			}
 
 			// Северо-запад
-			if ((NSWE & NORTH) == NORTH && (NSWE & WEST) == WEST)
+			if((NSWE & NORTH) == NORTH && (NSWE & WEST) == WEST)
 			{
 				getHeightAndNSWE(clX - 1, clY, clZ);
-				if ((buff.hNSWE[1] & NORTH) == NORTH)
+				if((hNSWE[1] & NORTH) == NORTH)
 				{
 					getHeightAndNSWE(clX, clY - 1, clZ);
-					if ((buff.hNSWE[1] & WEST) == WEST)
+					if((hNSWE[1] & WEST) == WEST)
 					{
-						result = getNeighbour(clX - 1, clY - 1, node, true);
-						if (result != null)
-						{
-							return result;
-						}
+						handleNeighbour(clX - 1, clY - 1, node, true);
 					}
 				}
 			}
 		}
 
 		// Восток
-		if ((NSWE & EAST) == EAST)
+		if((NSWE & EAST) == EAST)
 		{
-			result = getNeighbour(clX + 1, clY, node, false);
-			if (result != null)
-			{
-				return result;
-			}
+			handleNeighbour(clX + 1, clY, node, false);
 		}
 
 		// Запад
-		if ((NSWE & WEST) == WEST)
+		if((NSWE & WEST) == WEST)
 		{
-			result = getNeighbour(clX - 1, clY, node, false);
-			if (result != null)
-			{
-				return result;
-			}
+			handleNeighbour(clX - 1, clY, node, false);
 		}
 
 		// Юг
-		if ((NSWE & SOUTH) == SOUTH)
+		if((NSWE & SOUTH) == SOUTH)
 		{
-			result = getNeighbour(clX, clY + 1, node, false);
-			if (result != null)
-			{
-				return result;
-			}
+			handleNeighbour(clX, clY + 1, node, false);
 		}
 
 		// Север
-		if ((NSWE & NORTH) == NORTH)
+		if((NSWE & NORTH) == NORTH)
 		{
-			result = getNeighbour(clX, clY - 1, node, false);
+			handleNeighbour(clX, clY - 1, node, false);
 		}
-
-		return result;
 	}
 
-	public PathFindBuffers.GeoNode getNeighbour(int x, int y, PathFindBuffers.GeoNode from, boolean d)
+	private float pathCostEstimate(GeoNode n)
+	{
+		int diffx = endNode.x - n.x;
+		int diffy = endNode.y - n.y;
+		int diffz = endNode.z - n.z;
+
+		return (float) Math.sqrt(diffx * diffx + diffy * diffy + diffz * diffz / 256);
+	}
+
+	private float traverseCost(GeoNode from, GeoNode n, boolean d)
+	{
+		if(n.nswe != NSWE_ALL || Math.abs(n.z - from.z) > 16)
+			return 3f;
+		else
+		{
+			getHeightAndNSWE(n.x + 1, n.y, n.z);
+			if(hNSWE[1] != NSWE_ALL || Math.abs(n.z - hNSWE[0]) > 16){ return 2f; }
+
+			getHeightAndNSWE(n.x - 1, n.y, n.z);
+			if(hNSWE[1] != NSWE_ALL || Math.abs(n.z - hNSWE[0]) > 16){ return 2f; }
+
+			getHeightAndNSWE(n.x, n.y + 1, n.z);
+			if(hNSWE[1] != NSWE_ALL || Math.abs(n.z - hNSWE[0]) > 16){ return 2f; }
+
+			getHeightAndNSWE(n.x, n.y - 1, n.z);
+			if(hNSWE[1] != NSWE_ALL || Math.abs(n.z - hNSWE[0]) > 16){ return 2f; }
+		}
+
+		return d ? 1.414f : 1f;
+	}
+
+	private void handleNeighbour(int x, int y, GeoNode from, boolean d)
 	{
 		int nX = x - buff.offsetX, nY = y - buff.offsetY;
-		if (nX >= buff.info.MapSize || nX < 0 || nY >= buff.info.MapSize || nY < 0)
+		if(nX >= buff.mapSize || nX < 0 || nY >= buff.mapSize || nY < 0)
+			return;
+
+		GeoNode n = buff.nodes[nX][nY];
+		float newCost;
+
+		if(!n.isSet())
 		{
-			return null;
+			n = n.set(x, y, from.z);
+			GeoEngine.NgetHeightAndNSWE(x, y, from.z, hNSWE, geoIndex);
+			n.z = hNSWE[0];
+			n.nswe = hNSWE[1];
 		}
 
-		boolean isOldNull = PathFindBuffers.GeoNode.isNull(buff.nodes[nX][nY]);
-		if (!isOldNull && buff.nodes[nX][nY].closed)
+		int height = Math.abs(n.z - from.z);
+		if(height > Config.PATHFIND_MAX_Z_DIFF || n.nswe == NSWE_NONE)
+			return;
+
+		newCost = from.costFromStart + traverseCost(from, n, d);
+		if(n.state == GeoNode.OPENED || n.state == GeoNode.CLOSED)
 		{
-			return null;
+			if(n.costFromStart <= newCost)
+				return;
 		}
 
-		PathFindBuffers.GeoNode n = isOldNull ? PathFindBuffers.GeoNode.initNode(buff, nX, nY, x, y, from._z, from) : buff.tempNode.reuse(buff.nodes[nX][nY], from);
+		if(n.state == GeoNode.NONE)
+			n.costToEnd = pathCostEstimate(n);
 
-		int height = Math.abs(n._z - from._z);
+		n.parent = from;
+		n.costFromStart = newCost;
+		n.totalCost = n.costFromStart + n.costToEnd;
 
-		if (height > Config.PATHFIND_MAX_Z_DIFF || n._nswe == NSWE_NONE)
-		{
-			return null;
-		}
+		if(n.state == GeoNode.OPENED)
+			return;
 
-		double weight = d ? 1.414213562373095 * Config.WEIGHT0 : Config.WEIGHT0;
-
-		if (n._nswe != NSWE_ALL || height > 16)
-		{
-			weight = Config.WEIGHT1;
-		}
-		else
-		// Цикл только для удобства
-		{
-			while (buff.isPlayer || Config.SIMPLE_PATHFIND_FOR_MOBS)
-			{
-				getHeightAndNSWE(x + 1, y, n._z);
-				if (buff.hNSWE[1] != NSWE_ALL || Math.abs(n._z - buff.hNSWE[0]) > 16)
-				{
-					weight = Config.WEIGHT2;
-					break;
-				}
-
-				getHeightAndNSWE(x - 1, y, n._z);
-				if (buff.hNSWE[1] != NSWE_ALL || Math.abs(n._z - buff.hNSWE[0]) > 16)
-				{
-					weight = Config.WEIGHT2;
-					break;
-				}
-
-				getHeightAndNSWE(x, y + 1, n._z);
-				if (buff.hNSWE[1] != NSWE_ALL || Math.abs(n._z - buff.hNSWE[0]) > 16)
-				{
-					weight = Config.WEIGHT2;
-					break;
-				}
-
-				getHeightAndNSWE(x, y - 1, n._z);
-				if (buff.hNSWE[1] != NSWE_ALL || Math.abs(n._z - buff.hNSWE[0]) > 16)
-				{
-					weight = Config.WEIGHT2;
-					break;
-				}
-
-				break;
-			}
-		}
-
-		int diffx = buff.endpoint.x - x;
-		int diffy = buff.endpoint.y - y;
-		//int diffx = Math.abs(buff.endpoint.x - x);
-		//int diffy = Math.abs(buff.endpoint.y - y);
-		int dz = Math.abs(buff.endpoint.z - n._z);
-
-		n.moveCost += from.moveCost + weight;
-		n.score = n.moveCost + (Config.PATHFIND_DIAGONAL ? Math.sqrt(diffx * diffx + diffy * diffy + dz * dz / 256) : Math.abs(diffx) + Math.abs(diffy) + dz / 16); // 256 = 16*16
-		//n.score = n.moveCost + diffx + diffy + dz / 16;
-
-		if (x == buff.endpoint.x && y == buff.endpoint.y && dz < 64)
-		{
-			return n; // ура, мы дошли до точки назначения :)
-		}
-
-		if (isOldNull)
-		{
-			if (buff.currentNode == null)
-			{
-				buff.firstNode.link = n;
-			}
-			else
-			{
-				buff.currentNode.link = n;
-			}
-			buff.currentNode = n;
-
-		} // если !isOldNull, значит эта клетка уже присутствует, в n находится временный Node содержимое которого нужно скопировать
-		else if (n.moveCost < buff.nodes[nX][nY].moveCost)
-		{
-			buff.nodes[nX][nY].copy(n);
-		}
-
-		return null;
+		n.state = GeoNode.OPENED;
+		buff.open.add(n);
 	}
 
 	private void getHeightAndNSWE(int x, int y, short z)
 	{
 		int nX = x - buff.offsetX, nY = y - buff.offsetY;
-		if (nX >= buff.info.MapSize || nX < 0 || nY >= buff.info.MapSize || nY < 0)
+		if(nX >= buff.mapSize || nX < 0 || nY >= buff.mapSize || nY < 0)
 		{
-			buff.hNSWE[1] = NSWE_NONE; // Затычка
+			hNSWE[1] = NSWE_NONE; // Затычка
 			return;
 		}
-		PathFindBuffers.GeoNode n = buff.nodes[nX][nY];
-		if (n == null)
+
+		GeoNode n = buff.nodes[nX][nY];
+		if(!n.isSet())
 		{
-			n = PathFindBuffers.GeoNode.initNodeGeo(buff, nX, nY, x, y, z);
+			n = n.set(x, y, z);
+			GeoEngine.NgetHeightAndNSWE(x, y, z, hNSWE, geoIndex);
+			n.z = hNSWE[0];
+			n.nswe = hNSWE[1];
 		}
-		buff.hNSWE[0] = n._z;
-		buff.hNSWE[1] = n._nswe;
+		else
+		{
+			hNSWE[0] = n.z;
+			hNSWE[1] = n.nswe;
+		}
 	}
 
-	public ArrayList<Location> getPath()
+	public List<Location> getPath()
 	{
 		return path;
 	}

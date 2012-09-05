@@ -77,7 +77,7 @@ public class GMShop implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 				activeChar.isInsideZone(L2Character.ZONE_OLY) || Olympiad.getInstance().isRegistered(activeChar) ||
 				Olympiad.getInstance().isRegisteredInComp(activeChar))) 
 			msg = "GMShop не доступен на Великой Олимпиаде";
-		else if(PowerPakConfig.GMSHOP_EXCLUDE_ON.contains("EVENT") && false)
+		else if(PowerPakConfig.GMSHOP_EXCLUDE_ON.contains("EVENT") && (activeChar._event!=null && activeChar._event.isRunning()))
 			msg = "GMShop не доступен на эвенте";
 		
 		if(msg!=null)

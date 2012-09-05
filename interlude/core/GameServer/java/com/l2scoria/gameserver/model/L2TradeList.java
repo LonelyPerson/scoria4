@@ -18,12 +18,6 @@
  */
 package com.l2scoria.gameserver.model;
 
-import java.sql.PreparedStatement;
-import java.util.List;
-import java.util.logging.Logger;
-
-import javolution.util.FastList;
-
 import com.l2scoria.gameserver.datatables.sql.ItemTable;
 import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
@@ -31,8 +25,13 @@ import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.InventoryUpdate;
 import com.l2scoria.gameserver.network.serverpackets.StatusUpdate;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
-import java.sql.Connection;
 import com.l2scoria.util.database.L2DatabaseFactory;
+import javolution.util.FastList;
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.util.List;
 
 /**
  * This class ...
@@ -343,7 +342,7 @@ public class L2TradeList
 
 			if(playerItem == null)
 			{
-				_log.warning("L2TradeList: PlayersInv.destroyItem returned NULL!");
+				_log.warn("L2TradeList: PlayersInv.destroyItem returned NULL!");
 				continue;
 			}
 
@@ -412,7 +411,7 @@ public class L2TradeList
 		}
 		catch(Exception e)
 		{
-			_log.warning("could not change pet item object id: " + e);
+			_log.warn("could not change pet item object id: " + e);
 		}
 		finally
 		{
@@ -548,7 +547,7 @@ public class L2TradeList
 
 				if(buyerItem.getCount() > Integer.MAX_VALUE / buyerItem.getOwnersPrice())
 				{
-					_log.warning("Integer Overflow on Cost. Possible Exploit attempt between " + buyer.getName() + " and " + seller.getName() + ".");
+					_log.warn("Integer Overflow on Cost. Possible Exploit attempt between " + buyer.getName() + " and " + seller.getName() + ".");
 					return;
 				}
 

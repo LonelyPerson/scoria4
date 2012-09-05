@@ -37,9 +37,9 @@ import com.l2scoria.gameserver.network.serverpackets.SocialAction;
 import com.l2scoria.gameserver.templates.StatsSet;
 import com.l2scoria.util.random.Rnd;
 import javolution.util.FastList;
+import org.apache.log4j.Logger;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 public class QueenAnt extends Quest
 {

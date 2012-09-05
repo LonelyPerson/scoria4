@@ -19,14 +19,14 @@ package com.l2scoria.gameserver.model.zone.type;
 
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import com.l2scoria.gameserver.model.zone.L2ZoneType;
+import com.l2scoria.gameserver.model.zone.L2ZoneDefault;
 
 /**
  * A no landing zone
  * 
  * @author durgus
  */
-public class L2NoLandingZone extends L2ZoneType
+public class L2NoLandingZone extends L2ZoneDefault
 {
 	public L2NoLandingZone(int id)
 	{
@@ -40,6 +40,8 @@ public class L2NoLandingZone extends L2ZoneType
 		{
 			character.setInsideZone(L2Character.ZONE_NOLANDING, true);
 		}
+
+		super.onEnter(character);
 	}
 
 	@Override
@@ -49,13 +51,7 @@ public class L2NoLandingZone extends L2ZoneType
 		{
 			character.setInsideZone(L2Character.ZONE_NOLANDING, false);
 		}
+
+		super.onExit(character);
 	}
-
-	@Override
-	protected void onDieInside(L2Character character)
-	{}
-
-	@Override
-	protected void onReviveInside(L2Character character)
-	{}
 }

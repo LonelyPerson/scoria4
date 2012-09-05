@@ -14,15 +14,14 @@
  */
 package com.l2scoria.gameserver.managers;
 
+import com.l2scoria.util.database.L2DatabaseFactory;
+import com.l2scoria.util.random.Rnd;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.logging.Logger;
-
-import javolution.util.FastMap;
-
-import com.l2scoria.util.database.L2DatabaseFactory;
-import com.l2scoria.util.random.Rnd;
 
 /**
  * control for Custom Npcs that look like players.
@@ -167,7 +166,7 @@ public final class CustomNpcInstanceManager
 				}
 				catch(Throwable t)
 				{
-					_log.warning("Failed to load Npc Morph data for Id: " + ci.integerData[25]);
+					_log.warn("Failed to load Npc Morph data for Id: " + ci.integerData[25]);
 				}
 				ci = null;
 
@@ -180,7 +179,7 @@ public final class CustomNpcInstanceManager
 		}
 		catch(Exception e)
 		{
-			/** _log.warning( "CustomNpcInstanceManager: Passed "); **/
+			/** _log.warn( "CustomNpcInstanceManager: Passed "); **/
 		}
 		finally
 		{
@@ -273,7 +272,7 @@ public final class CustomNpcInstanceManager
 		}
 		catch(Throwable t)
 		{
-			_log.warning("Could not add Npc Morph info into the DB: ");
+			_log.warn("Could not add Npc Morph info into the DB: ");
 		}
 		finally
 		{

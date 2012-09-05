@@ -17,24 +17,18 @@
  */
 package com.l2scoria.gameserver.network;
 
-import java.nio.ByteBuffer;
-import java.util.concurrent.RejectedExecutionException;
-import java.util.logging.Logger;
-
-import ru.catssoftware.protection.OpcodeReader;
-
-import mmo.IClientFactory;
-import mmo.IMMOExecutor;
-import mmo.IPacketHandler;
-import mmo.MMOConnection;
-import mmo.ReceivablePacket;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.GmListTable;
 import com.l2scoria.gameserver.network.L2GameClient.GameClientState;
 import com.l2scoria.gameserver.network.clientpackets.*;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.util.Util;
+import mmo.*;
+import org.apache.log4j.Logger;
+import ru.catssoftware.protection.OpcodeReader;
+
+import java.nio.ByteBuffer;
+import java.util.concurrent.RejectedExecutionException;
 
 /**
  * Stateful Packet Handler<BR>
@@ -661,7 +655,7 @@ public final class L2GamePacketHandler implements IPacketHandler<L2GameClient>, 
 						}
 						else
 						{
-							_log.warning("Client: " + client.toString() + " sent a 0xd0 without the second opcode.");
+							_log.warn("Client: " + client.toString() + " sent a 0xd0 without the second opcode.");
 							break;
 						}
 
@@ -833,7 +827,7 @@ public final class L2GamePacketHandler implements IPacketHandler<L2GameClient>, 
 
 		if(Config.DEBUG_UNKNOWN_PACKETS)
 		{
-			_log.warning("Unknown Packet: " + Integer.toHexString(opcode) + " on State: " + state.name() + " Client: " + client.toString());
+			_log.warn("Unknown Packet: " + Integer.toHexString(opcode) + " on State: " + state.name() + " Client: " + client.toString());
 		}
 
 		byte[] array = new byte[v];
@@ -842,7 +836,7 @@ public final class L2GamePacketHandler implements IPacketHandler<L2GameClient>, 
 
 		if(Config.DEBUG_UNKNOWN_PACKETS)
 		{
-			_log.warning(Util.printData(array, v));
+			_log.warn(Util.printData(array, v));
 		}
 
 		array = null;
@@ -860,7 +854,7 @@ public final class L2GamePacketHandler implements IPacketHandler<L2GameClient>, 
 
 		if(Config.DEBUG_UNKNOWN_PACKETS)
 		{
-			_log.warning("Unknown Packet: " + Integer.toHexString(opcode) + ":" + Integer.toHexString(id2) + " on State: " + state.name() + " Client: " + client.toString());
+			_log.warn("Unknown Packet: " + Integer.toHexString(opcode) + ":" + Integer.toHexString(id2) + " on State: " + state.name() + " Client: " + client.toString());
 		}
 
 		byte[] array = new byte[v];
@@ -869,7 +863,7 @@ public final class L2GamePacketHandler implements IPacketHandler<L2GameClient>, 
 
 		if(Config.DEBUG_UNKNOWN_PACKETS)
 		{
-			_log.warning(Util.printData(array, v));
+			_log.warn(Util.printData(array, v));
 		}
 
 		array = null;
@@ -904,7 +898,7 @@ public final class L2GamePacketHandler implements IPacketHandler<L2GameClient>, 
 			// if the server is shutdown we ignore
 			if(!ThreadPoolManager.getInstance().isShutdown())
 			{
-				_log.severe("Failed executing: " + rp.getClass().getSimpleName() + " for Client: " + rp.getClient().toString());
+				_log.fatal("Failed executing: " + rp.getClass().getSimpleName() + " for Client: " + rp.getClient().toString());
 			}
 		}
 	}
@@ -927,11 +921,11 @@ public final class L2GamePacketHandler implements IPacketHandler<L2GameClient>, 
 				{
 					GmListTable.broadcastMessageToGMs("Player " + client.getActiveChar().toString() + " flooding unknown packets.");
 				}
-				_log.warning("Player " + client.getActiveChar().toString() + " flooding unknown packets.");
+				_log.warn("Player " + client.getActiveChar().toString() + " flooding unknown packets.");
 				break;
 
 			case 2:
-				_log.warning("PacketProtection: " + client.toString() + " got kicked due flooding of unknown packets");
+				_log.warn("PacketProtection: " + client.toString() + " got kicked due flooding of unknown packets");
 
 				if(client.getActiveChar() != null)
 				{
@@ -942,7 +936,7 @@ public final class L2GamePacketHandler implements IPacketHandler<L2GameClient>, 
 				break;
 
 			case 3:
-				_log.warning("PacketProtection: " + client.toString() + " got banned due flooding of unknown packets");
+				_log.warn("PacketProtection: " + client.toString() + " got banned due flooding of unknown packets");
 				client.getActiveChar().setAccessLevel(-1);
 
 				if(client.getActiveChar() != null)

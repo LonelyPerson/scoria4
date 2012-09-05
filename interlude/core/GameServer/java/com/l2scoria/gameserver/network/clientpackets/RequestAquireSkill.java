@@ -18,8 +18,6 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.SkillTable;
 import com.l2scoria.gameserver.datatables.sql.SkillSpellbookTable;
@@ -28,20 +26,12 @@ import com.l2scoria.gameserver.model.L2PledgeSkillLearn;
 import com.l2scoria.gameserver.model.L2ShortCut;
 import com.l2scoria.gameserver.model.L2Skill;
 import com.l2scoria.gameserver.model.L2SkillLearn;
-import com.l2scoria.gameserver.model.actor.instance.L2FishermanInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2FolkInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2NpcInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2VillageMasterInstance;
+import com.l2scoria.gameserver.model.actor.instance.*;
 import com.l2scoria.gameserver.network.SystemMessageId;
-import com.l2scoria.gameserver.network.serverpackets.ExStorageMaxCount;
-import com.l2scoria.gameserver.network.serverpackets.PledgeSkillList;
-import com.l2scoria.gameserver.network.serverpackets.ShortCutRegister;
-import com.l2scoria.gameserver.network.serverpackets.StatusUpdate;
-import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
+import com.l2scoria.gameserver.network.serverpackets.*;
 import com.l2scoria.gameserver.util.IllegalPlayerAction;
 import com.l2scoria.gameserver.util.Util;
+import org.apache.log4j.Logger;
 
 /**
  * This class ...
@@ -274,7 +264,7 @@ public class RequestAquireSkill extends L2GameClientPacket
 
 			if(Config.DEBUG)
 			{
-				_log.fine("Learned pledge skill " + _id + " for " + _requiredSp + " SP.");
+				_log.info("Learned pledge skill " + _id + " for " + _requiredSp + " SP.");
 			}
 
 			SystemMessage cr = new SystemMessage(SystemMessageId.S1_DEDUCTED_FROM_CLAN_REP);
@@ -297,7 +287,7 @@ public class RequestAquireSkill extends L2GameClientPacket
 
 		else
 		{
-			_log.warning("Recived Wrong Packet Data in Aquired Skill - unk1:" + _skillType);
+			_log.warn("Recived Wrong Packet Data in Aquired Skill - unk1:" + _skillType);
 			return;
 		}
 
@@ -305,7 +295,7 @@ public class RequestAquireSkill extends L2GameClientPacket
 
 		if(Config.DEBUG)
 		{
-			_log.fine("Learned skill " + _id + " for " + _requiredSp + " SP.");
+			_log.info("Learned skill " + _id + " for " + _requiredSp + " SP.");
 		}
 
 		player.setSp(player.getSp() - _requiredSp);

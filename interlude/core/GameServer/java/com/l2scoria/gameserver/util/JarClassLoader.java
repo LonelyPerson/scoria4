@@ -19,12 +19,12 @@
 
 package com.l2scoria.gameserver.util;
 
+import org.apache.log4j.Logger;
+
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -83,7 +83,7 @@ public class JarClassLoader extends ClassLoader
 			}
 			catch(IOException e)
 			{
-				_log.log(Level.WARNING, jarFile + ":" + e.toString(), e);
+				_log.warn(jarFile + ":" + e.toString(), e);
 				continue;
 			}
 		}

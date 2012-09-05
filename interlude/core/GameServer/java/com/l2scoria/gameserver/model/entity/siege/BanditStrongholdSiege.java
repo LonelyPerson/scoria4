@@ -17,16 +17,8 @@
  */
 package com.l2scoria.gameserver.model.entity.siege;
 
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ScheduledFuture;
-import java.util.logging.Logger;
-
-import javolution.util.FastList;
-
-import com.l2scoria.gameserver.datatables.sql.DoorTable;
 import com.l2scoria.gameserver.datatables.sql.ClanTable;
+import com.l2scoria.gameserver.datatables.sql.DoorTable;
 import com.l2scoria.gameserver.datatables.sql.NpcTable;
 import com.l2scoria.gameserver.idfactory.IdFactory;
 import com.l2scoria.gameserver.managers.ClanHallManager;
@@ -43,6 +35,13 @@ import com.l2scoria.gameserver.network.serverpackets.CreatureSay;
 import com.l2scoria.gameserver.taskmanager.ExclusiveTask;
 import com.l2scoria.gameserver.templates.L2NpcTemplate;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
+import javolution.util.FastList;
+import org.apache.log4j.Logger;
+
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ScheduledFuture;
 
 /**
  * @author: MHard
@@ -397,9 +396,7 @@ public class BanditStrongholdSiege extends ClanHallSiege
 		if(playerClan == clanhall.getOwnerClan())
 			return true;
 		clanPlayersInfo regPlayers = _clansInfo.get(playerClan.getClanId());
-		if(regPlayers == null)
-			return false;
-		return true;
+		return regPlayers != null;
 	}
 
 	public synchronized int registerClanOnSiege(L2PcInstance player, L2Clan playerClan)
@@ -472,7 +469,7 @@ public class BanditStrongholdSiege extends ClanHallSiege
 	public int getPlayersCount(String playerClan)
 	{
 		for(clanPlayersInfo a : _clansInfo.values())
-			if(a._clanName == playerClan)
+			if(a._clanName.equals(playerClan))
 				return a._players.size();
 		return 0;
 	}

@@ -22,10 +22,10 @@ import com.l2scoria.Config;
 import com.l2scoria.gameserver.network.L2GameClient;
 import javolution.text.TextBuilder;
 import mmo.ReceivablePacket;
+import org.apache.log4j.Logger;
 
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Logger;
 
 /**
  * <p>

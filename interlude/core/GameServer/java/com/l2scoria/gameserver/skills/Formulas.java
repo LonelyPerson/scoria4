@@ -18,22 +18,12 @@
  */
 package com.l2scoria.gameserver.skills;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.managers.ClanHallManager;
 import com.l2scoria.gameserver.managers.SiegeManager;
-import com.l2scoria.gameserver.model.Inventory;
-import com.l2scoria.gameserver.model.L2Character;
-import com.l2scoria.gameserver.model.L2SiegeClan;
-import com.l2scoria.gameserver.model.L2Skill;
-import com.l2scoria.gameserver.model.L2Summon;
+import com.l2scoria.gameserver.model.*;
 import com.l2scoria.gameserver.model.L2Skill.SkillType;
-import com.l2scoria.gameserver.model.actor.instance.L2DoorInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2NpcInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2PetInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2PlayableInstance;
+import com.l2scoria.gameserver.model.actor.instance.*;
 import com.l2scoria.gameserver.model.entity.ClanHall;
 import com.l2scoria.gameserver.model.entity.sevensigns.SevenSigns;
 import com.l2scoria.gameserver.model.entity.sevensigns.SevenSignsFestival;
@@ -41,8 +31,8 @@ import com.l2scoria.gameserver.model.entity.siege.Siege;
 import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
 import com.l2scoria.gameserver.skills.conditions.ConditionPlayerState;
-import com.l2scoria.gameserver.skills.conditions.ConditionUsingItemType;
 import com.l2scoria.gameserver.skills.conditions.ConditionPlayerState.CheckPlayerState;
+import com.l2scoria.gameserver.skills.conditions.ConditionUsingItemType;
 import com.l2scoria.gameserver.skills.funcs.Func;
 import com.l2scoria.gameserver.templates.L2Armor;
 import com.l2scoria.gameserver.templates.L2PcTemplate;
@@ -50,6 +40,7 @@ import com.l2scoria.gameserver.templates.L2Weapon;
 import com.l2scoria.gameserver.templates.L2WeaponType;
 import com.l2scoria.gameserver.util.Util;
 import com.l2scoria.util.random.Rnd;
+import org.apache.log4j.Logger;
 
 /**
  * Global calculations, can be modified by server admins

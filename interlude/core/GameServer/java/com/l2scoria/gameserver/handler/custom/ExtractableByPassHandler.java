@@ -18,8 +18,6 @@
  */
 package com.l2scoria.gameserver.handler.custom;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.gameserver.handler.ICustomByPassHandler;
 import com.l2scoria.gameserver.handler.IItemHandler;
 import com.l2scoria.gameserver.handler.ItemHandler;
@@ -27,6 +25,7 @@ import com.l2scoria.gameserver.handler.itemhandlers.ExtractableItems;
 import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.util.FloodProtector;
+import org.apache.log4j.Logger;
 
 /**
  * @author Nick
@@ -82,7 +81,7 @@ public class ExtractableByPassHandler implements ICustomByPassHandler
 		}
 		catch(Exception e)
 		{
-			_log.warning("ExtractableByPassHandler: Error while running " + e);
+			_log.warn("ExtractableByPassHandler: Error while running " + e);
 		}
 
 	}

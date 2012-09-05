@@ -18,17 +18,16 @@
  */
 package com.l2scoria.gameserver.datatables.sql;
 
+import com.l2scoria.gameserver.model.L2LvlupData;
+import com.l2scoria.gameserver.model.base.ClassId;
+import com.l2scoria.util.database.L2DatabaseFactory;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Map;
-import java.util.logging.Logger;
-
-import javolution.util.FastMap;
-
-import com.l2scoria.gameserver.model.L2LvlupData;
-import com.l2scoria.gameserver.model.base.ClassId;
-import com.l2scoria.util.database.L2DatabaseFactory;
 
 /**
  * This class ...
@@ -102,11 +101,11 @@ public class LevelUpData
 			rset = null;
 			lvlDat = null;
 
-			_log.config("LevelUpData: Loaded " + _lvlTable.size() + " Character Level Up Templates.");
+			_log.info("LevelUpData: Loaded " + _lvlTable.size() + " Character Level Up Templates.");
 		}
 		catch(Exception e)
 		{
-			_log.warning("error while creating Lvl up data table " + e);
+			_log.warn("error while creating Lvl up data table " + e);
 		}
 		finally
 		{

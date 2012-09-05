@@ -19,7 +19,7 @@
 package com.l2scoria.gameserver.network.serverpackets;
 
 //import java.util.Calendar; //signed time related
-//import java.util.logging.Logger;
+//import org.apache.log4j.Logger;
 
 import com.l2scoria.gameserver.datatables.sql.ClanTable;
 import com.l2scoria.gameserver.model.L2Clan;

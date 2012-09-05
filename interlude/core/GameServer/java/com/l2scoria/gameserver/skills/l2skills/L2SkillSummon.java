@@ -24,11 +24,7 @@ import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.L2Object;
 import com.l2scoria.gameserver.model.L2Skill;
 import com.l2scoria.gameserver.model.L2World;
-import com.l2scoria.gameserver.model.actor.instance.L2CubicInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2NpcInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2SiegeSummonInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2SummonInstance;
+import com.l2scoria.gameserver.model.actor.instance.*;
 import com.l2scoria.gameserver.model.base.Experience;
 import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
@@ -164,7 +160,7 @@ public class L2SkillSummon extends L2Skill
 				{
 					if(Config.DEBUG)
 					{
-						_log.fine("player can't summon any more cubics. ignore summon skill");
+						_log.info("player can't summon any more cubics. ignore summon skill");
 					}
 					activeChar.sendPacket(new SystemMessage(SystemMessageId.CUBIC_SUMMONING_FAILED));
 					return;
@@ -184,7 +180,7 @@ public class L2SkillSummon extends L2Skill
 		{
 			if(Config.DEBUG)
 			{
-				_log.fine("player has a pet already. ignore summon skill");
+				_log.info("player has a pet already. ignore summon skill");
 			}
 			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
@@ -207,7 +203,7 @@ public class L2SkillSummon extends L2Skill
 		if(summon.getLevel() >= Experience.MAX_LEVEL)
 		{
 			summon.getStat().setExp(Experience.getExp(Experience.MAX_LEVEL - 1));
-			_log.warning("Summon (" + summon.getName() + ") NpcID: " + summon.getNpcId() + " has a level above 75. Please rectify.");
+			_log.warn("Summon (" + summon.getName() + ") NpcID: " + summon.getNpcId() + " has a level above 75. Please rectify.");
 		}
 		else
 		{

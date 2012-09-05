@@ -14,29 +14,22 @@
  */
 package com.l2scoria.gameserver.model.actor.instance;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.concurrent.Future;
-
-import javolution.util.FastMap;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.ai.CtrlIntention;
 import com.l2scoria.gameserver.datatables.sql.DoorTable;
 import com.l2scoria.gameserver.managers.FourSepulchersManager;
 import com.l2scoria.gameserver.model.L2World;
 import com.l2scoria.gameserver.model.quest.Quest;
-import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
-import com.l2scoria.gameserver.network.serverpackets.CreatureSay;
-import com.l2scoria.gameserver.network.serverpackets.MyTargetSelected;
-import com.l2scoria.gameserver.network.serverpackets.NpcHtmlMessage;
-import com.l2scoria.gameserver.network.serverpackets.SocialAction;
-import com.l2scoria.gameserver.network.serverpackets.StatusUpdate;
-import com.l2scoria.gameserver.network.serverpackets.ValidateLocation;
+import com.l2scoria.gameserver.network.serverpackets.*;
 import com.l2scoria.gameserver.templates.L2NpcTemplate;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.gameserver.util.Util;
 import com.l2scoria.util.random.Rnd;
+import javolution.util.FastMap;
+
+import java.util.Collection;
+import java.util.Map;
+import java.util.concurrent.Future;
 
 /**
  * @author sandman
@@ -413,7 +406,7 @@ public class L2SepulcherNpcInstance extends L2NpcInstance
 			}
 			catch(Exception e)
 			{
-				_log.warning(e.getMessage());
+				_log.warn(e.getMessage());
 			}
 		}
 	}

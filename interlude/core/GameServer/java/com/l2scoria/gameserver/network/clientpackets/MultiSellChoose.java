@@ -35,8 +35,7 @@ import com.l2scoria.gameserver.templates.L2Item;
 import com.l2scoria.gameserver.templates.L2Weapon;
 import com.l2scoria.gameserver.util.FloodProtector;
 import javolution.util.FastList;
-
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 /**
  * @author programmos, sword developers
@@ -249,7 +248,7 @@ public class MultiSellChoose extends L2GameClientPacket
 
 				if(itemToTake == null)
 				{ //this is a cheat, transaction will be aborted and if any items already tanken will not be returned back to inventory!
-					_log.severe("Character: " + player.getName() + " is trying to cheat in multisell, merchatnt id:" + (merchant!=null?merchant.getNpcId():0));
+					_log.fatal("Character: " + player.getName() + " is trying to cheat in multisell, merchatnt id:" + (merchant!=null?merchant.getNpcId():0));
 					return;
 				}
 				if(itemToTake.fireEvent("MULTISELL", (Object[]) null) != null)
@@ -257,7 +256,7 @@ public class MultiSellChoose extends L2GameClientPacket
 
 				if(itemToTake.isWear())
 				{
-					_log.severe("Character: " + player.getName() + " is trying to cheat in multisell with weared item");
+					_log.fatal("Character: " + player.getName() + " is trying to cheat in multisell with weared item");
 					return;
 				}
 

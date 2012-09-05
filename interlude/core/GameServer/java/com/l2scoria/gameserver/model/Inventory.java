@@ -18,27 +18,21 @@
  */
 package com.l2scoria.gameserver.model;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.List;
-
-import javolution.util.FastList;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.SkillTable;
 import com.l2scoria.gameserver.datatables.csv.ArmorSetsTable;
 import com.l2scoria.gameserver.datatables.sql.ItemTable;
 import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance.ItemLocation;
-import com.l2scoria.gameserver.templates.L2Armor;
-import com.l2scoria.gameserver.templates.L2EtcItem;
-import com.l2scoria.gameserver.templates.L2EtcItemType;
-import com.l2scoria.gameserver.templates.L2Item;
-import com.l2scoria.gameserver.templates.L2Weapon;
-import com.l2scoria.gameserver.templates.L2WeaponType;
-import java.sql.Connection;
+import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
+import com.l2scoria.gameserver.templates.*;
 import com.l2scoria.util.database.L2DatabaseFactory;
+import javolution.util.FastList;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.List;
 
 /**
  * This class manages inventory
@@ -419,7 +413,7 @@ public abstract class Inventory extends ItemContainer
 					}
 					else
 					{
-						_log.warning("Inventory.ArmorSetListener: Incorrect skill: " + armorSet.getSkillId() + ".");
+						_log.warn("Inventory.ArmorSetListener: Incorrect skill: " + armorSet.getSkillId() + ".");
 					}
 
 					if(armorSet.containShield(player)) // has shield from set
@@ -433,7 +427,7 @@ public abstract class Inventory extends ItemContainer
 						}
 						else
 						{
-							_log.warning("Inventory.ArmorSetListener: Incorrect skill: " + armorSet.getShieldSkillId() + ".");
+							_log.warn("Inventory.ArmorSetListener: Incorrect skill: " + armorSet.getShieldSkillId() + ".");
 						}
 
 						skills = null;
@@ -454,7 +448,7 @@ public abstract class Inventory extends ItemContainer
 							}
 							else
 							{
-								_log.warning("Inventory.ArmorSetListener: Incorrect skill: " + armorSet.getEnchant6skillId() + ".");
+								_log.warn("Inventory.ArmorSetListener: Incorrect skill: " + armorSet.getEnchant6skillId() + ".");
 							}
 
 							skille = null;
@@ -477,7 +471,7 @@ public abstract class Inventory extends ItemContainer
 					}
 					else
 					{
-						_log.warning("Inventory.ArmorSetListener: Incorrect skill: " + armorSet.getShieldSkillId() + ".");
+						_log.warn("Inventory.ArmorSetListener: Incorrect skill: " + armorSet.getShieldSkillId() + ".");
 					}
 
 					skills = null;
@@ -549,7 +543,7 @@ public abstract class Inventory extends ItemContainer
 					}
 					else
 					{
-						_log.warning("Inventory.ArmorSetListener: Incorrect skill: " + removeSkillId1 + ".");
+						_log.warn("Inventory.ArmorSetListener: Incorrect skill: " + removeSkillId1 + ".");
 					}
 
 					skill = null;
@@ -565,7 +559,7 @@ public abstract class Inventory extends ItemContainer
 					}
 					else
 					{
-						_log.warning("Inventory.ArmorSetListener: Incorrect skill: " + removeSkillId2 + ".");
+						_log.warn("Inventory.ArmorSetListener: Incorrect skill: " + removeSkillId2 + ".");
 					}
 
 					skill = null;
@@ -581,7 +575,7 @@ public abstract class Inventory extends ItemContainer
 					}
 					else
 					{
-						_log.warning("Inventory.ArmorSetListener: Incorrect skill: " + removeSkillId3 + ".");
+						_log.warn("Inventory.ArmorSetListener: Incorrect skill: " + removeSkillId3 + ".");
 					}
 
 					skill = null;
@@ -1102,7 +1096,7 @@ public abstract class Inventory extends ItemContainer
 	{
 		if(Config.DEBUG)
 		{
-			_log.fine("--- unequip body slot:" + slot);
+			_log.info("--- unequip body slot:" + slot);
 		}
 
 		int pdollSlot = -1;
@@ -1398,7 +1392,7 @@ public abstract class Inventory extends ItemContainer
 				setPaperdollItem(PAPERDOLL_BACK, item);
 				break;
 			default:
-				_log.warning("unknown body slot:" + targetSlot);
+				_log.warn("unknown body slot:" + targetSlot);
 		}
 	}
 
@@ -1539,7 +1533,7 @@ public abstract class Inventory extends ItemContainer
 		}
 		catch(Exception e)
 		{
-			_log.warning("Could not restore inventory : " + e);
+			_log.warn("Could not restore inventory : " + e);
 		}
 		finally
 		{

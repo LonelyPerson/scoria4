@@ -22,9 +22,9 @@ import com.l2scoria.gameserver.datatables.SkillTable;
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2SummonInstance;
-import com.l2scoria.gameserver.model.zone.L2ZoneType;
+import com.l2scoria.gameserver.model.zone.L2ZoneDefault;
 
-public class L2SkillZone extends L2ZoneType
+public class L2SkillZone extends L2ZoneDefault
 {
 	private int _skillId;
 	private int _skillLvl;
@@ -59,7 +59,38 @@ public class L2SkillZone extends L2ZoneType
 	@Override
 	protected void onEnter(L2Character character)
 	{
-		if((character instanceof L2PcInstance || character instanceof L2SummonInstance) && (!_onSiege || _onSiege && character.isInsideZone(4)))
+		startSkill(character);
+
+		super.onEnter(character);
+	}
+
+	@Override
+	protected void onExit(L2Character character)
+	{
+		stopSkill(character);
+
+		super.onExit(character);
+	}
+
+	@Override
+	protected void onDieInside(L2Character character)
+	{
+		stopSkill(character);
+
+		super.onDieInside(character);
+	}
+
+	@Override
+	protected void onReviveInside(L2Character character)
+	{
+		startSkill(character);
+
+		super.onReviveInside(character);
+	}
+
+	private void startSkill(L2Character character)
+	{
+		if((character instanceof L2PcInstance || character instanceof L2SummonInstance) && (!_onSiege || character.isInsideZone(L2Character.ZONE_SIEGE)))
 		{
 			if(character instanceof L2PcInstance)
 			{
@@ -70,8 +101,7 @@ public class L2SkillZone extends L2ZoneType
 		}
 	}
 
-	@Override
-	protected void onExit(L2Character character)
+	private void stopSkill(L2Character character)
 	{
 		if(character instanceof L2PcInstance || character instanceof L2SummonInstance)
 		{
@@ -82,17 +112,5 @@ public class L2SkillZone extends L2ZoneType
 				((L2PcInstance) character).exitDangerArea();
 			}
 		}
-	}
-
-	@Override
-	protected void onDieInside(L2Character character)
-	{
-		onExit(character);
-	}
-
-	@Override
-	protected void onReviveInside(L2Character character)
-	{
-		onEnter(character);
 	}
 }

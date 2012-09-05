@@ -18,17 +18,16 @@
  */
 package com.l2scoria.gameserver.managers;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.logging.Logger;
-
-import javolution.util.FastList;
-
 import com.l2scoria.gameserver.model.L2World;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.entity.Wedding;
-import java.sql.Connection;
 import com.l2scoria.util.database.L2DatabaseFactory;
+import javolution.util.FastList;
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 /**
  * @author evill33t
@@ -93,7 +92,7 @@ public class CoupleManager
 		}
 		catch(Exception e)
 		{
-			_log.warning("Exception: CoupleManager.load(): " + e);
+			_log.warn("Exception: CoupleManager.load(): " + e);
 		}
 		finally
 		{

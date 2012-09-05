@@ -18,16 +18,16 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.model.L2World;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.FriendRecvMsg;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
+import org.apache.log4j.Logger;
+
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
 
 /**
  * Recieve Private (Friend) Message - 0xCC Format: c SS S: Message S: Receiving Player
@@ -75,7 +75,7 @@ public final class RequestSendFriendMsg extends L2GameClientPacket
 					"PRIV_MSG", "[" + activeChar.getName() + " to " + _reciever + "]"
 			});
 
-			_logChat.log(record);
+			_logChat.info(record);
 		}
 
 		targetPlayer.sendPacket(new FriendRecvMsg(activeChar.getName(), _reciever, _message));

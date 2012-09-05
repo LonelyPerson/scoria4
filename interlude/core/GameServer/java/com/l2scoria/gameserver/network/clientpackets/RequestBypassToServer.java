@@ -23,7 +23,7 @@ import com.l2scoria.gameserver.ai.CtrlIntention;
 import com.l2scoria.gameserver.communitybbs.CommunityBoard;
 import com.l2scoria.gameserver.datatables.sql.AdminCommandAccessRights;
 import com.l2scoria.gameserver.handler.AdminCommandHandler;
-import com.l2scoria.gameserver.handler.IAdminCommandHandler;
+import com.l2scoria.gameserver.handler.admincommandhandlers.Admin;
 import com.l2scoria.gameserver.handler.custom.CustomBypassHandler;
 import com.l2scoria.gameserver.model.L2Object;
 import com.l2scoria.gameserver.model.L2World;
@@ -36,9 +36,7 @@ import com.l2scoria.gameserver.model.entity.olympiad.Olympiad;
 import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
 import com.l2scoria.gameserver.network.serverpackets.NpcHtmlMessage;
 import com.l2scoria.gameserver.util.FloodProtector;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 /**
  * This class ...
@@ -96,7 +94,7 @@ public final class RequestBypassToServer extends L2GameClientPacket
 					command = _command;
 				}
 
-				IAdminCommandHandler ach = AdminCommandHandler.getInstance().getAdminCommandHandler(command);
+				Admin ach = AdminCommandHandler.getInstance().getAdminCommandHandler(command);
 
 				if(ach == null)
 				{
@@ -105,7 +103,7 @@ public final class RequestBypassToServer extends L2GameClientPacket
 						activeChar.sendMessage("The command " + command + " does not exists!");
 					}
 
-					_log.warning("No handler registered for admin command '" + command + "'");
+					_log.warn("No handler registered for admin command '" + command + "'");
 					return;
 				}
 
@@ -114,7 +112,7 @@ public final class RequestBypassToServer extends L2GameClientPacket
 					activeChar.sendMessage("You don't have the access right to use this command!");
 					if(Config.DEBUG)
 					{
-						_log.warning("Character " + activeChar.getName() + " tried to use admin command " + command + ", but doesn't have access to it!");
+						_log.warn("Character " + activeChar.getName() + " tried to use admin command " + command + ", but doesn't have access to it!");
 					}
 					return;
 				}
@@ -239,7 +237,7 @@ public final class RequestBypassToServer extends L2GameClientPacket
 		}
 		catch(Exception e)
 		{
-			_log.log(Level.WARNING, "Bad RequestBypassToServer: ", e);
+			_log.warn("Bad RequestBypassToServer: ", e);
 		}
 		//		finally
 		//		{

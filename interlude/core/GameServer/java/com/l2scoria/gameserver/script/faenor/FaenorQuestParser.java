@@ -18,15 +18,13 @@
  */
 package com.l2scoria.gameserver.script.faenor;
 
-import java.util.logging.Logger;
-
-import javax.script.ScriptContext;
-
-import org.w3c.dom.Node;
-
 import com.l2scoria.gameserver.script.Parser;
 import com.l2scoria.gameserver.script.ParserFactory;
 import com.l2scoria.gameserver.script.ScriptEngine;
+import org.apache.log4j.Logger;
+import org.w3c.dom.Node;
+
+import javax.script.ScriptContext;
 
 /**
  * @author Luis Arias

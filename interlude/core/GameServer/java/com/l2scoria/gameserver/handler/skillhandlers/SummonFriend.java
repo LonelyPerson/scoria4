@@ -19,7 +19,9 @@
 package com.l2scoria.gameserver.handler.skillhandlers;
 
 import com.l2scoria.Config;
+import com.l2scoria.gameserver.geodata.GeoEngine;
 import com.l2scoria.gameserver.handler.ISkillHandler;
+import com.l2scoria.gameserver.instancemanager.InstanceManager;
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.L2Object;
 import com.l2scoria.gameserver.model.L2Skill;
@@ -28,10 +30,12 @@ import com.l2scoria.gameserver.model.L2World;
 import com.l2scoria.gameserver.model.actor.instance.L2GrandBossInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2RaidBossInstance;
+import com.l2scoria.gameserver.model.entity.Instance;
 import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.ConfirmDlg;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
 import com.l2scoria.gameserver.util.Util;
+import com.l2scoria.util.random.Rnd;
 import javolution.util.FastList;
 
 /**
@@ -40,32 +44,38 @@ import javolution.util.FastList;
 public class SummonFriend implements ISkillHandler
 {
 	//private static Logger _log = Logger.getLogger(SummonFriend.class.getName());
-	private static final SkillType[] SKILL_IDS = { SkillType.SUMMON_FRIEND };
+	private static final SkillType[] SKILL_IDS = {SkillType.SUMMON_FRIEND};
 
 	public static boolean checkSummonerStatus(L2PcInstance summonerChar)
 	{
-		if(summonerChar == null)
+		if (summonerChar == null)
+		{
 			return false;
+		}
 
-		if(summonerChar.isFlying())
+		if (summonerChar.isFlying())
+		{
 			return false;
+		}
 
-		if(summonerChar.inObserverMode())
+		if (summonerChar.inObserverMode())
+		{
 			return false;
+		}
 
-		if(summonerChar.isInOlympiadMode())
+		if (summonerChar.isInOlympiadMode())
 		{
 			summonerChar.sendPacket(new SystemMessage(SystemMessageId.THIS_ITEM_IS_NOT_AVAILABLE_FOR_THE_OLYMPIAD_EVENT));
 			return false;
 		}
 
-		if(summonerChar.isInsideZone(L2Character.ZONE_PVP))
+		if (summonerChar.isInsideZone(L2Character.ZONE_PVP))
 		{
 			summonerChar.sendPacket(new SystemMessage(SystemMessageId.YOU_CANNOT_SUMMON_IN_COMBAT));
 			return false;
 		}
 
-		if(summonerChar.isInsideZone(L2Character.ZONE_NOSUMMONFRIEND))
+		if (summonerChar.isInsideZone(L2Character.ZONE_NOSUMMONFRIEND))
 		{
 			summonerChar.sendPacket(new SystemMessage(SystemMessageId.YOU_MAY_NOT_SUMMON_FROM_YOUR_CURRENT_LOCATION));
 			return false;
@@ -73,11 +83,11 @@ public class SummonFriend implements ISkillHandler
 
 		// check for summoner not in raid areas
 		FastList<L2Object> objects = L2World.getInstance().getVisibleObjects(summonerChar, Config.BOSS_LIMIT_RADIUS);
-		if(objects != null)
+		if (objects != null)
 		{
-			for(L2Object object : objects)
+			for (L2Object object : objects)
 			{
-				if(object instanceof L2RaidBossInstance || object instanceof L2GrandBossInstance)
+				if (object instanceof L2RaidBossInstance || object instanceof L2GrandBossInstance)
 				{
 					summonerChar.sendPacket(new SystemMessage(SystemMessageId.YOU_MAY_NOT_SUMMON_FROM_YOUR_CURRENT_LOCATION));
 					return false;
@@ -85,14 +95,26 @@ public class SummonFriend implements ISkillHandler
 			}
 		}
 
+		if (summonerChar.getInstanceId() > 0)
+		{
+			Instance summonerInstance = InstanceManager.getInstance().getInstance(summonerChar.getInstanceId());
+			if (summonerInstance != null && (!summonerInstance.isSummonAllowed()))
+			{
+				summonerChar.sendPacket(SystemMessageId.YOU_MAY_NOT_SUMMON_FROM_YOUR_CURRENT_LOCATION);
+				return false;
+			}
+		}
+
 		objects = null;
 		return true;
 	}
-	
+
 	public static boolean checkTargetStatus(L2PcInstance targetChar, L2PcInstance summonerChar)
 	{
 		if (targetChar == null)
+		{
 			return false;
+		}
 
 		if (targetChar.isAlikeDead())
 		{
@@ -139,9 +161,15 @@ public class SummonFriend implements ISkillHandler
 			return false;
 		}
 
-		if(targetChar.isInsideZone(L2Character.ZONE_NOSUMMONFRIEND) || targetChar.isInsideZone(L2Character.ZONE_PVP))
+		if (targetChar.isInsideZone(L2Character.ZONE_NOSUMMONFRIEND) || targetChar.isInsideZone(L2Character.ZONE_PVP))
 		{
 			summonerChar.sendPacket(new SystemMessage(SystemMessageId.YOUR_TARGET_IS_IN_AN_AREA_WHICH_BLOCKS_SUMMONING));
+			return false;
+		}
+
+		if ((summonerChar._event != null && summonerChar._event.isRunning()) || (targetChar._event != null && targetChar._event.isRunning()))
+		{
+			summonerChar.sendPacket(SystemMessageId.YOUR_TARGET_IS_IN_AN_AREA_WHICH_BLOCKS_SUMMONING);
 			return false;
 		}
 
@@ -151,13 +179,19 @@ public class SummonFriend implements ISkillHandler
 	public static void teleToTarget(L2PcInstance targetChar, L2PcInstance summonerChar, L2Skill summonSkill)
 	{
 		if (targetChar == null || summonerChar == null || summonSkill == null)
+		{
 			return;
+		}
 
 		if (!checkSummonerStatus(summonerChar))
+		{
 			return;
+		}
 		if (!checkTargetStatus(targetChar, summonerChar))
+		{
 			return;
-			
+		}
+
 		if (summonSkill.getId() != 1429)
 		{
 			if (targetChar.getInventory().getItemByItemId(8615) == null)
@@ -175,32 +209,58 @@ public class SummonFriend implements ISkillHandler
 			sm = null;
 		}
 
-		targetChar.teleToLocation(summonerChar.getX(), summonerChar.getY(), summonerChar.getZ(), false);
+		targetChar.setInstanceId(summonerChar.getInstanceId());
+		int x = summonerChar.getX();
+		int y = summonerChar.getY();
+		int n = 0;
+
+		while(true)
+		{
+			x += Rnd.get(summonerChar.getTemplate().getCollisionRadius() * -2, summonerChar.getTemplate().getCollisionRadius() * 2);
+			y += Rnd.get(summonerChar.getTemplate().getCollisionRadius() * -2, summonerChar.getTemplate().getCollisionRadius() * 2);
+
+			if (++n > 5 || GeoEngine.canMoveToCoord(summonerChar.getX(), summonerChar.getY(), summonerChar.getZ(), x, y, summonerChar.getZ(), summonerChar.getInstanceId()))
+			{
+				break;
+			}
+		}
+
+		targetChar.teleToLocation(x, y, summonerChar.getZ(), false);
 	}
 
 	public void useSkill(L2Character activeChar, L2Skill skill, L2Object[] targets)
 	{
-		if(!(activeChar instanceof L2PcInstance)) // currently not implemented for others
+		if (!(activeChar instanceof L2PcInstance)) // currently not implemented for others
+		{
 			return;
+		}
 
 		L2PcInstance activePlayer = (L2PcInstance) activeChar;
 
 		if (!checkSummonerStatus(activePlayer))
+		{
 			return;
+		}
 
 		for (L2Object element : targets)
 		{
-			if(!(element instanceof L2PcInstance))
+			if (!(element instanceof L2PcInstance))
+			{
 				continue;
+			}
 
 			L2PcInstance target = (L2PcInstance) element;
-			if(activeChar == target)
+			if (activeChar == target)
+			{
 				continue;
+			}
 
 			if (!checkTargetStatus(target, activePlayer))
+			{
 				continue;
+			}
 
-			if(!Util.checkIfInRange(0, activeChar, target, false))
+			if (!Util.checkIfInRange(0, activeChar, target, false))
 			{
 				if (!target.teleportRequest(activePlayer, skill))
 				{
@@ -225,8 +285,8 @@ public class SummonFriend implements ISkillHandler
 					teleToTarget(target, activePlayer, skill);
 					target.teleportRequest(null, null);
 				}
-                                // remove ressurection
-                                target.removeReviving();
+				// remove ressurection
+				target.removeReviving();
 
 			}
 

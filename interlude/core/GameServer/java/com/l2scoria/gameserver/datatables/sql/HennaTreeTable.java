@@ -18,21 +18,20 @@
  */
 package com.l2scoria.gameserver.datatables.sql;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
-
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 import com.l2scoria.gameserver.datatables.csv.HennaTable;
 import com.l2scoria.gameserver.model.actor.instance.L2HennaInstance;
 import com.l2scoria.gameserver.model.base.ClassId;
 import com.l2scoria.gameserver.templates.L2Henna;
 import com.l2scoria.util.database.L2DatabaseFactory;
+import javolution.util.FastList;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This class ...
@@ -117,7 +116,7 @@ public class HennaTreeTable
 				statement2 = null;
 
 				count += list.size();
-				_log.fine("Henna Tree for Class: " + classId + " has " + list.size() + " Henna Templates.");
+				_log.info("Henna Tree for Class: " + classId + " has " + list.size() + " Henna Templates.");
 
 			}
 
@@ -130,7 +129,7 @@ public class HennaTreeTable
 		}
 		catch(Exception e)
 		{
-			_log.warning("error while creating henna tree for classId " + classId + "  " + e);
+			_log.warn("error while creating henna tree for classId " + classId + "  " + e);
 			e.printStackTrace();
 		}
 		finally
@@ -139,7 +138,7 @@ public class HennaTreeTable
 			con = null;
 		}
 
-		_log.config("HennaTreeTable: Loaded " + count + " Henna Tree Templates.");
+		_log.info("HennaTreeTable: Loaded " + count + " Henna Tree Templates.");
 
 	}
 
@@ -150,7 +149,7 @@ public class HennaTreeTable
 		if(henna == null)
 		{
 			// the hennatree for this class is undefined, so we give an empty list
-			_log.warning("Hennatree for class " + classId + " is not defined !");
+			_log.warn("Hennatree for class " + classId + " is not defined !");
 
 			return new L2HennaInstance[0];
 		}

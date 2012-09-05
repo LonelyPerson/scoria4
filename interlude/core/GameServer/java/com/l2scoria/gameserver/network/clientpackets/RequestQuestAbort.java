@@ -18,18 +18,19 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
+import com.l2scoria.gameserver.instancemanager.InstanceManager;
 import com.l2scoria.gameserver.managers.QuestManager;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
+import com.l2scoria.gameserver.model.entity.Instance;
 import com.l2scoria.gameserver.model.quest.Quest;
 import com.l2scoria.gameserver.model.quest.QuestState;
 import com.l2scoria.gameserver.network.serverpackets.QuestList;
+import org.apache.log4j.Logger;
 
 /**
  * This class ...
- * 
+ *
  * @version $Revision: 1.3.4.2 $ $Date: 2005/03/27 15:29:30 $
  */
 public final class RequestQuestAbort extends L2GameClientPacket
@@ -49,8 +50,10 @@ public final class RequestQuestAbort extends L2GameClientPacket
 	protected void runImpl()
 	{
 		L2PcInstance activeChar = getClient().getActiveChar();
-		if(activeChar == null)
+		if (activeChar == null)
+		{
 			return;
+		}
 
 		Quest qe;
 		QuestState qs;
@@ -58,49 +61,58 @@ public final class RequestQuestAbort extends L2GameClientPacket
 		{
 			case 247:
 				qe = QuestManager.getInstance().getQuest(246);
-				if(qe != null)
+				if (qe != null)
 				{
 					qs = activeChar.getQuestState(qe.getName());
-					if(qs != null)
+					if (qs != null)
 					{
-						qe.deleteQuestInDb(qs);
+						Quest.deleteQuestInDb(qs);
 					}
 				}
 			case 246:
 				qe = QuestManager.getInstance().getQuest(242);
-				if(qe != null)
+				if (qe != null)
 				{
 					qs = activeChar.getQuestState(qe.getName());
-					if(qs != null)
+					if (qs != null)
 					{
-						qe.deleteQuestInDb(qs);
+						Quest.deleteQuestInDb(qs);
 					}
 				}
 			case 242:
 				qe = QuestManager.getInstance().getQuest(241);
-				if(qe != null)
+				if (qe != null)
 				{
 					qs = activeChar.getQuestState(qe.getName());
-					if(qs != null)
+					if (qs != null)
 					{
-						qe.deleteQuestInDb(qs);
+						Quest.deleteQuestInDb(qs);
 					}
 				}
 		}
+
 		qe = QuestManager.getInstance().getQuest(_questId);
-		if(qe != null)
+		if (qe != null)
 		{
 			qs = activeChar.getQuestState(qe.getName());
-			if(qs != null)
+			if (qs != null)
 			{
+				if (qs.getPlayer().getInstanceId() > 0)
+				{
+					Instance plInst = InstanceManager.getInstance().getInstance(qs.getPlayer().getInstanceId());
+					if (plInst.isQuestStarter(qs.getQuest().getQuestIntId()))
+					{
+						plInst.ejectPlayer(qs.getPlayer().getObjectId());
+					}
+				}
+
 				qs.exitQuest(true);
-				activeChar.sendMessage("Quest aborted.");
-				QuestList ql = new QuestList();
-				activeChar.sendPacket(ql);
+				activeChar.sendMessage("Квест отменен.");
+				activeChar.sendPacket(new QuestList());
 			}
 			else
 			{
-				if(Config.DEBUG)
+				if (Config.DEBUG)
 				{
 					_log.info("Player '" + activeChar.getName() + "' try to abort quest " + qe.getName() + " but he didn't have it started.");
 				}
@@ -108,9 +120,9 @@ public final class RequestQuestAbort extends L2GameClientPacket
 		}
 		else
 		{
-			if(Config.DEBUG)
+			if (Config.DEBUG)
 			{
-				_log.warning("Quest (id='" + _questId + "') not found.");
+				_log.warn("Quest (id='" + _questId + "') not found.");
 			}
 		}
 	}

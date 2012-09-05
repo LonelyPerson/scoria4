@@ -17,18 +17,6 @@
  */
 package com.l2scoria.gameserver.model.multisell;
 
-import java.io.File;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import javolution.util.FastList;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.sql.ItemTable;
 import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
@@ -37,6 +25,14 @@ import com.l2scoria.gameserver.network.serverpackets.MultiSellList;
 import com.l2scoria.gameserver.templates.L2Armor;
 import com.l2scoria.gameserver.templates.L2Item;
 import com.l2scoria.gameserver.templates.L2Weapon;
+import javolution.util.FastList;
+import org.apache.log4j.Logger;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.File;
+import java.util.List;
 
 /**
  * Multisell list manager
@@ -60,7 +56,7 @@ public class L2Multisell
 			}
 		}
 
-		_log.warning("[L2Multisell] can't find list with id: " + id);
+		_log.warn("[L2Multisell] can't find list with id: " + id);
 		return null;
 	}
 
@@ -291,7 +287,7 @@ public class L2Multisell
 
 		if(!dir.exists())
 		{
-			_log.config("Dir " + dir.getAbsolutePath() + " not exists");
+			_log.info("Dir " + dir.getAbsolutePath() + " not exists");
 			return;
 		}
 
@@ -332,7 +328,7 @@ public class L2Multisell
 			}
 			catch(Exception e)
 			{
-				_log.log(Level.SEVERE, "Error loading file " + f, e);
+				_log.fatal("Error loading file " + f, e);
 			}
 			try
 			{
@@ -343,7 +339,7 @@ public class L2Multisell
 			}
 			catch(Exception e)
 			{
-				_log.log(Level.SEVERE, "Error in file " + f, e);
+				_log.fatal("Error in file " + f, e);
 			}
 		}
 

@@ -182,7 +182,7 @@ public class Antharas extends Quest
 		}
 		catch (Exception e)
 		{
-			_log.warning(e.getMessage());
+			_log.warn(e.getMessage());
 		}
 		
 		// Setting spawn data of teleport cube.
@@ -206,7 +206,7 @@ public class Antharas extends Quest
 		}
 		catch (Exception e)
 		{
-			_log.warning(e.getMessage());
+			_log.warn(e.getMessage());
 		}
 		int status = GrandBossManager.getInstance().getBossStatus(ANTHARASOLDID);
 		if (Config.ANTHARAS_OLD || status == WAITING)
@@ -627,7 +627,7 @@ public class Antharas extends Quest
 			}
 			catch (Exception e)
 			{
-				_log.warning(e.getMessage());
+				_log.warn(e.getMessage());
 			}
 		}
 	}

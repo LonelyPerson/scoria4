@@ -18,9 +18,6 @@
  */
 package com.l2scoria.gameserver.model.quest;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.l2scoria.gameserver.datatables.sql.NpcTable;
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.actor.instance.L2NpcInstance;
@@ -28,6 +25,7 @@ import com.l2scoria.gameserver.model.spawn.L2Spawn;
 import com.l2scoria.gameserver.templates.L2NpcTemplate;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.util.random.Rnd;
+import org.apache.log4j.Logger;
 
 /**
  * @author programmos
@@ -69,13 +67,13 @@ public final class QuestSpawn
 	 */
 	public L2NpcInstance addSpawn(int npcId, L2Character cha)
 	{
-		return addSpawn(npcId, cha.getX(), cha.getY(), cha.getZ(), cha.getHeading(), false, 0);
+		return addSpawn(npcId, cha.getX(), cha.getY(), cha.getZ(), cha.getHeading(), false, 0, cha.getInstanceId());
 	}
 
 	/**
 	 * Add spawn for player instance Return object id of newly spawned npc
 	 */
-	public L2NpcInstance addSpawn(int npcId, int x, int y, int z, int heading, boolean randomOffset, int despawnDelay)
+	public L2NpcInstance addSpawn(int npcId, int x, int y, int z, int heading, boolean randomOffset, int despawnDelay, int instanceId)
 	{
 		L2NpcInstance result = null;
 
@@ -92,7 +90,7 @@ public final class QuestSpawn
 				// default spawn location, which is at the player's loc.
 				if(x == 0 && y == 0)
 				{
-					_log.log(Level.SEVERE, "Failed to adjust bad locks for quest spawn!  Spawn aborted!");
+					_log.fatal("Failed to adjust bad locks for quest spawn!  Spawn aborted!");
 					return null;
 				}
 
@@ -123,6 +121,7 @@ public final class QuestSpawn
 					y += offset;
 				}
 				L2Spawn spawn = new L2Spawn(template);
+				spawn.setInstanceId(instanceId);
 				spawn.setHeading(heading);
 				spawn.setLocx(x);
 				spawn.setLocy(y);
@@ -143,7 +142,7 @@ public final class QuestSpawn
 		}
 		catch(Exception e1)
 		{
-			_log.warning("Could not spawn Npc " + npcId);
+			_log.warn("Could not spawn Npc " + npcId);
 		}
 
 		return null;

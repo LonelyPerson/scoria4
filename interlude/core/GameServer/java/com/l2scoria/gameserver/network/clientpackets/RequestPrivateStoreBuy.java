@@ -18,10 +18,6 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.logging.Logger;
-
-import javolution.util.FastSet;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.model.ItemRequest;
 import com.l2scoria.gameserver.model.L2Object;
@@ -30,6 +26,8 @@ import com.l2scoria.gameserver.model.TradeList;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
 import com.l2scoria.gameserver.util.Util;
+import javolution.util.FastSet;
+import org.apache.log4j.Logger;
 
 /**
  * This class ...
@@ -128,7 +126,7 @@ public final class RequestPrivateStoreBuy extends L2GameClientPacket
 		{
 			player.sendPacket(ActionFailed.STATIC_PACKET);
 			if (result > 1)
-				_log.warning("PrivateStore buy has failed due to invalid list or request. Player: " + player.getName() + ", Private store of: " + storePlayer.getName());
+				_log.warn("PrivateStore buy has failed due to invalid list or request. Player: " + player.getName() + ", Private store of: " + storePlayer.getName());
 			return;
 		}
 

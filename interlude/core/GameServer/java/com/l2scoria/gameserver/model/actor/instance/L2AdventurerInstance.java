@@ -62,7 +62,7 @@ public class L2AdventurerInstance extends L2FolkInstance
 			}
 			catch(NumberFormatException e)
 			{
-				_log.warning("Invalid Bypass to Server command parameter.");
+				_log.warn("Invalid Bypass to Server command parameter.");
 			}
 		}
 		else if(command.startsWith("raidInfo"))

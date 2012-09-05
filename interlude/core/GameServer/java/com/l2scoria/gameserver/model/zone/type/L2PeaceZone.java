@@ -18,14 +18,14 @@
 package com.l2scoria.gameserver.model.zone.type;
 
 import com.l2scoria.gameserver.model.L2Character;
-import com.l2scoria.gameserver.model.zone.L2ZoneType;
+import com.l2scoria.gameserver.model.zone.L2ZoneDefault;
 
 /**
  * A peaceful zone
  * 
  * @author durgus
  */
-public class L2PeaceZone extends L2ZoneType
+public class L2PeaceZone extends L2ZoneDefault
 {
 	public L2PeaceZone(int id)
 	{
@@ -37,10 +37,7 @@ public class L2PeaceZone extends L2ZoneType
 	{
 		character.setInsideZone(L2Character.ZONE_PEACE, true);
 
-		/*if (character instanceof L2PcInstance)
-		{
-			((L2PcInstance)character).sendMessage("You entered a peace zone!");
-		}*/
+		super.onEnter(character);
 	}
 
 	@Override
@@ -48,18 +45,6 @@ public class L2PeaceZone extends L2ZoneType
 	{
 		character.setInsideZone(L2Character.ZONE_PEACE, false);
 
-		/*if (character instanceof L2PcInstance)
-		{
-			((L2PcInstance)character).sendMessage("You exited a peace zone!");
-		}*/
+		super.onExit(character);
 	}
-
-	@Override
-	protected void onDieInside(L2Character character)
-	{}
-
-	@Override
-	protected void onReviveInside(L2Character character)
-	{}
-
 }

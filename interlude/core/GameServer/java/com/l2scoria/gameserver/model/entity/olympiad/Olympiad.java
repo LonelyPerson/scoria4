@@ -35,6 +35,7 @@ import com.l2scoria.util.L2FastList;
 import com.l2scoria.util.database.L2DatabaseFactory;
 import javolution.text.TextBuilder;
 import javolution.util.FastMap;
+import org.apache.log4j.Logger;
 
 import java.io.*;
 import java.sql.Connection;
@@ -45,7 +46,6 @@ import java.util.Calendar;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ScheduledFuture;
-import java.util.logging.Logger;
 
 public class Olympiad
 {
@@ -218,7 +218,7 @@ public class Olympiad
 				}
 				break;
 			default:
-				_log.warning("Olympiad System: Omg something went wrong in loading!! Period = " + _period);
+				_log.warn("Olympiad System: Omg something went wrong in loading!! Period = " + _period);
 				return;
 		}
 
@@ -405,7 +405,7 @@ public class Olympiad
 			}
 			catch(Exception e)
 			{
-				_log.warning("Olympiad System: Failed to save Olympiad configuration: " + e);
+				_log.warn("Olympiad System: Failed to save Olympiad configuration: " + e);
 			}
 
 			if (_scheduledValdationTask != null)
@@ -445,6 +445,12 @@ public class Olympiad
 		{
 			sm = new SystemMessage(SystemMessageId.GAME_REQUEST_CANNOT_BE_MADE);
 			noble.sendPacket(sm);
+			return false;
+		}
+
+		if (noble._event != null)
+		{
+			noble.sendMessage("Вы неможете зарегистрироваться во время проведения эвента.");
 			return false;
 		}
 
@@ -764,7 +770,7 @@ public class Olympiad
 			}
 			catch(Exception e)
 			{
-				_log.warning("Olympiad System: Failed to save Olympiad configuration: " + e);
+				_log.warn("Olympiad System: Failed to save Olympiad configuration: " + e);
 			}
 
 			init();
@@ -815,7 +821,7 @@ public class Olympiad
 		}
 		catch(Exception e)
 		{
-			_log.warning("Olympiad System: Failed to save Olympiad configuration: " + e);
+			_log.warn("Olympiad System: Failed to save Olympiad configuration: " + e);
 		}
 
 		if (_scheduledValdationTask != null)
@@ -991,6 +997,24 @@ public class Olympiad
 			return;
 		}
 
+		if (getInstance().isRegisteredInComp(spectator))
+		{
+			spectator.sendPacket(SystemMessageId.WHILE_YOU_ARE_ON_THE_WAITING_LIST_YOU_ARE_NOT_ALLOWED_TO_WATCH_THE_GAME);
+			return;
+		}
+
+		if (spectator._event!=null)
+		{
+			spectator.sendMessage("В настоящее время это сделать невозможно.");
+			return;
+		}
+
+		if (spectator.getPet() != null)
+		{
+			spectator.sendMessage("Освободите слугу или питомца");
+			return;
+		}
+
 		spectator.enterOlympiadObserverMode(STADIUMS[id].getCoordinates()[0], STADIUMS[id].getCoordinates()[1], STADIUMS[id].getCoordinates()[2], id);
 
 		STADIUMS[id].addSpectator(spectator);
@@ -1143,13 +1167,13 @@ public class Olympiad
 				}
 				catch(Exception ex)
 				{
-					_log.warning("Olympiad System: Couldnt save nobles info in db for noble id: "+nobleId);
+					_log.warn("Olympiad System: Couldnt save nobles info in db for noble id: "+nobleId);
 				}
 			}
 		}
 		catch(SQLException e)
 		{
-			_log.warning("Olympiad System: Couldnt save nobles info in db");
+			_log.warn("Olympiad System: Couldnt save nobles info in db");
 		}
 		finally
 		{
@@ -1196,7 +1220,7 @@ public class Olympiad
 		}
 		catch(SQLException e)
 		{
-			_log.warning("Olympiad System: Couldnt heros from db");
+			_log.warn("Olympiad System: Couldnt heros from db");
 		}
 		finally
 		{
@@ -1235,7 +1259,7 @@ public class Olympiad
 		}
 		catch(SQLException e)
 		{
-			_log.warning("Olympiad System: Couldnt heros from db");
+			_log.warn("Olympiad System: Couldnt heros from db");
 		}
 		finally
 		{
@@ -1375,7 +1399,7 @@ public class Olympiad
 		}
 		catch(SQLException e)
 		{
-			_log.warning("Olympiad System: Couldnt delete nobles from db");
+			_log.warn("Olympiad System: Couldnt delete nobles from db");
 		}
 		finally
 		{

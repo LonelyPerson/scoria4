@@ -19,7 +19,7 @@ package com.l2scoria.gameserver.model.zone.type;
 
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import com.l2scoria.gameserver.model.zone.L2ZoneType;
+import com.l2scoria.gameserver.model.zone.L2ZoneDefault;
 import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
 
@@ -28,7 +28,7 @@ import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
  * 
  * @author durgus
  */
-public class L2JailZone extends L2ZoneType
+public class L2JailZone extends L2ZoneDefault
 {
 	public L2JailZone(int id)
 	{
@@ -42,8 +42,10 @@ public class L2JailZone extends L2ZoneType
 		{
 			character.setInsideZone(L2Character.ZONE_JAIL, true);
 			character.setInsideZone(L2Character.ZONE_PVP, true);
-			((L2PcInstance) character).sendPacket(new SystemMessage(SystemMessageId.ENTERED_COMBAT_ZONE));
+			character.sendPacket(new SystemMessage(SystemMessageId.ENTERED_COMBAT_ZONE));
 		}
+
+		super.onEnter(character);
 	}
 
 	@Override
@@ -53,16 +55,9 @@ public class L2JailZone extends L2ZoneType
 		{
 			character.setInsideZone(L2Character.ZONE_JAIL, false);
 			character.setInsideZone(L2Character.ZONE_PVP, false);
-			((L2PcInstance) character).sendPacket(new SystemMessage(SystemMessageId.LEFT_COMBAT_ZONE));
+			character.sendPacket(new SystemMessage(SystemMessageId.LEFT_COMBAT_ZONE));
 		}
+
+		super.onExit(character);
 	}
-
-	@Override
-	protected void onDieInside(L2Character character)
-	{}
-
-	@Override
-	protected void onReviveInside(L2Character character)
-	{}
-
 }

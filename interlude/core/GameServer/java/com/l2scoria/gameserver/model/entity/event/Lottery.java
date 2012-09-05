@@ -18,21 +18,21 @@
  */
 package com.l2scoria.gameserver.model.entity.event;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Calendar;
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
 import com.l2scoria.gameserver.model.entity.Announcements;
 import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
-import java.sql.Connection;
 import com.l2scoria.util.database.L2DatabaseFactory;
 import com.l2scoria.util.random.Rnd;
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Calendar;
 
 public class Lottery
 {
@@ -63,7 +63,7 @@ public class Lottery
 		_isStarted = false;
 		_enddate = System.currentTimeMillis();
 
-		if(Config.ALLOW_LOTTERY)
+		if (Config.ALLOW_LOTTERY)
 		{
 			new startLottery().run();
 		}
@@ -71,7 +71,7 @@ public class Lottery
 
 	public static Lottery getInstance()
 	{
-		if(_instance == null)
+		if (_instance == null)
 		{
 			_instance = new Lottery();
 		}
@@ -108,14 +108,17 @@ public class Lottery
 			statement.setInt(3, getId());
 			statement.execute();
 			statement.close();
-		}
-		catch(SQLException e)
+		} catch (SQLException e)
 		{
-			_log.warning("Lottery: Could not increase current lottery prize: " + e);
-		}
-		finally
+			_log.warn("Lottery: Could not increase current lottery prize: " + e);
+		} finally
 		{
-			try { con.close(); } catch(Exception e) { }
+			try
+			{
+				con.close();
+			} catch (Exception e)
+			{
+			}
 			con = null;
 		}
 	}
@@ -134,7 +137,7 @@ public class Lottery
 	{
 		protected startLottery()
 		{
-		// Do nothing
+			// Do nothing
 		}
 
 		public void run()
@@ -147,11 +150,11 @@ public class Lottery
 				statement = con.prepareStatement(SELECT_LAST_LOTTERY);
 				ResultSet rset = statement.executeQuery();
 
-				if(rset.next())
+				if (rset.next())
 				{
 					_number = rset.getInt("idnr");
 
-					if(rset.getInt("finished") == 1)
+					if (rset.getInt("finished") == 1)
 					{
 						_number++;
 						_prize = rset.getInt("newprize");
@@ -161,7 +164,7 @@ public class Lottery
 						_prize = rset.getInt("prize");
 						_enddate = rset.getLong("enddate");
 
-						if(_enddate <= System.currentTimeMillis() + 2 * MINUTE)
+						if (_enddate <= System.currentTimeMillis() + 2 * MINUTE)
 						{
 							new finishLottery().run();
 							rset.close();
@@ -171,12 +174,12 @@ public class Lottery
 							return;
 						}
 
-						if(_enddate > System.currentTimeMillis())
+						if (_enddate > System.currentTimeMillis())
 						{
 							_isStarted = true;
 							ThreadPoolManager.getInstance().scheduleGeneral(new finishLottery(), _enddate - System.currentTimeMillis());
 
-							if(_enddate > System.currentTimeMillis() + 12 * MINUTE)
+							if (_enddate > System.currentTimeMillis() + 12 * MINUTE)
 							{
 								_isSellingTickets = true;
 								ThreadPoolManager.getInstance().scheduleGeneral(new stopSellingTickets(), _enddate - System.currentTimeMillis() - 10 * MINUTE);
@@ -193,18 +196,21 @@ public class Lottery
 				statement.close();
 				statement = null;
 				rset = null;
-			}
-			catch(SQLException e)
+			} catch (SQLException e)
 			{
-				_log.warning("Lottery: Could not restore lottery data: " + e);
-			}
-			finally
+				_log.warn("Lottery: Could not restore lottery data: " + e);
+			} finally
 			{
-				try { con.close(); } catch(Exception e) { }
+				try
+				{
+					con.close();
+				} catch (Exception e)
+				{
+				}
 				con = null;
 			}
 
-			if(Config.DEBUG)
+			if (Config.DEBUG)
 			{
 				_log.info("Lottery: Starting ticket sell for lottery #" + getId() + ".");
 			}
@@ -218,7 +224,7 @@ public class Lottery
 			finishtime.set(Calendar.MINUTE, 0);
 			finishtime.set(Calendar.SECOND, 0);
 
-			if(finishtime.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY)
+			if (finishtime.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY)
 			{
 				finishtime.set(Calendar.HOUR_OF_DAY, 19);
 				_enddate = finishtime.getTimeInMillis();
@@ -247,19 +253,21 @@ public class Lottery
 				statement.setInt(5, getPrize());
 				statement.execute();
 				statement.close();
-			}
-			catch(SQLException e)
+			} catch (SQLException e)
 			{
-				_log.warning("Lottery: Could not store new lottery data: " + e);
-			}
-			finally
+				_log.warn("Lottery: Could not store new lottery data: " + e);
+			} finally
 			{
 				try
 				{
-					try { con.close(); } catch(Exception e) { }
+					try
+					{
+						con.close();
+					} catch (Exception e)
+					{
+					}
 					con = null;
-				}
-				catch(Exception e)
+				} catch (Exception e)
 				{
 					//empty
 				}
@@ -271,12 +279,12 @@ public class Lottery
 	{
 		protected stopSellingTickets()
 		{
-		// Do nothing
+			// Do nothing
 		}
 
 		public void run()
 		{
-			if(Config.DEBUG)
+			if (Config.DEBUG)
 			{
 				_log.info("Lottery: Stopping ticket sell for lottery #" + getId() + ".");
 			}
@@ -291,12 +299,12 @@ public class Lottery
 	{
 		protected finishLottery()
 		{
-		// Do nothing
+			// Do nothing
 		}
 
 		public void run()
 		{
-			if(Config.DEBUG)
+			if (Config.DEBUG)
 			{
 				_log.info("Lottery: Ending lottery #" + getId() + ".");
 			}
@@ -304,26 +312,28 @@ public class Lottery
 			int[] luckynums = new int[5];
 			int luckynum = 0;
 
-			for(int i = 0; i < 5; i++)
+			for (int i = 0; i < 5; i++)
 			{
 				boolean found = true;
 
-				while(found)
+				while (found)
 				{
 					luckynum = Rnd.get(20) + 1;
 					found = false;
 
-					for(int j = 0; j < i; j++)
-						if(luckynums[j] == luckynum)
+					for (int j = 0; j < i; j++)
+					{
+						if (luckynums[j] == luckynum)
 						{
 							found = true;
 						}
+					}
 				}
 
 				luckynums[i] = luckynum;
 			}
 
-			if(Config.DEBUG)
+			if (Config.DEBUG)
 			{
 				_log.info("Lottery: The lucky numbers are " + luckynums[0] + ", " + luckynums[1] + ", " + luckynums[2] + ", " + luckynums[3] + ", " + luckynums[4] + ".");
 			}
@@ -331,9 +341,9 @@ public class Lottery
 			int enchant = 0;
 			int type2 = 0;
 
-			for(int i = 0; i < 5; i++)
+			for (int i = 0; i < 5; i++)
 			{
-				if(luckynums[i] < 17)
+				if (luckynums[i] < 17)
 				{
 					enchant += Math.pow(2, luckynums[i] - 1);
 				}
@@ -343,7 +353,7 @@ public class Lottery
 				}
 			}
 
-			if(Config.DEBUG)
+			if (Config.DEBUG)
 			{
 				_log.info("Lottery: Encoded lucky numbers are " + enchant + ", " + type2);
 			}
@@ -362,30 +372,30 @@ public class Lottery
 				statement.setInt(1, getId());
 				ResultSet rset = statement.executeQuery();
 
-				while(rset.next())
+				while (rset.next())
 				{
 					int curenchant = rset.getInt("enchant_level") & enchant;
 					int curtype2 = rset.getInt("custom_type2") & type2;
 
-					if(curenchant == 0 && curtype2 == 0)
+					if (curenchant == 0 && curtype2 == 0)
 					{
 						continue;
 					}
 
 					int count = 0;
 
-					for(int i = 1; i <= 16; i++)
+					for (int i = 1; i <= 16; i++)
 					{
 						int val = curenchant / 2;
 
-						if(val != (double) curenchant / 2)
+						if (val != (double) curenchant / 2)
 						{
 							count++;
 						}
 
 						int val2 = curtype2 / 2;
 
-						if(val2 != (double) curtype2 / 2)
+						if (val2 != (double) curtype2 / 2)
 						{
 							count++;
 						}
@@ -394,19 +404,19 @@ public class Lottery
 						curtype2 = val2;
 					}
 
-					if(count == 5)
+					if (count == 5)
 					{
 						count1++;
 					}
-					else if(count == 4)
+					else if (count == 4)
 					{
 						count2++;
 					}
-					else if(count == 3)
+					else if (count == 3)
 					{
 						count3++;
 					}
-					else if(count > 0)
+					else if (count > 0)
 					{
 						count4++;
 					}
@@ -415,14 +425,17 @@ public class Lottery
 				statement.close();
 				statement = null;
 				rset = null;
-			}
-			catch(SQLException e)
+			} catch (SQLException e)
 			{
-				_log.warning("Lottery: Could restore lottery data: " + e);
-			}
-			finally
+				_log.warn("Lottery: Could restore lottery data: " + e);
+			} finally
 			{
-				try { con.close(); } catch(Exception e) { }
+				try
+				{
+					con.close();
+				} catch (Exception e)
+				{
+				}
 				con = null;
 			}
 
@@ -431,22 +444,22 @@ public class Lottery
 			int prize2 = 0;
 			int prize3 = 0;
 
-			if(count1 > 0)
+			if (count1 > 0)
 			{
 				prize1 = (int) ((getPrize() - prize4) * Config.ALT_LOTTERY_5_NUMBER_RATE / count1);
 			}
 
-			if(count2 > 0)
+			if (count2 > 0)
 			{
 				prize2 = (int) ((getPrize() - prize4) * Config.ALT_LOTTERY_4_NUMBER_RATE / count2);
 			}
 
-			if(count3 > 0)
+			if (count3 > 0)
 			{
 				prize3 = (int) ((getPrize() - prize4) * Config.ALT_LOTTERY_3_NUMBER_RATE / count3);
 			}
 
-			if(Config.DEBUG)
+			if (Config.DEBUG)
 			{
 				_log.info("Lottery: " + count1 + " players with all FIVE numbers each win " + prize1 + ".");
 				_log.info("Lottery: " + count2 + " players with FOUR numbers each win " + prize2 + ".");
@@ -455,14 +468,14 @@ public class Lottery
 			}
 
 			int newprize = getPrize() - (prize1 + prize2 + prize3 + prize4);
-			if(Config.DEBUG)
+			if (Config.DEBUG)
 			{
 				_log.info("Lottery: Jackpot for next lottery is " + newprize + ".");
 			}
 
 			SystemMessage sm;
 
-			if(count1 > 0)
+			if (count1 > 0)
 			{
 				// There are winners.
 				sm = new SystemMessage(SystemMessageId.AMOUNT_FOR_WINNER_S1_IS_S2_ADENA_WE_HAVE_S3_PRIZE_WINNER);
@@ -497,19 +510,21 @@ public class Lottery
 				statement.execute();
 				statement.close();
 				statement = null;
-			}
-			catch(SQLException e)
+			} catch (SQLException e)
 			{
-				_log.warning("Lottery: Could not store finished lottery data: " + e);
-			}
-			finally
+				_log.warn("Lottery: Could not store finished lottery data: " + e);
+			} finally
 			{
 				try
 				{
-					try { con.close(); } catch(Exception e) { }
+					try
+					{
+						con.close();
+					} catch (Exception e)
+					{
+					}
 					con = null;
-				}
-				catch(Exception e)
+				} catch (Exception e)
 				{
 					//empty;
 				}
@@ -528,10 +543,10 @@ public class Lottery
 		int id = 0;
 		int nr = 1;
 
-		while(enchant > 0)
+		while (enchant > 0)
 		{
 			int val = enchant / 2;
-			if(val != (double) enchant / 2)
+			if (val != (double) enchant / 2)
 			{
 				res[id] = nr;
 				id++;
@@ -542,10 +557,10 @@ public class Lottery
 
 		nr = 17;
 
-		while(type2 > 0)
+		while (type2 > 0)
 		{
 			int val = type2 / 2;
-			if(val != (double) type2 / 2)
+			if (val != (double) type2 / 2)
 			{
 				res[id] = nr;
 				id++;
@@ -564,10 +579,7 @@ public class Lottery
 
 	public int[] checkTicket(int id, int enchant, int type2)
 	{
-		int res[] =
-		{
-				0, 0
-		};
+		int res[] = {0, 0};
 
 		Connection con = null;
 		PreparedStatement statement;
@@ -579,12 +591,12 @@ public class Lottery
 			statement.setInt(1, id);
 			ResultSet rset = statement.executeQuery();
 
-			if(rset.next())
+			if (rset.next())
 			{
 				int curenchant = rset.getInt("number1") & enchant;
 				int curtype2 = rset.getInt("number2") & type2;
 
-				if(curenchant == 0 && curtype2 == 0)
+				if (curenchant == 0 && curtype2 == 0)
 				{
 					rset.close();
 					statement.close();
@@ -593,15 +605,15 @@ public class Lottery
 
 				int count = 0;
 
-				for(int i = 1; i <= 16; i++)
+				for (int i = 1; i <= 16; i++)
 				{
 					int val = curenchant / 2;
-					if(val != (double) curenchant / 2)
+					if (val != (double) curenchant / 2)
 					{
 						count++;
 					}
 					int val2 = curtype2 / 2;
-					if(val2 != (double) curtype2 / 2)
+					if (val2 != (double) curtype2 / 2)
 					{
 						count++;
 					}
@@ -609,7 +621,7 @@ public class Lottery
 					curtype2 = val2;
 				}
 
-				switch(count)
+				switch (count)
 				{
 					case 0:
 						break;
@@ -630,9 +642,9 @@ public class Lottery
 						res[1] = 200;
 				}
 
-				if(Config.DEBUG)
+				if (Config.DEBUG)
 				{
-					_log.warning("count: " + count + ", id: " + id + ", enchant: " + enchant + ", type2: " + type2);
+					_log.warn("count: " + count + ", id: " + id + ", enchant: " + enchant + ", type2: " + type2);
 				}
 			}
 
@@ -640,14 +652,17 @@ public class Lottery
 			statement.close();
 			statement = null;
 			rset = null;
-		}
-		catch(SQLException e)
+		} catch (SQLException e)
 		{
-			_log.warning("Lottery: Could not check lottery ticket #" + id + ": " + e);
-		}
-		finally
+			_log.warn("Lottery: Could not check lottery ticket #" + id + ": " + e);
+		} finally
 		{
-			try { con.close(); } catch(Exception e) { }
+			try
+			{
+				con.close();
+			} catch (Exception e)
+			{
+			}
 			con = null;
 		}
 

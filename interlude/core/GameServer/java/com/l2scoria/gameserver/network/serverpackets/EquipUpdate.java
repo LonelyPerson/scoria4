@@ -18,11 +18,10 @@
  */
 package com.l2scoria.gameserver.network.serverpackets;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
 import com.l2scoria.gameserver.templates.L2Item;
+import org.apache.log4j.Logger;
 
 /**
  * 5e 01 00 00 00 01 - added ? 02 - modified 7b 86 73 42 object id 08 00 00 00 body slot body slot 0000 ?? underwear
@@ -104,7 +103,7 @@ public class EquipUpdate extends L2GameServerPacket
 
 		if(Config.DEBUG)
 		{
-			_log.fine("body:" + bodypart);
+			_log.info("body:" + bodypart);
 		}
 		writeD(bodypart);
 	}

@@ -35,12 +35,12 @@ import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.gameserver.util.Util;
 import com.l2scoria.util.database.L2DatabaseFactory;
 import javolution.util.FastMap;
+import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Map;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -131,11 +131,11 @@ public class ClanTable
 			statement = null;
 			result = null;
 
-			_log.config("Restored " + clanCount + " clans from the database.");
+			_log.info("Restored " + clanCount + " clans from the database.");
 		}
 		catch(Exception e)
 		{
-			_log.warning("data error on ClanTable: " + e);
+			_log.warn("data error on ClanTable: " + e);
 			e.printStackTrace();
 		}
 		finally
@@ -182,7 +182,7 @@ public class ClanTable
 
 		if(Config.DEBUG)
 		{
-			_log.fine(player.getObjectId() + "(" + player.getName() + ") requested a clan creation.");
+			_log.info(player.getObjectId() + "(" + player.getName() + ") requested a clan creation.");
 		}
 
 		if(10 > player.getLevel())
@@ -218,7 +218,7 @@ public class ClanTable
 
 		if(Config.DEBUG)
 		{
-			_log.fine("New clan created: " + clan.getClanId() + " " + clan.getName());
+			_log.info("New clan created: " + clan.getClanId() + " " + clan.getName());
 		}
 
 		_clans.put(new Integer(clan.getClanId()), clan);
@@ -265,7 +265,7 @@ public class ClanTable
 		}
 		catch(PatternSyntaxException e) // case of illegal pattern
 		{
-			_log.warning("ERROR : Clan name pattern of config is wrong!");
+			_log.warn("ERROR : Clan name pattern of config is wrong!");
 			pattern = Pattern.compile(".*");
 		}
 
@@ -422,14 +422,14 @@ public class ClanTable
 
 			if(Config.DEBUG)
 			{
-				_log.fine("clan removed in db: " + clanId);
+				_log.info("clan removed in db: " + clanId);
 			}
 			
 			statement.close();
 		}
 		catch(Exception e)
 		{
-			_log.warning("error while removing clan in db " + e);
+			_log.warn("error while removing clan in db " + e);
 		}
 		finally
 		{
@@ -490,7 +490,7 @@ public class ClanTable
 		}
 		catch(Exception e)
 		{
-			_log.warning("could not store clans wars data:" + e);
+			_log.warn("could not store clans wars data:" + e);
 		}
 		finally
 		{
@@ -559,7 +559,7 @@ public class ClanTable
 		}
 		catch(Exception e)
 		{
-			_log.warning("could not restore clans wars data:" + e);
+			_log.warn("could not restore clans wars data:" + e);
 		}
 		finally
 		{
@@ -628,7 +628,7 @@ public class ClanTable
 		}
 		catch(Exception e)
 		{
-			_log.warning("could not restore clan wars data:" + e);
+			_log.warn("could not restore clan wars data:" + e);
 		}
 		finally
 		{

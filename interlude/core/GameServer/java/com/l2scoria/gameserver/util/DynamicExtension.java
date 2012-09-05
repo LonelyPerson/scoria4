@@ -19,12 +19,12 @@
 
 package com.l2scoria.gameserver.util;
 
+import org.apache.log4j.Logger;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * extension loader for l2j
@@ -101,7 +101,7 @@ public class DynamicExtension
 		}
 		catch(Exception ex)
 		{
-			_log.log(Level.WARNING, "could not load properties", ex);
+			_log.warn("could not load properties", ex);
 		}
 
 		_classLoader = new JarClassLoader();
@@ -149,7 +149,7 @@ public class DynamicExtension
 		}
 		catch(Exception ex)
 		{
-			_log.log(Level.WARNING, name, ex);
+			_log.warn(name, ex);
 			res = ex.toString();
 		}
 		return res;
@@ -218,7 +218,7 @@ public class DynamicExtension
 		}
 		catch(Exception ex)
 		{
-			_log.log(Level.WARNING, "could not unload " + className, ex);
+			_log.warn("could not unload " + className, ex);
 			res = ex.toString();
 		}
 		return res;

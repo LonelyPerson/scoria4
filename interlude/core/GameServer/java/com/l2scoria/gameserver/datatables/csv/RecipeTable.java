@@ -18,6 +18,14 @@
  */
 package com.l2scoria.gameserver.datatables.csv;
 
+import com.l2scoria.Config;
+import com.l2scoria.gameserver.RecipeController;
+import com.l2scoria.gameserver.model.L2RecipeList;
+import com.l2scoria.gameserver.model.actor.instance.L2RecipeInstance;
+import javolution.util.FastList;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -25,16 +33,6 @@ import java.io.LineNumberReader;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
-import com.l2scoria.Config;
-import com.l2scoria.gameserver.RecipeController;
-import com.l2scoria.gameserver.model.L2RecipeList;
-import com.l2scoria.gameserver.model.actor.instance.L2RecipeInstance;
 
 /**
  * @author programmos
@@ -77,18 +75,18 @@ public class RecipeTable extends RecipeController
 				parseList(line);
 
 			}
-			_log.config("RecipeController: Loaded " + _lists.size() + " Recipes.");
+			_log.info("RecipeController: Loaded " + _lists.size() + " Recipes.");
 			recipesData = null;
 		}
 		catch(Exception e)
 		{
 			if(lnr != null)
 			{
-				_log.log(Level.WARNING, "error while creating recipe controller in linenr: " + lnr.getLineNumber(), e);
+				_log.warn("error while creating recipe controller in linenr: " + lnr.getLineNumber(), e);
 			}
 			else
 			{
-				_log.warning("No recipes were found in data folder");
+				_log.warn("No recipes were found in data folder");
 			}
 
 		}
@@ -130,7 +128,7 @@ public class RecipeTable extends RecipeController
 			}
 			else
 			{ //prints a helpfull message
-				_log.warning("Error parsing recipes.csv, unknown recipe type " + recipeTypeString);
+				_log.warn("Error parsing recipes.csv, unknown recipe type " + recipeTypeString);
 				return;
 			}
 
@@ -178,7 +176,7 @@ public class RecipeTable extends RecipeController
 		}
 		catch(Exception e)
 		{
-			_log.severe("Exception in RecipeController.parseList() - " + e);
+			_log.fatal("Exception in RecipeController.parseList() - " + e);
 		}
 	}
 

@@ -17,11 +17,11 @@
  */
 package com.l2scoria.gameserver.taskmanager;
 
-import java.util.concurrent.ScheduledFuture;
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.taskmanager.TaskManager.ExecutedTask;
+import org.apache.log4j.Logger;
+
+import java.util.concurrent.ScheduledFuture;
 
 /**
  * @author Layane

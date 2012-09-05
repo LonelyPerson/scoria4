@@ -18,17 +18,16 @@
  */
 package com.l2scoria.gameserver.datatables.sql;
 
+import com.l2scoria.gameserver.datatables.AccessLevel;
+import com.l2scoria.util.database.L2DatabaseFactory;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Logger;
 import java.util.Map;
-
-import javolution.util.FastMap;
-
-import com.l2scoria.gameserver.datatables.AccessLevel;
-import com.l2scoria.util.database.L2DatabaseFactory;
 
 /**
  * @author FBIagent<br>
@@ -71,7 +70,7 @@ public class AdminCommandAccessRights
 		}
 		catch(SQLException e)
 		{
-			_log.warning("Admin Access Rights: Error loading from database:" + e);
+			_log.warn("Admin Access Rights: Error loading from database:" + e);
 		}
 		finally
 		{
@@ -105,7 +104,7 @@ public class AdminCommandAccessRights
 			return true;
 
 		String command = adminCommand;
-		if(adminCommand.indexOf(" ") != -1)
+		if(adminCommand.contains(" "))
 		{
 			command = adminCommand.substring(0, adminCommand.indexOf(" "));
 		}
@@ -121,9 +120,6 @@ public class AdminCommandAccessRights
 			_log.info("Admin Access Rights: No rights defined for admin command " + command + ".");
 			return false;
 		}
-		else if(acar >= accessLevel.getLevel())
-			return true;
-		else
-			return false;
+		else return acar >= accessLevel.getLevel();
 	}
 }

@@ -14,16 +14,15 @@
  */
 package com.l2scoria.gameserver.thread.daemons;
 
+import com.l2scoria.gameserver.thread.L2Thread;
+import com.l2scoria.util.Util;
+import javolution.util.FastSet;
+import org.apache.log4j.Logger;
+
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 import java.util.Set;
-
-import javolution.util.FastSet;
-
-import com.l2scoria.gameserver.thread.L2Thread;
-import com.l2scoria.util.Util;
 
 /**
  * РџРѕРёСЃРє РјРµСЂС‚РІС‹С… РїРѕС‚РѕРєРѕРІ.<br>
@@ -80,7 +79,7 @@ public final class DeadlockDetector implements Runnable
 			{
 				for(String line : L2Thread.getStats(thread))
 				{
-					_log.severe(line);
+					_log.fatal(line);
 				}
 			}
 

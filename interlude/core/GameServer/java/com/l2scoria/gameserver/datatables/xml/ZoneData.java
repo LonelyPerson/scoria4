@@ -17,57 +17,26 @@
  */
 package com.l2scoria.gameserver.datatables.xml;
 
-import java.io.File;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.xml.parsers.DocumentBuilderFactory;
-
+import com.l2scoria.Config;
+import com.l2scoria.gameserver.managers.*;
+import com.l2scoria.gameserver.model.L2World;
+import com.l2scoria.gameserver.model.L2WorldRegion;
+import com.l2scoria.gameserver.model.zone.L2ZoneDefault;
+import com.l2scoria.gameserver.model.zone.form.ZoneCuboid;
+import com.l2scoria.gameserver.model.zone.form.ZoneNPoly;
+import com.l2scoria.gameserver.model.zone.type.*;
+import com.l2scoria.util.database.L2DatabaseFactory;
 import javolution.util.FastList;
-
+import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
-import com.l2scoria.Config;
-import com.l2scoria.gameserver.managers.ArenaManager;
-import com.l2scoria.gameserver.managers.FishingZoneManager;
-import com.l2scoria.gameserver.managers.GrandBossManager;
-import com.l2scoria.gameserver.managers.OlympiadStadiaManager;
-import com.l2scoria.gameserver.managers.TownManager;
-import com.l2scoria.gameserver.model.L2World;
-import com.l2scoria.gameserver.model.L2WorldRegion;
-import com.l2scoria.gameserver.model.zone.L2ZoneType;
-import com.l2scoria.gameserver.model.zone.form.ZoneCuboid;
-import com.l2scoria.gameserver.model.zone.form.ZoneNPoly;
-import com.l2scoria.gameserver.model.zone.type.L2ArenaZone;
-import com.l2scoria.gameserver.model.zone.type.L2BigheadZone;
-import com.l2scoria.gameserver.model.zone.type.L2BossZone;
-import com.l2scoria.gameserver.model.zone.type.L2CastleTeleportZone;
-import com.l2scoria.gameserver.model.zone.type.L2CastleZone;
-import com.l2scoria.gameserver.model.zone.type.L2ClanHallZone;
-import com.l2scoria.gameserver.model.zone.type.L2CustomZone;
-import com.l2scoria.gameserver.model.zone.type.L2DamageZone;
-import com.l2scoria.gameserver.model.zone.type.L2DerbyTrackZone;
-import com.l2scoria.gameserver.model.zone.type.L2FightZone;
-import com.l2scoria.gameserver.model.zone.type.L2FishingZone;
-import com.l2scoria.gameserver.model.zone.type.L2FortZone;
-import com.l2scoria.gameserver.model.zone.type.L2JailZone;
-import com.l2scoria.gameserver.model.zone.type.L2MotherTreeZone;
-import com.l2scoria.gameserver.model.zone.type.L2NoLandingZone;
-import com.l2scoria.gameserver.model.zone.type.L2OlympiadStadiumZone;
-import com.l2scoria.gameserver.model.zone.type.L2PeaceZone;
-import com.l2scoria.gameserver.model.zone.type.L2PoisonZone;
-import com.l2scoria.gameserver.model.zone.type.L2SkillZone;
-import com.l2scoria.gameserver.model.zone.type.L2SwampZone;
-import com.l2scoria.gameserver.model.zone.type.L2TownZone;
-import com.l2scoria.gameserver.model.zone.type.L2WaterZone;
-import com.l2scoria.gameserver.model.zone.type.L2SummonOff;
-import com.l2scoria.gameserver.model.zone.type.L2HQZone;
-import com.l2scoria.util.database.L2DatabaseFactory;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.File;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 /**
  * This class manages the augmentation data and can also create new augmentations.
@@ -168,7 +137,7 @@ public class ZoneData
 							attrs = null;
 
 							// Create the zone
-							L2ZoneType temp = null;
+							L2ZoneDefault temp = null;
 
 							if(zoneType.equals("FishingZone"))
 							{
@@ -270,7 +239,7 @@ public class ZoneData
 							// Check for unknown type
 							if(temp == null)
 							{
-								_log.warning("ZoneData: No such zone type: " + zoneType);
+								_log.warn("ZoneData: No such zone type: " + zoneType);
 								continue;
 							}
 
@@ -310,7 +279,7 @@ public class ZoneData
 										}
 										else
 										{
-											_log.warning("ZoneData: Missing cuboid vertex in sql data for zone: " + zoneId);
+											_log.warn("ZoneData: Missing cuboid vertex in sql data for zone: " + zoneId);
 											statement.close();
 											rset.close();
 											successfulLoad = false;
@@ -357,7 +326,7 @@ public class ZoneData
 									}
 									else
 									{
-										_log.warning("ZoneData: Bad sql data for zone: " + zoneId);
+										_log.warn("ZoneData: Bad sql data for zone: " + zoneId);
 										statement.close();
 										rset.close();
 										continue;
@@ -367,7 +336,7 @@ public class ZoneData
 								}
 								else
 								{
-									_log.warning("ZoneData: Unknown shape: " + zoneShape);
+									_log.warn("ZoneData: Unknown shape: " + zoneShape);
 									statement.close();
 									rset.close();
 									continue;
@@ -380,7 +349,7 @@ public class ZoneData
 							}
 							catch(Exception e)
 							{
-								_log.warning("ZoneData: Failed to load zone coordinates: " + e);
+								_log.warn("ZoneData: Failed to load zone coordinates: " + e);
 							}
 
 							zoneShape = null;
@@ -399,9 +368,13 @@ public class ZoneData
 									name = null;
 									val = null;
 								}
-								if("spawn".equalsIgnoreCase(cd.getNodeName()))
+								else if("spawn".equalsIgnoreCase(cd.getNodeName()))
 								{
 									temp.setSpawnLocs(cd);
+								}
+								else if("instance".equalsIgnoreCase(cd.getNodeName()))
+								{
+									temp.setInstanceData(cd);
 								}
 							}
 
@@ -476,7 +449,7 @@ public class ZoneData
 		}
 		catch(Exception e)
 		{
-			_log.log(Level.SEVERE, "Error while loading zones.", e);
+			_log.fatal("Error while loading zones.", e);
 			return;
 		}
 		finally

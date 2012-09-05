@@ -18,10 +18,6 @@
  */
 package com.l2scoria.gameserver.model.actor.instance;
 
-import java.util.StringTokenizer;
-
-import javolution.text.TextBuilder;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.TradeController;
 import com.l2scoria.gameserver.datatables.SkillTable;
@@ -30,13 +26,11 @@ import com.l2scoria.gameserver.model.L2Skill;
 import com.l2scoria.gameserver.model.L2SkillLearn;
 import com.l2scoria.gameserver.model.L2TradeList;
 import com.l2scoria.gameserver.network.SystemMessageId;
-import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
-import com.l2scoria.gameserver.network.serverpackets.AquireSkillList;
-import com.l2scoria.gameserver.network.serverpackets.BuyList;
-import com.l2scoria.gameserver.network.serverpackets.NpcHtmlMessage;
-import com.l2scoria.gameserver.network.serverpackets.SellList;
-import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
+import com.l2scoria.gameserver.network.serverpackets.*;
 import com.l2scoria.gameserver.templates.L2NpcTemplate;
+import javolution.text.TextBuilder;
+
+import java.util.StringTokenizer;
 
 public class L2FishermanInstance extends L2FolkInstance
 {
@@ -76,7 +70,7 @@ public class L2FishermanInstance extends L2FolkInstance
 		player.tempInvetoryDisable();
 		if(Config.DEBUG)
 		{
-			_log.fine("Showing buylist");
+			_log.info("Showing buylist");
 		}
 		L2TradeList list = TradeController.getInstance().getBuyList(val);
 
@@ -89,8 +83,8 @@ public class L2FishermanInstance extends L2FolkInstance
 		}
 		else
 		{
-			_log.warning("possible client hacker: " + player.getName() + " attempting to buy from GM shop! < Ban him!");
-			_log.warning("buylist id:" + val);
+			_log.warn("possible client hacker: " + player.getName() + " attempting to buy from GM shop! < Ban him!");
+			_log.warn("buylist id:" + val);
 		}
 
 		player.sendPacket(ActionFailed.STATIC_PACKET);
@@ -100,14 +94,14 @@ public class L2FishermanInstance extends L2FolkInstance
 	{
 		if(Config.DEBUG)
 		{
-			_log.fine("Showing selllist");
+			_log.info("Showing selllist");
 		}
 
 		player.sendPacket(new SellList(player));
 
 		if(Config.DEBUG)
 		{
-			_log.fine("Showing sell window");
+			_log.info("Showing sell window");
 		}
 
 		player.sendPacket(ActionFailed.STATIC_PACKET);

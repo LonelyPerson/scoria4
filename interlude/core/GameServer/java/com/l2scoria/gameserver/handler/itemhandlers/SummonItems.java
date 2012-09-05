@@ -37,6 +37,7 @@ import com.l2scoria.gameserver.model.actor.instance.L2PetInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PlayableInstance;
 import com.l2scoria.gameserver.model.spawn.L2Spawn;
 import com.l2scoria.gameserver.network.SystemMessageId;
+import com.l2scoria.gameserver.network.clientpackets.RequestActionUse;
 import com.l2scoria.gameserver.network.serverpackets.*;
 import com.l2scoria.gameserver.templates.L2NpcTemplate;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
@@ -178,6 +179,11 @@ public class SummonItems implements IItemHandler
 
 				break;
 			case 2: // wyvern
+				if (activeChar._event!=null && !activeChar._event.canDoAction(activeChar, RequestActionUse.ACTION_MOUNT))
+				{
+					return;
+				}
+
 				if(!activeChar.disarmWeapons())
 					return;
 

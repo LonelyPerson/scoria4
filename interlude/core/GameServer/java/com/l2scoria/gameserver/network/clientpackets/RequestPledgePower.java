@@ -18,11 +18,10 @@
 */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.gameserver.model.L2Clan;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.serverpackets.ManagePledgePower;
+import org.apache.log4j.Logger;
 
 public final class RequestPledgePower extends L2GameClientPacket
 {

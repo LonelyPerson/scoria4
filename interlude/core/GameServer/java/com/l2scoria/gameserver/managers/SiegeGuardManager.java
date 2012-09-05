@@ -17,20 +17,19 @@
  */
 package com.l2scoria.gameserver.managers;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.List;
-import java.util.logging.Logger;
-
-import javolution.util.FastList;
-
 import com.l2scoria.gameserver.datatables.sql.NpcTable;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.entity.siege.Castle;
 import com.l2scoria.gameserver.model.spawn.L2Spawn;
 import com.l2scoria.gameserver.templates.L2NpcTemplate;
-import java.sql.Connection;
 import com.l2scoria.util.database.L2DatabaseFactory;
+import javolution.util.FastList;
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.List;
 
 public class SiegeGuardManager
 {
@@ -114,7 +113,7 @@ public class SiegeGuardManager
 		}
 		catch(Exception e1)
 		{
-			_log.warning("Error deleting hired siege guard at " + x + ',' + y + ',' + z + ":" + e1);
+			_log.warn("Error deleting hired siege guard at " + x + ',' + y + ',' + z + ":" + e1);
 		}
 		finally
 		{
@@ -141,7 +140,7 @@ public class SiegeGuardManager
 		}
 		catch(Exception e1)
 		{
-			_log.warning("Error deleting hired siege guard for castle " + getCastle().getName() + ":" + e1);
+			_log.warn("Error deleting hired siege guard for castle " + getCastle().getName() + ":" + e1);
 		}
 		finally
 		{
@@ -230,7 +229,7 @@ public class SiegeGuardManager
 				}
 				else
 				{
-					_log.warning("Missing npc data in npc table for id: " + rs.getInt("npcId"));
+					_log.warn("Missing npc data in npc table for id: " + rs.getInt("npcId"));
 				}
 				template1 = null;
 			}
@@ -241,7 +240,7 @@ public class SiegeGuardManager
 		}
 		catch(Exception e1)
 		{
-			_log.warning("Error loading siege guard for castle " + getCastle().getName() + ":" + e1);
+			_log.warn("Error loading siege guard for castle " + getCastle().getName() + ":" + e1);
 		}
 		finally
 		{
@@ -275,7 +274,7 @@ public class SiegeGuardManager
 		}
 		catch(Exception e1)
 		{
-			_log.warning("Error adding siege guard for castle " + getCastle().getName() + ":" + e1);
+			_log.warn("Error adding siege guard for castle " + getCastle().getName() + ":" + e1);
 		}
 		finally
 		{

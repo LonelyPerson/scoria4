@@ -17,14 +17,14 @@
  */
 package com.l2scoria.gameserver.taskmanager;
 
-import static com.l2scoria.gameserver.taskmanager.TaskTypes.TYPE_FIXED_SHEDULED;
-import static com.l2scoria.gameserver.taskmanager.TaskTypes.TYPE_GLOBAL_TASK;
-import static com.l2scoria.gameserver.taskmanager.TaskTypes.TYPE_NONE;
-import static com.l2scoria.gameserver.taskmanager.TaskTypes.TYPE_SHEDULED;
-import static com.l2scoria.gameserver.taskmanager.TaskTypes.TYPE_SPECIAL;
-import static com.l2scoria.gameserver.taskmanager.TaskTypes.TYPE_STARTUP;
-import static com.l2scoria.gameserver.taskmanager.TaskTypes.TYPE_TIME;
+import com.l2scoria.gameserver.taskmanager.tasks.*;
+import com.l2scoria.gameserver.thread.ThreadPoolManager;
+import com.l2scoria.util.database.L2DatabaseFactory;
+import javolution.util.FastList;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -32,20 +32,8 @@ import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.ScheduledFuture;
-import java.util.logging.Logger;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
-import com.l2scoria.gameserver.taskmanager.tasks.TaskOlympiadSave;
-import com.l2scoria.gameserver.taskmanager.tasks.TaskRaidPointsReset;
-import com.l2scoria.gameserver.taskmanager.tasks.TaskRecom;
-import com.l2scoria.gameserver.taskmanager.tasks.TaskRestart;
-import com.l2scoria.gameserver.taskmanager.tasks.TaskSevenSignsUpdate;
-import com.l2scoria.gameserver.taskmanager.tasks.TaskShutdown;
-import com.l2scoria.gameserver.thread.ThreadPoolManager;
-import java.sql.Connection;
-import com.l2scoria.util.database.L2DatabaseFactory;
+import static com.l2scoria.gameserver.taskmanager.TaskTypes.*;
 
 /**
  * @author ProGramMoS
@@ -108,7 +96,7 @@ public final class TaskManager
 			}
 			catch(SQLException e)
 			{
-				_log.warning("cannot updated the Global Task " + id + ": " + e.getMessage());
+				_log.warn("cannot updated the Global Task " + id + ": " + e.getMessage());
 			}
 			finally
 			{
@@ -241,7 +229,7 @@ public final class TaskManager
 		}
 		catch(Exception e)
 		{
-			_log.severe("error while loading Global Task table " + e);
+			_log.fatal("error while loading Global Task table " + e);
 			e.printStackTrace();
 		}
 		finally
@@ -307,7 +295,7 @@ public final class TaskManager
 
 			if(hour.length != 3)
 			{
-				_log.warning("Task " + task.getId() + " has incorrect parameters");
+				_log.warn("Task " + task.getId() + " has incorrect parameters");
 				return false;
 			}
 
@@ -323,7 +311,7 @@ public final class TaskManager
 			}
 			catch(Exception e)
 			{
-				_log.warning("Bad parameter on task " + task.getId() + ": " + e.getMessage());
+				_log.warn("Bad parameter on task " + task.getId() + ": " + e.getMessage());
 				return false;
 			}
 
@@ -379,7 +367,7 @@ public final class TaskManager
 		}
 		catch(SQLException e)
 		{
-			_log.warning("cannot add the unique task: " + e.getMessage());
+			_log.warn("cannot add the unique task: " + e.getMessage());
 		}
 		finally
 		{
@@ -418,7 +406,7 @@ public final class TaskManager
 		}
 		catch(SQLException e)
 		{
-			_log.warning("cannot add the task:  " + e.getMessage());
+			_log.warn("cannot add the task:  " + e.getMessage());
 		}
 		finally
 		{

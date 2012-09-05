@@ -18,14 +18,13 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.crypt.nProtect;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.L2GameClient.GameClientState;
 import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
 import com.l2scoria.gameserver.network.serverpackets.CharSelected;
+import org.apache.log4j.Logger;
 
 /**
  * This class ...
@@ -73,7 +72,7 @@ public class CharacterSelected extends L2GameClientPacket
 					// The L2PcInstance must be created here, so that it can be attached to the L2GameClient
 					if(Config.DEBUG)
 					{
-						_log.fine("selected slot:" + _charSlot);
+						_log.info("selected slot:" + _charSlot);
 					}
 
 					//load up character from disk
@@ -81,7 +80,7 @@ public class CharacterSelected extends L2GameClientPacket
 
 					if(cha == null)
 					{
-						_log.severe("Character could not be loaded (slot:" + _charSlot + ")");
+						_log.fatal("Character could not be loaded (slot:" + _charSlot + ")");
 						sendPacket(ActionFailed.STATIC_PACKET);
 						return;
 					}

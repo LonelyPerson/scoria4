@@ -20,16 +20,16 @@ package com.l2scoria.gameserver.model.zone.type;
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.base.Race;
-import com.l2scoria.gameserver.model.zone.L2ZoneType;
+import com.l2scoria.gameserver.model.zone.L2ZoneDefault;
 import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
 
 /**
  * A mother-trees zone
- * 
+ *
  * @author durgus
  */
-public class L2MotherTreeZone extends L2ZoneType
+public class L2MotherTreeZone extends L2ZoneDefault
 {
 	public L2MotherTreeZone(int id)
 	{
@@ -39,40 +39,44 @@ public class L2MotherTreeZone extends L2ZoneType
 	@Override
 	protected void onEnter(L2Character character)
 	{
-		if(character instanceof L2PcInstance)
+		if (character instanceof L2PcInstance)
 		{
 			L2PcInstance player = (L2PcInstance) character;
 
-			if(player.isInParty())
+			boolean effect = true;
+			if (player.isInParty())
 			{
-				for(L2PcInstance member : player.getParty().getPartyMembers())
-					if(member.getRace() != Race.elf)
-						return;
+				for (L2PcInstance member : player.getParty().getPartyMembers())
+				{
+					if (member.getRace() != Race.elf)
+					{
+						effect = false;
+						break;
+					}
+				}
 			}
 
-			player.setInsideZone(L2Character.ZONE_MOTHERTREE, true);
-			player.sendPacket(new SystemMessage(SystemMessageId.ENTER_SHADOW_MOTHER_TREE));
-
-			player = null;
+			if(effect)
+			{
+				player.setInsideZone(L2Character.ZONE_MOTHERTREE, true);
+				player.sendPacket(new SystemMessage(SystemMessageId.ENTER_SHADOW_MOTHER_TREE));
+				player = null;
+			}
 		}
+
+		super.onEnter(character);
 	}
 
 	@Override
 	protected void onExit(L2Character character)
 	{
-		if(character instanceof L2PcInstance && character.isInsideZone(L2Character.ZONE_MOTHERTREE))
+		if (character instanceof L2PcInstance && character.isInsideZone(L2Character.ZONE_MOTHERTREE))
 		{
 			character.setInsideZone(L2Character.ZONE_MOTHERTREE, false);
-			((L2PcInstance) character).sendPacket(new SystemMessage(SystemMessageId.EXIT_SHADOW_MOTHER_TREE));
+			character.sendPacket(new SystemMessage(SystemMessageId.EXIT_SHADOW_MOTHER_TREE));
 		}
+
+		super.onExit(character);
 	}
-
-	@Override
-	protected void onDieInside(L2Character character)
-	{}
-
-	@Override
-	protected void onReviveInside(L2Character character)
-	{}
 
 }

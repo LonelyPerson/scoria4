@@ -17,11 +17,6 @@
  */
 package com.l2scoria.gameserver.model.actor.instance;
 
-import java.util.NoSuchElementException;
-import java.util.StringTokenizer;
-
-import javolution.text.TextBuilder;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.TradeController;
 import com.l2scoria.gameserver.ai.CtrlIntention;
@@ -33,22 +28,14 @@ import com.l2scoria.gameserver.model.L2TradeList;
 import com.l2scoria.gameserver.model.PcInventory;
 import com.l2scoria.gameserver.model.entity.sevensigns.SevenSigns;
 import com.l2scoria.gameserver.network.SystemMessageId;
-import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
-import com.l2scoria.gameserver.network.serverpackets.BuyList;
-import com.l2scoria.gameserver.network.serverpackets.ExShowCropInfo;
-import com.l2scoria.gameserver.network.serverpackets.ExShowCropSetting;
-import com.l2scoria.gameserver.network.serverpackets.ExShowManorDefaultInfo;
-import com.l2scoria.gameserver.network.serverpackets.ExShowSeedInfo;
-import com.l2scoria.gameserver.network.serverpackets.ExShowSeedSetting;
-import com.l2scoria.gameserver.network.serverpackets.ItemList;
-import com.l2scoria.gameserver.network.serverpackets.MyTargetSelected;
-import com.l2scoria.gameserver.network.serverpackets.NpcHtmlMessage;
-import com.l2scoria.gameserver.network.serverpackets.SocialAction;
-import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
-import com.l2scoria.gameserver.network.serverpackets.ValidateLocation;
+import com.l2scoria.gameserver.network.serverpackets.*;
 import com.l2scoria.gameserver.templates.L2NpcTemplate;
 import com.l2scoria.gameserver.util.Util;
 import com.l2scoria.util.random.Rnd;
+import javolution.text.TextBuilder;
+
+import java.util.NoSuchElementException;
+import java.util.StringTokenizer;
 
 /**
  * Castle Chamberlains implementation used for: - tax rate control - regional manor system control - castle treasure
@@ -266,7 +253,7 @@ public class L2CastleChamberlainInstance extends L2FolkInstance
 				{
 					if(Config.DEBUG)
 					{
-						_log.fine("Showing chamberlain buylist");
+						_log.info("Showing chamberlain buylist");
 					}
 
 					player.tempInvetoryDisable();
@@ -294,8 +281,8 @@ public class L2CastleChamberlainInstance extends L2FolkInstance
 					}
 					else
 					{
-						_log.warning("player: " + player.getName() + " attempting to buy from chamberlain that don't have buylist!");
-						_log.warning("buylist id:" + buy);
+						_log.warn("player: " + player.getName() + " attempting to buy from chamberlain that don't have buylist!");
+						_log.warn("buylist id:" + buy);
 					}
 					list = null;
 

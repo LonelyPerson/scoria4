@@ -18,12 +18,12 @@
  */
 package com.l2scoria.gameserver.communitybbs.BB;
 
-import java.sql.PreparedStatement;
-import java.util.logging.Logger;
-
 import com.l2scoria.gameserver.communitybbs.Manager.TopicBBSManager;
-import java.sql.Connection;
 import com.l2scoria.util.database.L2DatabaseFactory;
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 
 public class Topic
 {
@@ -96,7 +96,7 @@ public class Topic
 		}
 		catch(Exception e)
 		{
-			_log.warning("error while saving new Topic to db " + e);
+			_log.warn("error while saving new Topic to db " + e);
 		}
 		finally
 		{

@@ -81,7 +81,7 @@ public class EffectEnemyFlight extends L2Effect
 		
 		if (Config.GEODATA)
 		{
-			Location destiny = GeoEngine.moveCheck(getEffector().getX(), getEffector().getY(), getEffector().getZ(), _x, _y, false);
+			Location destiny = GeoEngine.moveCheck(getEffector().getX(), getEffector().getY(), getEffector().getZ(), _x, _y, getEffector().getInstanceId());
 			_x = destiny.getX();
 			_y = destiny.getY();
 		}

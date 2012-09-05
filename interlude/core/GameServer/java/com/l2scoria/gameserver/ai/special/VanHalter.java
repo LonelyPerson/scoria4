@@ -18,17 +18,6 @@
  */
 package com.l2scoria.gameserver.ai.special;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ScheduledFuture;
-import java.util.logging.Logger;
-
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.ai.CtrlIntention;
 import com.l2scoria.gameserver.datatables.SkillTable;
@@ -53,6 +42,16 @@ import com.l2scoria.gameserver.templates.StatsSet;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.util.database.L2DatabaseFactory;
 import com.l2scoria.util.random.Rnd;
+import javolution.util.FastList;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ScheduledFuture;
 
 /**
  * This class ... control for sequence of fight against "High Priestess van Halter".
@@ -237,7 +236,7 @@ public class VanHalter extends Quest
 		}
 		catch(Exception e)
 		{
-			_log.warning("VanHalterManager : " + e.getMessage() + " :" + e);
+			_log.warn("VanHalterManager : " + e.getMessage() + " :" + e);
 		}
 
 		// Set time up.
@@ -333,7 +332,7 @@ public class VanHalter extends Quest
 				}
 				else
 				{
-					_log.warning("VanHalterManager.loadRoyalGuard: Data missing in NPC table for ID: " + rset.getInt("npc_templateid") + ".");
+					_log.warn("VanHalterManager.loadRoyalGuard: Data missing in NPC table for ID: " + rset.getInt("npc_templateid") + ".");
 				}
 			}
 
@@ -347,7 +346,7 @@ public class VanHalter extends Quest
 		catch(Exception e)
 		{
 			// Problem with initializing spawn, go to next one
-			_log.warning("VanHalterManager.loadRoyalGuard: Spawn could not be initialized: " + e);
+			_log.warn("VanHalterManager.loadRoyalGuard: Spawn could not be initialized: " + e);
 		}
 		finally
 		{
@@ -423,7 +422,7 @@ public class VanHalter extends Quest
 				}
 				else
 				{
-					_log.warning("VanHalterManager.loadTriolRevelation: Data missing in NPC table for ID: " + rset.getInt("npc_templateid") + ".");
+					_log.warn("VanHalterManager.loadTriolRevelation: Data missing in NPC table for ID: " + rset.getInt("npc_templateid") + ".");
 				}
 			}
 
@@ -437,7 +436,7 @@ public class VanHalter extends Quest
 		catch(Exception e)
 		{
 			// Problem with initializing spawn, go to next one
-			_log.warning("VanHalterManager.loadTriolRevelation: Spawn could not be initialized: " + e);
+			_log.warn("VanHalterManager.loadTriolRevelation: Spawn could not be initialized: " + e);
 		}
 		finally
 		{
@@ -516,7 +515,7 @@ public class VanHalter extends Quest
 				}
 				else
 				{
-					_log.warning("VanHalterManager.loadRoyalGuardCaptain: Data missing in NPC table for ID: " + rset.getInt("npc_templateid") + ".");
+					_log.warn("VanHalterManager.loadRoyalGuardCaptain: Data missing in NPC table for ID: " + rset.getInt("npc_templateid") + ".");
 				}
 			}
 
@@ -530,7 +529,7 @@ public class VanHalter extends Quest
 		catch(Exception e)
 		{
 			// Problem with initializing spawn, go to next one
-			_log.warning("VanHalterManager.loadRoyalGuardCaptain: Spawn could not be initialized: " + e);
+			_log.warn("VanHalterManager.loadRoyalGuardCaptain: Spawn could not be initialized: " + e);
 		}
 		finally
 		{
@@ -606,7 +605,7 @@ public class VanHalter extends Quest
 				}
 				else
 				{
-					_log.warning("VanHalterManager.loadRoyalGuardHelper: Data missing in NPC table for ID: " + rset.getInt("npc_templateid") + ".");
+					_log.warn("VanHalterManager.loadRoyalGuardHelper: Data missing in NPC table for ID: " + rset.getInt("npc_templateid") + ".");
 				}
 			}
 
@@ -620,7 +619,7 @@ public class VanHalter extends Quest
 		catch(Exception e)
 		{
 			// Problem with initializing spawn, go to next one
-			_log.warning("VanHalterManager.loadRoyalGuardHelper: Spawn could not be initialized: " + e);
+			_log.warn("VanHalterManager.loadRoyalGuardHelper: Spawn could not be initialized: " + e);
 		}
 		finally
 		{
@@ -689,7 +688,7 @@ public class VanHalter extends Quest
 				}
 				else
 				{
-					_log.warning("VanHalterManager.loadGuardOfAltar: Data missing in NPC table for ID: " + rset.getInt("npc_templateid") + ".");
+					_log.warn("VanHalterManager.loadGuardOfAltar: Data missing in NPC table for ID: " + rset.getInt("npc_templateid") + ".");
 				}
 			}
 
@@ -703,7 +702,7 @@ public class VanHalter extends Quest
 		catch(Exception e)
 		{
 			// Problem with initializing spawn, go to next one
-			_log.warning("VanHalterManager.loadGuardOfAltar: Spawn could not be initialized: " + e);
+			_log.warn("VanHalterManager.loadGuardOfAltar: Spawn could not be initialized: " + e);
 		}
 		finally
 		{
@@ -778,7 +777,7 @@ public class VanHalter extends Quest
 				}
 				else
 				{
-					_log.warning("VanHalterManager.loadVanHalter: Data missing in NPC table for ID: " + rset.getInt("npc_templateid") + ".");
+					_log.warn("VanHalterManager.loadVanHalter: Data missing in NPC table for ID: " + rset.getInt("npc_templateid") + ".");
 				}
 			}
 
@@ -792,7 +791,7 @@ public class VanHalter extends Quest
 		catch(Exception e)
 		{
 			// Problem with initializing spawn, go to next one
-			_log.warning("VanHalterManager.loadVanHalter: Spawn could not be initialized: " + e);
+			_log.warn("VanHalterManager.loadVanHalter: Spawn could not be initialized: " + e);
 		}
 		finally
 		{
@@ -860,7 +859,7 @@ public class VanHalter extends Quest
 				}
 				else
 				{
-					_log.warning("VanHalterManager.loadRitualOffering: Data missing in NPC table for ID: " + rset.getInt("npc_templateid") + ".");
+					_log.warn("VanHalterManager.loadRitualOffering: Data missing in NPC table for ID: " + rset.getInt("npc_templateid") + ".");
 				}
 			}
 
@@ -874,7 +873,7 @@ public class VanHalter extends Quest
 		catch(Exception e)
 		{
 			// Problem with initializing spawn, go to next one
-			_log.warning("VanHalterManager.loadRitualOffering: Spawn could not be initialized: " + e);
+			_log.warn("VanHalterManager.loadRitualOffering: Spawn could not be initialized: " + e);
 		}
 		finally
 		{
@@ -941,7 +940,7 @@ public class VanHalter extends Quest
 				}
 				else
 				{
-					_log.warning("VanHalterManager.loadRitualSacrifice: Data missing in NPC table for ID: " + rset.getInt("npc_templateid") + ".");
+					_log.warn("VanHalterManager.loadRitualSacrifice: Data missing in NPC table for ID: " + rset.getInt("npc_templateid") + ".");
 				}
 			}
 
@@ -955,7 +954,7 @@ public class VanHalter extends Quest
 		catch(Exception e)
 		{
 			// Problem with initializing spawn, go to next one
-			_log.warning("VanHalterManager.loadRitualSacrifice: Spawn could not be initialized: " + e);
+			_log.warn("VanHalterManager.loadRitualSacrifice: Spawn could not be initialized: " + e);
 		}
 		finally
 		{
@@ -1044,7 +1043,7 @@ public class VanHalter extends Quest
 			}
 			catch(Exception e)
 			{
-				_log.warning(e.getMessage() + " :" + e);
+				_log.warn(e.getMessage() + " :" + e);
 			}
 		}
 
@@ -1121,7 +1120,7 @@ public class VanHalter extends Quest
 			}
 			catch(Exception e)
 			{
-				_log.warning(e.getMessage() + " :" + e);
+				_log.warn(e.getMessage() + " :" + e);
 			}
 		}
 	}
@@ -1136,7 +1135,7 @@ public class VanHalter extends Quest
 			}
 			catch(Exception e)
 			{
-				_log.warning(e.getMessage() + " :" + e);
+				_log.warn(e.getMessage() + " :" + e);
 			}
 		}
 	}

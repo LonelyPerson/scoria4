@@ -23,18 +23,19 @@ import com.l2scoria.gameserver.datatables.sql.TerritoryTable;
 import com.l2scoria.gameserver.geodata.GeoEngine;
 import com.l2scoria.gameserver.idfactory.IdFactory;
 import com.l2scoria.gameserver.model.L2Object;
+import com.l2scoria.gameserver.model.Location;
 import com.l2scoria.gameserver.model.actor.instance.L2MonsterInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2NpcInstance;
 import com.l2scoria.gameserver.model.quest.Quest;
 import com.l2scoria.gameserver.templates.L2NpcTemplate;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
+import com.l2scoria.gameserver.util.RndCoord;
 import com.l2scoria.util.random.Rnd;
 import javolution.util.FastList;
+import org.apache.log4j.Logger;
 
 import java.lang.reflect.Constructor;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * This class manages the spawn and respawn of a group of L2NpcInstance that are in the same are and have the same type.
@@ -125,6 +126,9 @@ public class L2Spawn
 	 */
 	private Constructor<?> _constructor;
 
+	private boolean _useRandomPosRespwn = false;
+	private int _randomeRespawnRange;
+
 	/**
 	 * If True a L2NpcInstance is respawned each time that another is killed
 	 */
@@ -158,7 +162,7 @@ public class L2Spawn
 				respawnNpc(_oldNpc);
 			} catch (Exception e)
 			{
-				_log.log(Level.WARNING, "", e);
+				_log.warn("", e);
 			}
 
 			_scheduledCount--;
@@ -552,7 +556,7 @@ public class L2Spawn
 			return intializeNpcInstance(mob);
 		} catch (Exception e)
 		{
-			_log.log(Level.WARNING, "NPC " + _template.npcId + " class not found", e);
+			_log.warn("NPC " + _template.npcId + " class not found", e);
 		}
 		return mob;
 	}
@@ -591,7 +595,7 @@ public class L2Spawn
 
 			if (Config.GEODATA && mob instanceof L2MonsterInstance)
 			{
-				newlocz = GeoEngine.getHeight(newlocx, newlocy, getLocz(), true);
+				newlocz = GeoEngine.getHeight(newlocx, newlocy, getLocz(), true, mob.getInstanceId());
 			}
 		}
 
@@ -625,7 +629,7 @@ public class L2Spawn
 
 		if (Config.DEBUG)
 		{
-			_log.finest("spawned Mob ID: " + _template.npcId + " ,at: " + mob.getX() + " x, " + mob.getY() + " y, " + mob.getZ() + " z");
+			_log.info("spawned Mob ID: " + _template.npcId + " ,at: " + mob.getX() + " x, " + mob.getY() + " y, " + mob.getZ() + " z");
 		}
 
 		if (mob.getTemplate().getEventQuests(Quest.QuestEventType.ON_SPAWN) != null)
@@ -639,6 +643,36 @@ public class L2Spawn
 		// Increase the current number of L2NpcInstance managed by this L2Spawn
 		_currentCount++;
 		return mob;
+	}
+
+	public static Location findPointToStay(int x, int y, int z, int j, int k, int instance)
+	{
+		Location pos;
+		if (j <= 0)
+		{
+			j = 10;
+		}
+
+		if (k <= 0)
+		{
+			k = 200;
+		}
+
+		try
+		{
+			for (int i = 0; i < 5; i++)
+			{
+				pos = RndCoord.coordsRandomize(x, y, z, 0, j, k);
+
+				if (GeoEngine.canMoveToCoord(pos.getX(), pos.getY(), pos.getZ(), x, y, z, instance) && Math.abs(pos.getZ() - z) < 12)
+				{
+					return pos;
+				}
+			}
+		} catch (Exception e)
+		{
+		}
+		return new Location(x, y, z);
 	}
 
 	public static void addSpawnListener(SpawnListener listener)
@@ -675,7 +709,7 @@ public class L2Spawn
 	{
 		if (i < 0)
 		{
-			_log.warning("respawn delay is negative for spawnId:" + _id);
+			_log.warn("respawn delay is negative for spawnId:" + _id);
 		}
 
 		if (i < 10)
@@ -716,4 +750,23 @@ public class L2Spawn
 		_instanceId = instanceId;
 	}
 
+	public void enableRndRangeRespawn(boolean par)
+	{
+		_useRandomPosRespwn = par;
+	}
+
+	public boolean isRndRangeRespawn()
+	{
+		return _useRandomPosRespwn;
+	}
+
+	public void setRndRespawnRange(int par)
+	{
+		_randomeRespawnRange = par;
+	}
+
+	public int getRndRespawnRange()
+	{
+		return _randomeRespawnRange;
+	}
 }

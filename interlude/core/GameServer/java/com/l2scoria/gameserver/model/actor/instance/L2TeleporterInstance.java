@@ -18,8 +18,6 @@
  */
 package com.l2scoria.gameserver.model.actor.instance;
 
-import java.util.StringTokenizer;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.sql.TeleportLocationTable;
 import com.l2scoria.gameserver.managers.CastleManager;
@@ -32,6 +30,8 @@ import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
 import com.l2scoria.gameserver.network.serverpackets.NpcHtmlMessage;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
 import com.l2scoria.gameserver.templates.L2NpcTemplate;
+
+import java.util.StringTokenizer;
 
 /**
  * @author NightMarez
@@ -245,7 +245,7 @@ public final class L2TeleporterInstance extends L2FolkInstance
 			{
 				if(Config.DEBUG)
 				{
-					_log.fine("Teleporting player " + player.getName() + " to new location: " + list.getLocX() + ":" + list.getLocY() + ":" + list.getLocZ());
+					_log.info("Teleporting player " + player.getName() + " to new location: " + list.getLocX() + ":" + list.getLocY() + ":" + list.getLocZ());
 				}
 				player.teleToLocation(list.getLocX(), list.getLocY(), list.getLocZ(), true);
 			}
@@ -267,14 +267,14 @@ public final class L2TeleporterInstance extends L2FolkInstance
 			{
 				if(Config.DEBUG)
 				{
-					_log.fine("Teleporting player " + player.getName() + " to new location: " + list.getLocX() + ":" + list.getLocY() + ":" + list.getLocZ());
+					_log.info("Teleporting player " + player.getName() + " to new location: " + list.getLocX() + ":" + list.getLocY() + ":" + list.getLocZ());
 				}
 				player.teleToLocation(list.getLocX(), list.getLocY(), list.getLocZ(), true);
 			}
 		}
 		else
 		{
-			_log.warning("No teleport destination with id:" + val);
+			_log.warn("No teleport destination with id:" + val);
 		}
 		player.sendPacket(ActionFailed.STATIC_PACKET);
 		list = null;

@@ -18,15 +18,15 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.util.logging.Logger;
-
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.FriendPacket;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
 import com.l2scoria.util.database.L2DatabaseFactory;
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 
 /**
  * sample 5F 01 00 00 00 format cdd
@@ -90,7 +90,7 @@ public final class RequestAnswerFriendInvite extends L2GameClientPacket
 				}
 				catch(Exception e)
 				{
-					_log.warning("could not add friend objectid: " + e);
+					_log.warn("could not add friend objectid: " + e);
 				}
 				finally
 				{

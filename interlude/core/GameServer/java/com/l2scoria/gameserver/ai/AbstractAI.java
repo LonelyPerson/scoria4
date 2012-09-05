@@ -28,10 +28,9 @@ import com.l2scoria.gameserver.model.extender.BaseExtender.EventType;
 import com.l2scoria.gameserver.network.serverpackets.*;
 import com.l2scoria.gameserver.taskmanager.AttackStanceTaskManager;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
+import org.apache.log4j.Logger;
 
 import java.util.concurrent.Future;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static com.l2scoria.gameserver.ai.CtrlIntention.*;
 
@@ -87,7 +86,7 @@ abstract class AbstractAI implements Ctrl
 			}
 			catch(Throwable t)
 			{
-				_log.log(Level.WARNING, "", t);
+				_log.warn("", t);
 			}
 		}
 	}
@@ -206,7 +205,7 @@ abstract class AbstractAI implements Ctrl
 	{
 		/*
 		 if (Config.DEBUG)
-		 _log.warning("AbstractAI: changeIntention -> " + intention + " " + arg0 + " " + arg1);
+		 _log.warn("AbstractAI: changeIntention -> " + intention + " " + arg0 + " " + arg1);
 		 */
 
 		_intention = intention;
@@ -258,7 +257,7 @@ abstract class AbstractAI implements Ctrl
 
 		/*
 		 if (Config.DEBUG)
-		 _log.warning("AbstractAI: setIntention -> " + intention + " " + arg0 + " " + arg1);
+		 _log.warn("AbstractAI: setIntention -> " + intention + " " + arg0 + " " + arg1);
 		 */
 
 		// Stop the follow mode if necessary
@@ -352,7 +351,7 @@ abstract class AbstractAI implements Ctrl
 
 		/*
 		 if (Config.DEBUG)
-		 _log.warning("AbstractAI: notifyEvent -> " + evt + " " + arg0 + " " + arg1);
+		 _log.warn("AbstractAI: notifyEvent -> " + evt + " " + arg0 + " " + arg1);
 		 */
 
 		switch(evt)
@@ -634,7 +633,7 @@ abstract class AbstractAI implements Ctrl
 	{
 		/*
 		 if (Config.DEBUG)
-		 _log.warning("clientStopMoving();");
+		 _log.warn("clientStopMoving();");
 		 */
 
 		// Stop movement of the L2Character

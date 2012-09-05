@@ -14,24 +14,23 @@
  */
 package com.l2scoria.gameserver.model.zone.type;
 
-import javolution.util.FastList;
-
 import com.l2scoria.gameserver.datatables.csv.MapRegionTable;
 import com.l2scoria.gameserver.managers.FortManager;
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2SiegeSummonInstance;
 import com.l2scoria.gameserver.model.entity.siege.Fort;
-import com.l2scoria.gameserver.model.zone.L2ZoneType;
+import com.l2scoria.gameserver.model.zone.L2ZoneDefault;
 import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
+import javolution.util.FastList;
 
 /**
  * A castle zone
  * 
  * @author programmos, scoria dev
  */
-public class L2FortZone extends L2ZoneType
+public class L2FortZone extends L2ZoneDefault
 {
 	private int _fortId;
 	private Fort _fort;
@@ -83,9 +82,11 @@ public class L2FortZone extends L2ZoneType
 
 			if(character instanceof L2PcInstance)
 			{
-				((L2PcInstance) character).sendPacket(new SystemMessage(SystemMessageId.ENTERED_COMBAT_ZONE));
+				character.sendPacket(new SystemMessage(SystemMessageId.ENTERED_COMBAT_ZONE));
 			}
 		}
+
+		super.onEnter(character);
 	}
 
 	@Override
@@ -98,7 +99,7 @@ public class L2FortZone extends L2ZoneType
 
 			if(character instanceof L2PcInstance)
 			{
-				((L2PcInstance) character).sendPacket(new SystemMessage(SystemMessageId.LEFT_COMBAT_ZONE));
+				character.sendPacket(new SystemMessage(SystemMessageId.LEFT_COMBAT_ZONE));
 
 				// Set pvp flag
 				if(((L2PcInstance) character).getPvpFlag() == 0)
@@ -107,19 +108,14 @@ public class L2FortZone extends L2ZoneType
 				}
 			}
 		}
+
 		if(character instanceof L2SiegeSummonInstance)
 		{
 			((L2SiegeSummonInstance) character).unSummon(((L2SiegeSummonInstance) character).getOwner());
 		}
+
+		super.onExit(character);
 	}
-
-	@Override
-	protected void onDieInside(L2Character character)
-	{}
-
-	@Override
-	protected void onReviveInside(L2Character character)
-	{}
 
 	public void updateZoneStatusForCharactersInside()
 	{
@@ -146,7 +142,7 @@ public class L2FortZone extends L2ZoneType
 
 					if(character instanceof L2PcInstance)
 					{
-						((L2PcInstance) character).sendPacket(new SystemMessage(SystemMessageId.LEFT_COMBAT_ZONE));
+						character.sendPacket(new SystemMessage(SystemMessageId.LEFT_COMBAT_ZONE));
 					}
 
 					if(character instanceof L2SiegeSummonInstance)
@@ -179,7 +175,7 @@ public class L2FortZone extends L2ZoneType
 				continue;
 			}
 
-			((L2PcInstance) temp).teleToLocation(MapRegionTable.TeleportWhereType.Town);
+			temp.teleToLocation(MapRegionTable.TeleportWhereType.Town);
 		}
 	}
 

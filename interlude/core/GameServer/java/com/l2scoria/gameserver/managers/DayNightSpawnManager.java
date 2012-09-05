@@ -18,15 +18,14 @@
  */
 package com.l2scoria.gameserver.managers;
 
-import java.util.Map;
-import java.util.logging.Logger;
-
-import javolution.util.FastMap;
-
 import com.l2scoria.gameserver.GameTimeController;
 import com.l2scoria.gameserver.model.actor.instance.L2NpcInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2RaidBossInstance;
 import com.l2scoria.gameserver.model.spawn.L2Spawn;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
+
+import java.util.Map;
 
 /**
  * This class ...
@@ -72,7 +71,7 @@ public class DayNightSpawnManager
 	{
 		if(_dayCreatures.containsKey(spawnDat))
 		{
-			_log.warning("DayNightSpawnManager: Spawn already added into day map");
+			_log.warn("DayNightSpawnManager: Spawn already added into day map");
 			return;
 		}
 		else
@@ -85,7 +84,7 @@ public class DayNightSpawnManager
 	{
 		if(_nightCreatures.containsKey(spawnDat))
 		{
-			_log.warning("DayNightSpawnManager: Spawn already added into night map");
+			_log.warn("DayNightSpawnManager: Spawn already added into night map");
 			return;
 		}
 		else
@@ -201,7 +200,7 @@ public class DayNightSpawnManager
 				specialNightBoss(1);
 				break;
 			default:
-				_log.warning("DayNightSpawnManager: Wrong mode sent");
+				_log.warn("DayNightSpawnManager: Wrong mode sent");
 				break;
 		}
 	}

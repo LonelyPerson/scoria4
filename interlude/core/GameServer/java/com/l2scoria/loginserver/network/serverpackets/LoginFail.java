@@ -59,7 +59,7 @@ public final class LoginFail extends L2LoginServerPacket
 	 * @see com.l2jserver.mmocore.network.SendablePacket#write()
 	 */
 	@Override
-	protected void write()
+	protected void writeImpl()
 	{
 		writeC(0x01);
 		writeD(_reason.getCode());

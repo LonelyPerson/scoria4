@@ -18,22 +18,21 @@
  */
 package com.l2scoria.gameserver.model;
 
-import java.util.Iterator;
-import java.util.concurrent.ScheduledFuture;
-import java.util.logging.Logger;
-
-import javolution.util.FastList;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.ai.L2AttackableAI;
 import com.l2scoria.gameserver.datatables.sql.SpawnTable;
 import com.l2scoria.gameserver.model.actor.instance.L2NpcInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PlayableInstance;
 import com.l2scoria.gameserver.model.spawn.L2Spawn;
+import com.l2scoria.gameserver.model.zone.L2ZoneDefault;
 import com.l2scoria.gameserver.model.zone.L2ZoneManager;
-import com.l2scoria.gameserver.model.zone.L2ZoneType;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.util.object.L2ObjectSet;
+import javolution.util.FastList;
+import org.apache.log4j.Logger;
+
+import java.util.Iterator;
+import java.util.concurrent.ScheduledFuture;
 
 /**
  * This class ...
@@ -81,7 +80,7 @@ public final class L2WorldRegion
 		}
 	}
 
-	public void addZone(L2ZoneType zone)
+	public void addZone(L2ZoneDefault zone)
 	{
 		if(_zoneManager == null)
 		{
@@ -90,7 +89,7 @@ public final class L2WorldRegion
 		_zoneManager.registerNewZone(zone);
 	}
 
-	public void removeZone(L2ZoneType zone)
+	public void removeZone(L2ZoneDefault zone)
 	{
 		if(_zoneManager == null)
 			return;
@@ -206,7 +205,7 @@ public final class L2WorldRegion
 					//mob.getStatus().stopHpMpRegeneration();
 				}
 			}
-			_log.fine(c + " mobs were turned off");
+			_log.info(c + " mobs were turned off");
 		}
 		else
 		{
@@ -228,7 +227,7 @@ public final class L2WorldRegion
 					((L2NpcInstance) o).startRandomAnimationTimer();
 				}
 			}
-			_log.fine(c + " mobs were turned on");
+			_log.info(c + " mobs were turned on");
 		}
 
 	}
@@ -274,11 +273,11 @@ public final class L2WorldRegion
 		// turn the geodata on or off to match the region's activation.
 		if(value)
 		{
-			_log.fine("Starting Grid " + _tileX + "," + _tileY);
+			_log.info("Starting Grid " + _tileX + "," + _tileY);
 		}
 		else
 		{
-			_log.fine("Stoping Grid " + _tileX + "," + _tileY);
+			_log.info("Stoping Grid " + _tileX + "," + _tileY);
 		}
 	}
 
@@ -424,7 +423,7 @@ public final class L2WorldRegion
 	 */
 	public synchronized void deleteVisibleNpcSpawns()
 	{
-		_log.fine("Deleting all visible NPC's in Region: " + getName());
+		_log.info("Deleting all visible NPC's in Region: " + getName());
 		for(L2Object obj : _visibleObjects)
 		{
 			if(obj instanceof L2NpcInstance)
@@ -439,7 +438,7 @@ public final class L2WorldRegion
 					SpawnTable.getInstance().deleteSpawn(spawn, false);
 				}
 
-				_log.finest("Removed NPC " + target.getObjectId());
+				_log.info("Removed NPC " + target.getObjectId());
 
 				target = null;
 				spawn = null;

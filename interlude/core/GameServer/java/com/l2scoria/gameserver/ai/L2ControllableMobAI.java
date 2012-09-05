@@ -140,7 +140,7 @@ public class L2ControllableMobAI extends L2AttackableAI
 		}
 		catch(NullPointerException e)
 		{
-			_log.warning("Encountered Null Value.");
+			_log.warn("Encountered Null Value.");
 			e.printStackTrace();
 		}
 
@@ -207,7 +207,7 @@ public class L2ControllableMobAI extends L2AttackableAI
 		}
 		catch(NullPointerException e)
 		{
-			_log.warning("Encountered Null Value.");
+			_log.warn("Encountered Null Value.");
 			e.printStackTrace();
 		}
 
@@ -263,7 +263,7 @@ public class L2ControllableMobAI extends L2AttackableAI
 		}
 		catch(NullPointerException e)
 		{
-			_log.warning("Encountered Null Value.");
+			_log.warn("Encountered Null Value.");
 			e.printStackTrace();
 		}
 
@@ -354,7 +354,7 @@ public class L2ControllableMobAI extends L2AttackableAI
 			}
 			catch(NullPointerException e)
 			{
-				_log.warning("Encountered Null Value.");
+				_log.warn("Encountered Null Value.");
 				e.printStackTrace();
 			}
 

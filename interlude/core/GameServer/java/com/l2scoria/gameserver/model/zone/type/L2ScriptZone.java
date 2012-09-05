@@ -17,8 +17,7 @@
  */
 package com.l2scoria.gameserver.model.zone.type;
 
-import com.l2scoria.gameserver.model.L2Character;
-import com.l2scoria.gameserver.model.zone.L2ZoneType;
+import com.l2scoria.gameserver.model.zone.L2ZoneDefault;
 
 /**
  * A scripted zone... Creation of such a zone should require somekind of jython script reference which can handle
@@ -26,27 +25,10 @@ import com.l2scoria.gameserver.model.zone.L2ZoneType;
  * 
  * @author durgus
  */
-public class L2ScriptZone extends L2ZoneType
+public class L2ScriptZone extends L2ZoneDefault
 {
 	public L2ScriptZone(int id)
 	{
 		super(id);
 	}
-
-	@Override
-	protected void onEnter(L2Character character)
-	{}
-
-	@Override
-	protected void onExit(L2Character character)
-	{}
-
-	@Override
-	protected void onDieInside(L2Character character)
-	{}
-
-	@Override
-	protected void onReviveInside(L2Character character)
-	{}
-
 }

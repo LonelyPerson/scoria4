@@ -17,12 +17,31 @@
  */
 package com.l2scoria.loginserver.network.serverpackets;
 
-import mmo.SendablePacket;
-
 import com.l2scoria.loginserver.L2LoginClient;
+import mmo.SendablePacket;
+import org.apache.log4j.Logger;
+
 
 /**
  * @author programmos, sword dev
  */
 public abstract class L2LoginServerPacket extends SendablePacket<L2LoginClient>
-{}
+{
+	private static final Logger _log = Logger.getLogger(L2LoginServerPacket.class);
+
+	@Override
+	protected void write()
+	{
+		try
+		{
+			writeImpl();
+		}
+		catch(Throwable t)
+		{
+			_log.fatal(t.getMessage());
+			t.printStackTrace();
+		}
+	}
+
+	protected abstract void writeImpl();
+}

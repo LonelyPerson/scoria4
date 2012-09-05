@@ -17,41 +17,30 @@
  */
 package com.l2scoria.gameserver.managers;
 
+import com.l2scoria.Config;
+import com.l2scoria.gameserver.model.CursedWeapon;
+import com.l2scoria.gameserver.model.L2Attackable;
+import com.l2scoria.gameserver.model.L2Character;
+import com.l2scoria.gameserver.model.L2World;
+import com.l2scoria.gameserver.model.actor.instance.*;
+import com.l2scoria.gameserver.network.SystemMessageId;
+import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
+import com.l2scoria.util.database.L2DatabaseFactory;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+
+import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import javolution.util.FastMap;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-
-import com.l2scoria.Config;
-import com.l2scoria.gameserver.model.CursedWeapon;
-import com.l2scoria.gameserver.model.L2Attackable;
-import com.l2scoria.gameserver.model.L2Character;
-import com.l2scoria.gameserver.model.L2World;
-import com.l2scoria.gameserver.model.actor.instance.L2CommanderInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2FestivalMonsterInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2FortSiegeGuardInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2GrandBossInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2RiftInvaderInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2SiegeGuardInstance;
-import com.l2scoria.gameserver.network.SystemMessageId;
-import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
-import java.sql.Connection;
-import com.l2scoria.util.database.L2DatabaseFactory;
 
 /**
  * @author Micht
@@ -197,7 +186,7 @@ public class CursedWeaponsManager
 		}
 		catch(Exception e)
 		{
-			_log.log(Level.SEVERE, "Error parsing cursed weapons file.", e);
+			_log.fatal("Error parsing cursed weapons file.", e);
 
 			if(Config.DEBUG)
 			{
@@ -255,7 +244,7 @@ public class CursedWeaponsManager
 		}
 		catch(Exception e)
 		{
-			_log.warning("Could not restore CursedWeapons data: " + e);
+			_log.warn("Could not restore CursedWeapons data: " + e);
 
 			if(Config.DEBUG)
 			{
@@ -318,7 +307,7 @@ public class CursedWeaponsManager
 						statement.setInt(2, itemId);
 						if(statement.executeUpdate() != 1)
 						{
-							_log.warning("Error while deleting cursed weapon " + itemId + " from userId " + playerId);
+							_log.warn("Error while deleting cursed weapon " + itemId + " from userId " + playerId);
 						}
 						statement.close();
 
@@ -329,7 +318,7 @@ public class CursedWeaponsManager
 						statement.setInt(2, cw.getSkillId());
 						if (statement.executeUpdate() != 1)
 						{
-							_log.warning("Error while deleting cursed weapon "+itemId+" skill from userId "+playerId);
+							_log.warn("Error while deleting cursed weapon "+itemId+" skill from userId "+playerId);
 						}
 						*/
 						// Restore the player's old karma and pk count
@@ -339,7 +328,7 @@ public class CursedWeaponsManager
 						statement.setInt(3, playerId);
 						if(statement.executeUpdate() != 1)
 						{
-							_log.warning("Error while updating karma & pkkills for userId " + cw.getPlayerId());
+							_log.warn("Error while updating karma & pkkills for userId " + cw.getPlayerId());
 						}
 						// clean up the cursedweapons table.
 						removeFromDb(itemId);
@@ -358,7 +347,7 @@ public class CursedWeaponsManager
 		}
 		catch(Exception e)
 		{
-			_log.warning("Could not check CursedWeapons data: " + e);
+			_log.warn("Could not check CursedWeapons data: " + e);
 
 			if(Config.DEBUG)
 			{
@@ -392,6 +381,9 @@ public class CursedWeaponsManager
 			return;
 
 		if(player.isCursedWeaponEquiped())
+			return;
+
+		if (player.getInstanceId()!=0)
 			return;
 
 		for(CursedWeapon cw : _cursedWeapons.values())
@@ -518,7 +510,7 @@ public class CursedWeaponsManager
 		}
 		catch(SQLException e)
 		{
-			_log.severe("CursedWeaponsManager: Failed to remove data: " + e);
+			_log.fatal("CursedWeaponsManager: Failed to remove data: " + e);
 		}
 		finally
 		{

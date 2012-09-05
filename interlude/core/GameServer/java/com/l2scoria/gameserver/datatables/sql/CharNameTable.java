@@ -18,16 +18,15 @@
  */
 package com.l2scoria.gameserver.datatables.sql;
 
+import com.l2scoria.util.database.L2DatabaseFactory;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Logger;
 import java.util.Map;
-
-import javolution.util.FastMap;
-
-import com.l2scoria.util.database.L2DatabaseFactory;
 
 /**
  * This class ...
@@ -70,7 +69,7 @@ public class CharNameTable
 		}
 		catch(SQLException e)
 		{
-			_log.warning("could not check existing charname:" + e.getMessage());
+			_log.warn("could not check existing charname:" + e.getMessage());
 		}
 		finally
 		{
@@ -104,7 +103,7 @@ public class CharNameTable
 		}
 		catch(SQLException e)
 		{
-			_log.warning("could not check existing char number:" + e.getMessage());
+			_log.warn("could not check existing char number:" + e.getMessage());
 		}
 		finally
 		{
@@ -142,7 +141,7 @@ public class CharNameTable
 		}
 		catch (SQLException e)
 		{
-			_log.warning("Could not check existing char id: " + e.getMessage());
+			_log.warn("Could not check existing char id: " + e.getMessage());
 		}
 		finally
 		{
@@ -185,7 +184,7 @@ public class CharNameTable
 		}
 		catch (SQLException e)
 		{
-			_log.warning("Could not check existing char name: " + e.getMessage());
+			_log.warn("Could not check existing char name: " + e.getMessage());
 		}
 		finally
 		{

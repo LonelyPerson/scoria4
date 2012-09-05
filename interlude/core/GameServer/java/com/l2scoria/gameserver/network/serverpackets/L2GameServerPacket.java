@@ -17,12 +17,11 @@
  */
 package com.l2scoria.gameserver.network.serverpackets;
 
-import java.util.logging.Logger;
-
-import mmo.SendablePacket;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.network.L2GameClient;
+import mmo.SendablePacket;
+import org.apache.log4j.Logger;
+
 
 /**
  * @author ProGramMoS
@@ -30,7 +29,7 @@ import com.l2scoria.gameserver.network.L2GameClient;
 
 public abstract class L2GameServerPacket extends SendablePacket<L2GameClient>
 {
-	private static final Logger _log = Logger.getLogger(L2GameServerPacket.class.getName());
+	private static final Logger _log = Logger.getLogger(L2GameServerPacket.class);
 
 	/**
 	 * @see com.l2jserver.mmocore.network.SendablePacket#write()
@@ -40,11 +39,13 @@ public abstract class L2GameServerPacket extends SendablePacket<L2GameClient>
 	{
 		try
 		{
+			getClient().getActiveChar();
 			writeImpl();
+			writeImpl(getClient());
 		}
 		catch(Throwable t)
 		{
-			_log.severe("Client: " + getClient().toString() + " - Failed writing: " + getType() + " - L2J Server Version: " + Config.SERVER_VERSION + " - DP Revision: " + Config.DATAPACK_VERSION);
+			_log.fatal("Client: " + getClient().toString() + " - Failed writing: " + getType() + " - L2J Server Version: " + Config.SERVER_VERSION + " - DP Revision: " + Config.DATAPACK_VERSION);
 			t.printStackTrace();
 		}
 	}
@@ -54,7 +55,9 @@ public abstract class L2GameServerPacket extends SendablePacket<L2GameClient>
 
 	}
 
-	protected abstract void writeImpl();
+	protected void writeImpl() {}
+
+	protected void writeImpl(L2GameClient client) {}
 
 	/**
 	 * @return A String with this packet name for debuging purposes

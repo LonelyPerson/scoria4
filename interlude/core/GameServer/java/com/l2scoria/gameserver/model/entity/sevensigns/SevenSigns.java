@@ -17,16 +17,6 @@
  */
 package com.l2scoria.gameserver.model.entity.sevensigns;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Calendar;
-import java.util.Map;
-import java.util.logging.Logger;
-
-import javolution.util.FastMap;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.csv.MapRegionTable;
 import com.l2scoria.gameserver.managers.CastleManager;
@@ -41,6 +31,15 @@ import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
 import com.l2scoria.gameserver.templates.StatsSet;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.util.database.L2DatabaseFactory;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.Map;
 
 /**
  * Seven Signs Engine TODO: - Implementation of the Seal of Strife for sieges.
@@ -152,7 +151,7 @@ public class SevenSigns
 		}
 		catch(Exception e)
 		{
-			_log.severe("SevenSigns: Failed to load configuration: " + e);
+			_log.fatal("SevenSigns: Failed to load configuration: " + e);
 		}
 
 		_log.info("SevenSigns: Currently in the " + getCurrentPeriodName() + " period!");
@@ -774,7 +773,7 @@ public class SevenSigns
 		}
 		catch(SQLException e)
 		{
-			_log.severe("SevenSigns: Unable to load Seven Signs data from database: " + e);
+			_log.fatal("SevenSigns: Unable to load Seven Signs data from database: " + e);
 		}
 		finally
 		{
@@ -888,7 +887,7 @@ public class SevenSigns
 		}
 		catch(SQLException e)
 		{
-			_log.severe("SevenSigns: Unable to save data to database: " + e);
+			_log.fatal("SevenSigns: Unable to save data to database: " + e);
 		}
 		finally
 		{
@@ -993,7 +992,7 @@ public class SevenSigns
 			}
 			catch(SQLException e)
 			{
-				_log.severe("SevenSigns: Failed to save data: " + e);
+				_log.fatal("SevenSigns: Failed to save data: " + e);
 			}
 			finally
 			{

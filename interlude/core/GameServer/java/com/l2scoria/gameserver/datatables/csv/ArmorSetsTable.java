@@ -18,19 +18,13 @@
  */
 package com.l2scoria.gameserver.datatables.csv;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.LineNumberReader;
-import java.util.StringTokenizer;
-import java.util.logging.Logger;
-
-import javolution.util.FastMap;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.model.L2ArmorSet;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
+
+import java.io.*;
+import java.util.StringTokenizer;
 
 /**
  * @author Luno
@@ -96,16 +90,16 @@ public class ArmorSetsTable
 				_armorSets.put(chest, new L2ArmorSet(chest, legs, head, gloves, feet, skill_id, shield, shield_skill_id, enchant6skill));
 			}
 
-			_log.config("ArmorSetsTable: Loaded " + _armorSets.size() + " armor sets.");
+			_log.info("ArmorSetsTable: Loaded " + _armorSets.size() + " armor sets.");
 
 		}
 		catch(FileNotFoundException e)
 		{
-			_log.warning("armorsets.csv is missing in data folder");
+			_log.warn("armorsets.csv is missing in data folder");
 		}
 		catch(IOException e0)
 		{
-			_log.warning("Error while creating table: " + e0.getMessage() + "\n" + e0);
+			_log.warn("Error while creating table: " + e0.getMessage() + "\n" + e0);
 		}
 		finally
 		{

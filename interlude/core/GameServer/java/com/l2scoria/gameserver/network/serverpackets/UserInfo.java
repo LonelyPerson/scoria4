@@ -254,10 +254,12 @@ public class UserInfo extends L2GameServerPacket
 		writeD(_activeChar.isGM() ? 1 : 0); // builder level
 
 		String title = _activeChar.getTitle();
+
 		if (_activeChar.getAppearance().getInvisible() && _activeChar.isGM())
 		{
 			title = "Invisible";
 		}
+
 		if (_activeChar.getPoly().isMorphed())
 		{
 			L2NpcTemplate polyObj = NpcTable.getInstance().getTemplate(_activeChar.getPoly().getPolyId());
@@ -266,7 +268,11 @@ public class UserInfo extends L2GameServerPacket
 				title += " - " + polyObj.name;
 			}
 		}
-		writeS(title);
+
+		if(_activeChar.isInFunEvent())
+			writeS(_activeChar._event.getTitle(_activeChar, _activeChar));
+		else
+			writeS(title);
 
 		writeD(_activeChar.getClanId());
 		writeD(_activeChar.getClanCrestId());
@@ -325,14 +331,21 @@ public class UserInfo extends L2GameServerPacket
 		writeD(_activeChar.GetFishx()); //fishing x
 		writeD(_activeChar.GetFishy()); //fishing y
 		writeD(_activeChar.GetFishz()); //fishing z
-		writeD(_activeChar.getAppearance().getNameColor());
+
+		if(_activeChar.isInFunEvent())
+			writeD(_activeChar._event.getCharNameColor(_activeChar, _activeChar));
+		else
+			writeD(_activeChar.getAppearance().getNameColor());
 
 		writeC(_activeChar.isRunning() ? 0x01 : 0x00); //changes the Speed display on Status Window
 
 		writeD(_activeChar.getPledgeClass()); //changes the text above CP on Status Window
 		writeD(_activeChar.getPledgeType()); // TODO: PLEDGE TYPE
 
-		writeD(_activeChar.getAppearance().getTitleColor());
+		if(_activeChar.isInFunEvent())
+			writeD(_activeChar._event.getCharTitleColor(_activeChar, _activeChar));
+		else
+			writeD(_activeChar.getAppearance().getTitleColor());
 
 		if (_activeChar.isCursedWeaponEquiped())
 		{

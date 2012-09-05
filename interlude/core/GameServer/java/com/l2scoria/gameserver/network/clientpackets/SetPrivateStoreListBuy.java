@@ -18,8 +18,6 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.model.TradeList;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
@@ -28,6 +26,7 @@ import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
 import com.l2scoria.gameserver.network.serverpackets.PrivateStoreManageListBuy;
 import com.l2scoria.gameserver.network.serverpackets.PrivateStoreMsgBuy;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
+import org.apache.log4j.Logger;
 
 /**
  * This class ...

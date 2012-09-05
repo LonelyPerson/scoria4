@@ -14,13 +14,13 @@
  */
 package com.l2scoria.gameserver.network.serverpackets;
 
-import java.util.Calendar;
-import java.util.logging.Logger;
-
 import com.l2scoria.gameserver.datatables.sql.ClanTable;
 import com.l2scoria.gameserver.model.L2Clan;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.entity.siege.Fort;
+import org.apache.log4j.Logger;
+
+import java.util.Calendar;
 
 /**
  * Shows the Siege Info<BR>
@@ -76,7 +76,7 @@ public class FortressSiegeInfo extends L2GameServerPacket
 			}
 			else
 			{
-				_log.warning("Null owner for fort: " + _fort.getName());
+				_log.warn("Null owner for fort: " + _fort.getName());
 			}
 		}
 		else

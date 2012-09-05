@@ -21,27 +21,8 @@ package com.l2scoria.gameserver.network.clientpackets;
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.L2Object;
 import com.l2scoria.gameserver.model.L2Summon;
-import com.l2scoria.gameserver.model.actor.instance.L2BoatInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2DoorInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2NpcInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2PetInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2StaticObjectInstance;
-import com.l2scoria.gameserver.network.serverpackets.CharInfo;
-import com.l2scoria.gameserver.network.serverpackets.CustomNpcInfo;
-import com.l2scoria.gameserver.network.serverpackets.DoorInfo;
-import com.l2scoria.gameserver.network.serverpackets.DoorStatusUpdate;
-import com.l2scoria.gameserver.network.serverpackets.GetOnVehicle;
-import com.l2scoria.gameserver.network.serverpackets.NpcInfo;
-import com.l2scoria.gameserver.network.serverpackets.PetInfo;
-import com.l2scoria.gameserver.network.serverpackets.PetItemList;
-import com.l2scoria.gameserver.network.serverpackets.RelationChanged;
-import com.l2scoria.gameserver.network.serverpackets.SpawnItem;
-import com.l2scoria.gameserver.network.serverpackets.SpawnItemPoly;
-import com.l2scoria.gameserver.network.serverpackets.StaticObject;
-import com.l2scoria.gameserver.network.serverpackets.UserInfo;
-import com.l2scoria.gameserver.network.serverpackets.VehicleInfo;
+import com.l2scoria.gameserver.model.actor.instance.*;
+import com.l2scoria.gameserver.network.serverpackets.*;
 import com.l2scoria.gameserver.thread.TaskPriority;
 
 public class RequestRecordInfo extends L2GameClientPacket
@@ -90,7 +71,7 @@ public class RequestRecordInfo extends L2GameClientPacket
 				}
 				else if(object instanceof L2DoorInstance)
 				{
-					_activeChar.sendPacket(new DoorInfo((L2DoorInstance) object, false));
+					_activeChar.sendPacket(new DoorInfo((L2DoorInstance) object));
 					_activeChar.sendPacket(new DoorStatusUpdate((L2DoorInstance) object));
 				}
 				else if(object instanceof L2BoatInstance)

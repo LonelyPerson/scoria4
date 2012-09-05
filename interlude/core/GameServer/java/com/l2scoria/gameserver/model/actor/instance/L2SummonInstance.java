@@ -18,9 +18,6 @@
  */
 package com.l2scoria.gameserver.model.actor.instance;
 
-import java.util.concurrent.Future;
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.L2Object;
@@ -31,6 +28,9 @@ import com.l2scoria.gameserver.network.serverpackets.SetSummonRemainTime;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
 import com.l2scoria.gameserver.templates.L2NpcTemplate;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
+import org.apache.log4j.Logger;
+
+import java.util.concurrent.Future;
 
 public class L2SummonInstance extends L2Summon
 {
@@ -95,12 +95,12 @@ public class L2SummonInstance extends L2Summon
 
 		if(Config.DEBUG && _itemConsumeCount != 0)
 		{
-			_log.warning("L2SummonInstance: Item Consume ID: " + _itemConsumeId + ", Count: " + _itemConsumeCount + ", Rate: " + _itemConsumeSteps + " times.");
+			_log.warn("L2SummonInstance: Item Consume ID: " + _itemConsumeId + ", Count: " + _itemConsumeCount + ", Rate: " + _itemConsumeSteps + " times.");
 		}
 
 		if(Config.DEBUG)
 		{
-			_log.warning("L2SummonInstance: Task Delay " + delay / 1000 + " seconds.");
+			_log.warn("L2SummonInstance: Task Delay " + delay / 1000 + " seconds.");
 		}
 
 		_summonLifeTask = ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(new SummonLifetime(getOwner(), this), delay, delay);
@@ -215,7 +215,7 @@ public class L2SummonInstance extends L2Summon
 
 		if(Config.DEBUG)
 		{
-			_log.warning("L2SummonInstance: " + getTemplate().name + " (" + getOwner().getName() + ") has been killed.");
+			_log.warn("L2SummonInstance: " + getTemplate().name + " (" + getOwner().getName() + ") has been killed.");
 		}
 
 		if(_summonLifeTask != null)
@@ -263,7 +263,7 @@ public class L2SummonInstance extends L2Summon
 		{
 			if(Config.DEBUG)
 			{
-				log.warning("L2SummonInstance: " + _summon.getTemplate().name + " (" + _activeChar.getName() + ") run task.");
+				log.warn("L2SummonInstance: " + _summon.getTemplate().name + " (" + _activeChar.getName() + ") run task.");
 			}
 
 			try
@@ -310,7 +310,7 @@ public class L2SummonInstance extends L2Summon
 			{
 				if(Config.DEBUG)
 				{
-					log.warning("Summon of player [#" + _activeChar.getName() + "] has encountered item consumption errors: " + e);
+					log.warn("Summon of player [#" + _activeChar.getName() + "] has encountered item consumption errors: " + e);
 				}
 			}
 		}
@@ -321,7 +321,7 @@ public class L2SummonInstance extends L2Summon
 	{
 		if(Config.DEBUG)
 		{
-			_log.warning("L2SummonInstance: " + getTemplate().name + " (" + owner.getName() + ") unsummoned.");
+			_log.warn("L2SummonInstance: " + getTemplate().name + " (" + owner.getName() + ") unsummoned.");
 		}
 
 		if(_summonLifeTask != null)
@@ -344,7 +344,7 @@ public class L2SummonInstance extends L2Summon
 	{
 		if(Config.DEBUG)
 		{
-			_log.warning("L2SummonInstance: " + getTemplate().name + " (" + getOwner().getName() + ") consume.");
+			_log.warn("L2SummonInstance: " + getTemplate().name + " (" + getOwner().getName() + ") consume.");
 		}
 
 		return getOwner().destroyItemByItemId(process, itemId, count, reference, sendMessage);
@@ -374,5 +374,11 @@ public class L2SummonInstance extends L2Summon
 			getOwner().sendPacket(sm);
 			sm = null;
 		}
+	}
+
+	@Override
+	public final L2PcInstance getActingPlayer()
+	{
+		return getOwner();
 	}
 }

@@ -25,6 +25,7 @@ import com.l2scoria.gameserver.model.Inventory;
 import com.l2scoria.gameserver.model.L2Summon;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.SystemMessageId;
+import com.l2scoria.gameserver.network.clientpackets.RequestActionUse;
 import com.l2scoria.gameserver.network.serverpackets.Ride;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
 import com.l2scoria.gameserver.util.Broadcast;
@@ -90,6 +91,11 @@ public class Mount implements IUserCommandHandler
 			}
 			else if(!pet.isDead() && !activeChar.isMounted())
 			{
+				if (activeChar._event!=null && !activeChar._event.canDoAction(activeChar, RequestActionUse.ACTION_MOUNT))
+				{
+					return false;
+				}
+
 				if(!activeChar.disarmWeapons())
 					return false;
 

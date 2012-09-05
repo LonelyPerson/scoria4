@@ -18,34 +18,19 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.Map;
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
-import com.l2scoria.gameserver.ai.L2SummonAI;
 import com.l2scoria.gameserver.ai.CtrlIntention;
+import com.l2scoria.gameserver.ai.L2SummonAI;
 import com.l2scoria.gameserver.datatables.SkillTable;
 import com.l2scoria.gameserver.managers.CastleManager;
-import com.l2scoria.gameserver.model.Inventory;
-import com.l2scoria.gameserver.model.L2Character;
-import com.l2scoria.gameserver.model.L2ManufactureList;
-import com.l2scoria.gameserver.model.L2Object;
-import com.l2scoria.gameserver.model.L2Skill;
-import com.l2scoria.gameserver.model.L2Summon;
-import com.l2scoria.gameserver.model.actor.instance.L2DoorInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2PetInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2SiegeFlagInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2SiegeSummonInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2StaticObjectInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2SummonInstance;
+import com.l2scoria.gameserver.model.*;
+import com.l2scoria.gameserver.model.actor.instance.*;
 import com.l2scoria.gameserver.model.actor.position.L2CharPosition;
 import com.l2scoria.gameserver.network.SystemMessageId;
-import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
-import com.l2scoria.gameserver.network.serverpackets.ChairSit;
-import com.l2scoria.gameserver.network.serverpackets.RecipeShopManageList;
-import com.l2scoria.gameserver.network.serverpackets.Ride;
-import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
+import com.l2scoria.gameserver.network.serverpackets.*;
+import org.apache.log4j.Logger;
+
+import java.util.Map;
 
 /**
  * This class ...
@@ -56,6 +41,9 @@ public final class RequestActionUse extends L2GameClientPacket
 {
 	private static final String _C__45_REQUESTACTIONUSE = "[C] 45 RequestActionUse";
 	private static Logger _log = Logger.getLogger(RequestActionUse.class.getName());
+
+	public static final int ACTION_SIT_STAND = 0;
+	public static final int ACTION_MOUNT = 38;
 
 	private int _actionId;
 	private boolean _ctrlPressed;
@@ -79,7 +67,7 @@ public final class RequestActionUse extends L2GameClientPacket
 
 		if(Config.DEBUG)
 		{
-			_log.finest(activeChar.getName() + " request Action use: id " + _actionId + " 2:" + _ctrlPressed + " 3:" + _shiftPressed);
+			_log.info(activeChar.getName() + " request Action use: id " + _actionId + " 2:" + _ctrlPressed + " 3:" + _shiftPressed);
 		}
 
 		// dont do anything if player is dead
@@ -139,7 +127,7 @@ public final class RequestActionUse extends L2GameClientPacket
 
 				if(Config.DEBUG)
 				{
-					_log.fine("new wait type: " + (activeChar.isSitting() ? "SITTING" : "STANDING"));
+					_log.info("new wait type: " + (activeChar.isSitting() ? "SITTING" : "STANDING"));
 				}
 
 				break;
@@ -155,7 +143,7 @@ public final class RequestActionUse extends L2GameClientPacket
 
 				if(Config.DEBUG)
 				{
-					_log.fine("new move type: " + (activeChar.isRunning() ? "RUNNING" : "WALKIN"));
+					_log.info("new move type: " + (activeChar.isRunning() ? "RUNNING" : "WALKIN"));
 				}
 				break;
 			case 15:
@@ -293,6 +281,11 @@ public final class RequestActionUse extends L2GameClientPacket
 					}
 					else if(!pet.isDead() && !activeChar.isMounted())
 					{
+						if (activeChar._event!=null && !activeChar._event.canDoAction(activeChar, RequestActionUse.ACTION_MOUNT))
+						{
+							return;
+						}
+
 						if(!activeChar.disarmWeapons())
 							return;
 
@@ -560,7 +553,7 @@ public final class RequestActionUse extends L2GameClientPacket
 				}
 				break;
 			default:
-				_log.warning(activeChar.getName() + ": unhandled action type " + _actionId);
+				_log.warn(activeChar.getName() + ": unhandled action type " + _actionId);
 		}
 	}
 
@@ -602,7 +595,7 @@ public final class RequestActionUse extends L2GameClientPacket
 			{
 				if(Config.DEBUG)
 				{
-					_log.warning("Skill " + skillId + " missing from npcskills.sql for a summon id " + activeSummon.getNpcId());
+					_log.warn("Skill " + skillId + " missing from npcskills.sql for a summon id " + activeSummon.getNpcId());
 				}
 				return;
 			}

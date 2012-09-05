@@ -17,13 +17,13 @@
  */
 package com.l2scoria.gameserver.model.entity.siege;
 
+import com.l2scoria.util.database.L2DatabaseFactory;
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Calendar;
-import java.util.logging.Logger;
-
-import java.sql.Connection;
-import com.l2scoria.util.database.L2DatabaseFactory;
 
 /**
  * @author: MHard - L2EmuRT DevTeam
@@ -56,7 +56,7 @@ public abstract class ClanHallSiege
 		}
 		catch(Exception e)
 		{
-			_log.warning("Exception: can't get clanhall siege date: ");
+			_log.warn("Exception: can't get clanhall siege date: ");
 			e.printStackTrace();
 		}
 		finally
@@ -92,7 +92,7 @@ public abstract class ClanHallSiege
 			}
 			catch(Exception e)
 			{
-				_log.warning("Exception: can't save clanhall siege date: ");
+				_log.warn("Exception: can't save clanhall siege date: ");
 				e.printStackTrace();
 			}
 			finally

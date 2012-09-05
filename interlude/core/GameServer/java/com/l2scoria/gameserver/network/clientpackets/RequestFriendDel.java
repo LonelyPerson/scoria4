@@ -18,11 +18,6 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.l2scoria.gameserver.datatables.sql.CharNameTable;
 import com.l2scoria.gameserver.model.L2World;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
@@ -30,6 +25,10 @@ import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.FriendPacket;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
 import com.l2scoria.util.database.L2DatabaseFactory;
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 
 /**
  * This class ...
@@ -114,7 +113,7 @@ public final class RequestFriendDel extends L2GameClientPacket
 		}
 		catch(Exception e)
 		{
-			_log.log(Level.WARNING, "could not del friend objectid: ", e);
+			_log.warn("could not del friend objectid: ", e);
 		}
 		finally
 		{

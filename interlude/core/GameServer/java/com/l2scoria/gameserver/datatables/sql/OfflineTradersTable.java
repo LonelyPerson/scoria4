@@ -18,13 +18,6 @@
  */
 package com.l2scoria.gameserver.datatables.sql;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.Calendar;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.model.L2ManufactureItem;
 import com.l2scoria.gameserver.model.L2ManufactureList;
@@ -35,6 +28,12 @@ import com.l2scoria.gameserver.network.L2GameClient;
 import com.l2scoria.gameserver.network.L2GameClient.GameClientState;
 import com.l2scoria.gameserver.thread.LoginServerThread;
 import com.l2scoria.util.database.L2DatabaseFactory;
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.Calendar;
 
 public class OfflineTradersTable
 {
@@ -130,7 +129,7 @@ public class OfflineTradersTable
 					}
 				}
 				catch (Exception e) {
-					_log.log(Level.WARNING, "OfflineTradersTable[storeTradeItems()]: Error while saving offline trader: " + pc.getObjectId() + " " + e, e);
+					_log.warn("OfflineTradersTable[storeTradeItems()]: Error while saving offline trader: " + pc.getObjectId() + " " + e, e);
 				}
 			}
 			stm.close();
@@ -138,7 +137,7 @@ public class OfflineTradersTable
 			_log.info("Offline traders stored.");
 		}
 		catch (Exception e) {
-			_log.log(Level.WARNING, "OfflineTradersTable[storeTradeItems()]: Error while saving offline traders: " + e, e);
+			_log.warn("OfflineTradersTable[storeTradeItems()]: Error while saving offline traders: " + e, e);
 		}
 		finally
 		{
@@ -236,7 +235,7 @@ public class OfflineTradersTable
 				}
 				catch (Exception e)
 				{
-					_log.log(Level.WARNING, "OfflineTradersTable[loadOffliners()]: Error loading trader: ", e);
+					_log.warn("OfflineTradersTable[loadOffliners()]: Error loading trader: ", e);
 					if (player != null)
 						player.logout();
 				}
@@ -253,7 +252,7 @@ public class OfflineTradersTable
 		}
 		catch (Exception e)
 		{
-			_log.log(Level.WARNING, "OfflineTradersTable[loadOffliners()]: Error while loading offline traders: ", e);
+			_log.warn("OfflineTradersTable[loadOffliners()]: Error while loading offline traders: ", e);
 		}
 		finally
 		{

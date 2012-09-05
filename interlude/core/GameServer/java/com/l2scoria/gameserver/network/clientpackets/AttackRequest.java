@@ -18,13 +18,12 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.L2Object;
 import com.l2scoria.gameserver.model.L2World;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
+import org.apache.log4j.Logger;
 
 /**
  * This class ...
@@ -105,7 +104,7 @@ public final class AttackRequest extends L2GameClientPacket
 						break;
 					default:
 						// Ivalid action detected (probably client cheating), log this
-						_log.warning("Character: " + activeChar.getName() + " requested invalid action: " + _attackId);
+						_log.warn("Character: " + activeChar.getName() + " requested invalid action: " + _attackId);
 						getClient().sendPacket(ActionFailed.STATIC_PACKET);
 						break;
 				}

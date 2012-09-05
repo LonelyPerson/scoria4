@@ -18,7 +18,6 @@
  */
 package com.l2scoria;
 
-import com.l2scoria.gameserver.geodata.PathFindBuffers;
 import com.l2scoria.gameserver.services.FService;
 import com.l2scoria.gameserver.services.Instruments;
 import javolution.util.FastList;
@@ -100,11 +99,16 @@ public final class Config
 		}
 	}
 
+	public static enum ChatMode
+	{
+		GLOBAL, REGION, GM, OFF
+	}
+
 	//============================================================
 	public static boolean CHECK_KNOWN;
 
-	public static String DEFAULT_GLOBAL_CHAT;
-	public static String DEFAULT_TRADE_CHAT;
+	public static ChatMode DEFAULT_GLOBAL_CHAT;
+	public static ChatMode DEFAULT_TRADE_CHAT;
 	public static int MAX_CHAT_LENGTH;
 	public static boolean TRADE_CHAT_IS_NOOBLE;
 	public static boolean PRECISE_DROP_CALCULATION;
@@ -112,8 +116,8 @@ public final class Config
 	public static int COORD_SYNCHRONIZE;
 	public static int DELETE_DAYS;
 	public static int MAX_DRIFT_RANGE;
-        public static int MAX_FOLLOW_DRIFT_RANGE;
-        public static boolean ON_DRIFT_MAX_RANGE_TELEPORT;
+    public static int MAX_FOLLOW_DRIFT_RANGE;
+    public static boolean ON_DRIFT_MAX_RANGE_TELEPORT;
 	public static boolean ALLOWFISHING;
 	public static boolean ALLOW_MANOR;
 	public static int AUTODESTROY_ITEM_AFTER;
@@ -222,8 +226,10 @@ public final class Config
 			ALLOW_CURSED_WEAPONS = Boolean.valueOf(optionsSettings.getProperty("AllowCursedWeapons", "False"));
 
 			ALLOW_USE_CURSOR_FOR_WALK = Boolean.valueOf(optionsSettings.getProperty("AllowUseCursorForWalk", "False"));
-			DEFAULT_GLOBAL_CHAT = optionsSettings.getProperty("GlobalChat", "ON");
-			DEFAULT_TRADE_CHAT = optionsSettings.getProperty("TradeChat", "ON");
+
+			DEFAULT_GLOBAL_CHAT = ChatMode.valueOf(optionsSettings.getProperty("GlobalChat", "REGION").toUpperCase());
+			DEFAULT_TRADE_CHAT = ChatMode.valueOf(optionsSettings.getProperty("TradeChat", "REGION").toUpperCase());
+
 			MAX_CHAT_LENGTH = Integer.parseInt(optionsSettings.getProperty("MaxChatLength", "100"));
 			TRADE_CHAT_IS_NOOBLE = Boolean.valueOf(optionsSettings.getProperty("TradeChatIsNooble", "false"));
 
@@ -289,116 +295,15 @@ public final class Config
 		}
 	}
         
-        	//================================================================
+    //================================================================
 	/**
 	 * Fun_event configuration load
 	 */
 	//================================================================
-	public static boolean CTF_AUTO_MODE;
-	public static int CTF_TEAMS_NUM;
-	public static int CTF_PLAYER_LEVEL_MIN;
-	public static int CTF_PLAYER_LEVEL_MAX;
-	public static boolean CTF_ALLOW_INTERFERENCE;
-	public static boolean CTF_ALLOW_POTIONS;
-	public static boolean CTF_ALLOW_SUMMON;
-	public static boolean CTF_ALLOW_SCROLL;
-	public static boolean CTF_ON_START_REMOVE_ALL_EFFECTS;
-	public static boolean CTF_ON_START_UNSUMMON_PET;
-	public static boolean CTF_ALLOW_ENEMY_HEALING;
-	public static boolean CTF_ALLOW_TEAM_CASTING;
-	public static boolean CTF_ALLOW_TEAM_ATTACKING;
-	public static boolean CTF_JOIN_CURSED;
-	public static boolean CTF_PRICE_NO_KILLS;
-	public static boolean CTF_AURA;
-	public static String CTF_EVEN_TEAMS;
-	public static boolean CTF_ANNOUNCE_REWARD;
-	public static String[] CTF_REWARD;
-	public static String[] CTF_REWARD_TOP;
-	public static String[] CTF_EVENT_INTERVAL;
-	public static String[] CTF_NPC_LOC;
-	public static int CTF_NPC_X;
-	public static int CTF_NPC_Y;
-	public static int CTF_NPC_Z;
-	public static String CTF_NPC_LOC_NAME;
-	public static String[] CTF_DEAD_LOC;
-	public static int CTF_DEAD_X;
-	public static int CTF_DEAD_Y;
-	public static int CTF_DEAD_Z;
-	public static int CTF_RES_TIME;
-	public static int CTF_MIN_PLAYERS;
-	public static int CTF_FIGHT_TIME;
-	public static int CTF_COUNTDOWN_TIME;
-	public static ArrayList<Integer> CTF_DOORS_TO_CLOSE = new ArrayList<Integer>();
-	public static ArrayList<Integer> CTF_DOORS_TO_OPEN = new ArrayList<Integer>();
-	public static boolean BW_AUTO_MODE;
-	public static int BW_TEAMS_NUM;
-	public static int BW_PLAYER_LEVEL_MIN;
-	public static int BW_PLAYER_LEVEL_MAX;
-	public static boolean BW_ALLOW_INTERFERENCE;
-	public static boolean BW_ALLOW_POTIONS;
-	public static boolean BW_ALLOW_SUMMON;
-	public static boolean BW_ALLOW_SCROLL;
-	public static boolean BW_ON_START_REMOVE_ALL_EFFECTS;
-	public static boolean BW_ON_START_UNSUMMON_PET;
-	public static boolean BW_ALLOW_ENEMY_HEALING;
-	public static boolean BW_ALLOW_TEAM_CASTING;
-	public static boolean BW_ALLOW_TEAM_ATTACKING;
-	public static boolean BW_JOIN_CURSED;
-	public static boolean BW_PRICE_NO_KILLS;
-	public static boolean BW_AURA;
-	public static String BW_EVEN_TEAMS;
-	public static boolean BW_ANNOUNCE_REWARD;
-	public static String[] BW_REWARD;
-	public static String[] BW_REWARD_TOP;
-	public static String[] BW_EVENT_INTERVAL;
-	public static String[] BW_NPC_LOC;
-	public static int BW_NPC_X;
-	public static int BW_NPC_Y;
-	public static int BW_NPC_Z;
-	public static String BW_NPC_LOC_NAME;
-	public static String[] BW_DEAD_LOC;
-	public static int BW_DEAD_X;
-	public static int BW_DEAD_Y;
-	public static int BW_DEAD_Z;
-	public static int BW_RES_TIME;
-	public static int BW_MIN_PLAYERS;
-	public static int BW_FIGHT_TIME;
-	public static int BW_COUNTDOWN_TIME;
-	public static ArrayList<Integer> BW_DOORS_TO_CLOSE = new ArrayList<Integer>();
-	public static ArrayList<Integer> BW_DOORS_TO_OPEN = new ArrayList<Integer>();
-	public static boolean DM_AUTO_MODE;
-	public static int DM_PLAYER_LEVEL_MIN;
-	public static int DM_PLAYER_LEVEL_MAX;
-	public static boolean DM_ALLOW_INTERFERENCE;
-	public static boolean DM_ALLOW_POTIONS;
-	public static boolean DM_ALLOW_SUMMON;
-	public static boolean DM_ALLOW_SCROLL;
-	public static boolean DM_ON_START_REMOVE_ALL_EFFECTS;
-	public static boolean DM_ON_START_UNSUMMON_PET;
-	public static boolean DM_ALLOW_ENEMY_HEALING;
-	public static boolean DM_ALLOW_TEAM_CASTING;
-	public static boolean DM_ALLOW_TEAM_ATTACKING;
-	public static boolean DM_JOIN_CURSED;
-	public static String DM_EVEN_TEAMS;
-	public static boolean DM_ANNOUNCE_REWARD;
-	public static String[] DM_REWARD;
-	public static String[] DM_EVENT_INTERVAL;
-	public static String[] DM_NPC_LOC;
-	public static int DM_NPC_X;
-	public static int DM_NPC_Y;
-	public static int DM_NPC_Z;
-	public static String DM_NPC_LOC_NAME;
-	public static int DM_MIN_PLAYERS;
-	public static int DM_FIGHT_TIME;
-	public static int DM_COUNTDOWN_TIME;
-	public static String[] DM_START_LOC;
-	public static int DM_START_LOC_X;
-	public static int DM_START_LOC_Y;
-	public static int DM_START_LOC_Z;
-	public static ArrayList<Integer> DM_DOORS_TO_CLOSE = new ArrayList<Integer>();
-	public static ArrayList<Integer> DM_DOORS_TO_OPEN = new ArrayList<Integer>();
-	public static boolean EVENT_SHOW_JOIN_DIALOG;
-	
+
+	public static boolean		Allow_Same_HWID_On_Events;
+	public static boolean		Allow_Same_IP_On_Events;
+
 	public static void loadFunEvents()
 	{
 		final String FUNEVENT_FILE = FService.FUN_EVENT;
@@ -410,136 +315,8 @@ public final class Config
 			funevSettings.load(is);
 			is.close();
 
-			CTF_AUTO_MODE = Boolean.parseBoolean(funevSettings.getProperty("CTFAutoMode", "false"));
-			CTF_TEAMS_NUM = Integer.parseInt(funevSettings.getProperty("CTFTeamsNum", "2"));
-			CTF_PLAYER_LEVEL_MIN = Integer.parseInt(funevSettings.getProperty("CTFPlayerLevelMin", "1"));
-			CTF_PLAYER_LEVEL_MAX = Integer.parseInt(funevSettings.getProperty("CTFPlayerLevelMax", "80"));
-			CTF_ALLOW_INTERFERENCE = Boolean.parseBoolean(funevSettings.getProperty("CTFAllowInterference", "false"));
-			CTF_ALLOW_POTIONS = Boolean.parseBoolean(funevSettings.getProperty("CTFAllowPotions", "false"));
-			CTF_ALLOW_SUMMON = Boolean.parseBoolean(funevSettings.getProperty("CTFAllowSummon", "false"));
-			CTF_ALLOW_SCROLL = Boolean.parseBoolean(funevSettings.getProperty("CTFAllowScrolls", "false"));
-			CTF_ON_START_REMOVE_ALL_EFFECTS = Boolean.parseBoolean(funevSettings.getProperty("CTFOnStartRemoveAllEffects", "true"));
-			CTF_ON_START_UNSUMMON_PET = Boolean.parseBoolean(funevSettings.getProperty("CTFOnStartUnsummonPet", "true"));
-			CTF_ALLOW_ENEMY_HEALING = Boolean.parseBoolean(funevSettings.getProperty("CTFAllowEnemyHealing", "false"));
-			CTF_ALLOW_TEAM_CASTING = Boolean.parseBoolean(funevSettings.getProperty("CTFAllowTeamBuff", "false"));
-			CTF_ALLOW_TEAM_ATTACKING = Boolean.parseBoolean(funevSettings.getProperty("CTFAllowTeamAttacking", "false"));
-			CTF_JOIN_CURSED = Boolean.parseBoolean(funevSettings.getProperty("CTFJoinWithCursedWeapon", "true"));
-			CTF_PRICE_NO_KILLS = Boolean.parseBoolean(funevSettings.getProperty("CTFPriceNoKills", "false"));
-			CTF_AURA = Boolean.parseBoolean(funevSettings.getProperty("CTFAura", "true"));
-			CTF_EVEN_TEAMS = funevSettings.getProperty("CTFEvenTeams", "SHUFFLE");
-			CTF_REWARD = funevSettings.getProperty("CTFReward", "57:1000").split(";");
-			CTF_REWARD_TOP = funevSettings.getProperty("CTFRewardTop", "57:1000").split(";");
-			CTF_ANNOUNCE_REWARD = Boolean.parseBoolean(funevSettings.getProperty("CTFAnnounceReward", "false"));
-			CTF_EVENT_INTERVAL = funevSettings.getProperty("CTFEventInterval", "20:00").split(",");
-			CTF_NPC_LOC = funevSettings.getProperty("CTFNpcLoc", "147711,-55236,-2737").split(",");
-			CTF_NPC_X = Integer.parseInt(CTF_NPC_LOC[0]);
-			CTF_NPC_Y = Integer.parseInt(CTF_NPC_LOC[1]);
-			CTF_NPC_Z = Integer.parseInt(CTF_NPC_LOC[2]);
-			CTF_NPC_LOC_NAME = funevSettings.getProperty("CTFNpcLocName", "Goddard Town");
-			CTF_DEAD_LOC = funevSettings.getProperty("CTFDeadLoc", "147711,-55236,-2737").split(",");
-			CTF_DEAD_X = Integer.parseInt(CTF_DEAD_LOC[0]);
-			CTF_DEAD_Y = Integer.parseInt(CTF_DEAD_LOC[1]);
-			CTF_DEAD_Z = Integer.parseInt(CTF_DEAD_LOC[2]);
-			CTF_RES_TIME = Integer.parseInt(funevSettings.getProperty("CTFResTime", "1"));
-			CTF_MIN_PLAYERS = Integer.parseInt(funevSettings.getProperty("CTFMinPlayers", "4"));
-			CTF_FIGHT_TIME = Integer.parseInt(funevSettings.getProperty("CTFFightTime", "10"));
-			CTF_COUNTDOWN_TIME = Integer.parseInt(funevSettings.getProperty("CTFCountDownTime", "30"));
-			String[] CTFdoorsToClose = funevSettings.getProperty("CTFDoorsToClose", "").split(",");
-			for (int i = 0; i < CTFdoorsToClose.length; i++)
-			{
-				CTF_DOORS_TO_CLOSE.add(Integer.parseInt(CTFdoorsToClose[i]));
-			}
-			String[] CTFdoorsToOpen = funevSettings.getProperty("CTFDoorsToOpen", "").split(",");
-			for (int i = 0; i < CTFdoorsToOpen.length; i++)
-			{
-				CTF_DOORS_TO_OPEN.add(Integer.parseInt(CTFdoorsToOpen[i]));
-			}
-
-			DM_AUTO_MODE = Boolean.parseBoolean(funevSettings.getProperty("DMAutoMode", "false"));
-			DM_PLAYER_LEVEL_MIN = Integer.parseInt(funevSettings.getProperty("DMPlayerLevelMin", "1"));
-			DM_PLAYER_LEVEL_MAX = Integer.parseInt(funevSettings.getProperty("DMPlayerLevelMax", "80"));
-			DM_ALLOW_INTERFERENCE = Boolean.parseBoolean(funevSettings.getProperty("DMAllowInterference", "false"));
-			DM_ALLOW_POTIONS = Boolean.parseBoolean(funevSettings.getProperty("DMAllowPotions", "false"));
-			DM_ALLOW_SUMMON = Boolean.parseBoolean(funevSettings.getProperty("DMAllowSummon", "false"));
-			DM_ALLOW_SCROLL = Boolean.parseBoolean(funevSettings.getProperty("DMAllowScrolls", "false"));
-			DM_ON_START_REMOVE_ALL_EFFECTS = Boolean.parseBoolean(funevSettings.getProperty("DMOnStartRemoveAllEffects", "true"));
-			DM_ON_START_UNSUMMON_PET = Boolean.parseBoolean(funevSettings.getProperty("DMOnStartUnsummonPet", "true"));
-			DM_ALLOW_ENEMY_HEALING = Boolean.parseBoolean(funevSettings.getProperty("DMAllowEnemyHealing", "false"));
-			DM_ALLOW_TEAM_CASTING = Boolean.parseBoolean(funevSettings.getProperty("DMAllowTeamBuff", "false"));
-			DM_ALLOW_TEAM_ATTACKING = Boolean.parseBoolean(funevSettings.getProperty("DMAllowTeamAttacking", "false"));
-			DM_JOIN_CURSED = Boolean.parseBoolean(funevSettings.getProperty("DMJoinWithCursedWeapon", "true"));
-			DM_EVEN_TEAMS = "SHUFFLE";
-		
-			DM_REWARD = funevSettings.getProperty("DMReward", "57:1000").split(";");
-			DM_ANNOUNCE_REWARD = Boolean.parseBoolean(funevSettings.getProperty("DMAnnounceReward", "false"));
-			DM_EVENT_INTERVAL = funevSettings.getProperty("DMEventInterval", "20:00").split(",");
-			DM_NPC_LOC = funevSettings.getProperty("DMNpcLoc", "147711,-55236,-2737").split(",");
-			DM_NPC_X = Integer.parseInt(DM_NPC_LOC[0]);
-			DM_NPC_Y = Integer.parseInt(DM_NPC_LOC[1]);
-			DM_NPC_Z = Integer.parseInt(DM_NPC_LOC[2]);
-			DM_START_LOC = funevSettings.getProperty("DMStartLoc", "-77408,-50656,-10728").split(",");
-			DM_START_LOC_X = Integer.parseInt(DM_START_LOC[0]);
-			DM_START_LOC_Y = Integer.parseInt(DM_START_LOC[1]);
-			DM_START_LOC_Z = Integer.parseInt(DM_START_LOC[2]);
-			DM_NPC_LOC_NAME = funevSettings.getProperty("DMNpcLocName", "Goddard Town");
-			DM_MIN_PLAYERS = Integer.parseInt(funevSettings.getProperty("DMMinPlayers", "4"));
-			DM_FIGHT_TIME = Integer.parseInt(funevSettings.getProperty("DMFightTime", "10"));
-			DM_COUNTDOWN_TIME = Integer.parseInt(funevSettings.getProperty("DMCountDownTime", "30"));
-			String[] DMdoorsToClose = funevSettings.getProperty("DMDoorsToClose", "").split(",");
-			for(int i = 0; i < DMdoorsToClose.length; i ++)
-			{
-				DM_DOORS_TO_CLOSE.add(Integer.parseInt(DMdoorsToClose[i]));
-			}
-			String[] DMdoorsToOpen = funevSettings.getProperty("DMDoorsToOpen", "").split(",");
-			DMdoorsToOpen = funevSettings.getProperty("DMDoorsToOpen", "").split(",");
-			for(int i = 0; i < DMdoorsToOpen.length; i++)
-			{
-				DM_DOORS_TO_OPEN.add(Integer.parseInt(DMdoorsToOpen[i]));
-			}                       
-			BW_AUTO_MODE = Boolean.parseBoolean(funevSettings.getProperty("BWAutoMode", "false"));
-			BW_TEAMS_NUM = Integer.parseInt(funevSettings.getProperty("BWTeamsNum", "2"));
-			BW_PLAYER_LEVEL_MIN = Integer.parseInt(funevSettings.getProperty("BWPlayerLevelMin", "1"));
-			BW_PLAYER_LEVEL_MAX = Integer.parseInt(funevSettings.getProperty("BWPlayerLevelMax", "80"));
-			BW_ALLOW_INTERFERENCE = Boolean.parseBoolean(funevSettings.getProperty("BWAllowInterference", "false"));
-			BW_ALLOW_POTIONS = Boolean.parseBoolean(funevSettings.getProperty("BWAllowPotions", "false"));
-			BW_ALLOW_SUMMON = Boolean.parseBoolean(funevSettings.getProperty("BWAllowSummon", "false"));
-			BW_ALLOW_SCROLL = Boolean.parseBoolean(funevSettings.getProperty("BWAllowScrolls", "false"));
-			BW_ON_START_REMOVE_ALL_EFFECTS = Boolean.parseBoolean(funevSettings.getProperty("BWOnStartRemoveAllEffects", "true"));
-			BW_ON_START_UNSUMMON_PET = Boolean.parseBoolean(funevSettings.getProperty("BWOnStartUnsummonPet", "true"));
-			BW_ALLOW_ENEMY_HEALING = Boolean.parseBoolean(funevSettings.getProperty("BWAllowEnemyHealing", "false"));
-			BW_ALLOW_TEAM_CASTING = Boolean.parseBoolean(funevSettings.getProperty("BWAllowTeamBuff", "false"));
-			BW_ALLOW_TEAM_ATTACKING = Boolean.parseBoolean(funevSettings.getProperty("BWAllowTeamAttacking", "false"));
-			BW_JOIN_CURSED = Boolean.parseBoolean(funevSettings.getProperty("BWJoinWithCursedWeapon", "true"));
-			BW_PRICE_NO_KILLS = Boolean.parseBoolean(funevSettings.getProperty("BWPriceNoKills", "false"));
-			BW_AURA = Boolean.parseBoolean(funevSettings.getProperty("BWAura", "true"));
-			BW_EVEN_TEAMS = funevSettings.getProperty("BWEvenTeams", "SHUFFLE");
-			BW_REWARD = funevSettings.getProperty("BWReward", "57:1000").split(";");
-			BW_REWARD_TOP = funevSettings.getProperty("BWRewardTop", "57:1000").split(";");
-			BW_ANNOUNCE_REWARD = Boolean.parseBoolean(funevSettings.getProperty("BWAnnounceReward", "false"));
-			BW_EVENT_INTERVAL = funevSettings.getProperty("BWEventInterval", "20:00").split(",");
-			BW_NPC_LOC = funevSettings.getProperty("BWNpcLoc", "147711,-55236,-2737").split(",");
-			BW_NPC_X = Integer.parseInt(BW_NPC_LOC[0]);
-			BW_NPC_Y = Integer.parseInt(BW_NPC_LOC[1]);
-			BW_NPC_Z = Integer.parseInt(BW_NPC_LOC[2]);
-			BW_NPC_LOC_NAME = funevSettings.getProperty("BWNpcLocName", "Goddard Town");
-			BW_DEAD_LOC = funevSettings.getProperty("BWDeadLoc", "147711,-55236,-2737").split(",");
-			BW_DEAD_X = Integer.parseInt(BW_DEAD_LOC[0]);
-			BW_DEAD_Y = Integer.parseInt(BW_DEAD_LOC[1]);
-			BW_DEAD_Z = Integer.parseInt(BW_DEAD_LOC[2]);
-			BW_RES_TIME = Integer.parseInt(funevSettings.getProperty("BWResTime", "1"));
-			BW_MIN_PLAYERS = Integer.parseInt(funevSettings.getProperty("BWMinPlayers", "4"));
-			BW_FIGHT_TIME = Integer.parseInt(funevSettings.getProperty("BWFightTime", "10"));
-			BW_COUNTDOWN_TIME = Integer.parseInt(funevSettings.getProperty("BWCountDownTime", "30"));
-			String[] BWdoorsToClose = funevSettings.getProperty("BWDoorsToClose", "").split(",");
-			for(int i = 0; i < BWdoorsToClose.length; i++)
-			{
-				BW_DOORS_TO_CLOSE.add(Integer.parseInt(BWdoorsToClose[i]));
-			}
-			String[] BWdoorsToOpen = funevSettings.getProperty("BWDoorsToOpen", "").split(",");
-			for(int i = 0; i < BWdoorsToOpen.length; i++)
-			{
-				BW_DOORS_TO_OPEN.add(Integer.parseInt(BWdoorsToOpen[i]));
-			}
+			Allow_Same_HWID_On_Events = Boolean.parseBoolean(funevSettings.getProperty("SameHWIDOnEvents", "false"));
+			Allow_Same_IP_On_Events = Boolean.parseBoolean(funevSettings.getProperty("SameIPOnEvents", "true"));
 		}
 		catch(Exception e)
 		{
@@ -952,7 +729,7 @@ public final class Config
 					String[] skillSplit = skill.split(",");
 					if(skillSplit.length != 2)
 					{
-						System.out.println("[SkillDurationList]: invalid config property -> SkillDurationList \"" + skill + "\"");
+						_log.info("[SkillDurationList]: invalid config property -> SkillDurationList \"" + skill + "\"");
 					}
 					else
 					{
@@ -964,7 +741,7 @@ public final class Config
 						{
 							if(!skill.equals(""))
 							{
-								System.out.println("[SkillDurationList]: invalid config property -> SkillList \"" + skillSplit[0] + "\"" + skillSplit[1]);
+								_log.info("[SkillDurationList]: invalid config property -> SkillList \"" + skillSplit[0] + "\"" + skillSplit[1]);
 							}
 						}
 					}
@@ -980,13 +757,13 @@ public final class Config
                                 for(String spliter2 : spliter) {
                                     String[] potionskill = spliter2.split(",");
                                     if(potionskill.length != 2) {
-                                        System.out.println("[PotionSkillAttach]: bad protecties -> \"" + spliter2 + "\"");
+                                        _log.info("[PotionSkillAttach]: bad protecties -> \"" + spliter2 + "\"");
                                     } else {
                                         try {
                                             POTION_SKILL_ATTACH.put(Integer.parseInt(potionskill[0]), Integer.parseInt(potionskill[1]));
                                         } catch(NumberFormatException e) {
                                             if(!spliter2.equals("")) {
-                                                System.out.println("[PotionSkillAttachException]: invalid config props -> \"" + potionskill[0] + "\"" + potionskill[1]);
+                                                _log.info("[PotionSkillAttachException]: invalid config props -> \"" + potionskill[0] + "\"" + potionskill[1]);
                                             }
                                         }
                                     }
@@ -1053,7 +830,7 @@ public final class Config
 					String[] presentSplit = present.split(",");
 					if(presentSplit.length != 2)
 					{
-						System.out.println("[ChristmassPresents]: invalid config property -> ChristmassPresents \"" + present + "\"");
+						_log.info("[ChristmassPresents]: invalid config property -> ChristmassPresents \"" + present + "\"");
 					}
 					else
 					{
@@ -1065,7 +842,7 @@ public final class Config
 						{
 							if(!present.equals(""))
 							{
-								System.out.println("[ChristmassPresents]: invalid config property -> SkillList \"" + presentSplit[0] + "\"" + presentSplit[1]);
+								_log.info("[ChristmassPresents]: invalid config property -> SkillList \"" + presentSplit[0] + "\"" + presentSplit[1]);
 							}
 						}
 					}
@@ -2388,41 +2165,6 @@ public final class Config
 		}
 
 	}
-	
-	
-	//============================================================
-	public static boolean EVENT_ALLOW_LOGOUT;
-	public static boolean EVENT_ALLOW_POTIONS;
-	public static boolean EVENT_ALLOW_SCROOLS;
-	public static boolean EVENT_ALLOW_SUMMON;
-	public static boolean EVENT_SHOW_DIE_WINDOW;
-
-	//============================================================
-	public static void loadEventConfig()
-	{
-		final String EVENT = FService.EVENT_FILE;
-
-		_log.info("Loading: " + EVENT + ".");
-		try
-		{
-			Properties EventSettings = new Properties();
-			InputStream is = new FileInputStream(new File(EVENT));
-			EventSettings.load(is);
-			is.close();
-
-			/** Away System **/
-			EVENT_ALLOW_LOGOUT = Boolean.parseBoolean(EventSettings.getProperty("EventAllowLogOut", "True"));
-			EVENT_ALLOW_POTIONS = Boolean.parseBoolean(EventSettings.getProperty("EventAllowPotions", "True"));
-			EVENT_ALLOW_SCROOLS = Boolean.parseBoolean(EventSettings.getProperty("EventAllowScrools", "True"));
-			EVENT_ALLOW_SUMMON = Boolean.parseBoolean(EventSettings.getProperty("EventAllowSummon", "True"));
-			EVENT_SHOW_DIE_WINDOW = Boolean.parseBoolean(EventSettings.getProperty("EventShowDieWindow", "True"));
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-			throw new Error("Failed to Load " + EVENT + " File.");
-		}
-	}
 
 	//============================================================
 	public static boolean ONLINE_PLAYERS_ON_LOGIN;
@@ -2908,6 +2650,7 @@ public final class Config
 	public static String		L2TOPDEMON_PREFIX;
 	public static boolean		L2TOPDEMON_IGNOREFIRST;
 	public static RewardMode	L2TOP_REW_MODE;
+
 	public static enum			RewardMode
 	{
 		ALL, SMS, WEB
@@ -2916,7 +2659,7 @@ public final class Config
 	//**********************************************************************************************
 	public static void loadL2topConfig()
 	{
-		System.out.println("Loading: " + FService.L2TOP_DAEMON_CONFIG_FILE);
+		_log.info("Loading: " + FService.L2TOP_DAEMON_CONFIG_FILE);
 		try
 		{
 			Properties l2topSettings = new Properties();
@@ -2956,7 +2699,7 @@ public final class Config
 	//**********************************************************************************************
 	public static void loadMMOTopConfig()
 	{
-		System.out.println("Loading: " + FService.MMOTOP_DAEMON_CONFIG_FILE);
+		_log.info("Loading: " + FService.MMOTOP_DAEMON_CONFIG_FILE);
 		try
 		{
 			Properties mmotopSettings = new Properties();
@@ -2988,7 +2731,7 @@ public final class Config
 
 	public static void loadHopZoneConfig()
 	{
-		System.out.println("Loading: " + FService.HOPZONE_DAEMON_CONFIG_FILE);
+		_log.info("Loading: " + FService.HOPZONE_DAEMON_CONFIG_FILE);
 		try
 		{
 			Properties p = new L2Properties(FService.HOPZONE_DAEMON_CONFIG_FILE);
@@ -3192,7 +2935,7 @@ public final class Config
 				String[] writeData = readData.split(",");
 				if(writeData.length != 2)
 				{
-					System.out.println("invalid config property");
+					_log.info("invalid config property");
 				}
 				else
 				{
@@ -3204,7 +2947,7 @@ public final class Config
 					{
 						if(!readData.equals(""))
 						{
-							System.out.println("invalid config property");
+							_log.info("invalid config property");
 						}
 					}
 				}
@@ -3216,7 +2959,7 @@ public final class Config
 				String[] writeData = readData.split(",");
 				if(writeData.length != 2)
 				{
-					System.out.println("invalid config property");
+					_log.info("invalid config property");
 				}
 				else
 				{
@@ -3228,7 +2971,7 @@ public final class Config
 					{
 						if(!readData.equals(""))
 						{
-							System.out.println("invalid config property");
+							_log.info("invalid config property");
 						}
 					}
 				}
@@ -3240,7 +2983,7 @@ public final class Config
 				String[] writeData = readData.split(",");
 				if(writeData.length != 2)
 				{
-					System.out.println("invalid config property");
+					_log.info("invalid config property");
 				}
 				else
 				{
@@ -3252,7 +2995,7 @@ public final class Config
 					{
 						if(!readData.equals(""))
 						{
-							System.out.println("invalid config property");
+							_log.info("invalid config property");
 						}
 					}
 				}
@@ -3266,7 +3009,7 @@ public final class Config
 				String[] writeData = readData.split(",");
 				if(writeData.length != 2)
 				{
-					System.out.println("invalid config property");
+					_log.info("invalid config property");
 				}
 				else
 				{
@@ -3278,7 +3021,7 @@ public final class Config
 					{
 						if(!readData.equals(""))
 						{
-							System.out.println("invalid config property");
+							_log.info("invalid config property");
 						}
 					}
 				}
@@ -3290,7 +3033,7 @@ public final class Config
 				String[] writeData = readData.split(",");
 				if(writeData.length != 2)
 				{
-					System.out.println("invalid config property");
+					_log.info("invalid config property");
 				}
 				else
 				{
@@ -3302,7 +3045,7 @@ public final class Config
 					{
 						if(!readData.equals(""))
 						{
-							System.out.println("invalid config property");
+							_log.info("invalid config property");
 						}
 					}
 				}
@@ -3314,7 +3057,7 @@ public final class Config
 				String[] writeData = readData.split(",");
 				if(writeData.length != 2)
 				{
-					System.out.println("invalid config property");
+					_log.info("invalid config property");
 				}
 				else
 				{
@@ -3326,7 +3069,7 @@ public final class Config
 					{
 						if(!readData.equals(""))
 						{
-							System.out.println("invalid config property");
+							_log.info("invalid config property");
 						}
 					}
 				}
@@ -3340,7 +3083,7 @@ public final class Config
 				String[] writeData = readData.split(",");
 				if(writeData.length != 2)
 				{
-					System.out.println("invalid config property");
+					_log.info("invalid config property");
 				}
 				else
 				{
@@ -3352,7 +3095,7 @@ public final class Config
 					{
 						if(!readData.equals(""))
 						{
-							System.out.println("invalid config property");
+							_log.info("invalid config property");
 						}
 					}
 				}
@@ -3364,7 +3107,7 @@ public final class Config
 				String[] writeData = readData.split(",");
 				if(writeData.length != 2)
 				{
-					System.out.println("invalid config property");
+					_log.info("invalid config property");
 				}
 				else
 				{
@@ -3376,7 +3119,7 @@ public final class Config
 					{
 						if(!readData.equals(""))
 						{
-							System.out.println("invalid config property");
+							_log.info("invalid config property");
 						}
 					}
 				}
@@ -3388,7 +3131,7 @@ public final class Config
 				String[] writeData = readData.split(",");
 				if(writeData.length != 2)
 				{
-					System.out.println("invalid config property");
+					_log.info("invalid config property");
 				}
 				else
 				{
@@ -3400,7 +3143,7 @@ public final class Config
 					{
 						if(!readData.equals(""))
 						{
-							System.out.println("invalid config property");
+							_log.info("invalid config property");
 						}
 					}
 				}
@@ -3709,12 +3452,15 @@ public final class Config
 
 	public static boolean CONTROL_HEIGHT_DAMAGE;
 
-	public static boolean PATH_CLEAN;
-	public static boolean SIMPLE_PATHFIND_FOR_MOBS;
 	public static boolean ALLOW_KEYBOARD_MOVE;
+
 	public static int PATHFIND_BOOST;
 	public static boolean PATHFIND_DIAGONAL;
+	public static boolean PATH_CLEAN;
 	public static int PATHFIND_MAX_Z_DIFF;
+	public static long PATHFIND_MAX_TIME;
+	public static String PATHFIND_BUFFERS;
+
 	public static int MAX_Z_DIFF;
 	public static int MIN_LAYER_HEIGHT;
 	public static double WEIGHT0;
@@ -3743,7 +3489,6 @@ public final class Config
 			GEO_Y_LAST 					= Integer.parseInt(geodataSetting.getProperty("GeoLastY", "26"));
 			CONTROL_HEIGHT_DAMAGE       = Boolean.parseBoolean(geodataSetting.getProperty("ControlHeightDamage", "true"));
 			PATH_CLEAN 					= Boolean.parseBoolean(geodataSetting.getProperty("PathClean", "true"));
-			SIMPLE_PATHFIND_FOR_MOBS 	= Boolean.parseBoolean(geodataSetting.getProperty("SimplePathFindForMobs", "true"));
 			ALLOW_KEYBOARD_MOVE 		= Boolean.parseBoolean(geodataSetting.getProperty("AllowMoveWithKeyboard", "true"));
 			PATHFIND_BOOST 				= Integer.parseInt(geodataSetting.getProperty("PathFindBoost", "2"));
 			PATHFIND_DIAGONAL 			= Boolean.parseBoolean(geodataSetting.getProperty("PathFindDiagonal", "true"));
@@ -3754,7 +3499,8 @@ public final class Config
 			WEIGHT1 					= Double.parseDouble(geodataSetting.getProperty("Weight1", "2.0"));
 			WEIGHT2 					= Double.parseDouble(geodataSetting.getProperty("Weight2", "1.0"));
 
-			PathFindBuffers.initBuffers(geodataSetting.getProperty("PathFindBuffers", "8x100;8x128;8x192;4x256;2x320;2x384;1x500"));
+			PATHFIND_MAX_TIME 			= Long.parseLong(geodataSetting.getProperty("PathFindMaxTime", "10000000"));
+			PATHFIND_BUFFERS 			= geodataSetting.getProperty("PathFindBuffers", "8x96;8x128;8x160;8x192;4x224;4x256;4x288;2x320;2x384;2x352;1x512");
 
 			COMPACT_GEO 				= Boolean.parseBoolean(geodataSetting.getProperty("CompactGeoData", "false"));
 			GRIDS_ALWAYS_ON             = Boolean.parseBoolean(geodataSetting.getProperty("GridsAlwaysOn", "false"));
@@ -4285,7 +4031,7 @@ public final class Config
 	//============================================================
 	public static void loadHexed()
 	{
-		System.out.println("Loading: " + HEXID_FILE + ".");
+		_log.info("Loading: " + HEXID_FILE + ".");
 		try
 		{
 			Properties Settings = new Properties();
@@ -4350,7 +4096,7 @@ public final class Config
 	{
 		final String LOGIN = FService.LOGIN_CONFIGURATION_FILE;
 
-		System.out.println("Loading: " + LOGIN + ".");
+		_log.info("Loading: " + LOGIN + ".");
 		try
 		{
 			Properties serverSettings = new Properties();
@@ -4433,7 +4179,7 @@ public final class Config
 	{
 		final String BAN_IP_FILE = FService.BANNED_IP;
 
-		System.out.println("Loading: " + BAN_IP_FILE + ".");
+		_log.info("Loading: " + BAN_IP_FILE + ".");
 		try
 		{
 			Instruments banSettings = new Instruments();
@@ -4456,7 +4202,7 @@ public final class Config
 	{
 		final String TELNET_FILE = FService.TELNET_FILE;
 
-		System.out.println("Loading: " + TELNET_FILE + ".");
+		_log.info("Loading: " + TELNET_FILE + ".");
 		try
 		{
 			Properties telnetSettings = new Properties();
@@ -4551,7 +4297,6 @@ public final class Config
 			loadBankingConfig();
 			loadPCBPointConfig();
 			loadOfflineConfig();
-			loadEventConfig();
 			loadFunEvents();
 
 			//other
@@ -5350,11 +5095,11 @@ public final class Config
 		}
 		else if(pName.equalsIgnoreCase("GlobalChat"))
 		{
-			DEFAULT_GLOBAL_CHAT = pValue;
+			DEFAULT_GLOBAL_CHAT = ChatMode.valueOf(pValue.toUpperCase());
 		}
 		else if(pName.equalsIgnoreCase("TradeChat"))
 		{
-			DEFAULT_TRADE_CHAT = pValue;
+			DEFAULT_TRADE_CHAT = ChatMode.valueOf(pValue.toUpperCase());
 		}
 		else if(pName.equalsIgnoreCase("MenuStyle"))
 		{

@@ -1,8 +1,8 @@
 package com.l2scoria.gameserver.geodata.loader;
 
 import com.l2scoria.gameserver.geodata.GeoEngine;
+import org.apache.log4j.Logger;
 
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 public class L2JGeoLoader extends AbstractGeoLoader
@@ -94,7 +94,7 @@ public class L2JGeoLoader extends AbstractGeoLoader
 					blocks[block] = geoBlock;
 					break;
 				default:
-					log.severe("GeoEngine: invalid block type: " + type);
+					log.fatal("GeoEngine: invalid block type: " + type);
 			}
 		}
 

@@ -18,15 +18,15 @@
  */
 package com.l2scoria.gameserver.model.entity;
 
+import com.l2scoria.gameserver.idfactory.IdFactory;
+import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
+import com.l2scoria.util.database.L2DatabaseFactory;
+import org.apache.log4j.Logger;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Calendar;
-import java.util.logging.Logger;
-
-import com.l2scoria.gameserver.idfactory.IdFactory;
-import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import com.l2scoria.util.database.L2DatabaseFactory;
 
 /**
  * @author evill33t
@@ -84,7 +84,7 @@ public class Wedding
 		}
 		catch(Exception e)
 		{
-			_log.warning("Exception: Couple.load(): " + e);
+			_log.warn("Exception: Couple.load(): " + e);
 		}
 		finally
 		{
@@ -132,7 +132,7 @@ public class Wedding
 		}
 		catch(Exception e)
 		{
-			_log.warning("Wedding: " + e);
+			_log.warn("Wedding: " + e);
 		}
 		finally
 		{
@@ -166,7 +166,7 @@ public class Wedding
 		}
 		catch(Exception e)
 		{
-			_log.warning("marry: " + e);
+			_log.warn("marry: " + e);
 		}
 		finally
 		{
@@ -191,7 +191,7 @@ public class Wedding
 		}
 		catch(Exception e)
 		{
-			_log.warning("Exception: Couple.divorce(): " + e);
+			_log.warn("Exception: Couple.divorce(): " + e);
 		}
 		finally
 		{

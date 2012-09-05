@@ -18,8 +18,6 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.SkillTable;
 import com.l2scoria.gameserver.datatables.sql.SkillSpellbookTable;
@@ -31,6 +29,7 @@ import com.l2scoria.gameserver.model.actor.instance.L2FolkInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2NpcInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.serverpackets.AquireSkillInfo;
+import org.apache.log4j.Logger;
 
 /**
  * This class ...
@@ -75,7 +74,7 @@ public class RequestAquireSkillInfo extends L2GameClientPacket
 		{
 			if(Config.DEBUG)
 			{
-				_log.warning("skill id " + _id + " level " + _level + " is undefined. aquireSkillInfo failed.");
+				_log.warn("skill id " + _id + " level " + _level + " is undefined. aquireSkillInfo failed.");
 			}
 
 			return;

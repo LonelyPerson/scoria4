@@ -17,11 +17,11 @@ package com.l2scoria.gameserver.model.zone.type;
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.GameServer;
 import com.l2scoria.gameserver.ai.special.VanHalter;
-import com.l2scoria.gameserver.datatables.sql.DoorTable;
 import com.l2scoria.gameserver.datatables.csv.MapRegionTable;
+import com.l2scoria.gameserver.datatables.sql.DoorTable;
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import com.l2scoria.gameserver.model.zone.L2ZoneType;
+import com.l2scoria.gameserver.model.zone.L2ZoneDefault;
 import com.l2scoria.util.L2FastList;
 import com.l2scoria.util.random.Rnd;
 import javolution.util.FastMap;
@@ -29,7 +29,7 @@ import javolution.util.FastMap;
 /**
  * @author DaRkRaGe
  */
-public class L2BossZone extends L2ZoneType
+public class L2BossZone extends L2ZoneDefault
 {
 	private String _zoneName;
 	private int _timeInvade;
@@ -95,6 +95,8 @@ public class L2BossZone extends L2ZoneType
 	 */
 	protected void onEnter(L2Character character)
 	{
+		super.onEnter(character);
+
 		if(character instanceof L2PcInstance)
 		{
 			L2PcInstance player = (L2PcInstance) character;
@@ -206,6 +208,8 @@ public class L2BossZone extends L2ZoneType
 	@Override
 	protected void onExit(L2Character character)
 	{
+		super.onExit(character);
+
 		if(_enabled)
 		{
 			if(character instanceof L2PcInstance)
@@ -338,12 +342,4 @@ public class L2BossZone extends L2ZoneType
 			_playerAllowedReEntryTimes.put(player.getObjectId(), System.currentTimeMillis() + durationInSec * 1000);
 		}
 	}
-
-	@Override
-	protected void onDieInside(L2Character character)
-	{}
-
-	@Override
-	protected void onReviveInside(L2Character character)
-	{}
 }

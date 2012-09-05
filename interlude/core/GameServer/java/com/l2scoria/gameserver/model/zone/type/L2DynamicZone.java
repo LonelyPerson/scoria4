@@ -17,21 +17,21 @@
  */
 package com.l2scoria.gameserver.model.zone.type;
 
-import java.util.concurrent.Future;
-
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.L2Skill;
 import com.l2scoria.gameserver.model.L2WorldRegion;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import com.l2scoria.gameserver.model.zone.L2ZoneType;
+import com.l2scoria.gameserver.model.zone.L2ZoneDefault;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
+
+import java.util.concurrent.Future;
 
 /**
  * A dynamic zone? Maybe use this for interlude skills like protection field :>
  * 
  * @author durgus
  */
-public class L2DynamicZone extends L2ZoneType
+public class L2DynamicZone extends L2ZoneDefault
 {
 	private L2WorldRegion _region;
 	private L2Character _owner;
@@ -75,6 +75,8 @@ public class L2DynamicZone extends L2ZoneType
 		}
 		catch(NullPointerException e)
 		{}
+
+		super.onEnter(character);
 	}
 
 	@Override
@@ -88,9 +90,13 @@ public class L2DynamicZone extends L2ZoneType
 		if(character == _owner)
 		{
 			remove();
-			return;
 		}
-		character.stopSkillEffects(_skill.getId());
+		else
+		{
+			character.stopSkillEffects(_skill.getId());
+		}
+
+		super.onExit(character);
 	}
 
 	protected void remove()
@@ -127,12 +133,16 @@ public class L2DynamicZone extends L2ZoneType
 		{
 			character.stopSkillEffects(_skill.getId());
 		}
+
+		super.onDieInside(character);
 	}
 
 	@Override
 	protected void onReviveInside(L2Character character)
 	{
 		_skill.getEffects(_owner, character);
+
+		super.onReviveInside(character);
 	}
 
 }

@@ -18,17 +18,12 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.gameserver.model.L2World;
 import com.l2scoria.gameserver.model.TradeList;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.SystemMessageId;
-import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
-import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
-import com.l2scoria.gameserver.network.serverpackets.TradeOtherAdd;
-import com.l2scoria.gameserver.network.serverpackets.TradeOwnAdd;
-import com.l2scoria.gameserver.network.serverpackets.TradeUpdate;
+import com.l2scoria.gameserver.network.serverpackets.*;
+import org.apache.log4j.Logger;
 
 /**
  * This class ...
@@ -67,7 +62,7 @@ public final class AddTradeItem extends L2GameClientPacket
 
 		if(trade == null)
 		{
-			_log.warning("Character: " + player.getName() + " requested item:" + _objectId + " add without active tradelist:" + _tradeId);
+			_log.warn("Character: " + player.getName() + " requested item:" + _objectId + " add without active tradelist:" + _tradeId);
 			return;
 		}
 
@@ -76,7 +71,7 @@ public final class AddTradeItem extends L2GameClientPacket
 			// Trade partner not found, cancel trade
 			if(trade.getPartner() != null)
 			{
-				_log.warning("Character:" + player.getName() + " requested invalid trade object: " + _objectId);
+				_log.warn("Character:" + player.getName() + " requested invalid trade object: " + _objectId);
 			}
 
 			SystemMessage msg = new SystemMessage(SystemMessageId.TARGET_IS_NOT_FOUND_IN_THE_GAME);

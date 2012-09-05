@@ -17,13 +17,12 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.gameserver.datatables.sql.CharNameTable;
 import com.l2scoria.gameserver.model.BlockList;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
+import org.apache.log4j.Logger;
 
 public final class RequestBlock extends L2GameClientPacket
 {

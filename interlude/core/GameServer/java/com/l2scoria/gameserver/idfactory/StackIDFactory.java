@@ -18,15 +18,15 @@
  */
 package com.l2scoria.gameserver.idfactory;
 
+import com.l2scoria.Config;
+import com.l2scoria.util.database.L2DatabaseFactory;
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Stack;
-import java.util.logging.Logger;
-
-import com.l2scoria.Config;
-import java.sql.Connection;
-import com.l2scoria.util.database.L2DatabaseFactory;
 
 /**
  * This class ...
@@ -72,13 +72,13 @@ public class StackIDFactory extends IdFactory
 			}
 
 			_curOID++;
-			_log.config("IdFactory: Next usable Object ID is: " + _curOID);
+			_log.info("IdFactory: Next usable Object ID is: " + _curOID);
 			_initialized = true;
 		}
 		catch(Exception e1)
 		{
 			e1.printStackTrace();
-			_log.severe("ID Factory could not be initialized correctly:" + e1);
+			_log.fatal("ID Factory could not be initialized correctly:" + e1);
 		}
 		finally
 		{
@@ -111,7 +111,7 @@ public class StackIDFactory extends IdFactory
 				while(rs.next())
 				{
 					int badId = rs.getInt(1);
-					_log.severe("Bad ID " + badId + " in DB found by: " + check);
+					_log.fatal("Bad ID " + badId + " in DB found by: " + check);
 					throw new RuntimeException();
 				}
 

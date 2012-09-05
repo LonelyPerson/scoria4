@@ -18,19 +18,13 @@
  */
 package com.l2scoria.gameserver.script.faenor;
 
-import java.util.Date;
-import java.util.logging.Logger;
-
-import javax.script.ScriptContext;
-
+import com.l2scoria.gameserver.script.*;
+import com.l2scoria.gameserver.thread.ThreadPoolManager;
+import org.apache.log4j.Logger;
 import org.w3c.dom.Node;
 
-import com.l2scoria.gameserver.script.DateRange;
-import com.l2scoria.gameserver.script.IntList;
-import com.l2scoria.gameserver.script.Parser;
-import com.l2scoria.gameserver.script.ParserFactory;
-import com.l2scoria.gameserver.script.ScriptEngine;
-import com.l2scoria.gameserver.thread.ThreadPoolManager;
+import javax.script.ScriptContext;
+import java.util.Date;
 
 /**
  * @author Luis Arias
@@ -47,7 +41,7 @@ public class FaenorEventParser extends FaenorParser
 
 		if(DEBUG)
 		{
-			_log.fine("Parsing Event \"" + ID + "\"");
+			_log.info("Parsing Event \"" + ID + "\"");
 		}
 
 		_eventDates = DateRange.parse(attribute(eventNode, "Active"), DATE_FORMAT);
@@ -95,7 +89,7 @@ public class FaenorEventParser extends FaenorParser
 	{
 		if(DEBUG)
 		{
-			_log.fine("Parsing Event Message.");
+			_log.info("Parsing Event Message.");
 		}
 
 		try
@@ -110,7 +104,7 @@ public class FaenorEventParser extends FaenorParser
 		}
 		catch(Exception e)
 		{
-			_log.warning("Error in event parser.");
+			_log.warn("Error in event parser.");
 			e.printStackTrace();
 		}
 	}
@@ -119,7 +113,7 @@ public class FaenorEventParser extends FaenorParser
 	{
 		if(DEBUG)
 		{
-			_log.fine("Parsing Droplist.");
+			_log.info("Parsing Droplist.");
 		}
 
 		for(Node node = dropList.getFirstChild(); node != null; node = node.getNextSibling())
@@ -135,7 +129,7 @@ public class FaenorEventParser extends FaenorParser
 	{
 		if(DEBUG)
 		{
-			_log.fine("Parsing Drop.");
+			_log.info("Parsing Drop.");
 		}
 
 		try
@@ -148,7 +142,7 @@ public class FaenorEventParser extends FaenorParser
 		}
 		catch(Exception e)
 		{
-			_log.warning("ERROR(parseEventDrop):" + e.getMessage());
+			_log.warn("ERROR(parseEventDrop):" + e.getMessage());
 		}
 	}
 

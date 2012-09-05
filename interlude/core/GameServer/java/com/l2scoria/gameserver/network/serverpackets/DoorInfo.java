@@ -31,7 +31,7 @@ public class DoorInfo extends L2GameServerPacket
 	private static final String _S__60_DOORINFO = "[S] 4c DoorInfo";
 	private L2DoorInstance _door;
 
-	public DoorInfo(L2DoorInstance door, boolean showHp)
+	public DoorInfo(L2DoorInstance door)
 	{
             _door = door;
         }

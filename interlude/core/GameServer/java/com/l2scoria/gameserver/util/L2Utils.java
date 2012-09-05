@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Calendar;
 
 
 public class L2Utils
@@ -180,4 +181,45 @@ public class L2Utils
 		return msg;
 	}
 
+	public static void addHeroStatus(L2PcInstance player, int days)
+	{
+		if (player == null)
+			return;
+
+		Connection con = null;
+		try
+		{
+
+			Calendar finishtime = Calendar.getInstance();
+			finishtime.setTimeInMillis(System.currentTimeMillis());
+			finishtime.set(Calendar.SECOND, 0);
+			finishtime.add(Calendar.DAY_OF_MONTH, days);
+
+			con = L2DatabaseFactory.getInstance().getConnection();
+			PreparedStatement statement = con.prepareStatement("UPDATE characters_custom_data SET noble=1, hero=1, hero_end_date=? WHERE obj_Id=?");
+			statement.setLong(1, finishtime.getTimeInMillis());
+			statement.setInt(2, player.getObjectId());
+			statement.execute();
+			statement.close();
+			player.setIsHero(true);
+			player.broadcastUserInfo();
+			player.sendMessage("You are now a hero.");
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			try
+			{
+				if (con != null)
+					con.close();
+			}
+			catch (SQLException e)
+			{
+				e.printStackTrace();
+			}
+		}
+	}
 }

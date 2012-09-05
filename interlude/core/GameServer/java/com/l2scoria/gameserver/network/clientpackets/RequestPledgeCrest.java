@@ -18,11 +18,10 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.cache.CrestCache;
 import com.l2scoria.gameserver.network.serverpackets.PledgeCrest;
+import org.apache.log4j.Logger;
 
 /**
  * This class ...
@@ -50,7 +49,7 @@ public final class RequestPledgeCrest extends L2GameClientPacket
 
 		if(Config.DEBUG)
 		{
-			_log.fine("crestid " + _crestId + " requested");
+			_log.info("crestid " + _crestId + " requested");
 		}
 
 		byte[] data = CrestCache.getInstance().getPledgeCrest(_crestId);
@@ -64,7 +63,7 @@ public final class RequestPledgeCrest extends L2GameClientPacket
 		{
 			if(Config.DEBUG)
 			{
-				_log.fine("crest is missing:" + _crestId);
+				_log.info("crest is missing:" + _crestId);
 			}
 		}
 	}

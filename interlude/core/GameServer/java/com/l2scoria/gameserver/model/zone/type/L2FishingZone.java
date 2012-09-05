@@ -17,36 +17,19 @@
  */
 package com.l2scoria.gameserver.model.zone.type;
 
-import com.l2scoria.gameserver.model.L2Character;
-import com.l2scoria.gameserver.model.zone.L2ZoneType;
+import com.l2scoria.gameserver.model.zone.L2ZoneDefault;
 
 /**
  * A fishing zone
  * 
  * @author durgus
  */
-public class L2FishingZone extends L2ZoneType
+public class L2FishingZone extends L2ZoneDefault
 {
 	public L2FishingZone(int id)
 	{
 		super(id);
 	}
-
-	@Override
-	protected void onEnter(L2Character character)
-	{}
-
-	@Override
-	protected void onExit(L2Character character)
-	{}
-
-	@Override
-	protected void onDieInside(L2Character character)
-	{}
-
-	@Override
-	protected void onReviveInside(L2Character character)
-	{}
 
 	/* getWaterZ() this added function returns the Z value for the water surface.
 	 * In effect this simply returns the upper Z value of the zone. This required

@@ -34,9 +34,9 @@ import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.gameserver.util.Util;
 import com.l2scoria.util.random.Rnd;
 import javolution.util.FastList;
+import org.apache.log4j.Logger;
 
 import java.util.*;
-import java.util.logging.Logger;
 
 public class RecipeController
 {
@@ -341,14 +341,14 @@ public class RecipeController
 
 			if(_player == null || _target == null)
 			{
-				_log.warning("player or target == null (disconnected?), aborting" + _target + _player);
+				_log.warn("player or target == null (disconnected?), aborting" + _target + _player);
 				abort();
 				return;
 			}
 
 			if(_player.isOnline() == 0 || _target.isOnline() == 0)
 			{
-				_log.warning("player or target is not online, aborting " + _target + _player);
+				_log.warn("player or target is not online, aborting " + _target + _player);
 				abort();
 				return;
 			}

@@ -102,7 +102,7 @@ public final class RequestStartPledgeWar extends L2GameClientPacket
 			return;
 		}
 
-		//_log.warning("RequestStartPledgeWar, leader: " + clan.getLeaderName() + " clan: "+ _clan.getName());
+		//_log.warn("RequestStartPledgeWar, leader: " + clan.getLeaderName() + " clan: "+ _clan.getName());
 
 		//        L2PcInstance leader = L2World.getInstance().getPlayer(clan.getLeaderName());
 

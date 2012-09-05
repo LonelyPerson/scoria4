@@ -4,13 +4,13 @@ import com.l2scoria.gameserver.managers.CastleManager;
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.entity.siege.Castle;
-import com.l2scoria.gameserver.model.zone.L2ZoneType;
+import com.l2scoria.gameserver.model.zone.L2ZoneDefault;
 
 /**
  *
  * @author zenn
  */
-public class L2HQZone extends L2ZoneType
+public class L2HQZone extends L2ZoneDefault
 {
 	private int _castleId;
 	private Castle _castle;
@@ -40,6 +40,8 @@ public class L2HQZone extends L2ZoneType
 				character.setInsideZone(L2Character.ZONE_HQ, true);
 			}
 		}
+
+		super.onEnter(character);
 	}
 
 	@Override
@@ -49,14 +51,7 @@ public class L2HQZone extends L2ZoneType
 		{
 			character.setInsideZone(L2Character.ZONE_HQ, false);
 		}
+
+		super.onExit(character);
 	}
-
-	@Override
-	protected void onDieInside(L2Character character)
-	{}
-
-	@Override
-	protected void onReviveInside(L2Character character)
-	{}
-
 }

@@ -14,18 +14,17 @@
  */
 package com.l2scoria.gameserver.managers;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.List;
-import java.util.logging.Logger;
-
-import javolution.util.FastList;
-
 import com.l2scoria.gameserver.model.L2Clan;
 import com.l2scoria.gameserver.model.L2Object;
 import com.l2scoria.gameserver.model.entity.siege.Fort;
-import java.sql.Connection;
 import com.l2scoria.util.database.L2DatabaseFactory;
+import javolution.util.FastList;
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.List;
 
 /**
  * @author programmos, scoria dev
@@ -114,7 +113,7 @@ public class FortManager
 		}
 		catch(Exception e)
 		{
-			_log.warning("Exception: loadFortData(): " + e.getMessage());
+			_log.warn("Exception: loadFortData(): " + e.getMessage());
 			e.printStackTrace();
 		}
 

@@ -18,23 +18,18 @@
  */
 package com.l2scoria.gameserver.network.serverpackets;
 
+import com.l2scoria.gameserver.datatables.sql.ClanTable;
+import com.l2scoria.gameserver.model.*;
+import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
+import com.l2scoria.gameserver.network.L2GameClient;
+import com.l2scoria.util.database.L2DatabaseFactory;
+import javolution.util.FastList;
+import org.apache.log4j.Logger;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.List;
-import java.util.logging.Logger;
-
-import javolution.util.FastList;
-
-import com.l2scoria.gameserver.datatables.sql.ClanTable;
-import com.l2scoria.gameserver.model.CharSelectInfoPackage;
-import com.l2scoria.gameserver.model.Inventory;
-import com.l2scoria.gameserver.model.L2Clan;
-import com.l2scoria.gameserver.model.L2Object;
-import com.l2scoria.gameserver.model.L2World;
-import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import com.l2scoria.gameserver.network.L2GameClient;
-import com.l2scoria.util.database.L2DatabaseFactory;
 
 /**
  * This class ...
@@ -388,7 +383,7 @@ public class CharSelectInfo extends L2GameServerPacket
 			}
 			catch(Exception e)
 			{
-				_log.warning("Could not restore augmentation info: " + e);
+				_log.warn("Could not restore augmentation info: " + e);
 			}
 			finally
 			{

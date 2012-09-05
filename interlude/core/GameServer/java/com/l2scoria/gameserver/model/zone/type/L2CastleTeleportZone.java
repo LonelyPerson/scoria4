@@ -22,10 +22,10 @@ import com.l2scoria.gameserver.managers.CastleManager;
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.entity.siege.Castle;
-import com.l2scoria.gameserver.model.zone.L2ZoneType;
+import com.l2scoria.gameserver.model.zone.L2ZoneDefault;
 import com.l2scoria.util.random.Rnd;
 
-public class L2CastleTeleportZone extends L2ZoneType
+public class L2CastleTeleportZone extends L2ZoneDefault
 {
 	private int _spawnLoc[];
 	private int _castleId;
@@ -76,21 +76,15 @@ public class L2CastleTeleportZone extends L2ZoneType
 	protected void onEnter(L2Character character)
 	{
 		character.setInsideZone(2048, true);
+		super.onEnter(character);
 	}
 
 	@Override
 	protected void onExit(L2Character character)
 	{
 		character.setInsideZone(2048, false);
+		super.onExit(character);
 	}
-
-	@Override
-	public void onDieInside(L2Character l2character)
-	{}
-
-	@Override
-	public void onReviveInside(L2Character l2character)
-	{}
 
 	public void oustAllPlayers()
 	{

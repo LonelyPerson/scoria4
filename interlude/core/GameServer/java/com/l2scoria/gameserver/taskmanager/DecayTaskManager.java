@@ -17,15 +17,14 @@
  */
 package com.l2scoria.gameserver.taskmanager;
 
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.logging.Logger;
-
-import javolution.util.FastMap;
-
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.actor.instance.L2RaidBossInstance;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
+
+import java.util.Map;
+import java.util.NoSuchElementException;
 
 /**
  * @author la2 Lets drink to code!
@@ -108,7 +107,7 @@ public class DecayTaskManager
 			catch(Throwable e)
 			{
 				// TODO: Find out the reason for exception. Unless caught here, mob decay would stop.
-				_log.warning(e.toString());
+				_log.warn(e.toString());
 			}
 		}
 	}

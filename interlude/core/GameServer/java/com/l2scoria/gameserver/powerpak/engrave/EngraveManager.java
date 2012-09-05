@@ -18,22 +18,21 @@
  */
 package com.l2scoria.gameserver.powerpak.engrave;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.logging.Logger;
-
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.util.database.L2DatabaseFactory;
+import javolution.util.FastList;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.Map;
 
 public class EngraveManager
 {
@@ -117,7 +116,7 @@ public class EngraveManager
 		}
 		catch(Exception e)
 		{
-			_log.warning("...Database error " + e);
+			_log.warn("...Database error " + e);
 			e.printStackTrace();
 		}
 
@@ -140,7 +139,7 @@ public class EngraveManager
 			}
 			catch(Exception e)
 			{
-				_log.warning("EngraveManager: Unable to store item log " + e);
+				_log.warn("EngraveManager: Unable to store item log " + e);
 			}
 		}
 		return result;
@@ -171,7 +170,7 @@ public class EngraveManager
 				}
 				catch(Exception e)
 				{
-					_log.warning("EngraveManager: Unable to store item log " + e);
+					_log.warn("EngraveManager: Unable to store item log " + e);
 				}
 			}
 		}
@@ -247,7 +246,7 @@ public class EngraveManager
 				}
 				catch(Exception e)
 				{
-					_log.warning("EngraveManager: Unable to store item log " + e);
+					_log.warn("EngraveManager: Unable to store item log " + e);
 				}
 			}
 		}
@@ -273,7 +272,7 @@ public class EngraveManager
 			}
 			catch(Exception e)
 			{
-				_log.warning("EngraveManager: Unable to cleanup " + e);
+				_log.warn("EngraveManager: Unable to cleanup " + e);
 			}
 		}
 	}
@@ -316,7 +315,7 @@ public class EngraveManager
 			}
 			catch(Exception e)
 			{
-				_log.warning("EngraveManager: Unable to store item log " + e);
+				_log.warn("EngraveManager: Unable to store item log " + e);
 				e.printStackTrace();
 			}
 

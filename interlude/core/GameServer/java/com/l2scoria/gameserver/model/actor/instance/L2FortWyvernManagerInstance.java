@@ -19,12 +19,8 @@ package com.l2scoria.gameserver.model.actor.instance;
 
 import com.l2scoria.gameserver.ai.CtrlIntention;
 import com.l2scoria.gameserver.datatables.SkillTable;
-import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
-import com.l2scoria.gameserver.network.serverpackets.MyTargetSelected;
-import com.l2scoria.gameserver.network.serverpackets.NpcHtmlMessage;
-import com.l2scoria.gameserver.network.serverpackets.SocialAction;
-import com.l2scoria.gameserver.network.serverpackets.ValidateLocation;
-import com.l2scoria.gameserver.network.serverpackets.Ride;
+import com.l2scoria.gameserver.network.clientpackets.RequestActionUse;
+import com.l2scoria.gameserver.network.serverpackets.*;
 import com.l2scoria.gameserver.templates.L2NpcTemplate;
 import com.l2scoria.util.random.Rnd;
 
@@ -96,6 +92,11 @@ public class L2FortWyvernManagerInstance extends L2NpcInstance
 			// Wyvern requires Config.MANAGER_CRYSTAL_COUNT crystal for ride...
 			if(player.getInventory().getItemByItemId(1460) != null && player.getInventory().getItemByItemId(1460).getCount() >= 10)
 			{
+				if (player._event!=null && !player._event.canDoAction(player, RequestActionUse.ACTION_MOUNT))
+				{
+					return;
+				}
+
 				if(!player.disarmWeapons())
 					return;
 

@@ -18,19 +18,19 @@
  */
 package com.l2scoria.gameserver.model;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.logging.Logger;
-
 import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.serverpackets.ExAutoSoulShot;
 import com.l2scoria.gameserver.network.serverpackets.ShortCutInit;
 import com.l2scoria.gameserver.templates.L2EtcItemType;
-import java.sql.Connection;
 import com.l2scoria.util.database.L2DatabaseFactory;
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * This class ...
@@ -105,7 +105,7 @@ public class ShortCuts
 		}
 		catch(Exception e)
 		{
-			_log.warning("Could not store character shortcut: " + e);
+			_log.warn("Could not store character shortcut: " + e);
 		}
 		finally
 		{
@@ -192,7 +192,7 @@ public class ShortCuts
 		}
 		catch(Exception e)
 		{
-			_log.warning("Could not delete character shortcut: " + e);
+			_log.warn("Could not delete character shortcut: " + e);
 		}
 		finally
 		{
@@ -235,7 +235,7 @@ public class ShortCuts
 		}
 		catch(Exception e)
 		{
-			_log.warning("Could not restore character shortcuts: " + e);
+			_log.warn("Could not restore character shortcuts: " + e);
 		}
 		finally
 		{

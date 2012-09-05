@@ -18,8 +18,6 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.SkillTable;
 import com.l2scoria.gameserver.datatables.sql.SkillTreeTable;
@@ -37,6 +35,7 @@ import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
 import com.l2scoria.gameserver.util.IllegalPlayerAction;
 import com.l2scoria.gameserver.util.Util;
 import com.l2scoria.util.random.Rnd;
+import org.apache.log4j.Logger;
 
 /**
  * Format chdd c: (id) 0xD0 h: (subid) 0x06 d: skill id d: skill lvl
@@ -157,7 +156,7 @@ public final class RequestExEnchantSkill extends L2GameClientPacket
 
 			if(Config.DEBUG)
 			{
-				_log.fine("Learned skill " + _skillId + " for " + _requiredSp + " SP.");
+				_log.info("Learned skill " + _skillId + " for " + _requiredSp + " SP.");
 			}
 
 			player.getStat().removeExpAndSp(_requiredExp, _requiredSp);

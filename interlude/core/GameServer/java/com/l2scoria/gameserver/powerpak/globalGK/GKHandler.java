@@ -71,7 +71,7 @@ public class GKHandler implements IVoicedCommandHandler,ICustomByPassHandler, IB
 			msg = "Гейткипер не доступен в данной зоне";
 		else if(PowerPakConfig.GLOBALGK_EXCLUDE_ON.contains("OLYMPIAD") && activeChar.isInOlympiadMode())
 			msg = "Гейткипер не доступен в данной зоне";
-		else if(PowerPakConfig.GLOBALGK_EXCLUDE_ON.contains("EVENT") && false)
+		else if(PowerPakConfig.GLOBALGK_EXCLUDE_ON.contains("EVENT") && (activeChar._event!=null && activeChar._event.isRunning()))
 			msg = "Гейткипер не доступен на эвенте";
 
 		if(msg!=null)

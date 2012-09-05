@@ -17,8 +17,6 @@
  */
 package com.l2scoria.gameserver.model.actor.instance;
 
-import javolution.text.TextBuilder;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.SkillTable;
 import com.l2scoria.gameserver.datatables.sql.SkillTreeTable;
@@ -27,12 +25,9 @@ import com.l2scoria.gameserver.model.L2Skill;
 import com.l2scoria.gameserver.model.L2SkillLearn;
 import com.l2scoria.gameserver.model.base.ClassId;
 import com.l2scoria.gameserver.network.SystemMessageId;
-import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
-import com.l2scoria.gameserver.network.serverpackets.AquireSkillList;
-import com.l2scoria.gameserver.network.serverpackets.ExEnchantSkillList;
-import com.l2scoria.gameserver.network.serverpackets.NpcHtmlMessage;
-import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
+import com.l2scoria.gameserver.network.serverpackets.*;
 import com.l2scoria.gameserver.templates.L2NpcTemplate;
+import javolution.text.TextBuilder;
 
 public class L2FolkInstance extends L2NpcInstance
 {
@@ -60,7 +55,7 @@ public class L2FolkInstance extends L2NpcInstance
 	{
 		if(Config.DEBUG)
 		{
-			_log.fine("SkillList activated on: " + getObjectId());
+			_log.info("SkillList activated on: " + getObjectId());
 		}
 
 		int npcId = getTemplate().npcId;
@@ -149,7 +144,7 @@ public class L2FolkInstance extends L2NpcInstance
 	{
 		if(Config.DEBUG)
 		{
-			_log.fine("EnchantSkillList activated on: " + getObjectId());
+			_log.info("EnchantSkillList activated on: " + getObjectId());
 		}
 
 		int npcId = getTemplate().npcId;

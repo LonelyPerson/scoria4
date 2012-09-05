@@ -22,8 +22,7 @@ import com.l2scoria.gameserver.network.serverpackets.FlyToLocation;
 import com.l2scoria.gameserver.network.serverpackets.FlyToLocation.FlyType;
 import com.l2scoria.gameserver.network.serverpackets.ValidateLocation;
 import com.l2scoria.gameserver.skills.Env;
-
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 public class EffectThrowUp extends L2Effect
 {
@@ -86,7 +85,7 @@ public class EffectThrowUp extends L2Effect
 		
 		if (Config.GEODATA)
 		{
-			Location destiny = GeoEngine.moveCheck(getEffected().getX(), getEffected().getY(), getEffected().getZ(), _x, _y, false);
+			Location destiny = GeoEngine.moveCheck(getEffected().getX(), getEffected().getY(), getEffected().getZ(), _x, _y, getEffector().getInstanceId());
 			_x = destiny.getX();
 			_y = destiny.getY();
 		}

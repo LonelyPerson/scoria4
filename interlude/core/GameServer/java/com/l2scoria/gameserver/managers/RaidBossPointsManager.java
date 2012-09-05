@@ -18,6 +18,13 @@
  */
 package com.l2scoria.gameserver.managers;
 
+import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
+import com.l2scoria.util.database.L2DatabaseFactory;
+import javolution.util.FastList;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -26,15 +33,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
-import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import java.sql.Connection;
-import com.l2scoria.util.database.L2DatabaseFactory;
 
 /**
   * @author Kerberos
@@ -87,11 +85,11 @@ public class RaidBossPointsManager
 		}
 		catch (SQLException e)
 		{
-			_log.warning("RaidPointsManager: Couldnt load raid points ");
+			_log.warn("RaidPointsManager: Couldnt load raid points ");
 		}
 		catch (Exception e)
 		{
-			_log.warning(e.getMessage());
+			_log.warn(e.getMessage());
 		}
 		finally
 		{
@@ -116,7 +114,7 @@ public class RaidBossPointsManager
         }
 		catch (Exception e)
 		{
-			_log.log(Level.WARNING, "could not update char raid points:", e);
+			_log.warn("could not update char raid points:", e);
         }
 		finally
 		{
@@ -186,7 +184,7 @@ public class RaidBossPointsManager
         }
 		catch (Exception e)
 		{
-			_log.log(Level.WARNING, "could not clean raid points: ", e);
+			_log.warn("could not clean raid points: ", e);
         }
 		finally
 		{

@@ -18,17 +18,16 @@
  */
 package com.l2scoria.gameserver.communitybbs.Manager;
 
+import com.l2scoria.gameserver.communitybbs.BB.Forum;
+import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
+import com.l2scoria.util.database.L2DatabaseFactory;
+import javolution.util.FastList;
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.List;
-import java.util.logging.Logger;
-
-import javolution.util.FastList;
-
-import com.l2scoria.gameserver.communitybbs.BB.Forum;
-import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import java.sql.Connection;
-import com.l2scoria.util.database.L2DatabaseFactory;
 
 public class ForumsBBSManager extends BaseBBSManager
 {
@@ -92,7 +91,7 @@ public class ForumsBBSManager extends BaseBBSManager
 		}
 		catch(Exception e)
 		{
-			_log.warning("data error on Forum (root): " + e);
+			_log.warn("data error on Forum (root): " + e);
 			e.printStackTrace();
 		}
 		finally

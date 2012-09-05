@@ -1,7 +1,8 @@
 package com.l2scoria.gameserver.util;
 
+import org.apache.log4j.Logger;
+
 import java.util.ArrayList;
-import java.util.logging.Logger;
 
 public class Messages
 {
@@ -18,7 +19,7 @@ public class Messages
   {
     _message = Localization.getInstance().getString(lang, unicId);
     if (_message == null) {
-      _log.warning("CustomMessage: message with ID \"" + unicId + 
+      _log.warn("CustomMessage: message with ID \"" + unicId +
         "\" not found!");
       _message = "";
     }
@@ -51,7 +52,7 @@ public class Messages
       return "";
     _message = Localization.getInstance().getString(lang, _messageId);
     if (_message == null) {
-      _log.warning("CustomMessage: message with ID \"" + _messageId + 
+      _log.warn("CustomMessage: message with ID \"" + _messageId +
         "\" not found!");
       return "";
     }

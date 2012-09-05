@@ -17,17 +17,6 @@
  */
 package com.l2scoria.gameserver.model.spawn;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
-
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.csv.MapRegionTable;
 import com.l2scoria.gameserver.datatables.sql.NpcTable;
@@ -38,9 +27,19 @@ import com.l2scoria.gameserver.model.actor.instance.L2NpcInstance;
 import com.l2scoria.gameserver.model.entity.Announcements;
 import com.l2scoria.gameserver.templates.L2NpcTemplate;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
-import java.sql.Connection;
 import com.l2scoria.util.database.L2DatabaseFactory;
 import com.l2scoria.util.random.Rnd;
+import javolution.util.FastList;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Auto Spawn Handler Allows spawning of a NPC object based on a timer. (From the official idea used for the Merchant
@@ -147,12 +146,12 @@ public class AutoSpawn
 
 			if(Config.DEBUG)
 			{
-				_log.config("AutoSpawnHandler: Loaded " + numLoaded + " spawn group(s) from the database.");
+				_log.info("AutoSpawnHandler: Loaded " + numLoaded + " spawn group(s) from the database.");
 			}
 		}
 		catch(Exception e)
 		{
-			_log.warning("AutoSpawnHandler: Could not restore spawn data: " + e);
+			_log.warn("AutoSpawnHandler: Could not restore spawn data: " + e);
 		}
 		finally
 		{
@@ -207,7 +206,7 @@ public class AutoSpawn
 
 		if(Config.DEBUG)
 		{
-			_log.config("AutoSpawnHandler: Registered auto spawn for NPC ID " + npcId + " (Object ID = " + newId + ").");
+			_log.info("AutoSpawnHandler: Registered auto spawn for NPC ID " + npcId + " (Object ID = " + newId + ").");
 		}
 
 		return newSpawn;
@@ -251,14 +250,14 @@ public class AutoSpawn
 
 			if(Config.DEBUG)
 			{
-				_log.config("AutoSpawnHandler: Removed auto spawn for NPC ID " + spawnInst._npcId + " (Object ID = " + spawnInst._objectId + ").");
+				_log.info("AutoSpawnHandler: Removed auto spawn for NPC ID " + spawnInst._npcId + " (Object ID = " + spawnInst._objectId + ").");
 			}
 
 			respawnTask = null;
 		}
 		catch(Exception e)
 		{
-			_log.warning("AutoSpawnHandler: Could not auto spawn for NPC ID " + spawnInst._npcId + " (Object ID = " + spawnInst._objectId + "): " + e);
+			_log.warn("AutoSpawnHandler: Could not auto spawn for NPC ID " + spawnInst._npcId + " (Object ID = " + spawnInst._objectId + "): " + e);
 
 			return false;
 		}
@@ -495,7 +494,7 @@ public class AutoSpawn
 
 				if(npcTemp == null)
 				{
-					_log.warning("Couldnt find NPC id" + spawnInst.getNpcId() + " Try to update your DP");
+					_log.warn("Couldnt find NPC id" + spawnInst.getNpcId() + " Try to update your DP");
 					return;
 				}
 
@@ -576,7 +575,7 @@ public class AutoSpawn
 			}
 			catch(Exception e)
 			{
-				_log.warning("AutoSpawnHandler: An error occurred while initializing spawn instance (Object ID = " + _objectId + "): " + e);
+				_log.warn("AutoSpawnHandler: An error occurred while initializing spawn instance (Object ID = " + _objectId + "): " + e);
 				e.printStackTrace();
 			}
 		}
@@ -630,7 +629,7 @@ public class AutoSpawn
 			}
 			catch(Exception e)
 			{
-				_log.warning("AutoSpawnHandler: An error occurred while despawning spawn (Object ID = " + _objectId + "): " + e);
+				_log.warn("AutoSpawnHandler: An error occurred while despawning spawn (Object ID = " + _objectId + "): " + e);
 			}
 		}
 	}

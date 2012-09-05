@@ -8,6 +8,7 @@ import com.l2scoria.gameserver.util.sql.SQLQueue;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import javolution.util.FastMap;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -17,7 +18,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.StringTokenizer;
-import java.util.logging.Logger;
 
 public class SMSOnline implements HttpHandler
 {
@@ -57,7 +57,7 @@ public class SMSOnline implements HttpHandler
 				doAdd = doAdd && stm.executeUpdate() > 0;
 				stm.close();
 			}  catch(SQLException e) {
-				_log.warning("WebServices: SMSOnline error updating database " + e);
+				_log.warn("WebServices: SMSOnline error updating database " + e);
 				return;
 			}
 			if(doAdd) {
@@ -99,7 +99,7 @@ public class SMSOnline implements HttpHandler
 				}
 			}
 		} catch(Exception e) {
-			_log.warning("WebService: SMSOnline error reading config :" + e);
+			_log.warn("WebService: SMSOnline error reading config :" + e);
 		}
 	}
 	@Override

@@ -18,8 +18,6 @@
  */
 package com.l2scoria.gameserver.model.actor.instance;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.ai.CtrlIntention;
 import com.l2scoria.gameserver.ai.L2AttackableAI;
@@ -36,6 +34,7 @@ import com.l2scoria.gameserver.network.serverpackets.ValidateLocation;
 import com.l2scoria.gameserver.templates.L2NpcTemplate;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.util.random.Rnd;
+import org.apache.log4j.Logger;
 
 /**
  * This class manages all Guards in the world. It inherits all methods from L2Attackable and adds some more such as
@@ -121,7 +120,7 @@ public final class L2GuardInstance extends L2Attackable
 
 		if(Config.DEBUG)
 		{
-			_log.finer(getObjectId() + ": Home location set to" + " X:" + _homeX + " Y:" + _homeY + " Z:" + _homeZ);
+			_log.info(getObjectId() + ": Home location set to" + " X:" + _homeX + " Y:" + _homeY + " Z:" + _homeZ);
 		}
 	}
 
@@ -140,7 +139,7 @@ public final class L2GuardInstance extends L2Attackable
 		{
 			if(Config.DEBUG)
 			{
-				_log.fine(getObjectId() + ": moving hometo" + " X:" + _homeX + " Y:" + _homeY + " Z:" + _homeZ);
+				_log.info(getObjectId() + ": moving hometo" + " X:" + _homeX + " Y:" + _homeY + " Z:" + _homeZ);
 			}
 
 			clearAggroList();
@@ -163,7 +162,7 @@ public final class L2GuardInstance extends L2Attackable
 
 		if(Config.DEBUG)
 		{
-			_log.finer(getObjectId() + ": Home location set to" + " X:" + _homeX + " Y:" + _homeY + " Z:" + _homeZ);
+			_log.info(getObjectId() + ": Home location set to" + " X:" + _homeX + " Y:" + _homeY + " Z:" + _homeZ);
 		}
 
 		// check the region where this mob is, do not activate the AI if region is inactive.
@@ -237,7 +236,7 @@ public final class L2GuardInstance extends L2Attackable
 		{
 			if(Config.DEBUG)
 			{
-				_log.fine(player.getObjectId() + ": Targetted guard " + getObjectId());
+				_log.info(player.getObjectId() + ": Targetted guard " + getObjectId());
 			}
 
 			// Set the target of the L2PcInstance player
@@ -260,7 +259,7 @@ public final class L2GuardInstance extends L2Attackable
 			{
 				if(Config.DEBUG)
 				{
-					_log.fine(player.getObjectId() + ": Attacked guard " + getObjectId());
+					_log.info(player.getObjectId() + ": Attacked guard " + getObjectId());
 				}
 
 				// Set the L2PcInstance Intention to AI_INTENTION_ATTACK

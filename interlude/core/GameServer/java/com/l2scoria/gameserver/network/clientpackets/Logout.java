@@ -28,8 +28,7 @@ import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
 import com.l2scoria.gameserver.taskmanager.AttackStanceTaskManager;
-
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 /**
  * This class ...
@@ -60,9 +59,17 @@ public final class Logout extends L2GameClientPacket
 			return;
 		}
 
+		if (player.isInFunEvent())
+		{
+			if(!player._event.canLogout(player)) {
+				player.sendMessage("Нельзя покинуть игру.");
+				return;
+			}
+		}
+
 		if(player.isLocked())
 		{
-			_log.warning("Player " + player.getName() + " tried to logout during class change.");
+			_log.warn("Player " + player.getName() + " tried to logout during class change.");
 			player.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
@@ -73,7 +80,7 @@ public final class Logout extends L2GameClientPacket
 		{
 			if(Config.DEBUG)
 			{
-				_log.fine("Player " + player.getName() + " tried to logout while fighting");
+				_log.info("Player " + player.getName() + " tried to logout while fighting");
 			}
 
 			player.sendPacket(new SystemMessage(SystemMessageId.CANT_LOGOUT_WHILE_FIGHTING));
@@ -130,7 +137,7 @@ public final class Logout extends L2GameClientPacket
 		}
 		else
 		{
-			_log.warning("[Offline Trade] Player " + player.getName() + " is already offline. Cheater?");
+			_log.warn("[Offline Trade] Player " + player.getName() + " is already offline. Cheater?");
 		}
 
 		player.closeNetConnection();

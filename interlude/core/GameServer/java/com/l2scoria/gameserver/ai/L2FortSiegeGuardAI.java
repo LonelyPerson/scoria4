@@ -24,10 +24,10 @@ import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.gameserver.util.Util;
 import com.l2scoria.util.random.Rnd;
 import javolution.util.FastList;
+import org.apache.log4j.Logger;
 
 import java.util.List;
 import java.util.concurrent.Future;
-import java.util.logging.Logger;
 
 import static com.l2scoria.gameserver.ai.CtrlIntention.*;
 
@@ -590,7 +590,7 @@ public class L2FortSiegeGuardAI extends L2CharacterAI implements Runnable
 		}
 		catch(NullPointerException e)
 		{
-			//_log.warning("AttackableAI: Attack target is NULL.");
+			//_log.warn("AttackableAI: Attack target is NULL.");
 			_actor.setTarget(null);
 			setIntention(AI_INTENTION_IDLE, null, null);
 			return;

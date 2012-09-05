@@ -17,17 +17,16 @@
  */
 package com.l2scoria.gameserver.managers;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Map;
-import java.util.logging.Logger;
-
-import javolution.util.FastMap;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.model.quest.Quest;
 import com.l2scoria.gameserver.scripting.L2ScriptEngineManager;
 import com.l2scoria.gameserver.scripting.ScriptManager;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Map;
 
 public class QuestManager extends ScriptManager<Quest>
 {
@@ -92,7 +91,7 @@ public class QuestManager extends ScriptManager<Quest>
 		}
 		catch(IOException ioe)
 		{
-			_log.severe("Failed loading scripts.cfg, no script going to be loaded");
+			_log.fatal("Failed loading scripts.cfg, no script going to be loaded");
 		}
 	}
 

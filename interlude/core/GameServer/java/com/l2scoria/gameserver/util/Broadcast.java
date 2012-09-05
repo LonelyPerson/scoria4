@@ -28,8 +28,6 @@
  */
 package com.l2scoria.gameserver.util;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.L2World;
@@ -37,6 +35,7 @@ import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.serverpackets.CharInfo;
 import com.l2scoria.gameserver.network.serverpackets.L2GameServerPacket;
 import com.l2scoria.gameserver.network.serverpackets.RelationChanged;
+import org.apache.log4j.Logger;
 
 /**
  * This class ...
@@ -64,7 +63,7 @@ public final class Broadcast
 	{
 		if(Config.DEBUG)
 		{
-			_log.fine("players to notify:" + character.getKnownList().getKnownPlayers().size() + " packet:" + mov.getType());
+			_log.info("players to notify:" + character.getKnownList().getKnownPlayers().size() + " packet:" + mov.getType());
 		}
 
 		for(L2PcInstance player : character.getKnownList().getKnownPlayers().values())
@@ -94,7 +93,7 @@ public final class Broadcast
 	{
 		if(Config.DEBUG)
 		{
-			_log.fine("players to notify:" + character.getKnownList().getKnownPlayers().size() + " packet:" + mov.getType());
+			_log.info("players to notify:" + character.getKnownList().getKnownPlayers().size() + " packet:" + mov.getType());
 		}
 
 		for(L2PcInstance player : character.getKnownList().getKnownPlayers().values())
@@ -206,7 +205,7 @@ public final class Broadcast
 	{
 		if(Config.DEBUG)
 		{
-			_log.fine("Players to notify: " + L2World.getInstance().getAllPlayersCount() + " (with packet " + mov.getType() + ")");
+			_log.info("Players to notify: " + L2World.getInstance().getAllPlayersCount() + " (with packet " + mov.getType() + ")");
 		}
 
 		for(L2PcInstance onlinePlayer : L2World.getInstance().getAllPlayers())

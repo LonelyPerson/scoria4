@@ -17,17 +17,15 @@
  */
 package com.l2scoria.gameserver.managers;
 
+import com.l2scoria.gameserver.model.entity.Auction;
+import com.l2scoria.util.database.L2DatabaseFactory;
+import javolution.util.FastList;
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javolution.util.FastList;
-
-import com.l2scoria.gameserver.model.entity.Auction;
-import java.sql.Connection;
-import com.l2scoria.util.database.L2DatabaseFactory;
 
 public class AuctionManager
 {
@@ -213,7 +211,7 @@ public class AuctionManager
 
 		if(i >= ItemInitDataId.length)
 		{
-			_log.warning("Clan Hall auction not found for Id :" + id);
+			_log.warn("Clan Hall auction not found for Id :" + id);
 			return;
 		}
 		try
@@ -229,7 +227,7 @@ public class AuctionManager
 		}
 		catch(Exception e)
 		{
-			_log.log(Level.SEVERE, "Exception: Auction.initNPC(): " + e.getMessage(), e);
+			_log.fatal("Exception: Auction.initNPC(): " + e.getMessage(), e);
 		}
 		finally
 		{

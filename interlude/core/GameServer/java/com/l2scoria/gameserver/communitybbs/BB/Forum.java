@@ -18,20 +18,19 @@
  */
 package com.l2scoria.gameserver.communitybbs.BB;
 
+import com.l2scoria.gameserver.communitybbs.Manager.ForumsBBSManager;
+import com.l2scoria.gameserver.communitybbs.Manager.TopicBBSManager;
+import com.l2scoria.util.database.L2DatabaseFactory;
+import javolution.util.FastList;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
-
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
-import com.l2scoria.gameserver.communitybbs.Manager.ForumsBBSManager;
-import com.l2scoria.gameserver.communitybbs.Manager.TopicBBSManager;
-import com.l2scoria.util.database.L2DatabaseFactory;
 
 public class Forum
 {
@@ -121,7 +120,7 @@ public class Forum
 		}
 		catch(Exception e)
 		{
-			_log.warning("data error on Forum " + _forumId + " : " + e);
+			_log.warn("data error on Forum " + _forumId + " : " + e);
 			e.printStackTrace();
 		}
 		finally
@@ -162,7 +161,7 @@ public class Forum
 		}
 		catch(Exception e)
 		{
-			_log.warning("data error on Forum " + _forumId + " : " + e);
+			_log.warn("data error on Forum " + _forumId + " : " + e);
 			e.printStackTrace();
 		}
 		finally
@@ -204,7 +203,7 @@ public class Forum
 		}
 		catch(Exception e)
 		{
-			_log.warning("data error on Forum (children): " + e);
+			_log.warn("data error on Forum (children): " + e);
 			e.printStackTrace();
 		}
 		finally
@@ -293,7 +292,7 @@ public class Forum
 		}
 		catch(Exception e)
 		{
-			_log.warning("error while saving new Forum to db " + e);
+			_log.warn("error while saving new Forum to db " + e);
 		}
 		finally
 		{

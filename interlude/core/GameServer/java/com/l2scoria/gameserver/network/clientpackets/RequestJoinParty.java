@@ -18,8 +18,6 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.model.BlockList;
 import com.l2scoria.gameserver.model.L2Party;
@@ -28,6 +26,7 @@ import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.AskJoinParty;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
+import org.apache.log4j.Logger;
 
 /**
  * sample 29 42 00 00 10 01 00 00 00 format cdd
@@ -81,6 +80,12 @@ public final class RequestJoinParty extends L2GameClientPacket
 		if(target.isCursedWeaponEquiped() || requestor.isCursedWeaponEquiped())
 		{
 			requestor.sendPacket(new SystemMessage(SystemMessageId.INCORRECT_TARGET));
+			return;
+		}
+
+		if(requestor._event!=null && !requestor._event.canInteract(requestor, target))
+		{
+			requestor.sendPacket(SystemMessageId.INCORRECT_TARGET);
 			return;
 		}
 
@@ -178,7 +183,7 @@ public final class RequestJoinParty extends L2GameClientPacket
 
 			if(Config.DEBUG)
 			{
-				_log.fine("sent out a party invitation to:" + target.getName());
+				_log.info("sent out a party invitation to:" + target.getName());
 			}
 		}
 		else
@@ -189,7 +194,7 @@ public final class RequestJoinParty extends L2GameClientPacket
 
 			if(Config.DEBUG)
 			{
-				_log.warning(requestor.getName() + " already received a party invitation");
+				_log.warn(requestor.getName() + " already received a party invitation");
 			}
 		}
 	}
@@ -212,7 +217,7 @@ public final class RequestJoinParty extends L2GameClientPacket
 
 			if(Config.DEBUG)
 			{
-				_log.fine("sent out a party invitation to:" + target.getName());
+				_log.info("sent out a party invitation to:" + target.getName());
 			}
 		}
 		else
@@ -223,7 +228,7 @@ public final class RequestJoinParty extends L2GameClientPacket
 
 			if(Config.DEBUG)
 			{
-				_log.warning(requestor.getName() + " already received a party invitation");
+				_log.warn(requestor.getName() + " already received a party invitation");
 			}
 		}
 	}

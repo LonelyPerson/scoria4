@@ -14,8 +14,6 @@
  */
 package com.l2scoria.gameserver.model.actor.instance;
 
-import java.text.SimpleDateFormat;
-
 import com.l2scoria.gameserver.ai.CtrlIntention;
 import com.l2scoria.gameserver.managers.ClanHallManager;
 import com.l2scoria.gameserver.model.L2Clan;
@@ -23,13 +21,11 @@ import com.l2scoria.gameserver.model.L2ClanMember;
 import com.l2scoria.gameserver.model.entity.ClanHall;
 import com.l2scoria.gameserver.model.entity.siege.BanditStrongholdSiege;
 import com.l2scoria.gameserver.model.entity.siege.WildBeastFarmSiege;
-import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
-import com.l2scoria.gameserver.network.serverpackets.MyTargetSelected;
-import com.l2scoria.gameserver.network.serverpackets.NpcHtmlMessage;
-import com.l2scoria.gameserver.network.serverpackets.SocialAction;
-import com.l2scoria.gameserver.network.serverpackets.ValidateLocation;
+import com.l2scoria.gameserver.network.serverpackets.*;
 import com.l2scoria.gameserver.templates.L2NpcTemplate;
 import com.l2scoria.util.random.Rnd;
+
+import java.text.SimpleDateFormat;
 
 /**
  * @author MHard L2EmuRT
@@ -236,7 +232,7 @@ public class L2ClanHallSiegeInfInstance extends L2NpcInstance
 			L2Clan playerClan = player.getClan();
 			if(playerClan == null || playerClan.getLeaderId() != player.getObjectId() || playerClan.getLevel() < 4)
 			{
-				_log.warning("Attention!!! player " + player.getName() + " use packet hack, try unregister clan.");
+				_log.warn("Attention!!! player " + player.getName() + " use packet hack, try unregister clan.");
 				return;
 			}
 			if(!BanditStrongholdSiege.getInstance().isRegistrationPeriod())
@@ -260,7 +256,7 @@ public class L2ClanHallSiegeInfInstance extends L2NpcInstance
 			}
 			else
 			{
-				_log.warning("Attention!!! player " + player.getName() + " use packet hack, try unregister clan.");
+				_log.warn("Attention!!! player " + player.getName() + " use packet hack, try unregister clan.");
 			}
 		}
 		else if(command.startsWith("PlayerList"))

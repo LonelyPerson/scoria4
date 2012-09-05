@@ -286,7 +286,7 @@ public class L2NpcInstance extends L2Character
 
 		if(template == null)
 		{
-			_log.severe("No template for Npc. Please check your datapack is setup correctly.");
+			_log.fatal("No template for Npc. Please check your datapack is setup correctly.");
 			return;
 		}
 
@@ -658,7 +658,7 @@ public class L2NpcInstance extends L2Character
 		{
 			if(Config.DEBUG)
 			{
-				_log.fine("new target selected:" + getObjectId());
+				_log.info("new target selected:" + getObjectId());
 			}
 
 			// Set the target of the L2PcInstance player
@@ -721,6 +721,12 @@ public class L2NpcInstance extends L2Character
 					// Send a Server->Client packet SocialAction to the all L2PcInstance on the _knownPlayer of the L2NpcInstance
 					// to display a social action of the L2NpcInstance on their client
 					broadcastPacket(new SocialAction(getObjectId(), Rnd.get(8)));
+
+					if (_event != null && _event.onNPCTalk(this, player))
+					{
+						player.sendPacket(ActionFailed.STATIC_PACKET);
+						return;
+					}
 
 					Quest[] qlst = getTemplate().getEventQuests(Quest.QuestEventType.NPC_FIRST_TALK);
 					if(qlst != null && qlst.length == 1)
@@ -1540,11 +1546,11 @@ public class L2NpcInstance extends L2Character
 			{
 				if(content != null)
 				{
-					_log.fine("Showing quest window for quest " + questId + " html path: " + path);
+					_log.info("Showing quest window for quest " + questId + " html path: " + path);
 				}
 				else
 				{
-					_log.fine("File not exists for quest " + questId + " html path: " + path);
+					_log.info("File not exists for quest " + questId + " html path: " + path);
 				}
 			}
 			qs = null;
@@ -2682,7 +2688,7 @@ public class L2NpcInstance extends L2Character
 		}
 		catch(Throwable t)
 		{
-			_log.severe("deletedMe(): " + t);
+			_log.fatal("deletedMe(): " + t);
 		}
 
 		// Remove all L2Object from _knownObjects and _knownPlayer of the L2Character then cancel Attak or Cast and notify AI
@@ -2692,7 +2698,7 @@ public class L2NpcInstance extends L2Character
 		}
 		catch(Throwable t)
 		{
-			_log.severe("deletedMe(): " + t);
+			_log.fatal("deletedMe(): " + t);
 		}
 
 		// Remove L2Object object from _allObjects of L2World

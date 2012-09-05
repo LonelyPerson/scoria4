@@ -17,22 +17,20 @@
  */
 package com.l2scoria.gameserver.model.zone.type;
 
-import javolution.util.FastList;
-
-import org.w3c.dom.Node;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import com.l2scoria.gameserver.model.zone.L2ZoneType;
+import com.l2scoria.gameserver.model.zone.L2ZoneDefault;
 import com.l2scoria.util.random.Rnd;
+import javolution.util.FastList;
+import org.w3c.dom.Node;
 
 /**
  * A Town zone
  * 
  * @author durgus
  */
-public class L2TownZone extends L2ZoneType
+public class L2TownZone extends L2ZoneDefault
 {
 	private String _townName;
 	private int _townId;
@@ -110,10 +108,7 @@ public class L2TownZone extends L2ZoneType
 			ai[2] = Integer.parseInt(node1.getNodeValue());
 		}
 
-		if(ai != null)
-		{
-			_spawnLoc.add(ai);
-		}
+		_spawnLoc.add(ai);
 
 		node1 = null;
 	}
@@ -139,6 +134,7 @@ public class L2TownZone extends L2ZoneType
 			character.setInsideZone(L2Character.ZONE_PEACE, true);
 		}
 
+		super.onEnter(character);
 	}
 
 	@Override
@@ -156,15 +152,9 @@ public class L2TownZone extends L2ZoneType
 				((L2PcInstance) character).sendMessage("You left " + _townName);
 			}
 		}
+
+		super.onExit(character);
 	}
-
-	@Override
-	protected void onDieInside(L2Character character)
-	{}
-
-	@Override
-	protected void onReviveInside(L2Character character)
-	{}
 
 	/**
 	 * Returns this town zones name

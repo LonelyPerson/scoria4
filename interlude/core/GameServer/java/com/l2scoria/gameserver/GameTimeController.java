@@ -220,7 +220,7 @@ public class GameTimeController
 					// calculate sleep time... time needed to next tick minus time it takes to call moveObjects()
 					int sleepTime = 1 + MILLIS_IN_TICK - (int) runtime % MILLIS_IN_TICK;
 
-					//_log.finest("TICK: "+_gameTicks);
+					//_log.info("TICK: "+_gameTicks);
 
 					sleep(sleepTime); // hope other threads will have much more cpu time available now
 					// SelectorThread most of all

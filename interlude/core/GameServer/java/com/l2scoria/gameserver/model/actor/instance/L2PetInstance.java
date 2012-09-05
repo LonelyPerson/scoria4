@@ -18,11 +18,6 @@
  */
 package com.l2scoria.gameserver.model.actor.instance;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.concurrent.Future;
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.ai.CtrlIntention;
 import com.l2scoria.gameserver.datatables.SkillTable;
@@ -30,34 +25,22 @@ import com.l2scoria.gameserver.datatables.sql.L2PetDataTable;
 import com.l2scoria.gameserver.idfactory.IdFactory;
 import com.l2scoria.gameserver.managers.CursedWeaponsManager;
 import com.l2scoria.gameserver.managers.ItemsOnGroundManager;
-import com.l2scoria.gameserver.model.Inventory;
-import com.l2scoria.gameserver.model.L2Character;
-import com.l2scoria.gameserver.model.L2Object;
-import com.l2scoria.gameserver.model.L2PetData;
-import com.l2scoria.gameserver.model.L2Skill;
-import com.l2scoria.gameserver.model.L2Summon;
-import com.l2scoria.gameserver.model.L2World;
-import com.l2scoria.gameserver.model.PcInventory;
-import com.l2scoria.gameserver.model.PetInventory;
+import com.l2scoria.gameserver.model.*;
 import com.l2scoria.gameserver.model.actor.stat.PetStat;
 import com.l2scoria.gameserver.network.SystemMessageId;
-import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
-import com.l2scoria.gameserver.network.serverpackets.InventoryUpdate;
-import com.l2scoria.gameserver.network.serverpackets.ItemList;
-import com.l2scoria.gameserver.network.serverpackets.MyTargetSelected;
-import com.l2scoria.gameserver.network.serverpackets.PetInventoryUpdate;
-import com.l2scoria.gameserver.network.serverpackets.PetItemList;
-import com.l2scoria.gameserver.network.serverpackets.PetStatusShow;
-import com.l2scoria.gameserver.network.serverpackets.StatusUpdate;
-import com.l2scoria.gameserver.network.serverpackets.StopMove;
-import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
+import com.l2scoria.gameserver.network.serverpackets.*;
 import com.l2scoria.gameserver.taskmanager.DecayTaskManager;
 import com.l2scoria.gameserver.templates.L2Item;
 import com.l2scoria.gameserver.templates.L2NpcTemplate;
 import com.l2scoria.gameserver.templates.L2Weapon;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
-import java.sql.Connection;
 import com.l2scoria.util.database.L2DatabaseFactory;
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.concurrent.Future;
 
 /**
  * This class ...
@@ -176,7 +159,7 @@ public class L2PetInstance extends L2Summon
 			{
 				if(Config.DEBUG)
 				{
-					_logPet.warning("Pet [#" + getObjectId() + "] a feed task error has occurred: " + e);
+					_logPet.warn("Pet [#" + getObjectId() + "] a feed task error has occurred: " + e);
 				}
 			}
 		}
@@ -274,7 +257,7 @@ public class L2PetInstance extends L2Summon
 		{
 			if(Config.DEBUG)
 			{
-				_logPet.fine("new target selected:" + getObjectId());
+				_logPet.info("new target selected:" + getObjectId());
 			}
 
 			player.setTarget(this);
@@ -455,7 +438,7 @@ public class L2PetInstance extends L2Summon
 
 		if(Config.DEBUG)
 		{
-			_logPet.fine("Pet pickup pos: " + object.getX() + " " + object.getY() + " " + object.getZ());
+			_logPet.info("Pet pickup pos: " + object.getX() + " " + object.getY() + " " + object.getZ());
 		}
 
 		broadcastPacket(sm);
@@ -464,7 +447,7 @@ public class L2PetInstance extends L2Summon
 		if(!(object instanceof L2ItemInstance))
 		{
 			// dont try to pickup anything that is not an item :)
-			_logPet.warning("trying to pickup wrong target." + object);
+			_logPet.warn("trying to pickup wrong target." + object);
 			getOwner().sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
@@ -702,7 +685,7 @@ public class L2PetInstance extends L2Summon
 		}
 		catch(Exception e)
 		{
-			_logPet.warning("Give all items error " + e);
+			_logPet.warn("Give all items error " + e);
 		}
 	}
 
@@ -722,7 +705,7 @@ public class L2PetInstance extends L2Summon
 		}
 		catch(Exception e)
 		{
-			_logPet.warning("Error while giving item to owner: " + e);
+			_logPet.warn("Error while giving item to owner: " + e);
 		}
 	}
 
@@ -762,7 +745,7 @@ public class L2PetInstance extends L2Summon
 		}
 		catch(Exception e)
 		{
-			_logPet.warning("Error while destroying control item: " + e);
+			_logPet.warn("Error while destroying control item: " + e);
 		}
 
 		// pet control item no longer exists, delete the pet from the db
@@ -778,7 +761,7 @@ public class L2PetInstance extends L2Summon
 		}
 		catch(Exception e)
 		{
-			_logPet.warning("could not delete pet:" + e);
+			_logPet.warn("could not delete pet:" + e);
 		}
 		finally
 		{
@@ -800,7 +783,7 @@ public class L2PetInstance extends L2Summon
 		}
 		catch(Exception e)
 		{
-			_logPet.warning("Pet Drop Error: " + e);
+			_logPet.warn("Pet Drop Error: " + e);
 		}
 	}
 
@@ -810,7 +793,7 @@ public class L2PetInstance extends L2Summon
 
 		if(dropit != null)
 		{
-			_logPet.finer("Item id to drop: " + dropit.getItemId() + " amount: " + dropit.getCount());
+			_logPet.info("Item id to drop: " + dropit.getItemId() + " amount: " + dropit.getCount());
 			dropit.dropMe(this, getX(), getY(), getZ() + 100);
 		}
 	}
@@ -874,7 +857,7 @@ public class L2PetInstance extends L2Summon
 		}
 		catch(Exception e)
 		{
-			_logPet.warning("could not restore pet data: " + e);
+			_logPet.warn("could not restore pet data: " + e);
 			return null;
 		}
 		finally
@@ -920,7 +903,7 @@ public class L2PetInstance extends L2Summon
 		}
 		catch(Exception e)
 		{
-			_logPet.warning("could not store pet data: " + e);
+			_logPet.warn("could not store pet data: " + e);
 		}
 		finally
 		{
@@ -945,7 +928,7 @@ public class L2PetInstance extends L2Summon
 			_feedTask = null;
 			if(Config.DEBUG)
 			{
-				_logPet.fine("Pet [#" + getObjectId() + "] feed task stop");
+				_logPet.info("Pet [#" + getObjectId() + "] feed task stop");
 			}
 		}
 	}

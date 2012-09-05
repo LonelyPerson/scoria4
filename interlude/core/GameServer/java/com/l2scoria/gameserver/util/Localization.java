@@ -1,18 +1,16 @@
 package com.l2scoria.gameserver.util;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.logging.Logger;
-
-import javax.xml.parsers.DocumentBuilderFactory;
-
+import com.l2scoria.Config;
+import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 
-import com.l2scoria.Config;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.util.HashMap;
 
 public class Localization
 {
@@ -59,7 +57,7 @@ public class Localization
 		File f = new File(Config.DATAPACK_ROOT, "data/localization/" + lang + "/messages.xml");
 		if (!f.exists())
 		{
-			_log.warning("File not found, path: data/localization/" + lang + "/messages.xml");
+			_log.warn("File not found, path: data/localization/" + lang + "/messages.xml");
 			return;
 		}
 		try
@@ -86,7 +84,7 @@ public class Localization
 		}
 		catch (Exception e)
 		{
-			_log.warning("Localization: Error while creating table: " + e.getMessage() + "\n" + e);
+			_log.warn("Localization: Error while creating table: " + e.getMessage() + "\n" + e);
 		}
 	}
 

@@ -18,14 +18,6 @@
  */
 package com.l2scoria.gameserver.model;
 
-import java.util.List;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javolution.util.FastList;
-
 import com.l2scoria.gameserver.GameTimeController;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.SystemMessageId;
@@ -39,6 +31,12 @@ import com.l2scoria.gameserver.skills.funcs.Func;
 import com.l2scoria.gameserver.skills.funcs.FuncTemplate;
 import com.l2scoria.gameserver.skills.funcs.Lambda;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
+import javolution.util.FastList;
+import org.apache.log4j.Logger;
+
+import java.util.List;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 /**
  * This class ...
@@ -178,7 +176,7 @@ public abstract class L2Effect
 			}
 			catch(Throwable e)
 			{
-				_log.log(Level.SEVERE, "", e);
+				_log.fatal("", e);
 			}
 		}
 	}
@@ -247,7 +245,7 @@ public abstract class L2Effect
 			_currentTask = null;
 			_periodfirsttime = newfirsttime;
 			int duration = _period - _periodfirsttime;
-			//_log.warning("Period: "+_period+"-"+_periodfirsttime+"="+duration);
+			//_log.warn("Period: "+_period+"-"+_periodfirsttime+"="+duration);
 			_currentTask = new EffectTask(duration * 1000, -1);
 			_currentFuture = ThreadPoolManager.getInstance().scheduleEffect(_currentTask, duration * 1000);
 		}

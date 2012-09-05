@@ -18,15 +18,15 @@
 
 package com.l2scoria.gameserver.datatables.sql;
 
+import com.l2scoria.gameserver.model.L2Territory;
+import com.l2scoria.util.database.L2DatabaseFactory;
+import org.apache.log4j.Logger;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
-
-import com.l2scoria.gameserver.model.L2Territory;
-import com.l2scoria.util.database.L2DatabaseFactory;
 
 public class TerritoryTable
 {
@@ -89,7 +89,7 @@ public class TerritoryTable
 		catch(Exception e1)
 		{
 			//problem with initializing spawn, go to next one
-			_log.warning("locations couldnt be initialized:" + e1);
+			_log.warn("locations couldnt be initialized:" + e1);
 		}
 		finally
 		{
@@ -97,6 +97,6 @@ public class TerritoryTable
 			con = null;
 		}
 
-		_log.config("TerritoryTable: Loaded " + _territory.size() + " locations");
+		_log.info("TerritoryTable: Loaded " + _territory.size() + " locations");
 	}
 }

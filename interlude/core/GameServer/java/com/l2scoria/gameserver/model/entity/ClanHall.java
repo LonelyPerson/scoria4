@@ -33,14 +33,13 @@ import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.util.database.L2DatabaseFactory;
 import javolution.util.FastList;
 import javolution.util.FastMap;
+import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class ClanHall
 {
@@ -186,7 +185,7 @@ public class ClanHall
 
 						if(Config.DEBUG)
 						{
-							_log.warning("deducted " + fee + " adena from " + getName() + " owner's cwh for function id : " + getType());
+							_log.warn("deducted " + fee + " adena from " + getName() + " owner's cwh for function id : " + getType());
 						}
 
 						ThreadPoolManager.getInstance().scheduleGeneral(new FunctionTask(), getRate());
@@ -236,7 +235,7 @@ public class ClanHall
 			}
 			catch(Exception e)
 			{
-				_log.log(Level.SEVERE, "Exception: ClanHall.updateFunctions(int type, int lvl, int lease, long rate, long time, boolean addNew): " + e.getMessage(), e);
+				_log.fatal("Exception: ClanHall.updateFunctions(int type, int lvl, int lease, long rate, long time, boolean addNew): " + e.getMessage(), e);
 			}
 			finally
 			{
@@ -254,7 +253,7 @@ public class ClanHall
 
 		if(Config.DEBUG)
 		{
-			_log.warning("Init Owner : " + _ownerId);
+			_log.warn("Init Owner : " + _ownerId);
 		}
 
 		_lease = lease;
@@ -537,7 +536,7 @@ public class ClanHall
 		}
 		catch(Exception e)
 		{
-			_log.log(Level.SEVERE, "Exception: ClanHall.loadFunctions(): " + e.getMessage(), e);
+			_log.fatal("Exception: ClanHall.loadFunctions(): " + e.getMessage(), e);
 		}
 		finally
 		{
@@ -564,7 +563,7 @@ public class ClanHall
 		}
 		catch(Exception e)
 		{
-			_log.log(Level.SEVERE, "Exception: ClanHall.removeFunctions(int functionType): " + e.getMessage(), e);
+			_log.fatal("Exception: ClanHall.removeFunctions(int functionType): " + e.getMessage(), e);
 		}
 		finally
 		{
@@ -578,7 +577,7 @@ public class ClanHall
 	{
 		if(Config.DEBUG)
 		{
-			_log.warning("Called ClanHall.updateFunctions(int type, int lvl, int lease, long rate, boolean addNew) Owner : " + getOwnerId());
+			_log.warn("Called ClanHall.updateFunctions(int type, int lvl, int lease, long rate, boolean addNew) Owner : " + getOwnerId());
 		}
 
 		if(addNew)
@@ -599,7 +598,7 @@ public class ClanHall
 
 				if(Config.DEBUG)
 				{
-					_log.warning("Called ClanHall.updateFunctions diffLease : " + diffLease);
+					_log.warn("Called ClanHall.updateFunctions diffLease : " + diffLease);
 				}
 
 				if(diffLease > 0)
@@ -706,7 +705,7 @@ public class ClanHall
 
 					if(Config.DEBUG)
 					{
-						_log.warning("deducted " + getLease() + " adena from " + getName() + " owner's cwh for ClanHall _paidUntil" + _paidUntil);
+						_log.warn("deducted " + getLease() + " adena from " + getName() + " owner's cwh for ClanHall _paidUntil" + _paidUntil);
 					}
 
 					ThreadPoolManager.getInstance().scheduleGeneral(new FeeTask(), _paidUntil - System.currentTimeMillis());

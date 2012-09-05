@@ -18,18 +18,12 @@
  */
 package com.l2scoria.gameserver.datatables.csv;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.LineNumberReader;
-import java.util.logging.Logger;
-import java.util.StringTokenizer;
-
-import javolution.util.FastList;
-
 import com.l2scoria.gameserver.model.L2NpcWalkerNode;
+import javolution.util.FastList;
+import org.apache.log4j.Logger;
+
+import java.io.*;
+import java.util.StringTokenizer;
 
 /**
  * Main Table to Load Npc Walkers Routes and Chat SQL Table.<br>
@@ -117,11 +111,11 @@ public class NpcWalkerRoutesTable
 		}
 		catch(FileNotFoundException e)
 		{
-			_log.warning("walker_routes.csv is missing in data folder");
+			_log.warn("walker_routes.csv is missing in data folder");
 		}
 		catch(IOException e0)
 		{
-			_log.warning("Error while creating table: " + e0.getMessage() + "\n" + e0);
+			_log.warn("Error while creating table: " + e0.getMessage() + "\n" + e0);
 		}
 		finally
 		{

@@ -14,22 +14,21 @@
 */
 package com.l2scoria.gameserver.handler;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.Collection;
-import java.util.logging.Logger;
-import java.util.Map;
-import java.util.concurrent.ScheduledFuture;
-
-import javolution.text.TextBuilder;
-import javolution.util.FastMap;
-
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.entity.Announcements;
 import com.l2scoria.gameserver.network.serverpackets.NpcHtmlMessage;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.util.database.L2DatabaseFactory;
+import javolution.text.TextBuilder;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.Collection;
+import java.util.Map;
+import java.util.concurrent.ScheduledFuture;
 
 /**
  * Auto Announcment Handler Automatically send announcment at a set time interval.
@@ -205,7 +204,7 @@ public class AutoAnnouncementHandler
 		}
 		catch(Exception e)
 		{
-			_log.warning("System: Could Not Insert Auto Announcment into DataBase: " + e.getMessage());
+			_log.warn("System: Could Not Insert Auto Announcment into DataBase: " + e.getMessage());
 		}
 		finally
 		{
@@ -317,7 +316,7 @@ public class AutoAnnouncementHandler
 		}
 		catch(Exception e)
 		{
-			_log.warning("Could not delete Auto Announcement in database:" + e.getMessage());
+			_log.warn("Could not delete Auto Announcement in database:" + e.getMessage());
 		}
 		finally
 		{

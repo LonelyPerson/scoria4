@@ -18,19 +18,18 @@
  */
 package com.l2scoria.gameserver.datatables.sql;
 
+import com.l2scoria.gameserver.model.base.ClassId;
+import com.l2scoria.gameserver.templates.L2PcTemplate;
+import com.l2scoria.gameserver.templates.StatsSet;
+import com.l2scoria.util.database.L2DatabaseFactory;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
-import java.util.logging.Logger;
-
-import javolution.util.FastMap;
-
-import com.l2scoria.gameserver.model.base.ClassId;
-import com.l2scoria.gameserver.templates.L2PcTemplate;
-import com.l2scoria.gameserver.templates.StatsSet;
-import com.l2scoria.util.database.L2DatabaseFactory;
 
 public class CharTemplateTable
 {
@@ -256,7 +255,7 @@ public class CharTemplateTable
 					}
 					else
 					{
-						_log.warning("char_creation_items: No data for itemId: "+itemId+" defined for classId "+classId);
+						_log.warn("char_creation_items: No data for itemId: "+itemId+" defined for classId "+classId);
 					}
 				}
 				rset2.close();
@@ -277,7 +276,7 @@ public class CharTemplateTable
 		}
 		catch(SQLException e)
 		{
-			_log.warning("error while loading char templates " + e.getMessage());
+			_log.warn("error while loading char templates " + e.getMessage());
 		}
 		finally
 		{
@@ -285,7 +284,7 @@ public class CharTemplateTable
 			con = null;
 		}
 
-		_log.config("CharTemplateTable: Loaded " + _templates.size() + " Character Templates.");
+		_log.info("CharTemplateTable: Loaded " + _templates.size() + " Character Templates.");
 	}
 
 	public L2PcTemplate getTemplate(ClassId classId)

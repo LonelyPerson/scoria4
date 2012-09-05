@@ -18,33 +18,23 @@
  */
 package com.l2scoria.gameserver.model.actor.instance;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.LineNumberReader;
-import java.util.Collection;
-import java.util.Map;
-import java.util.StringTokenizer;
-import java.util.logging.Logger;
-
-import javolution.util.FastMap;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.GameTimeController;
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.actor.knownlist.BoatKnownList;
 import com.l2scoria.gameserver.model.actor.position.L2CharPosition;
 import com.l2scoria.gameserver.network.clientpackets.Say2;
-import com.l2scoria.gameserver.network.serverpackets.CreatureSay;
-import com.l2scoria.gameserver.network.serverpackets.InventoryUpdate;
-import com.l2scoria.gameserver.network.serverpackets.OnVehicleCheckLocation;
-import com.l2scoria.gameserver.network.serverpackets.PlaySound;
-import com.l2scoria.gameserver.network.serverpackets.VehicleDeparture;
-import com.l2scoria.gameserver.network.serverpackets.VehicleInfo;
+import com.l2scoria.gameserver.network.serverpackets.*;
 import com.l2scoria.gameserver.templates.L2CharTemplate;
 import com.l2scoria.gameserver.templates.L2Weapon;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
+
+import java.io.*;
+import java.util.Collection;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 /**
  * @author eX1steam, l2scoria
@@ -160,15 +150,15 @@ public class L2BoatInstance extends L2Character
 					parseLine(line);
 					return;
 				}
-				_logBoat.warning("No path for boat " + boatName + " !!!");
+				_logBoat.warn("No path for boat " + boatName + " !!!");
 			}
 			catch(FileNotFoundException e)
 			{
-				_logBoat.warning("boatpath.csv is missing in data folder");
+				_logBoat.warn("boatpath.csv is missing in data folder");
 			}
 			catch(Exception e)
 			{
-				_logBoat.warning("error while creating boat table " + e);
+				_logBoat.warn("error while creating boat table " + e);
 			}
 			finally
 			{
@@ -261,7 +251,7 @@ public class L2BoatInstance extends L2Character
 
 		if(Config.DEBUG)
 		{
-			_logBoat.fine("distance to target:" + distance);
+			_logBoat.info("distance to target:" + distance);
 		}
 
 		// Define movement angles needed
@@ -287,7 +277,7 @@ public class L2BoatInstance extends L2Character
 
 		if(Config.DEBUG)
 		{
-			_logBoat.fine("dist:" + distance + "speed:" + speed + " ttt:" + ticksToMove + " heading:" + getPosition().getHeading());
+			_logBoat.info("dist:" + distance + "speed:" + speed + " ttt:" + ticksToMove + " heading:" + getPosition().getHeading());
 		}
 
 		m._xDestination = x;
@@ -299,7 +289,7 @@ public class L2BoatInstance extends L2Character
 
 		if(Config.DEBUG)
 		{
-			_logBoat.fine("time to target:" + ticksToMove);
+			_logBoat.info("time to target:" + ticksToMove);
 		}
 
 		// Set the L2Character _move object to MoveData object

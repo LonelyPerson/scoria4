@@ -18,15 +18,15 @@
  */
 package com.l2scoria.gameserver.network.serverpackets;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.sql.NpcTable;
 import com.l2scoria.gameserver.managers.CursedWeaponsManager;
 import com.l2scoria.gameserver.model.Inventory;
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
+import com.l2scoria.gameserver.network.L2GameClient;
 import com.l2scoria.gameserver.templates.L2NpcTemplate;
+import org.apache.log4j.Logger;
 
 /**
  * 0000: 03 32 15 00 00 44 fe 00 00 80 f1 ff ff 00 00 00 .2...D..........
@@ -102,7 +102,7 @@ public class CharInfo extends L2GameServerPacket
 	}
 
 	@Override
-	protected final void writeImpl()
+	protected final void writeImpl(L2GameClient client)
 	{
 		boolean gmSeeInvis = false;
 
@@ -163,7 +163,10 @@ public class CharInfo extends L2GameServerPacket
 					writeC(_activeChar.getAppearance().getInvisible() ? 1 : 0); // invisible ?? 0=false  1=true   2=summoned (only works if model has a summon animation)
 				}
 
-				writeS(_activeChar.getName());
+				if(_activeChar.isInFunEvent())
+					writeS(_activeChar._event.getName(_activeChar, client.getActiveChar()));
+				else
+					writeS(_activeChar.getName());
 
 				if(gmSeeInvis)
 				{
@@ -171,7 +174,10 @@ public class CharInfo extends L2GameServerPacket
 				}
 				else
 				{
-					writeS(_activeChar.getTitle());
+					if(_activeChar.isInFunEvent())
+						writeS(_activeChar._event.getTitle(_activeChar, client.getActiveChar()));
+					else
+						writeS(_activeChar.getTitle());
 				}
 
 				writeD(0);
@@ -195,7 +201,7 @@ public class CharInfo extends L2GameServerPacket
 			}
 			else
 			{
-				_log.warning("Character " + _activeChar.getName() + " (" + _activeChar.getObjectId() + ") morphed in a Npc (" + _activeChar.getPoly().getPolyId() + ") w/o template.");
+				_log.warn("Character " + _activeChar.getName() + " (" + _activeChar.getObjectId() + ") morphed in a Npc (" + _activeChar.getPoly().getPolyId() + ") w/o template.");
 			}
 		}
 		else
@@ -206,7 +212,12 @@ public class CharInfo extends L2GameServerPacket
 			writeD(_z);
 			writeD(_heading);
 			writeD(_activeChar.getObjectId());
-			writeS(_activeChar.getName());
+
+			if(_activeChar.isInFunEvent())
+				writeS(_activeChar._event.getName(_activeChar, client.getActiveChar()));
+			else
+				writeS(_activeChar.getName());
+
 			writeD(_activeChar.getRace().ordinal());
 			writeD(_activeChar.getAppearance().getSex() ? 1 : 0);
 
@@ -278,7 +289,10 @@ public class CharInfo extends L2GameServerPacket
 			}
 			else
 			{
-				writeS(_activeChar.getTitle());
+				if(_activeChar.isInFunEvent())
+					writeS(_activeChar._event.getTitle(_activeChar, client.getActiveChar()));
+				else
+					writeS(_activeChar.getTitle());
 			}
 
 			writeD(_activeChar.getClanId());
@@ -353,14 +367,20 @@ public class CharInfo extends L2GameServerPacket
 			writeD(_activeChar.GetFishy());
 			writeD(_activeChar.GetFishz());
 
-			writeD(_activeChar.getAppearance().getNameColor());
+			if(_activeChar.isInFunEvent())
+				writeD(_activeChar._event.getCharNameColor(_activeChar, client.getActiveChar()));
+			else
+				writeD(_activeChar.getAppearance().getNameColor());
 
 			writeD(_heading);
 
 			writeD(_activeChar.getPledgeClass());
 			writeD(_activeChar.getPledgeType());
 
-			writeD(_activeChar.getAppearance().getTitleColor());
+			if(_activeChar.isInFunEvent())
+				writeD(_activeChar._event.getCharTitleColor(_activeChar, client.getActiveChar()));
+			else
+				writeD(_activeChar.getAppearance().getTitleColor());
 
 			//writeD(0x00); // ??
 

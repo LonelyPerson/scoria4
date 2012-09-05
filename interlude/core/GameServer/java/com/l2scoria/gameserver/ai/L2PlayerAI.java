@@ -66,7 +66,7 @@ public class L2PlayerAI extends L2CharacterAI
 	{
 		/*
 		 if (Config.DEBUG)
-		 _log.warning("L2PlayerAI: changeIntention -> " + intention + " " + arg0 + " " + arg1);
+		 _log.warn("L2PlayerAI: changeIntention -> " + intention + " " + arg0 + " " + arg1);
 		 */
 
 		// do nothing unless CAST intention
@@ -152,7 +152,7 @@ public class L2PlayerAI extends L2CharacterAI
 			{
 				/*
 				 if (Config.DEBUG)
-				 _log.warning("L2PlayerAI: no previous intention set... Setting it to IDLE");
+				 _log.warn("L2PlayerAI: no previous intention set... Setting it to IDLE");
 				 */
 				// set intention to idle if skill doesn't change intention.
 				setIntention(AI_INTENTION_IDLE);
@@ -260,7 +260,7 @@ public class L2PlayerAI extends L2CharacterAI
 	private void thinkCast()
 	{
 		L2Character target = getCastTarget();
-		//if (Config.DEBUG) _log.warning("L2PlayerAI: thinkCast -> Start");
+		//if (Config.DEBUG) _log.warn("L2PlayerAI: thinkCast -> Start");
 
 		if(checkTargetLost(target))
 		{
@@ -376,7 +376,7 @@ public class L2PlayerAI extends L2CharacterAI
 
 		/*
 		 if (Config.DEBUG)
-		 _log.warning("L2PlayerAI: onEvtThink -> Check intention");
+		 _log.warn("L2PlayerAI: onEvtThink -> Check intention");
 		 */
 
 		_thinking = true;

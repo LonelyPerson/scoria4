@@ -30,9 +30,9 @@ import com.l2scoria.gameserver.network.serverpackets.*;
 import com.l2scoria.gameserver.templates.L2Item;
 import com.l2scoria.gameserver.util.FloodProtector;
 import com.l2scoria.gameserver.util.Util;
+import org.apache.log4j.Logger;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * This class ...
@@ -259,7 +259,7 @@ public final class RequestBuyItem extends L2GameClientPacket
 			*/
 			if(price < 0)
 			{
-				_log.warning("ERROR, no price found .. wrong buylist ??");
+				_log.warn("ERROR, no price found .. wrong buylist ??");
 				sendPacket(ActionFailed.STATIC_PACKET);
 				return;
 			}

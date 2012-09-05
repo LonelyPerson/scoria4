@@ -39,8 +39,7 @@ import com.l2scoria.gameserver.templates.L2WeaponType;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.gameserver.util.FloodProtector;
 import com.l2scoria.gameserver.util.Util;
-
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 /**
  * This class ...
@@ -129,6 +128,9 @@ public final class UseItem extends L2GameClientPacket
 		{
 			return;
 		}
+
+		if(activeChar._event!=null && activeChar._event.isRunning() && !activeChar._event.canUseItem(activeChar, item))
+			return;
 
 		if(item.getItem().getType2() == L2Item.TYPE2_QUEST)
 		{
@@ -315,7 +317,7 @@ public final class UseItem extends L2GameClientPacket
 
 		if(Config.DEBUG)
 		{
-			_log.finest(activeChar.getObjectId() + ": use item " + _objectId);
+			_log.info(activeChar.getObjectId() + ": use item " + _objectId);
 		}
 
 		activeChar._inWorld = true;
@@ -447,7 +449,7 @@ public final class UseItem extends L2GameClientPacket
 				if(handler == null)
 				{
 					if(Config.DEBUG)
-						_log.warning("No item handler registered for item ID " + itemId + ".");
+						_log.warn("No item handler registered for item ID " + itemId + ".");
 				}
 				else
 				{

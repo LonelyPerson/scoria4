@@ -17,22 +17,6 @@
  */
 package com.l2scoria.gameserver.datatables.xml;
 
-import java.io.File;
-import java.util.List;
-import java.util.Map;
-import java.util.StringTokenizer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.SkillTable;
 import com.l2scoria.gameserver.model.L2Augmentation;
@@ -40,6 +24,18 @@ import com.l2scoria.gameserver.model.L2Skill;
 import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
 import com.l2scoria.gameserver.skills.Stats;
 import com.l2scoria.util.random.Rnd;
+import javolution.util.FastList;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.File;
+import java.util.List;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 public class AugmentationData
 {
@@ -223,7 +219,7 @@ public class AugmentationData
 			{
 				if(Config.DEBUG)
 				{
-					_log.warning("The augmentation skillmap file is missing.");
+					_log.warn("The augmentation skillmap file is missing.");
 				}
 				return;
 			}
@@ -266,7 +262,7 @@ public class AugmentationData
 							{
 								if(Config.DEBUG)
 								{
-									_log.log(Level.SEVERE, "Bad skillId in augmentation_skillmap.xml in the augmentationId:" + augmentationId);
+									_log.fatal("Bad skillId in augmentation_skillmap.xml in the augmentationId:" + augmentationId);
 								}
 								badAugmantData++;
 								continue;
@@ -275,7 +271,7 @@ public class AugmentationData
 							{
 								if(Config.DEBUG)
 								{
-									_log.log(Level.SEVERE, "Bad skillLevel in augmentation_skillmap.xml in the augmentationId:" + augmentationId);
+									_log.fatal("Bad skillLevel in augmentation_skillmap.xml in the augmentationId:" + augmentationId);
 								}
 								badAugmantData++;
 								continue;
@@ -316,7 +312,7 @@ public class AugmentationData
 		}
 		catch(Exception e)
 		{
-			_log.log(Level.SEVERE, "Error parsing augmentation_skillmap.xml.", e);
+			_log.fatal("Error parsing augmentation_skillmap.xml.", e);
 
 			return;
 		}
@@ -336,7 +332,7 @@ public class AugmentationData
 				{
 					if(Config.DEBUG)
 					{
-						_log.warning("The augmentation stat data file " + i + " is missing.");
+						_log.warn("The augmentation stat data file " + i + " is missing.");
 					}
 
 					return;
@@ -413,7 +409,7 @@ public class AugmentationData
 			}
 			catch(Exception e)
 			{
-				_log.log(Level.SEVERE, "Error parsing augmentation_stats" + i + ".xml.", e);
+				_log.fatal("Error parsing augmentation_stats" + i + ".xml.", e);
 				return;
 			}
 		}

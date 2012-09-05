@@ -18,8 +18,6 @@
  */
 package com.l2scoria.gameserver.handler.skillhandlers;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.SkillTable;
 import com.l2scoria.gameserver.handler.ISkillHandler;
@@ -28,11 +26,7 @@ import com.l2scoria.gameserver.model.L2Effect;
 import com.l2scoria.gameserver.model.L2Object;
 import com.l2scoria.gameserver.model.L2Skill;
 import com.l2scoria.gameserver.model.L2Skill.SkillType;
-import com.l2scoria.gameserver.model.actor.instance.L2DoorInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2MonsterInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2NpcInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
+import com.l2scoria.gameserver.model.actor.instance.*;
 import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.EtcStatusUpdate;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
@@ -40,6 +34,7 @@ import com.l2scoria.gameserver.skills.Formulas;
 import com.l2scoria.gameserver.skills.effects.EffectCharge;
 import com.l2scoria.gameserver.templates.L2WeaponType;
 import com.l2scoria.util.random.Rnd;
+import org.apache.log4j.Logger;
 
 /**
  * This class ...
@@ -70,7 +65,7 @@ public class Pdam implements ISkillHandler
 		int damage = 0;
 
 		if(Config.DEBUG)
-			_log.fine("Begin Skill processing in Pdam.java " + skill.getSkillType());
+			_log.info("Begin Skill processing in Pdam.java " + skill.getSkillType());
 
 		for(L2Object target2 : targets)
 		{

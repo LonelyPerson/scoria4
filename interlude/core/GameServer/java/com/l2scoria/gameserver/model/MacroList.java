@@ -18,23 +18,21 @@
  */
 package com.l2scoria.gameserver.model;
 
+import com.l2scoria.gameserver.model.L2Macro.L2MacroCmd;
+import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
+import com.l2scoria.gameserver.network.serverpackets.SendMacroList;
+import com.l2scoria.util.database.L2DatabaseFactory;
+import javolution.text.TextBuilder;
+import javolution.util.FastList;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javolution.text.TextBuilder;
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
-import com.l2scoria.gameserver.model.L2Macro.L2MacroCmd;
-import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import com.l2scoria.gameserver.network.serverpackets.SendMacroList;
-import java.sql.Connection;
-import com.l2scoria.util.database.L2DatabaseFactory;
 
 /**
  * This class ...
@@ -189,7 +187,7 @@ public class MacroList
 		catch(Exception e)
 		{
 			_log.info("Player: " + _owner.getName() + " IP:" + _owner.getClient().getConnection().getInetAddress().getHostAddress() + " try to use bug with macros");
-			_log.log(Level.WARNING, "could not store macro:", e);
+			_log.warn("could not store macro:", e);
 		}
 		finally
 		{
@@ -217,7 +215,7 @@ public class MacroList
 		}
 		catch(Exception e)
 		{
-			_log.log(Level.WARNING, "could not delete macro:", e);
+			_log.warn("could not delete macro:", e);
 		}
 		finally
 		{
@@ -291,7 +289,7 @@ public class MacroList
 		}
 		catch(Exception e)
 		{
-			_log.log(Level.WARNING, "could not store shortcuts:", e);
+			_log.warn("could not store shortcuts:", e);
 		}
 		finally
 		{

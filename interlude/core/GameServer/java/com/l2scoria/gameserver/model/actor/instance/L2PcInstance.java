@@ -38,7 +38,7 @@ import com.l2scoria.gameserver.datatables.sql.*;
 import com.l2scoria.gameserver.geodata.GeoEngine;
 import com.l2scoria.gameserver.handler.IItemHandler;
 import com.l2scoria.gameserver.handler.ItemHandler;
-import com.l2scoria.gameserver.handler.admincommandhandlers.AdminEditChar;
+import com.l2scoria.gameserver.handler.admincommandhandlers.EditChar;
 import com.l2scoria.gameserver.handler.skillhandlers.SiegeFlag;
 import com.l2scoria.gameserver.handler.skillhandlers.StrSiegeAssault;
 import com.l2scoria.gameserver.handler.skillhandlers.SummonFriend;
@@ -66,6 +66,7 @@ import com.l2scoria.gameserver.model.quest.Quest;
 import com.l2scoria.gameserver.model.quest.QuestState;
 import com.l2scoria.gameserver.network.L2GameClient;
 import com.l2scoria.gameserver.network.SystemMessageId;
+import com.l2scoria.gameserver.network.clientpackets.RequestActionUse;
 import com.l2scoria.gameserver.network.serverpackets.*;
 import com.l2scoria.gameserver.skills.Formulas;
 import com.l2scoria.gameserver.skills.Stats;
@@ -94,7 +95,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.logging.Level;
 
 /**
  * This class represents all player characters in the world. There is always a client-thread connected to this (except
@@ -716,7 +716,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			}
 			catch(Throwable t)
 			{
-				_log.log(Level.WARNING, "", t);
+				_log.warn("", t);
 			}
 		}
 	}
@@ -945,6 +945,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		initPcStatusUpdateValues();
 
 		_accountName = accountName;
+		app.setOwner(this);
 		_appearance = app;
 
 		// Create an AI
@@ -1181,7 +1182,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		}
 		else
 		{
-			_log.warning("Attempted to remove unknown RecipeList: " + recipeId);
+			_log.warn("Attempted to remove unknown RecipeList: " + recipeId);
 		}
 
 		L2ShortCut[] allShortCuts = getAllShortCuts();
@@ -1462,7 +1463,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		{
 			if(Config.DEBUG)
 			{
-				_log.fine("Showing quest window for quest " + questId + " state " + stateId + " html path: " + path);
+				_log.info("Showing quest window for quest " + questId + " state " + stateId + " html path: " + path);
 			}
 
 			NpcHtmlMessage npcReply = new NpcHtmlMessage(5);
@@ -1624,7 +1625,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			}
 			catch(Exception e)
 			{
-				_log.log(Level.WARNING, "error in pvp flag task:", e);
+				_log.warn("error in pvp flag task:", e);
 			}
 		}
 	}
@@ -1909,7 +1910,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			}
 			catch(Exception e)
 			{
-				_log.warning("could not update char recommendations:" + e);
+				_log.warn("could not update char recommendations:" + e);
 			}
 			finally
 			{
@@ -2000,6 +2001,12 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		if(karma < 0)
 		{
 			karma = 0;
+		}
+
+		if(karma > 0)
+		{
+			if (_event!=null && _event.isRunning())
+				return;
 		}
 
 		if(_karma == 0 && karma > 0)
@@ -2219,6 +2226,9 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 	 */
 	public void setPvpKills(int pvpKills)
 	{
+		if (_event!=null && _event.isRunning())
+			return;
+
 		_pvpKills = pvpKills;
 	}
 
@@ -2429,7 +2439,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 
 			if(Config.DEBUG && skill != null)
 			{
-				_log.fine("removed skill 'Lucky' from " + getName());
+				_log.info("removed skill 'Lucky' from " + getName());
 			}
 
 			skill = null;
@@ -2452,7 +2462,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 
 			if(Config.DEBUG)
 			{
-				_log.fine("awarded " + getName() + " with new expertise.");
+				_log.info("awarded " + getName() + " with new expertise.");
 			}
 
 			skill = null;
@@ -2461,7 +2471,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		{
 			if(Config.DEBUG)
 			{
-				_log.fine("No skills awarded at lvl: " + lvl);
+				_log.info("No skills awarded at lvl: " + lvl);
 			}
 		}
 
@@ -2759,7 +2769,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 	 */
 	public void sitDown()
 	{
-		if(Config.MOVE_SIT_LIKE_PTS && isMoving())
+		if(isMoving() && Config.MOVE_SIT_LIKE_PTS)
 		{
 			if(!getSitdownTask())
 			{
@@ -2833,6 +2843,12 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		if(isAway())
 		{
 			sendMessage("You can't stand up if your Status is Away.");
+			return;
+		}
+
+		if(_event != null && !_event.canDoAction(this, RequestActionUse.ACTION_SIT_STAND))
+		{
+			sendMessage("Запрещено администратором.");
 			return;
 		}
 
@@ -3218,7 +3234,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 	
 						if(handler == null)
 						{
-							_log.warning("No item handler registered for Herb - item ID " + herb.getItemId() + ".");
+							_log.warn("No item handler registered for Herb - item ID " + herb.getItemId() + ".");
 						}
 						else
 						{
@@ -3273,7 +3289,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 					{
 						CursedWeaponsManager.getInstance().activate(this, item);
 					}
-	
+
 					item = null;
 				}
 				// Sends message to client if requested
@@ -3319,9 +3335,18 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			}
 			else
 			{
-				_log.warning("No item with id: " + itemId + " exist in DB.");
+				_log.warn("No item with id: " + itemId + " exist in DB.");
 			}
 		}
+	}
+
+	public boolean addItem(String process, int []itemsId, int []counts, L2Object reference, boolean sendMessage)
+	{
+		if(itemsId.length==0 || itemsId.length != counts.length)
+			return false;
+		for(int i=0;i<itemsId.length;i++)
+			addItem(process, itemsId[i], counts[i], reference, sendMessage);
+		return true;
 	}
 
 	/**
@@ -3605,7 +3630,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 
 				if(_inventory.destroyItem(process, item, this, reference) == null)
 				{
-					_log.warning("Player " + getName() + " can't destroy weared item: " + item.getName() + "[ " + item.getObjectId() + " ]");
+					_log.warn("Player " + getName() + " can't destroy weared item: " + item.getName() + "[ " + item.getObjectId() + " ]");
 					continue;
 				}
 
@@ -3940,7 +3965,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 	{
 		if(L2World.getInstance().findObject(objectId) == null)
 		{
-			_log.finest(getObjectId() + ": player tried to " + action + " item not available in L2World");
+			_log.info(getObjectId() + ": player tried to " + action + " item not available in L2World");
 			return null;
 		}
 
@@ -3948,19 +3973,19 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 
 		if(item == null || item.getOwnerId() != getObjectId())
 		{
-			_log.finest(getObjectId() + ": player tried to " + action + " item he is not owner of");
+			_log.info(getObjectId() + ": player tried to " + action + " item he is not owner of");
 			return null;
 		}
 
 		if(count < 0 || count > 1 && !item.isStackable())
 		{
-			_log.finest(getObjectId() + ": player tried to " + action + " item with invalid count: " + count);
+			_log.info(getObjectId() + ": player tried to " + action + " item with invalid count: " + count);
 			return null;
 		}
 
 		if(count > item.getCount())
 		{
-			_log.finest(getObjectId() + ": player tried to " + action + " more items than he owns");
+			_log.info(getObjectId() + ": player tried to " + action + " more items than he owns");
 			return null;
 		}
 
@@ -3969,7 +3994,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		{
 			if(Config.DEBUG)
 			{
-				_log.finest(getObjectId() + ": player tried to " + action + " item controling pet");
+				_log.info(getObjectId() + ": player tried to " + action + " item controling pet");
 			}
 
 			return null;
@@ -3979,7 +4004,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		{
 			if(Config.DEBUG)
 			{
-				_log.finest(getObjectId() + ":player tried to " + action + " an enchant scroll he was using");
+				_log.info(getObjectId() + ":player tried to " + action + " an enchant scroll he was using");
 			}
 
 			return null;
@@ -4057,7 +4082,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			_client.close(new LeaveWorld());
 			setClient(null);
                     } catch(Exception f) {
-                        _log.warning("netConnection null-type exception: "+f);
+                        _log.warn("netConnection null-type exception: "+f);
                     }
 		}
 	}
@@ -4088,6 +4113,13 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 	@Override
 	public void onAction(L2PcInstance player)
 	{
+		if(player._event !=_event)
+			if((player._event != null && !player._event.canInteract(player, this)) ||
+					(_event!=null && !_event.canInteract(player, this)) && !player.isGM()	) {
+				player.sendPacket(ActionFailed.STATIC_PACKET);
+				return;
+			}
+
 		// Check if the L2PcInstance is confused
 		if(player.isOutOfControl())
 		{
@@ -4123,7 +4155,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			}
 			else
 			{
-				// Check if this L2PcInstance is autoAttackable
+				// Check ifisAutoAttackable this L2PcInstance is autoAttackable
 				if(isAutoAttackable(player))
 				{
 					if(player.getLevel() < Config.ALT_PLAYER_PROTECTION_LEVEL || getLevel() < Config.ALT_PLAYER_PROTECTION_LEVEL)
@@ -4203,7 +4235,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			{
 				if(AdminCommandAccessRights.getInstance().hasAccess("admin_character_info", player.getAccessLevel()))
 				{
-					AdminEditChar.gatherCharacterInfo(player, this, "charinfo.htm");
+					EditChar.gatherCharacterInfo(player, this, "charinfo.htm");
 				}
 				else
 				{
@@ -4480,7 +4512,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		{
 			if(Config.DEBUG)
 			{
-				_log.fine("Send status for party window of " + getObjectId() + "(" + getName() + ") to his party. CP: " + getCurrentCp() + " HP: " + getCurrentHp() + " MP: " + getCurrentMp());
+				_log.info("Send status for party window of " + getObjectId() + "(" + getName() + ") to his party. CP: " + getCurrentCp() + " HP: " + getCurrentHp() + " MP: " + getCurrentMp());
 			}
 			// Send the Server->Client packet PartySmallWindowUpdate with current HP, MP and Level to all other L2PcInstance of the Party
 			PartySmallWindowUpdate update = new PartySmallWindowUpdate(this);
@@ -4498,7 +4530,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 					if (player.getOlympiadGameId() == getOlympiadGameId() && player.isOlympiadStart()) 
 					{ 
 						if (Config.DEBUG) 
-							_log.fine("Send status for Olympia window of " + getObjectId() + "(" + getName() + ") to " 
+							_log.info("Send status for Olympia window of " + getObjectId() + "(" + getName() + ") to "
 								+ player.getObjectId() + "(" + player.getName()
 								+ "). CP: " + getCurrentCp()
 								+ " HP: " + getCurrentHp()
@@ -4635,7 +4667,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		// Send a Server->Client packet CharInfo to all L2PcInstance in _KnownPlayers of the L2PcInstance
 		if(Config.DEBUG)
 		{
-			_log.fine("players to notify:" + getKnownList().getKnownPlayers().size() + " packet: [S] 03 CharInfo");
+			_log.info("players to notify:" + getKnownList().getKnownPlayers().size() + " packet: [S] 03 CharInfo");
 		}
 
 		Broadcast.toKnownPlayers(this, new CharInfo(this));
@@ -4649,7 +4681,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		// Send a Server->Client packet TitleUpdate to all L2PcInstance in _KnownPlayers of the L2PcInstance
 		if(Config.DEBUG)
 		{
-			_log.fine("players to notify:" + getKnownList().getKnownPlayers().size() + " packet: [S] cc TitleUpdate");
+			_log.info("players to notify:" + getKnownList().getKnownPlayers().size() + " packet: [S] cc TitleUpdate");
 		}
 
 		Broadcast.toKnownPlayers(this, new TitleUpdate(this));
@@ -4723,7 +4755,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			}
 			catch (Exception e)
 			{
-				_log.log(Level.INFO, "", e);
+				_log.info("", e);
 			}
 		}*/
 	}
@@ -4835,7 +4867,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		if(!(object instanceof L2ItemInstance))
 		{
 			// dont try to pickup anything that is not an item :)
-			_log.warning("trying to pickup wrong target." + getTarget());
+			_log.warn("trying to pickup wrong target." + getTarget());
 			return;
 		}
 
@@ -4848,7 +4880,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		StopMove sm = new StopMove(getObjectId(), getX(), getY(), getZ(), getHeading());
 		if(Config.DEBUG)
 		{
-			_log.fine("pickup pos: " + target.getX() + " " + target.getY() + " " + target.getZ());
+			_log.info("pickup pos: " + target.getX() + " " + target.getY() + " " + target.getZ());
 		}
 		sendPacket(sm);
 		sm = null;
@@ -4931,7 +4963,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			IItemHandler handler = ItemHandler.getInstance().getItemHandler(target.getItemId());
 			if(handler == null)
 			{
-				_log.fine("No item handler registered for item ID " + target.getItemId() + ".");
+				_log.info("No item handler registered for item ID " + target.getItemId() + ".");
 			}
 			else
 			{
@@ -5335,9 +5367,19 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			if(killer instanceof L2PcInstance)
 			{
 				pk = (L2PcInstance) killer;
+
 				if(Config.ENABLE_PK_INFO)
 				{
 					doPkInfo(pk);
+				}
+
+				if(pk._event != null && pk._event.isRunning())
+				{
+					pk._event.onKill(pk, this);
+				}
+				else if (_event != null && _event.isRunning())
+				{
+					_event.onKill(killer, this);
 				}
 			}
 
@@ -5364,11 +5406,13 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 							{
 								((L2PcInstance) killer).getClan().setReputationScore(((L2PcInstance) killer).getClan().getReputationScore() + 2, true);
 							}
+
 							if(((L2PcInstance) killer).getClan().getReputationScore() > 0)
 							{
 								_clan.setReputationScore(_clan.getReputationScore() - 2, true);
 							}
 						}
+
 						if(Config.ALT_GAME_DELEVEL)
 						{
 							// Reduce the Experience of the L2PcInstance in function of the calculated Death Penalty
@@ -5429,7 +5473,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 
 	private void onDieDropItem(L2Character killer)
 	{
-		if(killer == null)
+		if ((_event!=null && _event.isRunning()) || killer == null)
 			return;
 
 		if(getKarma() <= 0 && killer instanceof L2PcInstance && ((L2PcInstance) killer).getClan() != null && getClan() != null && ((L2PcInstance) killer).getClan().isAtWarWith(getClanId()))
@@ -5510,11 +5554,11 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 
 						if(isKarmaDrop)
 						{
-							_log.warning(getName() + " has karma and dropped id = " + itemDrop.getItemId() + ", count = " + itemDrop.getCount() + ", location: " + itemDrop.getLocation());
+							_log.warn(getName() + " has karma and dropped id = " + itemDrop.getItemId() + ", count = " + itemDrop.getCount() + ", location: " + itemDrop.getLocation());
 						}
 						else
 						{
-							_log.warning(getName() + " dropped id = " + itemDrop.getItemId() + ", count = " + itemDrop.getCount());
+							_log.warn(getName() + " dropped id = " + itemDrop.getItemId() + ", count = " + itemDrop.getCount());
 						}
 
 						dropCount++;
@@ -5553,6 +5597,9 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			return;
 
 		if(!(target instanceof L2PlayableInstance))
+			return;
+
+		if (_event!=null && _event.isRunning())
 			return;
 
 		if(isCursedWeaponEquiped())
@@ -5830,8 +5877,8 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		}
 		catch(SQLException e)
 		{
-			_log.warning("Could not check pkKills, got: " + e.getMessage());
-			_log.warning("This appears after the first kill.");
+			_log.warn("Could not check pkKills, got: " + e.getMessage());
+			_log.warn("This appears after the first kill.");
 		}
 		finally
 		{
@@ -5857,7 +5904,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			}
 			catch(SQLException e)
 			{
-				_log.warning("Could not update pkKills, got: " + e.getMessage());
+				_log.warn("Could not update pkKills, got: " + e.getMessage());
 			}
 			finally
 			{
@@ -5885,7 +5932,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			}
 			catch(SQLException e)
 			{
-				_log.warning("Could not add pkKills, got: " + e.getMessage());
+				_log.warn("Could not add pkKills, got: " + e.getMessage());
 			}
 			finally
 			{
@@ -6022,8 +6069,12 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 
 	public void updatePvPStatus()
 	{
+		if (_event != null && _event.isRunning())
+			return;
+
 		if(isInsideZone(ZONE_PVP))
 			return;
+
 		setPvpFlagLasts(System.currentTimeMillis() + Config.PVP_NORMAL_TIME);
 
 		if(getPvpFlag() == 0)
@@ -6034,16 +6085,10 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 
 	public void updatePvPStatus(L2Character target)
 	{
-		L2PcInstance player_target = null;
+		if (_event!=null && _event.isRunning())
+			return;
 
-		if(target instanceof L2PcInstance)
-		{
-			player_target = (L2PcInstance) target;
-		}
-		else if(target instanceof L2Summon)
-		{
-			player_target = ((L2Summon) target).getOwner();
-		}
+		L2PcInstance player_target = target.getActingPlayer();
 
 		if(player_target == null)
 			return;
@@ -6131,13 +6176,16 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		// Calculate the Experience loss
 		long lostExp = 0;
 
-		if(lvl < Experience.MAX_LEVEL)
+		if (_event==null || _event.canLostExpOnDie())
 		{
-			lostExp = Math.round((getStat().getExpForLevel(lvl + 1) - getStat().getExpForLevel(lvl)) * percentLost / 100);
-		}
-		else
-		{
-			lostExp = Math.round((getStat().getExpForLevel(Experience.MAX_LEVEL) - getStat().getExpForLevel(Experience.MAX_LEVEL - 1)) * percentLost / 100);
+			if(lvl < Experience.MAX_LEVEL)
+			{
+				lostExp = Math.round((getStat().getExpForLevel(lvl + 1) - getStat().getExpForLevel(lvl)) * percentLost / 100);
+			}
+			else
+			{
+				lostExp = Math.round((getStat().getExpForLevel(Experience.MAX_LEVEL) - getStat().getExpForLevel(Experience.MAX_LEVEL - 1)) * percentLost / 100);
+			}
 		}
 
 		// Get the Experience before applying penalty
@@ -6154,7 +6202,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 
 		if(Config.DEBUG)
 		{
-			_log.fine(getName() + " died and lost " + lostExp + " experience.");
+			_log.info(getName() + " died and lost " + lostExp + " experience.");
 		}
 
 		// Set the new Experience value of the L2PcInstance
@@ -6547,7 +6595,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 
 		if(Config.DEBUG)
 		{
-			_log.fine("arrow count:" + (arrows == null ? 0 : arrows.getCount()));
+			_log.info("arrow count:" + (arrows == null ? 0 : arrows.getCount()));
 		}
 
 		if(arrows == null || arrows.getCount() == 0)
@@ -6557,7 +6605,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 
 			if(Config.DEBUG)
 			{
-				_log.fine("removed arrows count");
+				_log.info("removed arrows count");
 			}
 
 			sendPacket(new ItemList(this, false));
@@ -6888,7 +6936,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 	{
 		if(level == AccessLevels._masterAccessLevelNum)
 		{
-			_log.warning("Access level from the character " + getName() + " > 0");
+			_log.warn("Access level from the character " + getName() + " > 0");
 			_accessLevel = AccessLevels._masterAccessLevel;
 		}
 		else if(level == AccessLevels._userAccessLevelNum)
@@ -6908,7 +6956,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 				}
 				else
 				{
-					_log.warning("Tried to set unregistered access level " + level + " to character " + getName() + ". Setting access level without privileges!");
+					_log.warn("Tried to set unregistered access level " + level + " to character " + getName() + ". Setting access level without privileges!");
 					_accessLevel = AccessLevels._userAccessLevel;
 				}
 			}
@@ -7088,7 +7136,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		}
 		catch(Exception e)
 		{
-			_log.warning("could not set char online status:" + e);
+			_log.warn("could not set char online status:" + e);
 		}
 		finally
 		{
@@ -7114,7 +7162,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		}
 		catch(Exception e)
 		{
-			_log.warning("could not set char isIn7sDungeon status:" + e);
+			_log.warn("could not set char isIn7sDungeon status:" + e);
 		}
 		finally
 		{
@@ -7202,7 +7250,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		}
 		catch(Exception e)
 		{
-			_log.severe("Could not insert char data: " + e);
+			_log.fatal("Could not insert char data: " + e);
 			return false;
 		}
 		finally
@@ -7355,7 +7403,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 					// a possible restart-while-modifysubclass cheat has been attempted.
 					// Switching to use base class
 					player.setClassId(player.getBaseClass());
-					_log.warning("Player " + player.getName() + " reverted to base class. Possibly has tried a relogin exploit while subclassing.");
+					_log.warn("Player " + player.getName() + " reverted to base class. Possibly has tried a relogin exploit while subclassing.");
 				}
 				else
 				{
@@ -7439,7 +7487,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		}
 		catch(Exception e)
 		{
-			_log.severe("Could not restore char data: " + e);
+			_log.fatal("Could not restore char data: " + e);
 		}
 		finally
 		{
@@ -7539,7 +7587,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		}
 		catch(Exception e)
 		{
-			_log.warning("Could not restore classes for " + player.getName() + ": " + e);
+			_log.warn("Could not restore classes for " + player.getName() + ": " + e);
 			e.printStackTrace();
 		}
 		finally
@@ -7630,7 +7678,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		}
 		catch(Exception e)
 		{
-			_log.warning("Could not store recipe book data: " + e);
+			_log.warn("Could not store recipe book data: " + e);
 		}
 		finally
 		{
@@ -7676,7 +7724,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		}
 		catch(Exception e)
 		{
-			_log.warning("Could not restore recipe book data:" + e);
+			_log.warn("Could not restore recipe book data:" + e);
 		}
 		finally
 		{
@@ -7802,7 +7850,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		}
 		catch(Exception e)
 		{
-			_log.warning("Could not store char base data: " + e);
+			_log.warn("Could not store char base data: " + e);
 		}
 		finally
 		{
@@ -7840,7 +7888,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		}
 		catch(Exception e)
 		{
-			_log.warning("Could not store sub class data for " + getName() + ": " + e);
+			_log.warn("Could not store sub class data for " + getName() + ": " + e);
 		}
 		finally
 		{
@@ -7946,7 +7994,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		}
 		catch(Exception e)
 		{
-			_log.warning("Could not store char effect data: " + e);
+			_log.warn("Could not store char effect data: " + e);
 		}
 		finally
 		{
@@ -8057,7 +8105,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		}
 		catch(Exception e)
 		{
-			_log.warning("Error could not delete skill: " + e);
+			_log.warn("Error could not delete skill: " + e);
 		}
 		finally
 		{
@@ -8123,13 +8171,13 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			}
 			else
 			{
-				_log.warning("could not store new skill. its NULL");
+				_log.warn("could not store new skill. its NULL");
 			}
 			statement = null;
 		}
 		catch(Exception e)
 		{
-			_log.warning("Error could not store char skills: " + e);
+			_log.warn("Error could not store char skills: " + e);
 		}
 		finally
 		{
@@ -8239,7 +8287,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 				{
 					removeSkill(skill);
 					sendMessage("Skill " + skill.getName() + " removed and gm informed!");
-					_log.warning("Cheater! - Character " + getName() + " of Account " + getAccountName() + " got skill " + skill.getName() + " removed!" + IllegalPlayerAction.PUNISH_KICK);
+					_log.warn("Cheater! - Character " + getName() + " of Account " + getAccountName() + " got skill " + skill.getName() + " removed!" + IllegalPlayerAction.PUNISH_KICK);
 				}
 			}
 			skillTree = null;
@@ -8323,7 +8371,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		}
 		catch(Exception e)
 		{
-			_log.warning("Could not restore character skills: " + e);
+			_log.warn("Could not restore character skills: " + e);
 		}
 		finally
 		{
@@ -8430,7 +8478,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		}
 		catch(Exception e)
 		{
-			_log.warning("Could not restore active effect data: " + e);
+			_log.warn("Could not restore active effect data: " + e);
 		}
 		finally
 		{
@@ -8469,7 +8517,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		}
 		catch(Exception e)
 		{
-			_log.warning("Could not restore active effect data: " + e);
+			_log.warn("Could not restore active effect data: " + e);
 		}
 		finally
 		{
@@ -8534,7 +8582,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		}
 		catch(Exception e)
 		{
-			_log.warning("could not restore henna: " + e);
+			_log.warn("could not restore henna: " + e);
 		}
 		finally
 		{
@@ -8573,7 +8621,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		}
 		catch(Exception e)
 		{
-			_log.warning("could not restore recommendations: " + e);
+			_log.warn("could not restore recommendations: " + e);
 		}
 		finally
 		{
@@ -8635,7 +8683,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		}
 		catch(Exception e)
 		{
-			_log.warning("could not remove char henna: " + e);
+			_log.warn("could not remove char henna: " + e);
 		}
 		finally
 		{
@@ -8704,7 +8752,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 				}
 				catch(Exception e)
 				{
-					_log.warning("could not save char henna: " + e);
+					_log.warn("could not save char henna: " + e);
 				}
 				finally
 				{
@@ -8899,6 +8947,9 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			{
 				return false;
 			}
+
+			if(attacker._event!=null && attacker._event.canAttack(attacker, this))
+				return true;
 		}
 
 		// Check if the attacker is not in the same clan
@@ -10324,7 +10375,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 	{
 		if(!_observerMode)
 		{
-			_log.warning("Player " + L2PcInstance.this.getName() + " request leave observer mode when he not use it!");
+			_log.warn("Player " + L2PcInstance.this.getName() + " request leave observer mode when he not use it!");
 			Util.handleIllegalPlayerAction(L2PcInstance.this, "Warning!! Character " + L2PcInstance.this.getName() + " tried to cheat in observer mode.", Config.DEFAULT_PUNISH);
 		}
 		setTarget(null);
@@ -10824,6 +10875,12 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		sendSkillList();
 	}
 
+	@Override
+	public final L2PcInstance getActingPlayer()
+	{
+		return this;
+	}
+
 	public void setLvlJoinedAcademy(int lvl)
 	{
 		_lvlJoinedAcademy = lvl;
@@ -10974,7 +11031,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			}
 			catch(Exception e)
 			{
-				_log.warning("WARNING: Could not add character sub class for " + getName() + ": " + e);
+				_log.warn("WARNING: Could not add character sub class for " + getName() + ": " + e);
 				return false;
 			}
 			finally
@@ -11101,7 +11158,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			}
 			catch(Exception e)
 			{
-				_log.warning("Could not modify sub class for " + getName() + " to class index " + classIndex + ": " + e);
+				_log.warn("Could not modify sub class for " + getName() + " to class index " + classIndex + ": " + e);
 
 				// This must be done in order to maintain data consistency.
 				getSubClasses().remove(classIndex);
@@ -11165,7 +11222,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 
 		if(t == null)
 		{
-			_log.severe("Missing template for classId: " + classId);
+			_log.fatal("Missing template for classId: " + classId);
 			throw new Error();
 		}
 
@@ -11652,7 +11709,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			}
 			catch(Exception e)
 			{
-				_log.warning("could not clear char recommendations: " + e);
+				_log.warn("could not clear char recommendations: " + e);
 			}
 			finally
 			{
@@ -11709,6 +11766,10 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 				getParty().getDimensionalRift().memberRessurected(this);
 			}
 		}
+
+		if(_event != null && _event.isRunning())
+			_event.onRevive(this);
+
 		rechargeAutoSoulShot(true, true, false);
 	}
 
@@ -11998,6 +12059,35 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		}
 	}
 
+	public boolean canRegisterToEvents()
+	{
+		if (isInOlympiadMode() || Olympiad.getInstance().isRegistered(this))
+		{
+			sendMessage("You can not join an event in olympiad mode.");
+			return false;
+		}
+
+		if (isInJail() || isInsideZone(L2Character.ZONE_JAIL))
+		{
+			sendMessage("You can not join an event while in jail.");
+			return false;
+		}
+
+		if (getKarma() > 0)
+		{
+			sendMessage("Chaotic players are not allowed to the events.");
+			return false;
+		}
+
+		if (_event != null)
+		{
+			sendMessage("You are a part of another event.");
+			return false;
+		}
+
+		return true;
+	}
+
 	public void broadcastSnoop(int type, String name, String text)
 	{
 		if (_snoopers.length == 0)
@@ -12043,7 +12133,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		if(bypass == null)
 			return;
 		_validBypass.add(bypass);
-		//_log.warning("[BypassAdd]"+getName()+" '"+bypass+"'");
+		//_log.warn("[BypassAdd]"+getName()+" '"+bypass+"'");
 	}
 
 	public synchronized void addBypass2(String bypass)
@@ -12051,7 +12141,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		if(bypass == null)
 			return;
 		_validBypass2.add(bypass);
-		//_log.warning("[BypassAdd]"+getName()+" '"+bypass+"'");
+		//_log.warn("[BypassAdd]"+getName()+" '"+bypass+"'");
 	}
 
 	public boolean validateBypass(String cmd)
@@ -12068,7 +12158,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 					continue;
 				}
 
-				//_log.warning("[BypassValidation]"+getName()+" '"+bp+"'");
+				//_log.warn("[BypassValidation]"+getName()+" '"+bp+"'");
 				if(bp.equals(cmd))
 					return true;
 			}
@@ -12083,7 +12173,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 					continue;
 				}
 
-				//_log.warning("[BypassValidation]"+getName()+" '"+bp+"'");
+				//_log.warn("[BypassValidation]"+getName()+" '"+bp+"'");
 				if(cmd.startsWith(bp))
 					return true;
 			}
@@ -12092,7 +12182,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		if(cmd.startsWith("npc_") && cmd.endsWith("_SevenSigns 7"))
 			return true;
 
-		_log.warning("[L2PcInstance] player [" + getName() + "] sent invalid bypass '" + cmd + "', ban this player!");
+		_log.warn("[L2PcInstance] player [" + getName() + "] sent invalid bypass '" + cmd + "', ban this player!");
 		return false;
 	}
 
@@ -12102,7 +12192,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 
 		if(item == null || item.getOwnerId() != getObjectId())
 		{
-			_log.finest(getObjectId() + ": player tried to " + action + " item he is not owner of");
+			_log.info(getObjectId() + ": player tried to " + action + " item he is not owner of");
 			return false;
 		}
 
@@ -12111,7 +12201,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		{
 			if(Config.DEBUG)
 			{
-				_log.finest(getObjectId() + ": player tried to " + action + " item controling pet");
+				_log.info(getObjectId() + ": player tried to " + action + " item controling pet");
 			}
 
 			return false;
@@ -12121,7 +12211,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		{
 			if(Config.DEBUG)
 			{
-				_log.finest(getObjectId() + ":player tried to " + action + " an enchant scroll he was using");
+				_log.info(getObjectId() + ":player tried to " + action + " an enchant scroll he was using");
 			}
 
 			return false;
@@ -12140,6 +12230,11 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		return true;
 	}
 
+	@Override
+	public boolean isInFunEvent()
+	{
+		return (_event!=null && _event.isRunning());
+	}
 
 	public void clearBypass()
 	{
@@ -12247,7 +12342,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		}
 		catch(Exception e)
 		{
-			_log.log(Level.SEVERE, "deleteMe()", e);
+			_log.fatal("deleteMe()", e);
 		}
 
 		stopJailTask(true);
@@ -12259,7 +12354,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		}
 		catch(Exception e)
 		{
-			_log.log(Level.SEVERE, "deleteMe()", e);
+			_log.fatal("deleteMe()", e);
 		}
 
 		// Stop crafting, if in progress
@@ -12269,7 +12364,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		}
 		catch(Exception e)
 		{
-			_log.log(Level.SEVERE, "deleteMe()", e);
+			_log.fatal("deleteMe()", e);
 		}
 
 		// Cancel Attak or Cast
@@ -12281,7 +12376,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		}
 		catch(Exception e)
 		{
-			_log.log(Level.SEVERE, "deleteMe()", e);
+			_log.fatal("deleteMe()", e);
 		}
 
 		if(isFlying())
@@ -12310,7 +12405,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		}
 		catch(Exception e)
 		{
-			_log.log(Level.SEVERE, "deleteMe()", e);
+			_log.fatal("deleteMe()", e);
 		}
 
 		// Remove the L2PcInstance from the world
@@ -12322,7 +12417,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			}
 			catch(Exception e)
 			{
-				_log.log(Level.SEVERE, "deleteMe()", e);
+				_log.fatal("deleteMe()", e);
 			}
 		}
 
@@ -12335,7 +12430,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			}
 			catch(Exception e)
 			{
-				_log.log(Level.SEVERE, "deleteMe()", e);
+				_log.fatal("deleteMe()", e);
 			}
 		}
 
@@ -12353,7 +12448,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		}
 		catch (Exception e)
 		{
-			_log.log(Level.SEVERE, "deleteMe()", e);
+			_log.fatal("deleteMe()", e);
 		}
 
 		// If the L2PcInstance has Pet, unsummon it
@@ -12365,7 +12460,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			}
 			catch(Exception e)
 			{
-				_log.log(Level.SEVERE, "deleteMe()", e);
+				_log.fatal("deleteMe()", e);
 			}// returns pet to control item
 		}
 
@@ -12386,7 +12481,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			}
 			catch(Exception e)
 			{
-				_log.log(Level.SEVERE, "deleteMe()", e);
+				_log.fatal("deleteMe()", e);
 			}
 		}
 
@@ -12410,7 +12505,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			}
 			catch(Exception e)
 			{
-				_log.log(Level.SEVERE, "deleteMe()", e);
+				_log.fatal("deleteMe()", e);
 			}
 		}
 
@@ -12421,7 +12516,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		}
 		catch(Exception e)
 		{
-			_log.log(Level.SEVERE, "deleteMe()", e);
+			_log.fatal("deleteMe()", e);
 		}
 
 		// Update database with items in its warehouse and remove them from the world
@@ -12431,7 +12526,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		}
 		catch(Exception e)
 		{
-			_log.log(Level.SEVERE, "deleteMe()", e);
+			_log.fatal("deleteMe()", e);
 		}
 
 		// Update database with items in its freight and remove them from the world
@@ -12441,7 +12536,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		}
 		catch(Exception e)
 		{
-			_log.log(Level.SEVERE, "deleteMe()", e);
+			_log.fatal("deleteMe()", e);
 		}
 
 		// Remove all L2Object from _knownObjects and _knownPlayer of the L2Character then cancel Attak or Cast and notify AI
@@ -12451,7 +12546,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		}
 		catch(Exception e)
 		{
-			_log.log(Level.SEVERE, "deleteMe()", e);
+			_log.fatal("deleteMe()", e);
 		}
 
 		if(getRespawnTask() != null)
@@ -12501,7 +12596,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		}
 		catch (RuntimeException e)
 		{
-			_log.log(Level.SEVERE, "deleteMe()", e);
+			_log.fatal("deleteMe()", e);
 		}
 
 		notifyFriends();
@@ -12541,7 +12636,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		}
 		catch (Exception e)
 		{
-			_log.log(Level.WARNING, "Error found in " + getName() + "'s FriendList: " + e.getMessage(), e);
+			_log.warn("Error found in " + getName() + "'s FriendList: " + e.getMessage(), e);
 		}
 		finally
 		{
@@ -13502,7 +13597,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		}
 		catch(Exception e)
 		{
-			_log.warning("Error: could not restore char custom data info: " + e);
+			_log.warn("Error: could not restore char custom data info: " + e);
 		}
 		finally
 		{
@@ -13991,7 +14086,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		}
 		catch (Exception e)
 		{
-			_log.warning("Could not restore player setting: " + e);
+			_log.warn("Could not restore player setting: " + e);
 		}
 		finally
 		{
@@ -14027,7 +14122,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		}
 		catch(Exception e)
 		{
-			_log.warning("Could not save player setting: " + e);
+			_log.warn("Could not save player setting: " + e);
 		}
 		finally
 		{
@@ -14316,7 +14411,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		}
 		catch (SQLException e)
 		{
-			_log.warning("Could not store " + getName() + "'s buff profiles: " + e);
+			_log.warn("Could not store " + getName() + "'s buff profiles: " + e);
 		}
 		finally
 		{
@@ -14386,7 +14481,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		}
 		catch (SQLException h)
 		{
-			_log.warning("Could not store " + getName() + "'s buff profile" + h);
+			_log.warn("Could not store " + getName() + "'s buff profile" + h);
 		}
 		finally
 		{
@@ -14425,7 +14520,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		}
 		catch (SQLException h)
 		{
-			_log.warning("Could not store " + getName() + "'s buff profile" + h);
+			_log.warn("Could not store " + getName() + "'s buff profile" + h);
 		}
 		finally
 		{

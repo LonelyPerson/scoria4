@@ -17,16 +17,15 @@
  */
 package com.l2scoria.gameserver.model.actor.knownlist;
 
-import java.util.Collection;
-import java.util.Map;
-
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.L2Object;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.util.Util;
+import javolution.util.FastList;
+import javolution.util.FastMap;
+
+import java.util.Collection;
+import java.util.Map;
 
 public class CharKnownList extends ObjectKnownList
 {
@@ -56,11 +55,16 @@ public class CharKnownList extends ObjectKnownList
 		if(!super.addKnownObject(object, dropper))
 			return false;
 
+		// instance -1 for gms can see everything on all instances
+		if (getActiveChar().getInstanceId() != -1 && getActiveChar().getInstanceId() != object.getInstanceId())
+			return false;
+
 		if(object instanceof L2PcInstance)
 		{
 			getKnownPlayers().put(object.getObjectId(), (L2PcInstance) object);
 			getKnownRelations().put(object.getObjectId(), -1);
 		}
+
 		return true;
 	}
 

@@ -29,8 +29,7 @@ import com.l2scoria.gameserver.model.actor.instance.L2PlayableInstance;
 import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
-
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 public class Crystals implements IItemHandler
 {

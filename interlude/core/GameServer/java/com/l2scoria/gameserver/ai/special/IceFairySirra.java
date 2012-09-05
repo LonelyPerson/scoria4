@@ -38,7 +38,6 @@ import com.l2scoria.gameserver.templates.L2NpcTemplate;
 import javolution.util.FastList;
 
 import java.util.concurrent.Future;
-import java.util.logging.Level;
 
 public class IceFairySirra extends Quest
 {
@@ -126,7 +125,7 @@ public class IceFairySirra extends Quest
 		{
 			if(_freyasZone == null)
 			{
-				_log.warning("IceFairySirraManager: Failed to load zone");
+				_log.warn("IceFairySirraManager: Failed to load zone");
 				cleanUp();
 				return super.onAdvEvent(event, npc, player);
 			}
@@ -169,7 +168,7 @@ public class IceFairySirra extends Quest
 		_freyasZone = GrandBossManager.getInstance().getZone(105546, -127892, -2768);
 		if(_freyasZone == null)
 		{
-			_log.warning("IceFairySirraManager: Failed to load zone");
+			_log.warn("IceFairySirraManager: Failed to load zone");
 			return;
 		}
 		_freyasZone.setZoneEnabled(false);
@@ -197,7 +196,7 @@ public class IceFairySirra extends Quest
 			}
 			catch(Exception e)
 			{
-				_log.log(Level.SEVERE, "IceFairySirraManager: Failed deleting mob.", e);
+				_log.fatal("IceFairySirraManager: Failed deleting mob.", e);
 			}
 		}
 		_allMobs.clear();
@@ -230,12 +229,12 @@ public class IceFairySirra extends Quest
 				}
 				else
 				{
-					_log.warning("IceFairySirraManager: Attempted to open undefined door. doorId: " + i);
+					_log.warn("IceFairySirraManager: Attempted to open undefined door. doorId: " + i);
 				}
 			}
 			catch(Exception e)
 			{
-				_log.log(Level.SEVERE, "IceFairySirraManager: Failed closing door", e);
+				_log.fatal("IceFairySirraManager: Failed closing door", e);
 			}
 		}
 	}
@@ -253,12 +252,12 @@ public class IceFairySirra extends Quest
 				}
 				else
 				{
-					_log.warning("IceFairySirraManager: Attempted to close undefined door. doorId: " + i);
+					_log.warn("IceFairySirraManager: Attempted to close undefined door. doorId: " + i);
 				}
 			}
 			catch(Exception e)
 			{
-				_log.log(Level.SEVERE, "IceFairySirraManager: Failed closing door", e);
+				_log.fatal("IceFairySirraManager: Failed closing door", e);
 			}
 		}
 	}
@@ -304,7 +303,7 @@ public class IceFairySirra extends Quest
 				pc.teleToLocation(113533, -126159, -3488, false);
 				if(_freyasZone == null)
 				{
-					_log.warning("IceFairySirraManager: Failed to load zone");
+					_log.warn("IceFairySirraManager: Failed to load zone");
 					cleanUp();
 					return;
 				}
@@ -374,13 +373,13 @@ public class IceFairySirra extends Quest
 				}
 				else
 				{
-					_log.warning("IceFairySirraManager: Data missing in NPC table for ID: " + mobs[i][0]);
+					_log.warn("IceFairySirraManager: Data missing in NPC table for ID: " + mobs[i][0]);
 				}
 			}
 		}
 		catch(Exception e)
 		{
-			_log.warning("IceFairySirraManager: Spawns could not be initialized: " + e);
+			_log.warn("IceFairySirraManager: Spawns could not be initialized: " + e);
 		}
 	}
 

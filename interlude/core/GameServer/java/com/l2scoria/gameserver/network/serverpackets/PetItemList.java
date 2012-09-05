@@ -21,8 +21,7 @@ package com.l2scoria.gameserver.network.serverpackets;
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PetInstance;
-
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 /**
  * This class ...
@@ -43,7 +42,7 @@ public class PetItemList extends L2GameServerPacket
 			L2ItemInstance[] items = _activeChar.getInventory().getItems();
 			for(L2ItemInstance temp : items)
 			{
-				_log.fine("item:" + temp.getItem().getName() + " type1:" + temp.getItem().getType1() + " type2:" + temp.getItem().getType2());
+				_log.info("item:" + temp.getItem().getName() + " type1:" + temp.getItem().getType1() + " type2:" + temp.getItem().getType2());
 			}
 		}
 	}

@@ -18,9 +18,12 @@
  */
 package com.l2scoria.gameserver.model;
 
+import com.l2scoria.gameserver.geodata.GeoEngine;
+import com.l2scoria.gameserver.util.RndCoord;
+
 /**
  * This class ...
- * 
+ *
  * @version $Revision: 1.1.4.1 $ $Date: 2005/03/27 15:29:33 $
  */
 
@@ -44,6 +47,30 @@ public final class Location
 		this.y = y;
 		this.z = z;
 		h = heading;
+	}
+
+	public Location(String pos)
+	{
+		String[] v = pos.split(" ");
+		if (v.length > 0)
+		{
+			x = Integer.parseInt(v[0].trim());
+		}
+
+		if (v.length > 1)
+		{
+			y = Integer.parseInt(v[1].trim());
+		}
+
+		if (v.length > 2)
+		{
+			z = Integer.parseInt(v[2].trim());
+		}
+
+		if (v.length > 3)
+		{
+			h = Integer.parseInt(v[3].trim());
+		}
 	}
 
 	public void set(int x, int y, int z, int h)
@@ -125,5 +152,19 @@ public final class Location
 	public Location clone()
 	{
 		return new Location(x, y, z, h);
+	}
+
+	public Location rnd(int min, int max, boolean change)
+	{
+		Location loc = RndCoord.coordsRandomize(this, min, max);
+		loc = GeoEngine.moveCheck(x, y, z, loc.x, loc.y, 0);
+		if(change)
+		{
+			x = loc.x;
+			y = loc.y;
+			z = loc.z;
+			return this;
+		}
+		return loc;
 	}
 }

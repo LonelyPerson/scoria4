@@ -18,26 +18,16 @@
  */
 package com.l2scoria.gameserver.scripting;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import java.util.Map;
-import java.util.logging.Logger;
+import com.l2scoria.Config;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
 
 import javax.script.Compilable;
 import javax.script.CompiledScript;
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
-
-import javolution.util.FastMap;
-
-import com.l2scoria.Config;
+import java.io.*;
+import java.util.Map;
 
 /**
  * Cache of Compiled Scripts
@@ -66,7 +56,7 @@ public class CompiledScriptCache implements Serializable
 		{
 			if(Config.DEBUG)
 			{
-				LOG.fine("Reusing cached compiled script: " + file);
+				LOG.info("Reusing cached compiled script: " + file);
 			}
 			return csh.getCompiledScript();
 		}

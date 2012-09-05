@@ -18,8 +18,6 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.model.ClanWarehouse;
 import com.l2scoria.gameserver.model.ItemContainer;
@@ -28,14 +26,11 @@ import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2NpcInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.SystemMessageId;
-import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
-import com.l2scoria.gameserver.network.serverpackets.InventoryUpdate;
-import com.l2scoria.gameserver.network.serverpackets.ItemList;
-import com.l2scoria.gameserver.network.serverpackets.StatusUpdate;
-import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
+import com.l2scoria.gameserver.network.serverpackets.*;
 import com.l2scoria.gameserver.templates.L2EtcItemType;
 import com.l2scoria.gameserver.util.FloodProtector;
 import com.l2scoria.gameserver.util.Util;
+import org.apache.log4j.Logger;
 
 /**
  * This class ... 31 SendWareHouseDepositList cd (dd)
@@ -99,7 +94,7 @@ public final class SendWareHouseDepositList extends L2GameClientPacket
 
 		if(!FloodProtector.getInstance().tryPerformAction(player.getObjectId(), FloodProtector.PROTECTED_WEREHOUSE))
 		{
-			_log.warning("Player " + player.getName() + " has performed a werehouse action too fast");
+			_log.warn("Player " + player.getName() + " has performed a werehouse action too fast");
 			return;
 		}
 
@@ -145,7 +140,7 @@ public final class SendWareHouseDepositList extends L2GameClientPacket
 			L2ItemInstance item = player.checkItemManipulation(objectId, count, "deposit");
 			if(item == null)
 			{
-				_log.warning("Error depositing a warehouse object for char " + player.getName() + " (validity check)");
+				_log.warn("Error depositing a warehouse object for char " + player.getName() + " (validity check)");
 				_items[i * 2 + 0] = 0;
 				_items[i * 2 + 1] = 0;
 				continue;
@@ -214,7 +209,7 @@ public final class SendWareHouseDepositList extends L2GameClientPacket
 			L2ItemInstance oldItem = player.getInventory().getItemByObjectId(objectId);
 			if(oldItem == null)
 			{
-				_log.warning("Error depositing a warehouse object for char " + player.getName() + " (olditem == null)");
+				_log.warn("Error depositing a warehouse object for char " + player.getName() + " (olditem == null)");
 				continue;
 			}
 
@@ -228,7 +223,7 @@ public final class SendWareHouseDepositList extends L2GameClientPacket
 			L2ItemInstance newItem = player.getInventory().transferItem("Warehouse", objectId, count, warehouse, player, player.getLastFolkNPC());
 			if(newItem == null)
 			{
-				_log.warning("Error depositing a warehouse object for char " + player.getName() + " (newitem == null)");
+				_log.warn("Error depositing a warehouse object for char " + player.getName() + " (newitem == null)");
 				continue;
 			}
 

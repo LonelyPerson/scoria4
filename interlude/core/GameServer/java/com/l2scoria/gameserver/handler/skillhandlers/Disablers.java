@@ -18,22 +18,13 @@
  */
 package com.l2scoria.gameserver.handler.skillhandlers;
 
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.ai.CtrlEvent;
 import com.l2scoria.gameserver.ai.CtrlIntention;
 import com.l2scoria.gameserver.ai.L2AttackableAI;
 import com.l2scoria.gameserver.handler.ISkillHandler;
 import com.l2scoria.gameserver.handler.SkillHandler;
-import com.l2scoria.gameserver.model.L2Attackable;
-import com.l2scoria.gameserver.model.L2Character;
-import com.l2scoria.gameserver.model.L2Effect;
-import com.l2scoria.gameserver.model.L2Object;
-import com.l2scoria.gameserver.model.L2Skill;
-import com.l2scoria.gameserver.model.L2Summon;
+import com.l2scoria.gameserver.model.*;
 import com.l2scoria.gameserver.model.L2Skill.SkillType;
 import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
@@ -45,6 +36,9 @@ import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
 import com.l2scoria.gameserver.skills.Formulas;
 import com.l2scoria.gameserver.skills.Stats;
 import com.l2scoria.util.random.Rnd;
+import org.apache.log4j.Logger;
+
+import java.io.IOException;
 
 /**
  * This Handles Disabler skills
@@ -695,7 +689,7 @@ public class Disablers implements ISkillHandler
 								ISkillHandler Healhandler = SkillHandler.getInstance().getSkillHandler(SkillType.HEAL);
 								if(Healhandler == null)
 								{
-									_log.severe("Couldn't find skill handler for HEAL.");
+									_log.fatal("Couldn't find skill handler for HEAL.");
 									continue;
 								}
 
@@ -706,7 +700,7 @@ public class Disablers implements ISkillHandler
 								}
 								catch(IOException e)
 								{
-									_log.log(Level.WARNING, "", e);
+									_log.warn("", e);
 								}
 								Healhandler = null;
 							}

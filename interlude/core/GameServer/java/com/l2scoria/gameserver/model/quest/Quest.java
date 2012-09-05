@@ -41,6 +41,7 @@ import com.l2scoria.util.database.L2DatabaseFactory;
 import com.l2scoria.util.random.Rnd;
 import javolution.util.FastList;
 import javolution.util.FastMap;
+import org.apache.log4j.Logger;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -50,8 +51,6 @@ import java.sql.ResultSet;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author Luis Arias
@@ -708,7 +707,7 @@ public class Quest extends ManagedScript
 	 */
 	public boolean showError(L2Character object, Throwable t)
 	{
-		_log.log(Level.WARNING, getScriptFile() != null ? getScriptFile().getAbsolutePath() : "CoreScript", t);
+		_log.warn(getScriptFile() != null ? getScriptFile().getAbsolutePath() : "CoreScript", t);
 
 		if(object == null)
 			return false;
@@ -960,7 +959,7 @@ public class Quest extends ManagedScript
 
 				if(q == null)
 				{
-					_log.finer("Unknown quest " + questId + " for player " + player.getName());
+					_log.info("Unknown quest " + questId + " for player " + player.getName());
 					if(Config.AUTODELETE_INVALID_QUEST_DATA)
 					{
 						invalidQuestData.setInt(1, player.getObjectId());
@@ -982,7 +981,7 @@ public class Quest extends ManagedScript
 				State state = q._states.get(stateId);
 				if(state == null)
 				{
-					_log.finer("Unknown state in quest " + questId + " for player " + player.getName());
+					_log.info("Unknown state in quest " + questId + " for player " + player.getName());
 					if(Config.AUTODELETE_INVALID_QUEST_DATA)
 					{
 						invalidQuestData.setInt(1, player.getObjectId());
@@ -1022,7 +1021,7 @@ public class Quest extends ManagedScript
 
 				if(qs == null)
 				{
-					_log.finer("Lost variable " + var + " in quest " + questId + " for player " + player.getName());
+					_log.info("Lost variable " + var + " in quest " + questId + " for player " + player.getName());
 
 					if(Config.AUTODELETE_INVALID_QUEST_DATA)
 					{
@@ -1052,7 +1051,7 @@ public class Quest extends ManagedScript
 		}
 		catch(Exception e)
 		{
-			_log.log(Level.WARNING, "could not insert char quest:", e);
+			_log.warn("could not insert char quest:", e);
 		}
 		finally
 		{
@@ -1093,7 +1092,7 @@ public class Quest extends ManagedScript
 		}
 		catch(Exception e)
 		{
-			_log.log(Level.WARNING, "could not insert global quest variable:", e);
+			_log.warn("could not insert global quest variable:", e);
 		}
 		finally
 		{
@@ -1138,7 +1137,7 @@ public class Quest extends ManagedScript
 		}
 		catch(Exception e)
 		{
-			_log.log(Level.WARNING, "could not load global quest variable:", e);
+			_log.warn("could not load global quest variable:", e);
 		}
 		finally
 		{
@@ -1169,7 +1168,7 @@ public class Quest extends ManagedScript
 		}
 		catch(Exception e)
 		{
-			_log.log(Level.WARNING, "could not delete global quest variable:", e);
+			_log.warn("could not delete global quest variable:", e);
 		}
 		finally
 		{
@@ -1196,7 +1195,7 @@ public class Quest extends ManagedScript
 		}
 		catch(Exception e)
 		{
-			_log.log(Level.WARNING, "could not delete global quest variables:", e);
+			_log.warn("could not delete global quest variables:", e);
 		}
 		finally
 		{
@@ -1230,7 +1229,7 @@ public class Quest extends ManagedScript
 		}
 		catch(Exception e)
 		{
-			_log.log(Level.WARNING, "could not insert char quest:", e);
+			_log.warn("could not insert char quest:", e);
 		}
 		finally
 		{
@@ -1270,7 +1269,7 @@ public class Quest extends ManagedScript
 		}
 		catch(Exception e)
 		{
-			_log.log(Level.WARNING, "could not update char quest:", e);
+			_log.warn("could not update char quest:", e);
 		}
 		finally
 		{
@@ -1302,7 +1301,7 @@ public class Quest extends ManagedScript
 		}
 		catch(Exception e)
 		{
-			_log.log(Level.WARNING, "could not delete char quest:", e);
+			_log.warn("could not delete char quest:", e);
 		}
 		finally
 		{
@@ -1332,7 +1331,7 @@ public class Quest extends ManagedScript
 		}
 		catch(Exception e)
 		{
-			_log.log(Level.WARNING, "could not delete char quest:", e);
+			_log.warn("could not delete char quest:", e);
 		}
 		finally
 		{
@@ -1587,12 +1586,12 @@ public class Quest extends ManagedScript
 	// =========================================================
 	public L2NpcInstance addSpawn(int npcId, L2Character cha)
 	{
-		return QuestSpawn.getInstance().addSpawn(npcId, cha.getX(), cha.getY(), cha.getZ(), cha.getHeading(), false, 0);
+		return QuestSpawn.getInstance().addSpawn(npcId, cha.getX(), cha.getY(), cha.getZ(), cha.getHeading(), false, 0, cha.getInstanceId());
 	}
 
 	public L2NpcInstance addSpawn(int npcId, int x, int y, int z, int heading, boolean randomOffset, int despawnDelay)
 	{
-		return QuestSpawn.getInstance().addSpawn(npcId, x, y, z, heading, randomOffset, despawnDelay);
+		return QuestSpawn.getInstance().addSpawn(npcId, x, y, z, heading, randomOffset, despawnDelay, 0);
 	}
 
 	public void registerItem(int itemId)

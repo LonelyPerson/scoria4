@@ -18,18 +18,17 @@
  */
 package com.l2scoria.gameserver.datatables.sql;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.List;
-import java.util.logging.Logger;
-
-import javolution.util.FastList;
-
 import com.l2scoria.gameserver.datatables.csv.HennaTable;
 import com.l2scoria.gameserver.templates.L2HelperBuff;
 import com.l2scoria.gameserver.templates.StatsSet;
 import com.l2scoria.util.database.L2DatabaseFactory;
+import javolution.util.FastList;
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.List;
 
 public class HelperBuffTable
 {
@@ -93,7 +92,7 @@ public class HelperBuffTable
 		}
 		catch(Exception e)
 		{
-			_log.severe("Table helper_buff_list not found: Update your DataPack");
+			_log.fatal("Table helper_buff_list not found: Update your DataPack");
 			e.printStackTrace();
 		}
 		finally
@@ -152,7 +151,7 @@ public class HelperBuffTable
 			_helperBuff.add(template);
 		}
 
-		_log.config("Helper Buff Table: Loaded " + _helperBuff.size() + " Templates.");
+		_log.info("Helper Buff Table: Loaded " + _helperBuff.size() + " Templates.");
 
 	}
 

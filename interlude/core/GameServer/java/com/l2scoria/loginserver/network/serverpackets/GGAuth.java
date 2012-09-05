@@ -18,9 +18,9 @@
  */
 package com.l2scoria.loginserver.network.serverpackets;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
+
+import java.util.logging.Logger;
 
 /**
  * Fromat: d d: response
@@ -46,7 +46,7 @@ public final class GGAuth extends L2LoginServerPacket
 	 * @see com.l2jserver.mmocore.network.SendablePacket#write()
 	 */
 	@Override
-	protected void write()
+	protected void writeImpl()
 	{
 		writeC(0x0b);
 		writeD(_response);

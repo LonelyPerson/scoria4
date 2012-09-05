@@ -17,15 +17,14 @@
  */
 package com.l2scoria.gameserver.taskmanager.tasks;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.gameserver.model.L2World;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.serverpackets.UserInfo;
 import com.l2scoria.gameserver.taskmanager.Task;
 import com.l2scoria.gameserver.taskmanager.TaskManager;
-import com.l2scoria.gameserver.taskmanager.TaskTypes;
 import com.l2scoria.gameserver.taskmanager.TaskManager.ExecutedTask;
+import com.l2scoria.gameserver.taskmanager.TaskTypes;
+import org.apache.log4j.Logger;
 
 
 /**
@@ -57,7 +56,7 @@ public class TaskRecom extends Task
             player.restartRecom();
             player.sendPacket(new UserInfo(player));
         }
-        _log.config("Recommendation Global Task: launched.");
+        _log.info("Recommendation Global Task: launched.");
     }
 
     @Override

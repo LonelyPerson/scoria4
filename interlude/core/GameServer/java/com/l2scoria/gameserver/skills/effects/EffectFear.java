@@ -126,7 +126,7 @@ final class EffectFear extends L2Effect
 
 		if (Config.GEODATA)
 		{
-			Location destiny = GeoEngine.moveCheck(getEffected().getX(), getEffected().getY(), getEffected().getZ(), posX, posY, false);
+			Location destiny = GeoEngine.moveCheck(getEffected().getX(), getEffected().getY(), getEffected().getZ(), posX, posY, getEffector().getInstanceId());
 			posX = destiny.getX();
 			posY = destiny.getY();
 		}

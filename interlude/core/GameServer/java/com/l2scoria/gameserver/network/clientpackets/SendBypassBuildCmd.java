@@ -18,13 +18,12 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.sql.AdminCommandAccessRights;
 import com.l2scoria.gameserver.handler.AdminCommandHandler;
 import com.l2scoria.gameserver.handler.IAdminCommandHandler;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
+import org.apache.log4j.Logger;
 
 /**
  * This class handles all GM commands triggered by //command
@@ -60,7 +59,7 @@ public final class SendBypassBuildCmd extends L2GameClientPacket
 			activeChar.sendMessage("You don't have the access right to use this command!");
 			if(Config.DEBUG)
 			{
-				_log.warning("Character " + activeChar.getName() + " tried to use admin command " + _command + ", but doesn't have access to it!");
+				_log.warn("Character " + activeChar.getName() + " tried to use admin command " + _command + ", but doesn't have access to it!");
 			}
 			return;
 		}
@@ -76,7 +75,7 @@ public final class SendBypassBuildCmd extends L2GameClientPacket
 		else
 		{
 			activeChar.sendMessage("The command " + _command + " doesn't exists!");
-			_log.warning("No handler registered for admin command '" + _command + "'");
+			_log.warn("No handler registered for admin command '" + _command + "'");
 			return;
 		}
 	}

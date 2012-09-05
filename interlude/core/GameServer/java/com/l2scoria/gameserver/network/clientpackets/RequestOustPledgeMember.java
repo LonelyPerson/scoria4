@@ -18,8 +18,6 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.model.L2Clan;
 import com.l2scoria.gameserver.model.L2ClanMember;
@@ -27,6 +25,7 @@ import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.PledgeShowMemberListDelete;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
+import org.apache.log4j.Logger;
 
 /**
  * This class ...
@@ -77,7 +76,7 @@ public final class RequestOustPledgeMember extends L2GameClientPacket
 
 		if(member == null)
 		{
-			_log.warning("Target (" + _target + ") is not member of the clan");
+			_log.warn("Target (" + _target + ") is not member of the clan");
 			return;
 		}
 

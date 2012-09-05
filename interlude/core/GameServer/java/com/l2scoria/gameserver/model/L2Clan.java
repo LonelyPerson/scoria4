@@ -18,16 +18,6 @@
  */
 package com.l2scoria.gameserver.model;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
-
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.communitybbs.BB.Forum;
 import com.l2scoria.gameserver.communitybbs.Manager.ForumsBBSManager;
@@ -38,20 +28,19 @@ import com.l2scoria.gameserver.managers.CrownManager;
 import com.l2scoria.gameserver.managers.SiegeManager;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.SystemMessageId;
-import com.l2scoria.gameserver.network.serverpackets.ItemList;
-import com.l2scoria.gameserver.network.serverpackets.L2GameServerPacket;
-import com.l2scoria.gameserver.network.serverpackets.PledgeReceiveSubPledgeCreated;
-import com.l2scoria.gameserver.network.serverpackets.PledgeShowInfoUpdate;
-import com.l2scoria.gameserver.network.serverpackets.PledgeShowMemberListAll;
-import com.l2scoria.gameserver.network.serverpackets.PledgeShowMemberListDeleteAll;
-import com.l2scoria.gameserver.network.serverpackets.PledgeShowMemberListUpdate;
-import com.l2scoria.gameserver.network.serverpackets.PledgeSkillListAdd;
-import com.l2scoria.gameserver.network.serverpackets.StatusUpdate;
-import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
-import com.l2scoria.gameserver.network.serverpackets.UserInfo;
+import com.l2scoria.gameserver.network.serverpackets.*;
 import com.l2scoria.gameserver.util.Util;
-import java.sql.Connection;
 import com.l2scoria.util.database.L2DatabaseFactory;
+import javolution.util.FastList;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This class ...
@@ -367,7 +356,7 @@ public class L2Clan
 
 		if(exMember == null)
 		{
-			_log.warning("Member with object ID " + objectID + " not found in clan while trying to remove");
+			_log.warn("Member with object ID " + objectID + " not found in clan while trying to remove");
 			return;
 		}
 
@@ -562,7 +551,35 @@ public class L2Clan
 		}
 
 		return result.toArray(new L2PcInstance[result.size()]);
+	}
 
+	public List<L2PcInstance> getOnlineMembers()
+	{
+		List<L2PcInstance> result = new FastList<L2PcInstance>();
+		for (L2ClanMember temp : _members.values())
+		{
+			if (temp != null)
+			{
+				if (temp.isOnline() && temp.getPlayerInstance() != null)
+					result.add(temp.getPlayerInstance());
+			}
+		}
+
+		return result;
+	}
+
+	public List<L2PcInstance> getOnlineAllyMembers()
+	{
+		List<L2PcInstance> list = new FastList<L2PcInstance>();
+		if (getAllyId() == 0)
+			return list;
+
+		for (L2Clan clan : ClanTable.getInstance().getClans())
+		{
+			if (clan.getAllyId() == getAllyId())
+				list.addAll(clan.getOnlineMembers());
+		}
+		return list;
 	}
 
 	/**
@@ -753,12 +770,12 @@ public class L2Clan
 
 			if(Config.DEBUG)
 			{
-				_log.fine("New clan leader saved in db: " + getClanId());
+				_log.info("New clan leader saved in db: " + getClanId());
 			}
 		}
 		catch(Exception e)
 		{
-			_log.warning("error while saving new clan leader to db " + e);
+			_log.warn("error while saving new clan leader to db " + e);
 		}
 		finally
 		{
@@ -790,12 +807,12 @@ public class L2Clan
 
 			if(Config.DEBUG)
 			{
-				_log.fine("New clan saved in db: " + getClanId());
+				_log.info("New clan saved in db: " + getClanId());
 			}
 		}
 		catch(Exception e)
 		{
-			_log.warning("error while saving new clan to db " + e);
+			_log.warn("error while saving new clan to db " + e);
 		}
 		finally
 		{
@@ -831,7 +848,7 @@ public class L2Clan
 
 			if(Config.DEBUG)
 			{
-				_log.fine("clan member removed in db: " + getClanId());
+				_log.info("clan member removed in db: " + getClanId());
 			}
 
 			statement = con.prepareStatement("UPDATE characters SET apprentice=0 WHERE apprentice=?");
@@ -847,7 +864,7 @@ public class L2Clan
 		}
 		catch(Exception e)
 		{
-			_log.warning("error while removing clan member in db " + e);
+			_log.warn("error while removing clan member in db " + e);
 		}
 		finally
 		{
@@ -942,7 +959,7 @@ public class L2Clan
 
 			if(Config.DEBUG && getName() != null)
 			{
-				_log.config("Restored clan data for \"" + getName() + "\" from database.");
+				_log.info("Restored clan data for \"" + getName() + "\" from database.");
 			}
 
 			restoreSubPledges();
@@ -953,7 +970,7 @@ public class L2Clan
 		}
 		catch(Exception e)
 		{
-			_log.warning("error while restoring clan " + e);
+			_log.warn("error while restoring clan " + e);
 			e.printStackTrace();
 		}
 		finally
@@ -998,7 +1015,7 @@ public class L2Clan
 		}
 		catch(Exception e)
 		{
-			_log.warning("Could not restore clan skills: " + e);
+			_log.warn("Could not restore clan skills: " + e);
 		}
 		finally
 		{
@@ -1074,7 +1091,7 @@ public class L2Clan
 			}
 			catch(Exception e)
 			{
-				_log.warning("Error could not store char skills: " + e);
+				_log.warn("Error could not store char skills: " + e);
 			}
 			finally
 			{
@@ -1461,7 +1478,7 @@ public class L2Clan
 		}
 		catch(Exception e)
 		{
-			_log.warning("Could not restore clan sub-units: " + e);
+			_log.warn("Could not restore clan sub-units: " + e);
 		}
 		finally
 		{
@@ -1570,12 +1587,12 @@ public class L2Clan
 
 				if(Config.DEBUG)
 				{
-					_log.fine("New sub_clan saved in db: " + getClanId() + "; " + pledgeType);
+					_log.info("New sub_clan saved in db: " + getClanId() + "; " + pledgeType);
 				}
 			}
 			catch(Exception e)
 			{
-				_log.warning("error while saving new sub_clan to db " + e);
+				_log.warn("error while saving new sub_clan to db " + e);
 			}
 			finally
 			{
@@ -1593,7 +1610,7 @@ public class L2Clan
 	{
 		if(_subPledges.get(pledgeType) != null)
 		{
-			//_log.warning("found sub-unit with id: "+pledgeType);
+			//_log.warn("found sub-unit with id: "+pledgeType);
 			switch(pledgeType)
 			{
 				case SUBUNIT_ACADEMY:
@@ -1635,12 +1652,12 @@ public class L2Clan
 
 			if(Config.DEBUG)
 			{
-				_log.fine("New subpledge leader saved in db: " + getClanId());
+				_log.info("New subpledge leader saved in db: " + getClanId());
 			}
 		}
 		catch(Exception e)
 		{
-			_log.warning("error while saving new clan leader to db " + e);
+			_log.warn("error while saving new clan leader to db " + e);
 		}
 		finally
 		{
@@ -1659,7 +1676,7 @@ public class L2Clan
 			con = L2DatabaseFactory.getInstance().getConnection();
 			PreparedStatement statement = con.prepareStatement("SELECT privs,rank,party FROM clan_privs WHERE clan_id=?");
 			statement.setInt(1, getClanId());
-			//_log.warning("clanPrivs restore for ClanId : "+getClanId());
+			//_log.warn("clanPrivs restore for ClanId : "+getClanId());
 			ResultSet rset = statement.executeQuery();
 
 			// Go though the recordset of this SQL query
@@ -1683,7 +1700,7 @@ public class L2Clan
 		}
 		catch(Exception e)
 		{
-			_log.warning("Could not restore clan privs by rank: " + e);
+			_log.warn("Could not restore clan privs by rank: " + e);
 		}
 		finally
 		{
@@ -1723,7 +1740,7 @@ public class L2Clan
 
 			try
 			{
-				//_log.warning("requested store clan privs in db for rank: "+rank+", privs: "+privs);
+				//_log.warn("requested store clan privs in db for rank: "+rank+", privs: "+privs);
 				// Retrieve all skills of this L2PcInstance from the database
 				con = L2DatabaseFactory.getInstance().getConnection();
 				PreparedStatement statement = con.prepareStatement("INSERT INTO clan_privs (clan_id,rank,party,privs) VALUES (?,?,?,?) ON DUPLICATE KEY UPDATE privs = ?");
@@ -1739,7 +1756,7 @@ public class L2Clan
 			}
 			catch(Exception e)
 			{
-				_log.warning("Could not store clan privs for rank: " + e);
+				_log.warn("Could not store clan privs for rank: " + e);
 			}
 			finally
 			{
@@ -1766,7 +1783,7 @@ public class L2Clan
 
 			try
 			{
-				//_log.warning("requested store clan new privs in db for rank: "+rank);
+				//_log.warn("requested store clan new privs in db for rank: "+rank);
 				// Retrieve all skills of this L2PcInstance from the database
 				con = L2DatabaseFactory.getInstance().getConnection();
 				PreparedStatement statement = con.prepareStatement("INSERT INTO clan_privs (clan_id,rank,party,privs) VALUES (?,?,?,?)");
@@ -1780,7 +1797,7 @@ public class L2Clan
 			}
 			catch(Exception e)
 			{
-				_log.warning("Could not create new rank and store clan privs for rank: " + e);
+				_log.warn("Could not create new rank and store clan privs for rank: " + e);
 			}
 			finally
 			{
@@ -1916,7 +1933,7 @@ public class L2Clan
 			}
 			catch(Exception e)
 			{
-				_log.warning("Could not store auction for clan: " + e);
+				_log.warn("Could not store auction for clan: " + e);
 			}
 			finally
 			{
@@ -2200,7 +2217,7 @@ public class L2Clan
 
 		if(Config.DEBUG)
 		{
-			_log.fine(player.getObjectId() + "(" + player.getName() + ") requested ally creation from ");
+			_log.info(player.getObjectId() + "(" + player.getName() + ") requested ally creation from ");
 		}
 
 		if(!player.isClanLeader())
@@ -2515,7 +2532,7 @@ public class L2Clan
 		}
 		catch(Exception e)
 		{
-			_log.warning("could not increase clan level:" + e);
+			_log.warn("could not increase clan level:" + e);
 		}
 		finally
 		{
@@ -2576,7 +2593,7 @@ public class L2Clan
 		}
 		catch(SQLException e)
 		{
-			_log.warning("could not update the ally crest id:" + e.getMessage());
+			_log.warn("could not update the ally crest id:" + e.getMessage());
 		}
 		finally
 		{

@@ -18,12 +18,12 @@
  */
 package com.l2scoria.loginserver.network.serverpackets;
 
-import java.io.IOException;
-
 import com.l2scoria.Config;
 import com.l2scoria.loginserver.L2LoginServer;
 import com.l2scoria.loginserver.SessionKey;
 import com.l2scoria.loginserver.network.loginserverpackets.ClientConnected;
+
+import java.io.IOException;
 
 /**
  *
@@ -43,7 +43,7 @@ public final class PlayOk extends L2LoginServerPacket
 	 * @see com.l2jserver.mmocore.network.SendablePacket#write()
 	 */
 	@Override
-	protected void write()
+	protected void writeImpl()
 	{
 		try
 		{

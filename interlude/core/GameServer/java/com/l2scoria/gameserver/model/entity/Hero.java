@@ -23,16 +23,6 @@
 
 package com.l2scoria.gameserver.model.entity;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
-
-import javolution.util.FastMap;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.sql.ClanTable;
 import com.l2scoria.gameserver.model.L2Clan;
@@ -41,15 +31,20 @@ import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.entity.olympiad.Olympiad;
 import com.l2scoria.gameserver.network.SystemMessageId;
-import com.l2scoria.gameserver.network.serverpackets.InventoryUpdate;
-import com.l2scoria.gameserver.network.serverpackets.PledgeShowInfoUpdate;
-import com.l2scoria.gameserver.network.serverpackets.SocialAction;
-import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
-import com.l2scoria.gameserver.network.serverpackets.UserInfo;
+import com.l2scoria.gameserver.network.serverpackets.*;
 import com.l2scoria.gameserver.templates.L2Item;
 import com.l2scoria.gameserver.templates.StatsSet;
-import java.sql.Connection;
 import com.l2scoria.util.database.L2DatabaseFactory;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 public class Hero
 {
@@ -242,7 +237,7 @@ public class Hero
 		}
 		catch(SQLException e)
 		{
-			_log.warning("Hero System: Couldnt load Heroes");
+			_log.warn("Hero System: Couldnt load Heroes");
 
 			if(Config.DEBUG)
 			{
@@ -496,7 +491,7 @@ public class Hero
 				}
 				catch(Exception e)
 				{
-					_log.warning("could not get clan name of " + name + ": " + e);
+					_log.warn("could not get clan name of " + name + ": " + e);
 				}
 				finally
 				{
@@ -607,7 +602,7 @@ public class Hero
 		}
 		catch(SQLException e)
 		{
-			_log.warning("Hero System: Couldnt update Heroes");
+			_log.warn("Hero System: Couldnt update Heroes");
 
 			if(Config.DEBUG)
 			{

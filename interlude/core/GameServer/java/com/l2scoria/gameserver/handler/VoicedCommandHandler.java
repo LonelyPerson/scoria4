@@ -18,21 +18,13 @@
  */
 package com.l2scoria.gameserver.handler;
 
-import java.util.Map;
-import java.util.logging.Logger;
-
-import javolution.util.FastMap;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.GameServer;
-import com.l2scoria.gameserver.handler.voicedcommandhandlers.Away;
-import com.l2scoria.gameserver.handler.voicedcommandhandlers.Banking;
-import com.l2scoria.gameserver.handler.voicedcommandhandlers.Online;
-import com.l2scoria.gameserver.handler.voicedcommandhandlers.Wedding;
-import com.l2scoria.gameserver.handler.voicedcommandhandlers.farmpvp;
-import com.l2scoria.gameserver.handler.voicedcommandhandlers.stat;
-import com.l2scoria.gameserver.handler.voicedcommandhandlers.version;
-import com.l2scoria.gameserver.handler.voicedcommandhandlers.Configurator;
+import com.l2scoria.gameserver.handler.voicedcommandhandlers.*;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
+
+import java.util.Map;
 
 /**
  * This class ...
@@ -101,7 +93,7 @@ public class VoicedCommandHandler
 			registerVoicedCommandHandler(new Configurator());
 		}
 
-		_log.config("VoicedCommandHandler: Loaded " + _datatable.size() + " handlers.");
+		_log.info("VoicedCommandHandler: Loaded " + _datatable.size() + " handlers.");
 
 	}
 
@@ -113,7 +105,7 @@ public class VoicedCommandHandler
 		{
 			if(Config.DEBUG)
 			{
-				_log.fine("Adding handler for command " + id);
+				_log.info("Adding handler for command " + id);
 			}
 
 			_datatable.put(id, handler);
@@ -133,7 +125,7 @@ public class VoicedCommandHandler
 
 		if(Config.DEBUG)
 		{
-			_log.fine("getting handler for command: " + command + " -> " + (_datatable.get(command) != null));
+			_log.info("getting handler for command: " + command + " -> " + (_datatable.get(command) != null));
 		}
 
 		return _datatable.get(command);

@@ -36,8 +36,7 @@ import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.gameserver.util.sql.SQLQueue;
 import com.l2scoria.util.database.L2DatabaseFactory;
 import com.l2scoria.util.database.SqlUtils;
-
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 /**
  * This class provides the functions for shutting down and restarting the server It closes all open client connections
@@ -71,7 +70,7 @@ public class Shutdown extends Thread
 		}
 	}
 
-	private static Logger _log = Logger.getLogger(Shutdown.class.getName());
+	private static Logger _log = Logger.getLogger(Shutdown.class);
 	private static Shutdown _instance;
 	private static Shutdown _counterInstance = null;
 
@@ -116,7 +115,7 @@ public class Shutdown extends Thread
 	public void startTelnetShutdown(String IP, int seconds, boolean restart)
 	{
 		Announcements _an = Announcements.getInstance();
-		_log.warning("IP: " + IP + " issued shutdown command. " + MODE_TEXT[_shutdownMode] + " in " + seconds + " seconds!");
+		_log.warn("IP: " + IP + " issued shutdown command. " + MODE_TEXT[_shutdownMode] + " in " + seconds + " seconds!");
 		_an.announceToAll("Server " + Config.ABORT_RR + " is " + MODE_TEXT[_shutdownMode] + " in " + seconds + " seconds!");
 
 		if(restart)
@@ -155,7 +154,7 @@ public class Shutdown extends Thread
 	public void telnetAbort(String IP)
 	{
 		Announcements _an = Announcements.getInstance();
-		_log.warning("IP: " + IP + " issued shutdown ABORT. " + MODE_TEXT[_shutdownMode] + " has been stopped!");
+		_log.warn("IP: " + IP + " issued shutdown ABORT. " + MODE_TEXT[_shutdownMode] + " has been stopped!");
 		_an.announceToAll("Server " + Config.ABORT_RR + " aborts " + MODE_TEXT[_shutdownMode] + " and continues normal operation!");
 		_an = null;
 
@@ -249,6 +248,8 @@ public class Shutdown extends Thread
 	@Override
 	public void run()
 	{
+		Thread.dumpStack();
+
 		// disallow new logins
 		try
 		{
@@ -269,7 +270,7 @@ public class Shutdown extends Thread
 			}
 			catch (Throwable t)
 			{
-				_log.warning("Error saving offline shops." + t);
+				_log.warn("Error saving offline shops." + t);
 			}
 
 			disconnectAllCharacters();
@@ -370,10 +371,10 @@ public class Shutdown extends Thread
 		}
 		else
 		{
-			// gm shutdown: send warnings and then call exit to start shutdown sequence
+			// gm shutdown: send warns and then call exit to start shutdown sequence
 			countdown();
 			// last point where logging is operational :(
-			_log.warning("GM shutdown countdown is over. " + MODE_TEXT[_shutdownMode] + " NOW!");
+			_log.warn("GM shutdown countdown is over. " + MODE_TEXT[_shutdownMode] + " NOW!");
 			switch(_shutdownMode)
 			{
 				case GM_SHUTDOWN:
@@ -419,7 +420,7 @@ public class Shutdown extends Thread
 	public void startShutdown(L2PcInstance activeChar, int seconds, boolean restart)
 	{
 		Announcements _an = Announcements.getInstance();
-		_log.warning("GM: " + activeChar.getName() + "(" + activeChar.getObjectId() + ") issued shutdown command. " + MODE_TEXT[_shutdownMode] + " in " + seconds + " seconds!");
+		_log.warn("GM: " + activeChar.getName() + "(" + activeChar.getObjectId() + ") issued shutdown command. " + MODE_TEXT[_shutdownMode] + " in " + seconds + " seconds!");
 
 		if(restart)
 		{
@@ -466,7 +467,7 @@ public class Shutdown extends Thread
 	public void abort(L2PcInstance activeChar)
 	{
 		Announcements _an = Announcements.getInstance();
-		_log.warning("GM: " + activeChar.getName() + "(" + activeChar.getObjectId() + ") issued shutdown ABORT. " + MODE_TEXT[_shutdownMode] + " has been stopped!");
+		_log.warn("GM: " + activeChar.getName() + "(" + activeChar.getObjectId() + ") issued shutdown ABORT. " + MODE_TEXT[_shutdownMode] + " has been stopped!");
 		_an.announceToAll("Server " + Config.ABORT_RR + " aborts " + MODE_TEXT[_shutdownMode] + " and continues normal operation!");
 		_an = null;
 
@@ -598,7 +599,7 @@ public class Shutdown extends Thread
 		}
 		catch(Throwable t)
 		{
-			_log.warning("" + t);
+			_log.warn("" + t);
 		}
 
 		// Seven Signs data is now saved along with Festival data.
@@ -661,30 +662,25 @@ public class Shutdown extends Thread
 	private void disconnectAllCharacters()
 	{
 		_log.info("Players: All players save to disk"); 
+		
 		for(L2PcInstance player : L2World.getInstance().getAllPlayers())
 		{
-			//Logout Character
 			try
 			{
 				player.store();
-				//SystemMessage sm = new SystemMessage(SystemMessage.YOU_HAVE_WON_THE_WAR_OVER_THE_S1_CLAN);
-				//player.sendPacket(sm);
-				ServerClose ql = new ServerClose();
-				player.sendPacket(ql);
-				ql = null;
+				player.sendPacket(ServerClose.STATIC_PACKET);
 			}
 			catch(Throwable t)
-			{
-				//null
-			}
+			{}
 		}
+
 		try
 		{
 			Thread.sleep(1000);
 		}
 		catch(Exception e)
 		{
-			_log.warning("Error: " + e);
+			_log.warn("Error: " + e);
 		}
 
 		for(L2PcInstance player : L2World.getInstance().getAllPlayers())
@@ -694,9 +690,7 @@ public class Shutdown extends Thread
 				player.closeNetConnection();
 			}
 			catch(Throwable t)
-			{
-				// just to make sure we try to kill the connection 
-			}
+			{}
 		}
 	}
 

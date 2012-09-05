@@ -18,14 +18,14 @@
  */
 package com.l2scoria.gameserver.idfactory;
 
+import com.l2scoria.Config;
+import com.l2scoria.util.database.L2DatabaseFactory;
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.logging.Logger;
-
-import com.l2scoria.Config;
-import java.sql.Connection;
-import com.l2scoria.util.database.L2DatabaseFactory;
 
 /**
  * This class ...

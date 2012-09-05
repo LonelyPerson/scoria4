@@ -18,24 +18,18 @@
  */
 package com.l2scoria.gameserver.cache;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javolution.util.FastMap;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.sql.ClanTable;
 import com.l2scoria.gameserver.idfactory.IdFactory;
 import com.l2scoria.gameserver.model.L2Clan;
 import com.l2scoria.util.database.L2DatabaseFactory;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
+
+import java.io.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 /**
  * @author Layane
@@ -117,7 +111,7 @@ public class CrestCache
 				}
 				catch(Exception e)
 				{
-					_log.warning("problem with crest bmp file " + e);
+					_log.warn("problem with crest bmp file " + e);
 				}
 				finally
 				{
@@ -185,7 +179,7 @@ public class CrestCache
 				}
 				catch(SQLException e)
 				{
-					_log.warning("could not update the crest id:" + e.getMessage());
+					_log.warn("could not update the crest id:" + e.getMessage());
 				}
 				finally
 				{
@@ -322,7 +316,7 @@ public class CrestCache
 		}
 		catch(IOException e)
 		{
-			_log.log(Level.INFO, "Error saving pledge crest" + crestFile + ":", e);
+			_log.info("Error saving pledge crest" + crestFile + ":", e);
 			return false;
 		}
 	}
@@ -344,7 +338,7 @@ public class CrestCache
 		}
 		catch(IOException e)
 		{
-			_log.log(Level.INFO, "Error saving Large pledge crest" + crestFile + ":", e);
+			_log.info("Error saving Large pledge crest" + crestFile + ":", e);
 			return false;
 		}
 	}
@@ -366,7 +360,7 @@ public class CrestCache
 		}
 		catch(IOException e)
 		{
-			_log.log(Level.INFO, "Error saving ally crest" + crestFile + ":", e);
+			_log.info("Error saving ally crest" + crestFile + ":", e);
 			return false;
 		}
 	}

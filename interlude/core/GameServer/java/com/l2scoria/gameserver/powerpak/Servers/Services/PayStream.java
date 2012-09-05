@@ -10,6 +10,7 @@ import com.l2scoria.gameserver.util.sql.SQLQueue;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import javolution.util.FastMap;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -19,7 +20,6 @@ import java.sql.PreparedStatement;
 import java.sql.Timestamp;
 import java.util.Map;
 import java.util.StringTokenizer;
-import java.util.logging.Logger;
 
 public class PayStream implements HttpHandler
 {
@@ -117,7 +117,7 @@ public class PayStream implements HttpHandler
 			}
 			catch(Exception e)
 			{
-				_log.warning("WebServer: Paystream can't update data : "+e);
+				_log.warn("WebServer: Paystream can't update data : "+e);
 			}
 			
 		}

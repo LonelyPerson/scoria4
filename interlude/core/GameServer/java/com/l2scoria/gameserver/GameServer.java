@@ -37,11 +37,13 @@ import com.l2scoria.gameserver.datatables.xml.ZoneData;
 import com.l2scoria.gameserver.geodata.GeoEngine;
 import com.l2scoria.gameserver.handler.*;
 import com.l2scoria.gameserver.idfactory.IdFactory;
+import com.l2scoria.gameserver.instancemanager.InstanceManager;
 import com.l2scoria.gameserver.managers.*;
 import com.l2scoria.gameserver.model.*;
 import com.l2scoria.gameserver.model.entity.Announcements;
 import com.l2scoria.gameserver.model.entity.Hero;
 import com.l2scoria.gameserver.model.entity.MonsterRace;
+import com.l2scoria.gameserver.model.entity.event.GameEventManager;
 import com.l2scoria.gameserver.model.entity.olympiad.Olympiad;
 import com.l2scoria.gameserver.model.entity.sevensigns.SevenSigns;
 import com.l2scoria.gameserver.model.entity.sevensigns.SevenSignsFestival;
@@ -80,7 +82,6 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.util.Arrays;
 import java.util.Calendar;
 
 /**
@@ -124,7 +125,7 @@ public class GameServer
 			}
 			else
 			{
-				System.out.println("Telnet server is currently disabled.");
+				_log.info("Telnet server is currently disabled.");
 			}
 			Util.printSection("Logo");
 			L2Scoria.infoGS();
@@ -136,11 +137,11 @@ public class GameServer
 				ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(DeadlockDetector.getInstance(), Config.DEADLOCKCHECK_INTIAL_TIME, Config.DEADLOCKCHECK_DELAY_TIME);
 			}
                         
-			if (!Arrays.equals(Util.securityCrypt(Config.USER_NAME), Util.getHash()))
+			/*if (!Arrays.equals(Util.securityCrypt(Config.USER_NAME), Util.getHash()))
 			{
-				System.out.println("UserName is wrong.");
+				_log.info("UserName is wrong.");
 				throw new Exception("UserName is wrong.");
-			}
+			}*/
 
 			new File(Config.DATAPACK_ROOT, "data/clans").mkdirs();
 			new File(Config.DATAPACK_ROOT, "data/crests").mkdirs();
@@ -164,7 +165,7 @@ public class GameServer
 			AutoAnnouncementHandler.getInstance();
 			if(!IdFactory.getInstance().isInitialized())
 			{
-				System.out.println("Could not read object IDs from DB. Please Check Your Data.");
+				_log.info("Could not read object IDs from DB. Please Check Your Data.");
 				throw new Exception("Could not initialize the ID factory");
 			}
 			StaticObjects.getInstance();
@@ -176,7 +177,7 @@ public class GameServer
 			Util.printSection("Skills");
 			if(!SkillTable.getInstance().isInitialized())
 			{
-				System.out.println("Could not find the extraced files. Please Check Your Data.");
+				_log.info("Could not find the extraced files. Please Check Your Data.");
 				throw new Exception("Could not initialize the skill table");
 			}
 			SkillTreeTable.getInstance();
@@ -187,7 +188,7 @@ public class GameServer
 			Util.printSection("Items");
 			if(!ItemTable.getInstance().isInitialized())
 			{
-				System.out.println("Could not find the extraced files. Please Check Your Data.");
+				_log.info("Could not find the extraced files. Please Check Your Data.");
 				throw new Exception("Could not initialize the item table");
 			}
 			ArmorSetsTable.getInstance();
@@ -206,7 +207,7 @@ public class GameServer
 			NpcWalkerRoutesTable.getInstance().load();
 			if(!NpcTable.getInstance().isInitialized())
 			{
-				System.out.println("Could not find the extraced files. Please Check Your Data.");
+				_log.info("Could not find the extraced files. Please Check Your Data.");
 				throw new Exception("Could not initialize the npc table");
 			}
 
@@ -256,7 +257,7 @@ public class GameServer
 			}
 			else
 			{
-				System.out.println("Spawn: disable load.");
+				_log.info("Spawn: disable load.");
 			}
 			if(!Config.ALT_DEV_NO_RB)
 			{
@@ -266,7 +267,7 @@ public class GameServer
 			}
 			else
 			{
-				System.out.println("RaidBoss: disable load.");
+				_log.info("RaidBoss: disable load.");
 			}
 			DayNightSpawnManager.getInstance().notifyChangeMode();
 
@@ -307,7 +308,7 @@ public class GameServer
 			}
 			else
 			{
-				System.out.println("Wedding manager is currently Disabled");
+				_log.info("Wedding manager is currently Disabled");
 			}
 			if(Config.SCORIA_ALLOW_AWAY_STATUS)
 			{
@@ -330,6 +331,9 @@ public class GameServer
 			Util.printSection("Boat");
 			BoatManager.getInstance();
 
+			Util.printSection("Instance");
+			InstanceManager.getInstance();
+
 			Util.printSection("Doors");
 			DoorTable.getInstance().parseData();
 
@@ -346,8 +350,8 @@ public class GameServer
 			Olympiad.getInstance().load();
 			Hero.getInstance();
 
-			Util.printSection("L2Scoria Event Manager");
-			// TODO
+			Util.printSection("Events");
+			GameEventManager.getInstance();
 
 			if(Config.PCB_ENABLE)
 			{
@@ -370,35 +374,19 @@ public class GameServer
 			UserCommandHandler.getInstance();
 			VoicedCommandHandler.getInstance();
 
-			System.out.println("AutoChatHandler : Loaded " + AutoChatHandler.getInstance().size() + " handlers in total.");
-			System.out.println("AutoSpawnHandler : Loaded " + AutoSpawn.getInstance().size() + " handlers in total.");
+			_log.info("AutoChatHandler : Loaded " + AutoChatHandler.getInstance().size() + " handlers in total.");
+			_log.info("AutoSpawnHandler : Loaded " + AutoSpawn.getInstance().size() + " handlers in total.");
 
 			Runtime.getRuntime().addShutdownHook(Shutdown.getInstance());
 
 			try
 			{
-				DoorTable doorTable = DoorTable.getInstance();
-				doorTable.getDoor(24190001).openMe();
-				doorTable.getDoor(24190002).openMe();
-				doorTable.getDoor(24190003).openMe();
-				doorTable.getDoor(24190004).openMe();
-				doorTable.getDoor(23180001).openMe();
-				doorTable.getDoor(23180002).openMe();
-				doorTable.getDoor(23180003).openMe();
-				doorTable.getDoor(23180004).openMe();
-				doorTable.getDoor(23180005).openMe();
-				doorTable.getDoor(23180006).openMe();
-				doorTable.checkAutoOpen();
-				doorTable = null;
+				DoorTable.getInstance().initalize();
 			}
-			catch(NullPointerException e)
+			catch(Exception e)
 			{
-				System.out.println("There is errors in your Door.csv file. Update door.csv");
-
-				if(Config.DEBUG)
-				{
-					e.printStackTrace();
-				}
+				_log.info(e.getMessage());
+				e.printStackTrace();
 			}
 
 			Util.printSection("Quests");
@@ -408,7 +396,7 @@ public class GameServer
 			}
 			else
 			{
-				System.out.println("Quest: disable load.");
+				_log.info("Quest: disable load.");
 			}
 
 			Util.printSection("AI");
@@ -418,7 +406,7 @@ public class GameServer
 			}
 			else
 			{
-				System.out.println("AI: disable load.");
+				_log.info("AI: disable load.");
 			}
 
 			Util.printSection("Scripts");
@@ -429,7 +417,7 @@ public class GameServer
 			}
 			catch(IOException ioe)
 			{
-				System.out.println("Failed loading scripts.cfg, no script going to be loaded");
+				_log.info("Failed loading scripts.cfg, no script going to be loaded");
 			}
 
 			try
@@ -437,7 +425,7 @@ public class GameServer
 				CompiledScriptCache compiledScriptCache = L2ScriptEngineManager.getInstance().getCompiledScriptCache();
 				if(compiledScriptCache == null)
 				{
-					System.out.println("Compiled Scripts Cache is disabled.");
+					_log.info("Compiled Scripts Cache is disabled.");
 				}
 				else
 				{
@@ -446,17 +434,17 @@ public class GameServer
 					if(compiledScriptCache.isModified())
 					{
 						compiledScriptCache.save();
-						System.out.println("Compiled Scripts Cache was saved.");
+						_log.info("Compiled Scripts Cache was saved.");
 					}
 					else
 					{
-						System.out.println("Compiled Scripts Cache is up-to-date.");
+						_log.info("Compiled Scripts Cache is up-to-date.");
 					}
 				}
 			}
 			catch(IOException e)
 			{
-				System.out.println("Failed to store Compiled Scripts Cache." + e);
+				_log.info("Failed to store Compiled Scripts Cache." + e);
 			}
 
 			QuestManager.getInstance().report();
@@ -466,7 +454,7 @@ public class GameServer
 			}
 			else
 			{
-				System.out.println("Script: disable load.");
+				_log.info("Script: disable load.");
 			}
 
 			Util.printSection("Web Daemons");
@@ -475,7 +463,7 @@ public class GameServer
 			Util.printSection("Game Server");
 			if ((Config.OFFLINE_TRADE_ENABLE || Config.OFFLINE_CRAFT_ENABLE) && Config.RESTORE_OFFLINERS)
 				OfflineTradersTable.restoreOfflineTraders();
-			System.out.println("IdFactory: Free ObjectID's remaining: " + IdFactory.getInstance().size());
+			_log.info("IdFactory: Free ObjectID's remaining: " + IdFactory.getInstance().size());
 			// initialize the dynamic extension loader
 			try
 			{
@@ -483,7 +471,7 @@ public class GameServer
 			}
 			catch(Exception ex)
 			{
-				System.out.println("DynamicExtension could not be loaded and initialized" + ex);
+				_log.info("DynamicExtension could not be loaded and initialized" + ex);
 			}
 
 			if(Config.LAME)
@@ -506,6 +494,7 @@ public class GameServer
 		catch(Exception e)
 		{
 			System.exit(0);
+			Thread.dumpStack();
 		}
 		/* ****************************
 		 * ****************************

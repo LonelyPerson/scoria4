@@ -22,8 +22,7 @@ import com.l2scoria.Config;
 import com.l2scoria.gameserver.cache.HtmCache;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.clientpackets.RequestBypassToServer;
-
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 /**
  * The HTML parser in the client knowns these standard and non-standard tags and attributes<br>
@@ -87,7 +86,7 @@ public class NpcHtmlMessage extends L2GameServerPacket
 		if(content == null)
 		{
 			setHtml("<html><body>My Text is missing:<br>" + path + "</body></html>");
-			_log.warning("missing html page " + path);
+			_log.warn("missing html page " + path);
 			return false;
 		}
 
@@ -145,7 +144,7 @@ public class NpcHtmlMessage extends L2GameServerPacket
 		writeD(_npcObjId);
 		if(_html.length() > 8192)
 		{
-			_log.warning("Html is too long! this will crash the client!");
+			_log.warn("Html is too long! this will crash the client!");
 			_html = "<html><body>Html was too long,<br>Try another time.</body></html>";
 		}
 		else

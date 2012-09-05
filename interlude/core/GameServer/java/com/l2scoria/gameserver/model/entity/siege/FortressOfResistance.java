@@ -24,13 +24,6 @@
 
 package com.l2scoria.gameserver.model.entity.siege;
 
-import java.sql.PreparedStatement;
-import java.util.Calendar;
-import java.util.concurrent.ScheduledFuture;
-import java.util.logging.Logger;
-
-import javolution.util.FastMap;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.sql.NpcTable;
 import com.l2scoria.gameserver.managers.ClanHallManager;
@@ -41,8 +34,14 @@ import com.l2scoria.gameserver.model.entity.Announcements;
 import com.l2scoria.gameserver.model.spawn.L2Spawn;
 import com.l2scoria.gameserver.templates.L2NpcTemplate;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
-import java.sql.Connection;
 import com.l2scoria.util.database.L2DatabaseFactory;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.util.Calendar;
+import java.util.concurrent.ScheduledFuture;
 
 public class FortressOfResistance
 {

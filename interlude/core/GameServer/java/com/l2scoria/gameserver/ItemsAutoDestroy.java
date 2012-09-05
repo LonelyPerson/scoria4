@@ -18,17 +18,16 @@
  */
 package com.l2scoria.gameserver;
 
-import java.util.List;
-import java.util.logging.Logger;
-
-import javolution.util.FastList;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.managers.ItemsOnGroundManager;
 import com.l2scoria.gameserver.model.L2World;
 import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
 import com.l2scoria.gameserver.templates.L2EtcItemType;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
+import javolution.util.FastList;
+import org.apache.log4j.Logger;
+
+import java.util.List;
 
 public class ItemsAutoDestroy
 {

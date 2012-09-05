@@ -18,10 +18,8 @@
  */
 package com.l2scoria.gameserver.model.actor.instance;
 
-import java.text.SimpleDateFormat;
-import java.util.StringTokenizer;
-
 import com.l2scoria.Config;
+import com.l2scoria.gameserver.TradeController;
 import com.l2scoria.gameserver.ai.CtrlIntention;
 import com.l2scoria.gameserver.datatables.SkillTable;
 import com.l2scoria.gameserver.datatables.sql.TeleportLocationTable;
@@ -29,24 +27,17 @@ import com.l2scoria.gameserver.managers.ClanHallManager;
 import com.l2scoria.gameserver.managers.SiegeManager;
 import com.l2scoria.gameserver.model.L2Clan;
 import com.l2scoria.gameserver.model.L2Skill;
+import com.l2scoria.gameserver.model.L2Skill.SkillType;
 import com.l2scoria.gameserver.model.L2TeleportLocation;
 import com.l2scoria.gameserver.model.L2TradeList;
-import com.l2scoria.gameserver.model.L2Skill.SkillType;
 import com.l2scoria.gameserver.model.entity.ClanHall;
 import com.l2scoria.gameserver.network.SystemMessageId;
-import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
-import com.l2scoria.gameserver.network.serverpackets.BuyList;
-import com.l2scoria.gameserver.network.serverpackets.ClanHallDecoration;
-import com.l2scoria.gameserver.network.serverpackets.MyTargetSelected;
-import com.l2scoria.gameserver.network.serverpackets.NpcHtmlMessage;
-import com.l2scoria.gameserver.network.serverpackets.SocialAction;
-import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
-import com.l2scoria.gameserver.network.serverpackets.ValidateLocation;
-import com.l2scoria.gameserver.network.serverpackets.WareHouseDepositList;
-import com.l2scoria.gameserver.network.serverpackets.WareHouseWithdrawalList;
+import com.l2scoria.gameserver.network.serverpackets.*;
 import com.l2scoria.gameserver.templates.L2NpcTemplate;
-import com.l2scoria.gameserver.TradeController;
 import com.l2scoria.util.random.Rnd;
+
+import java.text.SimpleDateFormat;
+import java.util.StringTokenizer;
 
 public class L2ClanHallManagerInstance extends L2FolkInstance
 {
@@ -241,7 +232,7 @@ public class L2ClanHallManagerInstance extends L2FolkInstance
 									int fee;
 									if(Config.DEBUG)
 									{
-										_log.warning("Hp editing invoked");
+										_log.warn("Hp editing invoked");
 									}
 									val = st.nextToken();
 									int percent = Integer.valueOf(val);
@@ -307,7 +298,7 @@ public class L2ClanHallManagerInstance extends L2FolkInstance
 									int fee;
 									if(Config.DEBUG)
 									{
-										_log.warning("Mp editing invoked");
+										_log.warn("Mp editing invoked");
 									}
 									val = st.nextToken();
 									int percent = Integer.valueOf(val);
@@ -349,7 +340,7 @@ public class L2ClanHallManagerInstance extends L2FolkInstance
 									int fee;
 									if(Config.DEBUG)
 									{
-										_log.warning("Exp editing invoked");
+										_log.warn("Exp editing invoked");
 									}
 									val = st.nextToken();
 									int percent = Integer.valueOf(val);
@@ -459,7 +450,7 @@ public class L2ClanHallManagerInstance extends L2FolkInstance
 									}
 									if(Config.DEBUG)
 									{
-										_log.warning("Item editing invoked");
+										_log.warn("Item editing invoked");
 									}
 									val = st.nextToken();
 									int fee;
@@ -496,7 +487,7 @@ public class L2ClanHallManagerInstance extends L2FolkInstance
 									int fee;
 									if(Config.DEBUG)
 									{
-										_log.warning("Tele editing invoked");
+										_log.warn("Tele editing invoked");
 									}
 									val = st.nextToken();
 									int lvl = Integer.valueOf(val);
@@ -529,7 +520,7 @@ public class L2ClanHallManagerInstance extends L2FolkInstance
 									int fee;
 									if(Config.DEBUG)
 									{
-										_log.warning("Support editing invoked");
+										_log.warn("Support editing invoked");
 									}
 									val = st.nextToken();
 									int lvl = Integer.valueOf(val);
@@ -638,7 +629,7 @@ public class L2ClanHallManagerInstance extends L2FolkInstance
 									int fee;
 									if(Config.DEBUG)
 									{
-										_log.warning("Deco curtains editing invoked");
+										_log.warn("Deco curtains editing invoked");
 									}
 									val = st.nextToken();
 									int lvl = Integer.valueOf(val);
@@ -671,7 +662,7 @@ public class L2ClanHallManagerInstance extends L2FolkInstance
 									int fee;
 									if(Config.DEBUG)
 									{
-										_log.warning("Deco curtains editing invoked");
+										_log.warn("Deco curtains editing invoked");
 									}
 									val = st.nextToken();
 									int lvl = Integer.valueOf(val);
@@ -968,7 +959,7 @@ public class L2ClanHallManagerInstance extends L2FolkInstance
 			{
 				if(Config.DEBUG)
 				{
-					_log.warning("Teleporting player " + player.getName() + " for CH to new location: " + list.getLocX() + ":" + list.getLocY() + ":" + list.getLocZ());
+					_log.warn("Teleporting player " + player.getName() + " for CH to new location: " + list.getLocX() + ":" + list.getLocY() + ":" + list.getLocZ());
 				}
 				player.teleToLocation(list.getLocX(), list.getLocY(), list.getLocZ());
 			}
@@ -976,7 +967,7 @@ public class L2ClanHallManagerInstance extends L2FolkInstance
 		}
 		else
 		{
-			_log.warning("No teleport destination with id:" + val);
+			_log.warn("No teleport destination with id:" + val);
 		}
 		player.sendPacket(ActionFailed.STATIC_PACKET);
 	}
@@ -994,7 +985,7 @@ public class L2ClanHallManagerInstance extends L2FolkInstance
 
 		if(Config.DEBUG)
 		{
-			_log.fine("Showing buylist :" + player.getName() + " List ID :" + val);
+			_log.info("Showing buylist :" + player.getName() + " List ID :" + val);
 		}
 
 		L2TradeList list = TradeController.getInstance().getBuyList(val);
@@ -1008,8 +999,8 @@ public class L2ClanHallManagerInstance extends L2FolkInstance
 		}
 		else
 		{
-			_log.warning("possible client hacker: " + player.getName() + " attempting to buy from GM shop! < Ban him!");
-			_log.warning("buylist id:" + val);
+			_log.warn("possible client hacker: " + player.getName() + " attempting to buy from GM shop! < Ban him!");
+			_log.warn("buylist id:" + val);
 		}
 
 		player.sendPacket(ActionFailed.STATIC_PACKET);

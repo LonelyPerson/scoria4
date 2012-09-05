@@ -21,11 +21,11 @@ import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.gameserver.util.Broadcast;
 import com.l2scoria.util.database.L2DatabaseFactory;
+import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.logging.Logger;
 
 /**
  * @author L2Scoria
@@ -217,7 +217,7 @@ public class Wedding implements IVoicedCommandHandler
 		}
 		catch(Exception e)
 		{
-			_log.warning("could not read friend data: " + e);
+			_log.warn("could not read friend data: " + e);
 		}
 		finally
 		{
@@ -253,7 +253,7 @@ public class Wedding implements IVoicedCommandHandler
 		if(activeChar.getPartnerId() == 0)
 		{
 			activeChar.sendMessage("Couldn't find your fiance in the Database - Inform a Gamemaster.");
-			_log.warning("Married but couldn't find parter for " + activeChar.getName());
+			_log.warn("Married but couldn't find parter for " + activeChar.getName());
 			return false;
 		}
 
@@ -418,7 +418,7 @@ public class Wedding implements IVoicedCommandHandler
 			}
 			catch(Throwable e)
 			{
-				_log.warning("Error in EscapeFinalizer: " + e);
+				_log.warn("Error in EscapeFinalizer: " + e);
 			}
 		}
 	}

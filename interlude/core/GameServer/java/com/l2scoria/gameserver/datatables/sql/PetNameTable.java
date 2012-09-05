@@ -18,17 +18,17 @@
  */
 package com.l2scoria.gameserver.datatables.sql;
 
+import com.l2scoria.Config;
+import com.l2scoria.util.database.L2DatabaseFactory;
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
-
-import com.l2scoria.Config;
-import java.sql.Connection;
-import com.l2scoria.util.database.L2DatabaseFactory;
 
 public class PetNameTable
 {
@@ -79,7 +79,7 @@ public class PetNameTable
 		}
 		catch(SQLException e)
 		{
-			_log.warning("could not check existing petname:" + e.getMessage());
+			_log.warn("could not check existing petname:" + e.getMessage());
 		}
 		finally
 		{
@@ -103,7 +103,7 @@ public class PetNameTable
 		}
 		catch(PatternSyntaxException e) // case of illegal pattern
 		{
-			_log.warning("ERROR : Pet name pattern of config is wrong!");
+			_log.warn("ERROR : Pet name pattern of config is wrong!");
 			pattern = Pattern.compile(".*");
 		}
 

@@ -37,10 +37,10 @@ import com.l2scoria.gameserver.powerpak.PowerPakConfig;
 import com.l2scoria.gameserver.taskmanager.AttackStanceTaskManager;
 import com.l2scoria.gameserver.util.Util;
 import javolution.util.FastMap;
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -108,7 +108,7 @@ public class BuffHandler implements IVoicedCommandHandler, ICustomByPassHandler,
 				activeChar.isInsideZone(L2Character.ZONE_OLY) || Olympiad.getInstance().isRegistered(activeChar) ||
 				Olympiad.getInstance().isRegisteredInComp(activeChar))) 
 			msg = PowerPakConfig.BUFF_NOT_ALLOWED_OLY;
-		else if(PowerPakConfig.BUFFER_EXCLUDE_ON.contains("EVENT") && false)
+		else if(PowerPakConfig.BUFFER_EXCLUDE_ON.contains("EVENT") && (activeChar._event!=null && activeChar._event.isRunning()))
 			msg = PowerPakConfig.BUFF_NOT_ALLOWED_EVENT;
 		
 		if(msg!=null)
@@ -227,7 +227,7 @@ public class BuffHandler implements IVoicedCommandHandler, ICustomByPassHandler,
 			}
 			catch(PatternSyntaxException e) // case of illegal pattern
 			{
-				_log.warning("ERROR : Buff profile name pattern is wrong!");
+				_log.warn("ERROR : Buff profile name pattern is wrong!");
 				pattern = Pattern.compile(".*");
 			}
 

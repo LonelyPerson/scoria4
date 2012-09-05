@@ -18,15 +18,6 @@
  */
 package com.l2scoria.gameserver.model.entity;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.Calendar;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javolution.util.FastMap;
-
 import com.l2scoria.gameserver.datatables.sql.ClanTable;
 import com.l2scoria.gameserver.idfactory.IdFactory;
 import com.l2scoria.gameserver.managers.AuctionManager;
@@ -35,8 +26,15 @@ import com.l2scoria.gameserver.model.L2Clan;
 import com.l2scoria.gameserver.model.L2World;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
-import java.sql.Connection;
 import com.l2scoria.util.database.L2DatabaseFactory;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.Calendar;
+import java.util.Map;
 
 public class Auction
 {
@@ -286,7 +284,7 @@ public class Auction
 		}
 		catch(Exception e)
 		{
-			_log.log(Level.SEVERE, "Exception: saveAuctionDate(): " + e.getMessage(), e);
+			_log.fatal("Exception: saveAuctionDate(): " + e.getMessage(), e);
 		}
 		finally
 		{
@@ -399,7 +397,7 @@ public class Auction
 		}
 		catch(Exception e)
 		{
-			_log.log(Level.SEVERE, "Exception: Auction.updateInDB(L2PcInstance bidder, int bid): " + e.getMessage());
+			_log.fatal("Exception: Auction.updateInDB(L2PcInstance bidder, int bid): " + e.getMessage());
 			e.printStackTrace();
 		}
 		finally
@@ -427,7 +425,7 @@ public class Auction
 		}
 		catch(Exception e)
 		{
-			_log.log(Level.SEVERE, "Exception: Auction.deleteFromDB(): " + e.getMessage(), e);
+			_log.fatal("Exception: Auction.deleteFromDB(): " + e.getMessage(), e);
 		}
 		finally
 		{
@@ -469,7 +467,7 @@ public class Auction
 		}
 		catch(Exception e)
 		{
-			_log.log(Level.SEVERE, "Exception: Auction.deleteFromDB(): " + e.getMessage(), e);
+			_log.fatal("Exception: Auction.deleteFromDB(): " + e.getMessage(), e);
 		}
 		finally
 		{
@@ -540,7 +538,7 @@ public class Auction
 		}
 		catch(Exception e)
 		{
-			_log.log(Level.SEVERE, "Exception: Auction.cancelBid(String bidder): " + e.getMessage(), e);
+			_log.fatal("Exception: Auction.cancelBid(String bidder): " + e.getMessage(), e);
 		}
 		finally
 		{
@@ -590,7 +588,7 @@ public class Auction
 		}
 		catch(Exception e)
 		{
-			_log.log(Level.SEVERE, "Exception: Auction.load(): " + e.getMessage(), e);
+			_log.fatal("Exception: Auction.load(): " + e.getMessage(), e);
 		}
 		finally
 		{

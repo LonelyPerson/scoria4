@@ -17,8 +17,6 @@
  */
 package com.l2scoria.gameserver.model.actor.position;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.L2Object;
@@ -26,6 +24,7 @@ import com.l2scoria.gameserver.model.L2World;
 import com.l2scoria.gameserver.model.L2WorldRegion;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.util.Point3D;
+import org.apache.log4j.Logger;
 
 public class ObjectPosition
 {
@@ -77,7 +76,7 @@ public class ObjectPosition
 		}
 		catch(Exception e)
 		{
-			_log.warning("Object Id at bad coords: (x: " + getX() + ", y: " + getY() + ", z: " + getZ() + ").");
+			_log.warn("Object Id at bad coords: (x: " + getX() + ", y: " + getY() + ", z: " + getZ() + ").");
 
 			if(getActiveObject() instanceof L2Character)
 			{

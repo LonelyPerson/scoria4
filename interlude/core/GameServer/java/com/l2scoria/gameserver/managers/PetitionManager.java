@@ -18,16 +18,6 @@
  */
 package com.l2scoria.gameserver.managers;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
-
-import javolution.text.TextBuilder;
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.GmListTable;
 import com.l2scoria.gameserver.idfactory.IdFactory;
@@ -38,6 +28,15 @@ import com.l2scoria.gameserver.network.serverpackets.CreatureSay;
 import com.l2scoria.gameserver.network.serverpackets.L2GameServerPacket;
 import com.l2scoria.gameserver.network.serverpackets.NpcHtmlMessage;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
+import javolution.text.TextBuilder;
+import javolution.util.FastList;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Petition Manager
@@ -110,7 +109,7 @@ public final class PetitionManager
 			_id = IdFactory.getInstance().getNextId();
 			if(petitionType >= PetitionType.values().length)
 			{
-				_log.warning("PetitionManager:Petition : invalid petition type (received type was +1) : " + petitionType);
+				_log.warn("PetitionManager:Petition : invalid petition type (received type was +1) : " + petitionType);
 			}
 			_type = PetitionType.values()[petitionType];
 			_content = petitionText;

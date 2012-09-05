@@ -18,6 +18,8 @@
  */
 package com.l2scoria.gameserver.model.actor.appearance;
 
+import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
+
 public class PcAppearance
 {
 	// =========================================================
@@ -26,16 +28,23 @@ public class PcAppearance
 	private byte _hairColor;
 	private byte _hairStyle;
 	private boolean _sex; //Female true(1)
-	/** true if the player is invisible */
+	/**
+	 * true if the player is invisible
+	 */
 	private boolean _invisible = false;
-	/** The hexadecimal Color of players name (white is 0xFFFFFF) */
+	/**
+	 * The hexadecimal Color of players name (white is 0xFFFFFF)
+	 */
 	private int _nameColor = 0xFFFFFF;
 	private int _baseNameColor = 0xFFFFFF;
-	/** The hexadecimal Color of players name (white is 0xFFFFFF) */
+	/**
+	 * The hexadecimal Color of players name (white is 0xFFFFFF)
+	 */
 	private int _titleColor = 0xFFFF77;
 	private int _baseTitleColor = 0xFFFF77;
 	private boolean _saveNameColor = true;
 	private boolean _saveTitleColor = true;
+	private L2PcInstance _owner;
 
 	// =========================================================
 	// Constructor
@@ -149,8 +158,18 @@ public class PcAppearance
 		return _saveNameColor;
 	}
 
+	private int _eventTitleColor = 0;
+
 	public int getTitleColor()
 	{
+		if (_owner._event != null && _owner._event.isRunning())
+		{
+			if (_eventTitleColor == 0)
+			{
+				_eventTitleColor = _titleColor;
+			}
+			return _eventTitleColor;
+		}
 		return _titleColor;
 	}
 
@@ -174,5 +193,21 @@ public class PcAppearance
 	public boolean getSaveTitle()
 	{
 		return _saveTitleColor;
+	}
+
+	/**
+	 * @param owner The owner to set.
+	 */
+	public void setOwner(L2PcInstance owner)
+	{
+		_owner = owner;
+	}
+
+	/**
+	 * @return Returns the owner.
+	 */
+	public L2PcInstance getOwner()
+	{
+		return _owner;
 	}
 }

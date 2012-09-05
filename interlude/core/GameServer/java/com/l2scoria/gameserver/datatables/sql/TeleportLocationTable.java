@@ -18,17 +18,16 @@
  */
 package com.l2scoria.gameserver.datatables.sql;
 
+import com.l2scoria.Config;
+import com.l2scoria.gameserver.model.L2TeleportLocation;
+import com.l2scoria.util.database.L2DatabaseFactory;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Map;
-import java.util.logging.Logger;
-
-import javolution.util.FastMap;
-
-import com.l2scoria.Config;
-import com.l2scoria.gameserver.model.L2TeleportLocation;
-import com.l2scoria.util.database.L2DatabaseFactory;
 
 /**
  * This class ...
@@ -90,11 +89,11 @@ public class TeleportLocationTable
 			statement = null;
 			rset = null;
 
-			_log.config("TeleportLocationTable: Loaded " + _teleports.size() + " Teleport Location Templates.");
+			_log.info("TeleportLocationTable: Loaded " + _teleports.size() + " Teleport Location Templates.");
 		}
 		catch(Exception e)
 		{
-			_log.warning("error while creating teleport table " + e);
+			_log.warn("error while creating teleport table " + e);
 		}
 		finally
 		{
@@ -134,13 +133,13 @@ public class TeleportLocationTable
 
 				if(_cTeleCount > 0)
 				{
-					_log.config("TeleportLocationTable: Loaded " + _cTeleCount + " Custom Teleport Location Templates.");
+					_log.info("TeleportLocationTable: Loaded " + _cTeleCount + " Custom Teleport Location Templates.");
 				}
 
 			}
 			catch(Exception e)
 			{
-				_log.warning("error while creating custom teleport table " + e);
+				_log.warn("error while creating custom teleport table " + e);
 			}
 			finally
 			{

@@ -17,15 +17,14 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.model.L2World;
-import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
+import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.ExDuelAskStart;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
+import org.apache.log4j.Logger;
 
 /**
  * Format:(ch) Sd
@@ -180,7 +179,7 @@ public final class RequestDuelStart extends L2GameClientPacket
 
 				if(Config.DEBUG)
 				{
-					_log.fine(activeChar.getName() + " requested a duel with " + partyLeader.getName());
+					_log.info(activeChar.getName() + " requested a duel with " + partyLeader.getName());
 				}
 
 				SystemMessage msg = new SystemMessage(SystemMessageId.S1S_PARTY_HAS_BEEN_CHALLENGED_TO_A_DUEL);
@@ -208,7 +207,7 @@ public final class RequestDuelStart extends L2GameClientPacket
 
 				if(Config.DEBUG)
 				{
-					_log.fine(activeChar.getName() + " requested a duel with " + targetChar.getName());
+					_log.info(activeChar.getName() + " requested a duel with " + targetChar.getName());
 				}
 
 				SystemMessage msg = new SystemMessage(SystemMessageId.S1_HAS_BEEN_CHALLENGED_TO_A_DUEL);

@@ -17,11 +17,6 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.List;
-import java.util.logging.Logger;
-
-import javolution.util.FastList;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.model.ItemContainer;
 import com.l2scoria.gameserver.model.PcFreight;
@@ -30,12 +25,12 @@ import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2NpcInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.SystemMessageId;
-import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
-import com.l2scoria.gameserver.network.serverpackets.InventoryUpdate;
-import com.l2scoria.gameserver.network.serverpackets.ItemList;
-import com.l2scoria.gameserver.network.serverpackets.StatusUpdate;
-import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
+import com.l2scoria.gameserver.network.serverpackets.*;
 import com.l2scoria.gameserver.templates.L2EtcItemType;
+import javolution.util.FastList;
+import org.apache.log4j.Logger;
+
+import java.util.List;
 
 /**
  * @author -Wooden-
@@ -142,7 +137,7 @@ public final class RequestPackageSend extends L2GameClientPacket
 
 			if(item == null)
 			{
-				_log.warning("Error depositing a warehouse object for char " + player.getName() + " (validity check)");
+				_log.warn("Error depositing a warehouse object for char " + player.getName() + " (validity check)");
 				i.id = 0;
 				i.count = 0;
 				continue;
@@ -206,7 +201,7 @@ public final class RequestPackageSend extends L2GameClientPacket
 
 			if(oldItem == null)
 			{
-				_log.warning("Error depositing a warehouse object for char " + player.getName() + " (olditem == null)");
+				_log.warn("Error depositing a warehouse object for char " + player.getName() + " (olditem == null)");
 				continue;
 			}
 
@@ -221,7 +216,7 @@ public final class RequestPackageSend extends L2GameClientPacket
 
 			if(newItem == null)
 			{
-				_log.warning("Error depositing a warehouse object for char " + player.getName() + " (newitem == null)");
+				_log.warn("Error depositing a warehouse object for char " + player.getName() + " (newitem == null)");
 				continue;
 			}
 

@@ -18,23 +18,18 @@
  */
 package com.l2scoria.gameserver.skills;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
-
-import javolution.util.FastList;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.Item;
 import com.l2scoria.gameserver.datatables.SkillTable;
 import com.l2scoria.gameserver.model.L2Skill;
-import com.l2scoria.gameserver.templates.L2Armor;
-import com.l2scoria.gameserver.templates.L2EtcItem;
-import com.l2scoria.gameserver.templates.L2EtcItemType;
-import com.l2scoria.gameserver.templates.L2Item;
-import com.l2scoria.gameserver.templates.L2Weapon;
+import com.l2scoria.gameserver.templates.*;
+import javolution.util.FastList;
+import org.apache.log4j.Logger;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author PrioGramMoS, l2scoria TODO To change the template for this generated type comment go to Window - Preferences
@@ -71,7 +66,7 @@ public class SkillsEngine
 		File dir = new File(Config.DATAPACK_ROOT, dirname);
 		if(!dir.exists())
 		{
-			_log.config("Dir " + dir.getAbsolutePath() + " not exists");
+			_log.info("Dir " + dir.getAbsolutePath() + " not exists");
 			return;
 		}
 		File[] files = dir.listFiles();
@@ -94,7 +89,7 @@ public class SkillsEngine
 	{
 		if(file == null)
 		{
-			_log.config("Skill file not found.");
+			_log.info("Skill file not found.");
 			return null;
 		}
 		DocumentSkill doc = new DocumentSkill(file);
@@ -142,7 +137,7 @@ public class SkillsEngine
 				}
 			}
 
-			_log.config("SkillsEngine: Loaded " + count + " Skill templates from XML files.");
+			_log.info("SkillsEngine: Loaded " + count + " Skill templates from XML files.");
 		}
 		catch (Exception e)
 		{

@@ -18,8 +18,6 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.gameserver.model.PartyMatchRoom;
 import com.l2scoria.gameserver.model.PartyMatchRoomList;
 import com.l2scoria.gameserver.model.PartyMatchWaitingList;
@@ -28,6 +26,7 @@ import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.ExPartyRoomMember;
 import com.l2scoria.gameserver.network.serverpackets.PartyMatchDetail;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
+import org.apache.log4j.Logger;
 
 /**
  * Packetformat Rev650 cdddddS

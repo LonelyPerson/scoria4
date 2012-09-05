@@ -18,13 +18,12 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.sql.ClanTable;
 import com.l2scoria.gameserver.model.L2Clan;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.serverpackets.PledgeInfo;
+import org.apache.log4j.Logger;
 
 /**
  * This class ...
@@ -50,7 +49,7 @@ public final class RequestPledgeInfo extends L2GameClientPacket
 	{
 		if(Config.DEBUG)
 		{
-			_log.fine("infos for clan " + _clanId + " requested");
+			_log.info("infos for clan " + _clanId + " requested");
 		}
 
 		L2PcInstance activeChar = getClient().getActiveChar();
@@ -58,7 +57,7 @@ public final class RequestPledgeInfo extends L2GameClientPacket
 
 		if(clan == null)
 		{
-			_log.warning("Clan data for clanId " + _clanId + " is missing");
+			_log.warn("Clan data for clanId " + _clanId + " is missing");
 			return; // we have no clan data ?!? should not happen
 		}
 

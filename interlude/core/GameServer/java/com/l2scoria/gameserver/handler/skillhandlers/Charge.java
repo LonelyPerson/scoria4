@@ -18,8 +18,6 @@
  */
 package com.l2scoria.gameserver.handler.skillhandlers;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.gameserver.handler.ISkillHandler;
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.L2Effect;
@@ -27,6 +25,7 @@ import com.l2scoria.gameserver.model.L2Object;
 import com.l2scoria.gameserver.model.L2Skill;
 import com.l2scoria.gameserver.model.L2Skill.SkillType;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
+import org.apache.log4j.Logger;
 
 /**
  * This class ...

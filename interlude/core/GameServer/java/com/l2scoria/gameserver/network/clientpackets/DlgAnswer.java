@@ -18,11 +18,10 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.SystemMessageId;
+import org.apache.log4j.Logger;
 
 /**
  * @author Dezmond_snz Format: cddd
@@ -52,7 +51,7 @@ public final class DlgAnswer extends L2GameClientPacket
 
 		if(Config.DEBUG)
 		{
-			_log.fine(getType() + ": Answer acepted. Message ID " + _messageId + ", asnwer " + _answer + ", unknown field " + _requestId);
+			_log.info(getType() + ": Answer acepted. Message ID " + _messageId + ", asnwer " + _answer + ", unknown field " + _requestId);
 		}
 
 		if(_messageId == SystemMessageId.RESSURECTION_REQUEST.getId())

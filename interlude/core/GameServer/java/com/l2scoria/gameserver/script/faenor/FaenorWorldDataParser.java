@@ -18,20 +18,17 @@
  */
 package com.l2scoria.gameserver.script.faenor;
 
-import java.util.Map;
-import java.util.logging.Logger;
-
-import javax.script.ScriptContext;
-
-import javolution.util.FastMap;
-
-import org.w3c.dom.Node;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.script.IntList;
 import com.l2scoria.gameserver.script.Parser;
 import com.l2scoria.gameserver.script.ParserFactory;
 import com.l2scoria.gameserver.script.ScriptEngine;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
+import org.w3c.dom.Node;
+
+import javax.script.ScriptContext;
+import java.util.Map;
 
 /**
  * @author Luis Arias
@@ -98,7 +95,7 @@ public class FaenorWorldDataParser extends FaenorParser
 		catch(Exception e)
 		{
 			petData.petId = -1;
-			_log.warning("Error in pet Data parser.");
+			_log.warn("Error in pet Data parser.");
 			e.printStackTrace();
 		}
 	}
@@ -123,7 +120,7 @@ public class FaenorWorldDataParser extends FaenorParser
 		catch(Exception e)
 		{
 			petData.petId = -1;
-			_log.warning("ERROR(parseStat):" + e.getMessage());
+			_log.warn("ERROR(parseStat):" + e.getMessage());
 		}
 	}
 

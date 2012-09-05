@@ -18,20 +18,17 @@
  */
 package com.l2scoria.gameserver.skills;
 
-import java.io.File;
-import java.util.List;
-import java.util.logging.Level;
-
-import javolution.util.FastList;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-
 import com.l2scoria.gameserver.model.L2Skill;
 import com.l2scoria.gameserver.model.L2Skill.SkillType;
 import com.l2scoria.gameserver.skills.conditions.Condition;
 import com.l2scoria.gameserver.templates.StatsSet;
+import javolution.util.FastList;
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+
+import java.io.File;
+import java.util.List;
 
 /**
  * @author mkizub
@@ -84,7 +81,7 @@ final class DocumentSkill extends DocumentBase
 		}
 		catch(RuntimeException e)
 		{
-			_log.log(Level.SEVERE, "Error in table: " + name + " of Skill Id " + _currentSkill.id, e);
+			_log.fatal("Error in table: " + name + " of Skill Id " + _currentSkill.id, e);
 			return "";
 		}
 	}
@@ -98,7 +95,7 @@ final class DocumentSkill extends DocumentBase
 		}
 		catch(RuntimeException e)
 		{
-			_log.log(Level.SEVERE, "wrong level count in skill Id " + _currentSkill.id, e);
+			_log.fatal("wrong level count in skill Id " + _currentSkill.id, e);
 			return "";
 		}
 	}
@@ -384,7 +381,7 @@ final class DocumentSkill extends DocumentBase
 			}
 			catch(Exception e)
 			{
-				_log.log(Level.SEVERE, "Skill id=" + _currentSkill.sets[i].getEnum("skillType", SkillType.class).makeSkill(_currentSkill.sets[i]).getDisplayId() + "level" + _currentSkill.sets[i].getEnum("skillType", SkillType.class).makeSkill(_currentSkill.sets[i]).getLevel(), e);
+				_log.fatal("Skill id=" + _currentSkill.sets[i].getEnum("skillType", SkillType.class).makeSkill(_currentSkill.sets[i]).getDisplayId() + "level" + _currentSkill.sets[i].getEnum("skillType", SkillType.class).makeSkill(_currentSkill.sets[i]).getLevel(), e);
 			}
 		}
 
@@ -398,7 +395,7 @@ final class DocumentSkill extends DocumentBase
 			}
 			catch(Exception e)
 			{
-				_log.log(Level.SEVERE, "Skill id=" + _currentSkill.enchsets1[i].getEnum("skillType", SkillType.class).makeSkill(_currentSkill.enchsets1[i]).getDisplayId() + " level=" + _currentSkill.enchsets1[i].getEnum("skillType", SkillType.class).makeSkill(_currentSkill.enchsets1[i]).getLevel(), e);
+				_log.fatal("Skill id=" + _currentSkill.enchsets1[i].getEnum("skillType", SkillType.class).makeSkill(_currentSkill.enchsets1[i]).getDisplayId() + " level=" + _currentSkill.enchsets1[i].getEnum("skillType", SkillType.class).makeSkill(_currentSkill.enchsets1[i]).getLevel(), e);
 			}
 		}
 
@@ -412,7 +409,7 @@ final class DocumentSkill extends DocumentBase
 			}
 			catch(Exception e)
 			{
-				_log.log(Level.SEVERE, "Skill id=" + _currentSkill.enchsets2[i].getEnum("skillType", SkillType.class).makeSkill(_currentSkill.enchsets2[i]).getDisplayId() + " level=" + _currentSkill.enchsets2[i].getEnum("skillType", SkillType.class).makeSkill(_currentSkill.enchsets2[i]).getLevel(), e);
+				_log.fatal("Skill id=" + _currentSkill.enchsets2[i].getEnum("skillType", SkillType.class).makeSkill(_currentSkill.enchsets2[i]).getDisplayId() + " level=" + _currentSkill.enchsets2[i].getEnum("skillType", SkillType.class).makeSkill(_currentSkill.enchsets2[i]).getLevel(), e);
 			}
 		}
 	}

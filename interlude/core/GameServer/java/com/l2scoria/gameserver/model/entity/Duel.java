@@ -18,11 +18,6 @@
  */
 package com.l2scoria.gameserver.model.entity;
 
-import java.util.Calendar;
-import java.util.logging.Logger;
-
-import javolution.util.FastList;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.ai.CtrlIntention;
 import com.l2scoria.gameserver.managers.DuelManager;
@@ -32,15 +27,12 @@ import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.entity.olympiad.Olympiad;
 import com.l2scoria.gameserver.model.entity.olympiad.OlympiadStadia;
 import com.l2scoria.gameserver.network.SystemMessageId;
-import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
-import com.l2scoria.gameserver.network.serverpackets.ExDuelEnd;
-import com.l2scoria.gameserver.network.serverpackets.ExDuelReady;
-import com.l2scoria.gameserver.network.serverpackets.ExDuelStart;
-import com.l2scoria.gameserver.network.serverpackets.L2GameServerPacket;
-import com.l2scoria.gameserver.network.serverpackets.PlaySound;
-import com.l2scoria.gameserver.network.serverpackets.SocialAction;
-import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
+import com.l2scoria.gameserver.network.serverpackets.*;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
+import javolution.util.FastList;
+import org.apache.log4j.Logger;
+
+import java.util.Calendar;
 
 public class Duel
 {
@@ -1068,7 +1060,7 @@ public class Duel
 		{
 			if(player != _playerA && player != _playerB)
 			{
-				_log.warning("Error in onPlayerDefeat(): player is not part of this 1vs1 duel");
+				_log.warn("Error in onPlayerDefeat(): player is not part of this 1vs1 duel");
 			}
 
 			if(_playerA == player)

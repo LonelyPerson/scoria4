@@ -23,9 +23,9 @@ import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2MerchantInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import javolution.util.FastList;
+import org.apache.log4j.Logger;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * This class ...
@@ -71,7 +71,7 @@ public class SellList extends L2GameServerPacket
 					_selllist.add(item);
 					if(Config.DEBUG)
 					{
-						_log.fine("item added to selllist: " + item.getItem().getName());
+						_log.info("item added to selllist: " + item.getItem().getName());
 					}
 				}
 			}

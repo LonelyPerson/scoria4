@@ -18,14 +18,14 @@
  */
 package com.l2scoria.gameserver.datatables.sql;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.logging.Logger;
-
 import com.l2scoria.gameserver.datatables.csv.ArmorSetsTable;
 import com.l2scoria.gameserver.model.L2ArmorSet;
 import com.l2scoria.util.database.L2DatabaseFactory;
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 public final class CustomArmorSetsTable
 {
@@ -71,7 +71,7 @@ public final class CustomArmorSetsTable
 		}
 		catch(Exception e)
 		{
-			_log.warning("ArmorSetsTable: Error reading Custom ArmorSets table: " + e);
+			_log.warn("ArmorSetsTable: Error reading Custom ArmorSets table: " + e);
 		}
 		finally
 		{

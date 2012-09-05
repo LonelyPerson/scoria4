@@ -18,18 +18,17 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.l2scoria.gameserver.cache.CrestCache;
 import com.l2scoria.gameserver.datatables.sql.ClanTable;
 import com.l2scoria.gameserver.idfactory.IdFactory;
 import com.l2scoria.gameserver.model.L2Clan;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import java.sql.Connection;
 import com.l2scoria.util.database.L2DatabaseFactory;
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 /**
  * This class ...
@@ -87,7 +86,7 @@ public final class RequestSetAllyCrest extends L2GameClientPacket
 
 			if(!crestCache.saveAllyCrest(newId, _data))
 			{
-				_log.log(Level.INFO, "Error loading crest of ally:" + leaderclan.getAllyName());
+				_log.info("Error loading crest of ally:" + leaderclan.getAllyName());
 				return;
 			}
 
@@ -111,7 +110,7 @@ public final class RequestSetAllyCrest extends L2GameClientPacket
 			}
 			catch(SQLException e)
 			{
-				_log.warning("could not update the ally crest id:" + e.getMessage());
+				_log.warn("could not update the ally crest id:" + e.getMessage());
 			}
 			finally
 			{

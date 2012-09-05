@@ -632,7 +632,7 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable
 					boss.callMinions();
 			}
 
-			//_log.config("Curent pos ("+getX()+", "+getY()+"), moving to ("+x1+", "+y1+").");
+			//_log.info("Curent pos ("+getX()+", "+getY()+"), moving to ("+x1+", "+y1+").");
 			// Move the actor to Location (x,y,z) server side AND client side by sending Server->Client packet CharMoveToLocation (broadcast)
 
 			moveTo(x1, y1, z1);

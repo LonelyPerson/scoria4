@@ -18,11 +18,6 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.sql.L2PetDataTable;
 import com.l2scoria.gameserver.managers.CursedWeaponsManager;
@@ -36,6 +31,10 @@ import com.l2scoria.gameserver.network.serverpackets.StatusUpdate;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
 import com.l2scoria.gameserver.util.Util;
 import com.l2scoria.util.database.L2DatabaseFactory;
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 
 /**
  * This class ...
@@ -176,7 +175,7 @@ public final class RequestDestroyItem extends L2GameClientPacket
 			}
 			catch(Exception e)
 			{
-				_log.log(Level.WARNING, "could not delete pet objectid: ", e);
+				_log.warn("could not delete pet objectid: ", e);
 			}
 			finally
 			{

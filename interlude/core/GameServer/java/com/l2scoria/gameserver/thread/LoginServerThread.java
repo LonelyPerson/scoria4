@@ -33,6 +33,7 @@ import com.l2scoria.util.Util;
 import com.l2scoria.util.random.Rnd;
 import javolution.util.FastList;
 import javolution.util.FastMap;
+import org.apache.log4j.Logger;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -48,7 +49,6 @@ import java.security.spec.RSAKeyGenParameterSpec;
 import java.security.spec.RSAPublicKeySpec;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 public class LoginServerThread extends Thread
 {
@@ -160,7 +160,7 @@ public class LoginServerThread extends Thread
 
 						if (lengthHi < 0)
 						{
-							_log.finer("LoginServerThread: Login terminated the connection.");
+							_log.info("LoginServerThread: Login terminated the connection.");
 							break;
 						}
 
@@ -178,7 +178,7 @@ public class LoginServerThread extends Thread
 
 						if (receivedBytes != length - 2)
 						{
-							_log.warning("Incomplete Packet is sent to the server, closing connection.(LS)");
+							_log.warn("Incomplete Packet is sent to the server, closing connection.(LS)");
 							break;
 						}
 
@@ -190,13 +190,13 @@ public class LoginServerThread extends Thread
 
 						if (!checksumOk)
 						{
-							_log.warning("Incorrect packet checksum, ignoring packet (LS)");
+							_log.warn("Incorrect packet checksum, ignoring packet (LS)");
 							break;
 						}
 
 						if (Config.DEBUG)
 						{
-							_log.warning("[C]\n" + Util.printData(decrypt));
+							_log.warn("[C]\n" + Util.printData(decrypt));
 						}
 
 						int packetType = decrypt[0] & 0xff;
@@ -211,7 +211,7 @@ public class LoginServerThread extends Thread
 								if (init.getRevision() != REVISION)
 								{
 									//TODO: revision mismatch
-									_log.warning("/!\\ Revision mismatch between LS and GS /!\\");
+									_log.warn("/!\\ Revision mismatch between LS and GS /!\\");
 									break;
 								}
 								try
@@ -226,7 +226,7 @@ public class LoginServerThread extends Thread
 									}
 								} catch (GeneralSecurityException e)
 								{
-									_log.warning("Troubles while init the public key send by login");
+									_log.warn("Troubles while init the public key send by login");
 									break;
 								}
 								//send the blowfish key through the rsa encryption
@@ -356,7 +356,7 @@ public class LoginServerThread extends Thread
 									{
 										if (Config.DEBUG)
 										{
-											_log.warning("session key is not correct. closing connection");
+											_log.warn("session key is not correct. closing connection");
 										}
 										wcToRemove.gameClient.getConnection().sendPacket(new AuthLoginFail(1));
 										wcToRemove.gameClient.closeNow();
@@ -384,7 +384,7 @@ public class LoginServerThread extends Thread
 						}
 					} catch (Exception e)
 					{
-						_log.severe("[LoginServerThread]: WARNING! CRITICAL ERROR! Text: " + e.getMessage());
+						_log.fatal("[LoginServerThread]: WARNING! CRITICAL ERROR! Text: " + e.getMessage());
 						e.printStackTrace();
 					}
 				}
@@ -401,7 +401,7 @@ public class LoginServerThread extends Thread
 			} catch (Exception e)
 			{
 				// дабы не умирал цикл
-				_log.warning("Unexpected error in the thread: (PLEASE REPORT!)");
+				_log.warn("Unexpected error in the thread: (PLEASE REPORT!)");
 				e.printStackTrace();
 			} finally
 			{
@@ -447,7 +447,7 @@ public class LoginServerThread extends Thread
 			sendPacket(par);
 		} catch (IOException e)
 		{
-			_log.warning("Error while sending player auth request");
+			_log.warn("Error while sending player auth request");
 
 			if (Config.DEBUG)
 			{
@@ -489,7 +489,7 @@ public class LoginServerThread extends Thread
 			sendPacket(pl);
 		} catch (IOException e)
 		{
-			_log.warning("Error while sending logout packet to login");
+			_log.warn("Error while sending logout packet to login");
 
 			if (Config.DEBUG)
 			{
@@ -542,7 +542,7 @@ public class LoginServerThread extends Thread
 		Rnd.nextBytes(array);
 		if (Config.DEBUG)
 		{
-			_log.fine("Generated random String:  \"" + array + "\"");
+			_log.info("Generated random String:  \"" + array + "\"");
 		}
 		return array;
 	}
@@ -557,7 +557,7 @@ public class LoginServerThread extends Thread
 		NewCrypt.appendChecksum(data);
 		if (Config.DEBUG)
 		{
-			_log.finest("[S]\n" + Util.printData(data));
+			_log.info("[S]\n" + Util.printData(data));
 		}
 		data = _blowfish.crypt(data);
 

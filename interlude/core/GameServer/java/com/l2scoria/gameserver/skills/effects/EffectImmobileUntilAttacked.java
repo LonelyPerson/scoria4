@@ -14,10 +14,9 @@
  */
 package com.l2scoria.gameserver.skills.effects;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.gameserver.model.L2Effect;
 import com.l2scoria.gameserver.skills.Env;
+import org.apache.log4j.Logger;
 
 /**
  * @author programmos, sword dev

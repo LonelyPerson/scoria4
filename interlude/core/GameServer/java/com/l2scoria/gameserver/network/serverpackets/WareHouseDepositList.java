@@ -18,13 +18,11 @@
  */
 package com.l2scoria.gameserver.network.serverpackets;
 
-import java.util.logging.Logger;
-
-import javolution.util.FastList;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
+import javolution.util.FastList;
+import org.apache.log4j.Logger;
 
 /**
  * 0x53 WareHouseDepositList dh (h dddhh dhhh d)
@@ -82,7 +80,7 @@ public class WareHouseDepositList extends L2GameServerPacket
 		int count = _items.size();
 		if(Config.DEBUG)
 		{
-			_log.fine("count:" + count);
+			_log.info("count:" + count);
 		}
 		writeH(count);
 

@@ -17,15 +17,6 @@
  */
 package com.l2scoria.gameserver.managers;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javolution.util.FastList;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.ItemsAutoDestroy;
 import com.l2scoria.gameserver.model.L2Object;
@@ -33,8 +24,15 @@ import com.l2scoria.gameserver.model.L2World;
 import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
 import com.l2scoria.gameserver.templates.L2EtcItemType;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
-import java.sql.Connection;
 import com.l2scoria.util.database.L2DatabaseFactory;
+import javolution.util.FastList;
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.List;
 
 /**
  * This class manage all items on ground
@@ -108,7 +106,7 @@ public class ItemsOnGroundManager
 			}
 			catch(Exception e)
 			{
-				_log.log(Level.SEVERE, "error while updating table ItemsOnGround " + e);
+				_log.fatal("error while updating table ItemsOnGround " + e);
 				e.printStackTrace();
 			}
 			finally
@@ -190,7 +188,7 @@ public class ItemsOnGroundManager
 			}
 			catch(Exception e)
 			{
-				_log.log(Level.SEVERE, "error while loading ItemsOnGround " + e);
+				_log.fatal("error while loading ItemsOnGround " + e);
 				e.printStackTrace();
 			}
 		}
@@ -242,7 +240,7 @@ public class ItemsOnGroundManager
 		}
 		catch(Exception e1)
 		{
-			_log.log(Level.SEVERE, "error while cleaning table ItemsOnGround " + e1);
+			_log.fatal("error while cleaning table ItemsOnGround " + e1);
 			e1.printStackTrace();
 		}
 		finally
@@ -266,7 +264,7 @@ public class ItemsOnGroundManager
 			{
 				if(Config.DEBUG)
 				{
-					_log.warning("ItemsOnGroundManager: nothing to save...");
+					_log.warn("ItemsOnGroundManager: nothing to save...");
 				}
 				return;
 			}
@@ -314,7 +312,7 @@ public class ItemsOnGroundManager
 				}
 				catch(Exception e)
 				{
-					_log.log(Level.SEVERE, "error while inserting into table ItemsOnGround " + e);
+					_log.fatal("error while inserting into table ItemsOnGround " + e);
 					e.printStackTrace();
 				}
 				finally
@@ -325,7 +323,7 @@ public class ItemsOnGroundManager
 			}
 			if(Config.DEBUG)
 			{
-				_log.warning("ItemsOnGroundManager: " + _items.size() + " items on ground saved");
+				_log.warn("ItemsOnGroundManager: " + _items.size() + " items on ground saved");
 			}
 		}
 	}

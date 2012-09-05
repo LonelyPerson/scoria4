@@ -18,15 +18,22 @@
  */
 package com.l2scoria.gameserver.datatables;
 
+import com.l2scoria.loginserver.GameServerThread;
+import com.l2scoria.loginserver.network.gameserverpackets.ServerStatus;
+import com.l2scoria.util.database.L2DatabaseFactory;
+import com.l2scoria.util.random.Rnd;
+import javolution.io.UTF8StreamReader;
+import javolution.util.FastMap;
+import javolution.xml.stream.XMLStreamConstants;
+import javolution.xml.stream.XMLStreamException;
+import javolution.xml.stream.XMLStreamReaderImpl;
+import org.apache.log4j.Logger;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.math.BigInteger;
-import java.security.GeneralSecurityException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
+import java.security.*;
 import java.security.spec.RSAKeyGenParameterSpec;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -34,18 +41,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.logging.Logger;
-
-import javolution.io.UTF8StreamReader;
-import javolution.util.FastMap;
-import javolution.xml.stream.XMLStreamConstants;
-import javolution.xml.stream.XMLStreamException;
-import javolution.xml.stream.XMLStreamReaderImpl;
-
-import com.l2scoria.loginserver.GameServerThread;
-import com.l2scoria.loginserver.network.gameserverpackets.ServerStatus;
-import com.l2scoria.util.database.L2DatabaseFactory;
-import com.l2scoria.util.random.Rnd;
 
 /**
  * @author KenM
@@ -137,7 +132,7 @@ public class GameServerTable
 		}
 		catch(FileNotFoundException e)
 		{
-			_log.warning("servername.xml could not be loaded: file not found");
+			_log.warn("servername.xml could not be loaded: file not found");
 		}
 		catch(XMLStreamException xppe)
 		{
@@ -252,7 +247,7 @@ public class GameServerTable
 		}
 		catch(SQLException e)
 		{
-			_log.warning("SQL error while saving gameserver: " + e);
+			_log.warn("SQL error while saving gameserver: " + e);
 		}
 		finally
 		{

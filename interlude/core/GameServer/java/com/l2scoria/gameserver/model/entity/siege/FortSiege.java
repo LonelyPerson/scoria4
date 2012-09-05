@@ -14,15 +14,6 @@
  */
 package com.l2scoria.gameserver.model.entity.siege;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.Calendar;
-import java.util.List;
-import java.util.logging.Logger;
-
-import javolution.util.FastList;
-
 import com.l2scoria.crypt.nProtect;
 import com.l2scoria.crypt.nProtect.RestrictionType;
 import com.l2scoria.gameserver.datatables.csv.MapRegionTable;
@@ -31,13 +22,9 @@ import com.l2scoria.gameserver.datatables.sql.NpcTable;
 import com.l2scoria.gameserver.idfactory.IdFactory;
 import com.l2scoria.gameserver.managers.FortSiegeGuardManager;
 import com.l2scoria.gameserver.managers.FortSiegeManager;
-import com.l2scoria.gameserver.managers.MercTicketManager;
 import com.l2scoria.gameserver.managers.FortSiegeManager.SiegeSpawn;
-import com.l2scoria.gameserver.model.L2Character;
-import com.l2scoria.gameserver.model.L2Clan;
-import com.l2scoria.gameserver.model.L2Object;
-import com.l2scoria.gameserver.model.L2SiegeClan;
-import com.l2scoria.gameserver.model.L2World;
+import com.l2scoria.gameserver.managers.MercTicketManager;
+import com.l2scoria.gameserver.model.*;
 import com.l2scoria.gameserver.model.L2SiegeClan.SiegeClanType;
 import com.l2scoria.gameserver.model.actor.instance.L2ArtefactInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2CommanderInstance;
@@ -51,6 +38,14 @@ import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
 import com.l2scoria.gameserver.network.serverpackets.UserInfo;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.util.database.L2DatabaseFactory;
+import javolution.util.FastList;
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.Calendar;
+import java.util.List;
 
 /**
  * @author programmos, sword dev
@@ -589,7 +584,7 @@ public class FortSiege
 		}
 		catch(Exception e)
 		{
-			_log.warning("Exception: clearSiegeClan(): " + e.getMessage());
+			_log.warn("Exception: clearSiegeClan(): " + e.getMessage());
 			e.printStackTrace();
 		}
 		finally
@@ -623,7 +618,7 @@ public class FortSiege
 		}
 		catch(Exception e)
 		{
-			_log.warning("Exception: clearSiegeWaitingClan(): " + e.getMessage());
+			_log.warn("Exception: clearSiegeWaitingClan(): " + e.getMessage());
 			e.printStackTrace();
 		}
 		finally
@@ -1163,7 +1158,7 @@ public class FortSiege
 		}
 		catch(Exception e)
 		{
-			_log.warning("Exception: loadSiegeClan(): " + e.getMessage());
+			_log.warn("Exception: loadSiegeClan(): " + e.getMessage());
 			e.printStackTrace();
 		}
 		finally
@@ -1234,7 +1229,7 @@ public class FortSiege
 		}
 		catch(Exception e)
 		{
-			_log.warning("Exception: saveSiegeDate(): " + e.getMessage());
+			_log.warn("Exception: saveSiegeDate(): " + e.getMessage());
 			e.printStackTrace();
 		}
 		finally
@@ -1311,7 +1306,7 @@ public class FortSiege
 		}
 		catch(Exception e)
 		{
-			_log.warning("Exception: saveSiegeClan(L2Clan clan, int typeId, boolean isUpdateRegistration): " + e.getMessage());
+			_log.warn("Exception: saveSiegeClan(L2Clan clan, int typeId, boolean isUpdateRegistration): " + e.getMessage());
 			e.printStackTrace();
 		}
 		finally

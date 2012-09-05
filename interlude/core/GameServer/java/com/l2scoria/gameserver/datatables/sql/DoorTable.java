@@ -26,23 +26,33 @@ import com.l2scoria.gameserver.model.actor.instance.L2DoorInstance;
 import com.l2scoria.gameserver.model.entity.ClanHall;
 import com.l2scoria.gameserver.templates.L2CharTemplate;
 import com.l2scoria.gameserver.templates.StatsSet;
+import com.l2scoria.gameserver.util.Util;
 import com.l2scoria.util.database.DatabaseUtils;
 import com.l2scoria.util.database.L2DatabaseFactory;
+import gnu.trove.TIntArrayList;
 import javolution.util.FastMap;
+import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 public class DoorTable
 {
-	private static Logger _log = Logger.getLogger(DoorTable.class.getName());
+	private static Logger _log = Logger.getLogger(DoorTable.class);
 
 	private Map<Integer, L2DoorInstance> _staticItems;
 
 	private static DoorTable _instance;
+
+	public static TIntArrayList INITIALLY_OPENED_DOORS = new TIntArrayList();
+	static
+	{
+		INITIALLY_OPENED_DOORS.add(new int[]{24190001, 24190002, 24190003, 24190004, 23180001, 23180002, 23180003, 23180004, 23180005, 23180006});
+	}
 
 	public static DoorTable getInstance()
 	{
@@ -85,7 +95,7 @@ public class DoorTable
 			FillDoors(rs);
 		} catch (Exception e)
 		{
-			_log.warning("Cannot load doors");
+			_log.error("Can not load doors");
 			e.printStackTrace();
 		} finally
 		{
@@ -154,6 +164,15 @@ public class DoorTable
 			L2CharTemplate template = new L2CharTemplate(npcDat);
 			L2DoorInstance door = new L2DoorInstance(IdFactory.getInstance().getNextId(), template, id, doorname, DoorData.getBoolean("unlockable"), DoorData.getBoolean("showHp"));
 			_staticItems.put(id, door);
+
+			/*Polygon shape = new Polygon();
+			shape.add(DoorData.getInt("ax"), DoorData.getInt("ay"));
+			shape.add(DoorData.getInt("bx"), DoorData.getInt("by"));
+			shape.add(DoorData.getInt("cx"), DoorData.getInt("cy"));
+			shape.add(DoorData.getInt("dx"), DoorData.getInt("dy"));
+			shape.setZmin(zmin);
+			shape.setZmax(zmax);
+			door.setShape(shape);*/
 			L2Territory pos = new L2Territory();
 			pos.add(DoorData.getInt("ax"), DoorData.getInt("ay"), zmin, zmax, 0);
 			pos.add(DoorData.getInt("bx"), DoorData.getInt("by"), zmin, zmax, 0);
@@ -161,25 +180,19 @@ public class DoorTable
 			pos.add(DoorData.getInt("dx"), DoorData.getInt("dy"), zmin, zmax, 0);
 			door.setGeoPos(pos);
 
+
+			//door.getTemplate().collisionHeight = zmax - zmin & 0xfff0;
+			//door.getTemplate().collisionRadius = Math.max(50, Math.min(posx - shape.getXmin(), posy - shape.getYmin()));
 			door.getTemplate().collisionHeight = zmax - zmin & 0xfff0;
 			door.getTemplate().collisionRadius = Math.max(50, Math.min(posx - pos.getXmin(), posy - pos.getYmin()));
 
 			if (door.getTemplate().collisionRadius > 200 && Config.DEBUG)
 			{
-				System.out.println("DoorId: " + id + ", collision: " + door.getTemplate().collisionRadius + ", posx: " + posx + ", posy: " + posy + ", xMin: " + pos.getXmin() + ", yMin: " + pos.getYmin());
-			}
-
-			if (pos.getXmin() == pos.getXmax() && Config.DEBUG)
-			{
-				_log.warning("door " + id + " has zero size");
-			}
-			else if (pos.getYmin() == pos.getYmax() && Config.DEBUG)
-			{
-				_log.warning("door " + id + " has zero size");
+				_log.debug("DoorId: " + id + ", collision: " + door.getTemplate().collisionRadius + ", posx: " + posx + ", posy: " + posy + ", xMin: " + pos.getXmin() + ", yMin: " + pos.getYmin());
 			}
 
 			door.setGeodata(DoorData.getBoolean("geodata"));
-			door.setOpen(false);
+			//door.setOpen(false);
 			door.setCurrentHpMp(door.getMaxHp(), door.getMaxMp());
 			door.setXYZInvisible(posx, posy, zmin);
 
@@ -187,6 +200,7 @@ public class DoorTable
 			door.setSiegeWeaponOlnyAttackable(DoorData.getBoolean("siege_weapon"));
 
 			door.spawnMe(door.getX(), door.getY(), door.getZ() + 32);
+			//door.closeMe();
 
 			ClanHall clanhall = ClanHallManager.getInstance().getNearbyClanHall(door.getX(), door.getY(), 500);
 			if (clanhall != null)
@@ -195,20 +209,13 @@ public class DoorTable
 				door.setClanHall(clanhall);
 				if (Config.DEBUG)
 				{
-					_log.warning("door " + door.getDoorName() + " attached to ch " + clanhall.getName());
+					_log.error("door " + door.getDoorName() + " attached to ch " + clanhall.getName());
 				}
 			}
 		}
 
-		_log.config("DoorTable: Loaded " + _staticItems.size() + " doors.");
+		_log.info("DoorTable: Loaded " + _staticItems.size() + " doors.");
 	}
-
-	public boolean isInitialized()
-	{
-		return _initialized;
-	}
-
-	private boolean _initialized = true;
 
 	public L2DoorInstance getDoor(Integer id)
 	{
@@ -225,21 +232,38 @@ public class DoorTable
 		return _staticItems.values().toArray(new L2DoorInstance[_staticItems.size()]);
 	}
 
-	/**
-	 * Performs a check and sets up a scheduled task for those doors that require auto opening/closing.
-	 */
-	public void checkAutoOpen()
+	public L2DoorInstance[] getDoorsInGeoRegion(int rx, int ry)
 	{
-		for (L2DoorInstance doorInst : getDoors())
-		// Garden of Eva (every 7 minutes)
+		List<L2DoorInstance> result = new ArrayList<L2DoorInstance>();
+
+		for (L2DoorInstance door : getDoors())
 		{
-			if (doorInst.getDoorName().startsWith("goe"))
+			int[] georegion = Util.convertLocationToGeoRegion(door.getLoc());
+			if (georegion[0] == rx && georegion[1] == ry)
 			{
-				doorInst.setAutoActionDelay(420000);
+				result.add(door);
 			}
-			else if (doorInst.getDoorName().startsWith("aden_tower"))
+		}
+
+		return result.toArray(new L2DoorInstance[result.size()]);
+	}
+
+	public void initalize()
+	{
+		for(L2DoorInstance door : getDoors())
+		{
+			if(!INITIALLY_OPENED_DOORS.contains(door.getDoorId()))
 			{
-				doorInst.setAutoActionDelay(300000);
+				door.closeMe();
+			}
+
+			if (door.getDoorName().startsWith("goe"))
+			{
+				door.setAutoActionDelay(420000);
+			}
+			else if (door.getDoorName().startsWith("aden_tower"))
+			{
+				door.setAutoActionDelay(300000);
 			}
 		}
 	}

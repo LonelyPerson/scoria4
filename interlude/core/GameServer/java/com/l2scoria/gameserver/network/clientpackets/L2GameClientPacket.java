@@ -17,17 +17,16 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.nio.BufferOverflowException;
-import java.nio.BufferUnderflowException;
-import java.util.logging.Logger;
-
-import mmo.ReceivablePacket;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.GameTimeController;
 import com.l2scoria.gameserver.network.L2GameClient;
 import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
 import com.l2scoria.gameserver.network.serverpackets.L2GameServerPacket;
+import mmo.ReceivablePacket;
+import org.apache.log4j.Logger;
+
+import java.nio.BufferOverflowException;
+import java.nio.BufferUnderflowException;
 
 /**
  * Packets received by the game server from clients
@@ -52,17 +51,17 @@ public abstract class L2GameClientPacket extends ReceivablePacket<L2GameClient>
 		{
 			if(getClient()!=null)
 				getClient().closeNow();
-			_log.severe("Client: " + getClient().toString() + " - Buffer overflow and has been kicked");
+			_log.fatal("Client: " + getClient().toString() + " - Buffer overflow and has been kicked");
 		}
 		catch(BufferUnderflowException e)
 		{
 			if(getClient()!=null)
 				getClient().closeNow();
-			_log.severe("Client: " + getClient().toString() + " - Buffer underflow and has been kicked");
+			_log.fatal("Client: " + getClient().toString() + " - Buffer underflow and has been kicked");
 		}
 		catch(Throwable t)
 		{
-			_log.severe("Client: " + getClient().toString() + " - Failed reading: " + getType() + " - L2Scoria Server Version: " + Config.SERVER_VERSION + " - DP Revision: " + Config.DATAPACK_VERSION);
+			_log.fatal("Client: " + getClient().toString() + " - Failed reading: " + getType() + " - L2Scoria Server Version: " + Config.SERVER_VERSION + " - DP Revision: " + Config.DATAPACK_VERSION);
 			t.printStackTrace();
 		}
 
@@ -113,7 +112,7 @@ public abstract class L2GameClientPacket extends ReceivablePacket<L2GameClient>
 		}
 		catch(Throwable t)
 		{
-			_log.severe("Client: " + getClient().toString() + " - Failed running: " + getType() + " - L2Scoria Server Version: " + Config.SERVER_VERSION + " - DP Revision: " + Config.DATAPACK_VERSION);
+			_log.fatal("Client: " + getClient().toString() + " - Failed running: " + getType() + " - L2Scoria Server Version: " + Config.SERVER_VERSION + " - DP Revision: " + Config.DATAPACK_VERSION);
 			t.printStackTrace();
 		}
 	}

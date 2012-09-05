@@ -18,24 +18,6 @@
  */
 package com.l2scoria.gameserver.managers;
 
-import java.awt.Polygon;
-import java.awt.Shape;
-import java.sql.Connection;
-import java.io.File;
-import java.io.IOException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.logging.Logger;
-
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import javolution.util.FastList;
-import javolution.util.FastMap;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.sql.NpcTable;
 import com.l2scoria.gameserver.datatables.sql.SpawnTable;
@@ -49,6 +31,20 @@ import com.l2scoria.gameserver.templates.L2NpcTemplate;
 import com.l2scoria.gameserver.util.Util;
 import com.l2scoria.util.database.L2DatabaseFactory;
 import com.l2scoria.util.random.Rnd;
+import javolution.util.FastList;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 public class DimensionalRiftManager
 {
@@ -143,7 +139,7 @@ public class DimensionalRiftManager
 		}
 		catch(Exception e)
 		{
-			_log.warning("Can't load Dimension Rift zones. " + e);
+			_log.warn("Can't load Dimension Rift zones. " + e);
 		}
 		finally
 		{
@@ -215,15 +211,15 @@ public class DimensionalRiftManager
 											template = NpcTable.getInstance().getTemplate(mobId);
 											if(template == null)
 											{
-												_log.warning("Template " + mobId + " not found!");
+												_log.warn("Template " + mobId + " not found!");
 											}
 											if(!_rooms.containsKey(type))
 											{
-												_log.warning("Type " + type + " not found!");
+												_log.warn("Type " + type + " not found!");
 											}
 											else if(!_rooms.get(type).containsKey(roomId))
 											{
-												_log.warning("Room " + roomId + " in Type " + type + " not found!");
+												_log.warn("Room " + roomId + " in Type " + type + " not found!");
 											}
 
 											for(int i = 0; i < count; i++)
@@ -266,7 +262,7 @@ public class DimensionalRiftManager
 		}
 		catch(Exception e)
 		{
-			_log.warning("Error on loading dimensional rift spawns: " + e);
+			_log.warn("Error on loading dimensional rift spawns: " + e);
 			e.printStackTrace();
 		}
 		_log.info("DimensionalRiftManager: Loaded " + countGood + " dimensional rift spawns, " + countBad + " errors.");
@@ -570,7 +566,7 @@ public class DimensionalRiftManager
 		showHtmlFile(player, "data/html/seven_signs/rift/Cheater.htm", npc);
 		if(!player.isGM())
 		{
-			_log.warning("Player " + player.getName() + "(" + player.getObjectId() + ") was cheating in dimension rift area!");
+			_log.warn("Player " + player.getName() + "(" + player.getObjectId() + ") was cheating in dimension rift area!");
 			Util.handleIllegalPlayerAction(player, "Warning!! Character " + player.getName() + " tried to cheat in dimensional rift.", Config.DEFAULT_PUNISH);
 		}
 	}

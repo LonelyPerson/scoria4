@@ -14,14 +14,13 @@
  */
 package com.l2scoria.gameserver.managers;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.gameserver.datatables.CrownTable;
 import com.l2scoria.gameserver.model.L2Clan;
 import com.l2scoria.gameserver.model.L2ClanMember;
 import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.entity.siege.Castle;
+import org.apache.log4j.Logger;
 
 
 public class CrownManager

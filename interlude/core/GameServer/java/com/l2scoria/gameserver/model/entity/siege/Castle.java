@@ -41,6 +41,7 @@ import com.l2scoria.gameserver.updaters.CastleUpdater;
 import com.l2scoria.util.database.L2DatabaseFactory;
 import javolution.util.FastList;
 import javolution.util.FastMap;
+import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -48,7 +49,6 @@ import java.sql.ResultSet;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 public class Castle
 {

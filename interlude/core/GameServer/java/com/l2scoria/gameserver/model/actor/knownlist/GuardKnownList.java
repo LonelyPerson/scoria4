@@ -17,8 +17,6 @@
  */
 package com.l2scoria.gameserver.model.actor.knownlist;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.ai.CtrlIntention;
 import com.l2scoria.gameserver.ai.L2CharacterAI;
@@ -27,6 +25,7 @@ import com.l2scoria.gameserver.model.L2Object;
 import com.l2scoria.gameserver.model.actor.instance.L2GuardInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2MonsterInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
+import org.apache.log4j.Logger;
 
 public class GuardKnownList extends AttackableKnownList
 {
@@ -71,7 +70,7 @@ public class GuardKnownList extends AttackableKnownList
 			{
 				if(Config.DEBUG)
 				{
-					_log.fine(getActiveChar().getObjectId() + ": PK " + player.getObjectId() + " entered scan range");
+					_log.info(getActiveChar().getObjectId() + ": PK " + player.getObjectId() + " entered scan range");
 				}
 
 				// Set the L2GuardInstance Intention to AI_INTENTION_ACTIVE
@@ -92,7 +91,7 @@ public class GuardKnownList extends AttackableKnownList
 			{
 				if(Config.DEBUG)
 				{
-					_log.fine(getActiveChar().getObjectId() + ": Aggressive mob " + mob.getObjectId() + " entered scan range");
+					_log.info(getActiveChar().getObjectId() + ": Aggressive mob " + mob.getObjectId() + " entered scan range");
 				}
 
 				// Set the L2GuardInstance Intention to AI_INTENTION_ACTIVE

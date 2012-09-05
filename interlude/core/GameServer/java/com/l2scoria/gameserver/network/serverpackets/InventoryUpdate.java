@@ -18,14 +18,13 @@
  */
 package com.l2scoria.gameserver.network.serverpackets;
 
-import java.util.List;
-import java.util.logging.Logger;
-
-import javolution.util.FastList;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.model.ItemInfo;
 import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
+import javolution.util.FastList;
+import org.apache.log4j.Logger;
+
+import java.util.List;
 
 /**
  * 37 // Packet Identifier <BR>
@@ -128,7 +127,7 @@ public class InventoryUpdate extends L2GameServerPacket
 	{
 		for(ItemInfo item : _items)
 		{
-			_log.fine("oid:" + Integer.toHexString(item.getObjectId()) + " item:" + item.getItem().getName() + " last change:" + item.getChange());
+			_log.info("oid:" + Integer.toHexString(item.getObjectId()) + " item:" + item.getItem().getName() + " last change:" + item.getChange());
 		}
 	}
 

@@ -229,7 +229,7 @@ public final class L2CastleTeleporterInstance extends L2FolkInstance
 			{
 				if(Config.DEBUG)
 				{
-					_log.fine("Teleporting player " + player.getName() + " to new location: " + list.getLocX() + ":" + list.getLocY() + ":" + list.getLocZ());
+					_log.info("Teleporting player " + player.getName() + " to new location: " + list.getLocX() + ":" + list.getLocY() + ":" + list.getLocZ());
 				}
 
 				// teleport
@@ -240,7 +240,7 @@ public final class L2CastleTeleporterInstance extends L2FolkInstance
 		}
 		else
 		{
-			_log.warning("No teleport destination with id:" + val);
+			_log.warn("No teleport destination with id:" + val);
 		}
 		player.sendPacket(ActionFailed.STATIC_PACKET);
 	}

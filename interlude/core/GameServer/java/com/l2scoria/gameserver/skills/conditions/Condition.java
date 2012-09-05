@@ -18,7 +18,7 @@
  */
 package com.l2scoria.gameserver.skills.conditions;
 
-//import java.util.logging.Logger;
+//import org.apache.log4j.Logger;
 
 import com.l2scoria.gameserver.skills.Env;
 

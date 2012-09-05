@@ -15,17 +15,17 @@ public class GeoMove
 	private static final ArrayList<Location> emptyTargetRecorder = new ArrayList<Location>(0);
 	private static final ArrayList<ArrayList<Location>> emptyMovePath = new ArrayList<ArrayList<Location>>(0);
 
-	public static ArrayList<Location> findPath(int x, int y, int z, Location target, L2Object obj)
+	public static ArrayList<Location> findPath(int x, int y, int z, Location target, L2Object obj, int instanceId)
 	{
 		if (Math.abs(z - target.z) > 256)
 		{
 			return emptyTargetRecorder;
 		}
 
-		z = GeoEngine.getHeight(x, y, z);
-		target.z = GeoEngine.getHeight(target);
+		z = GeoEngine.getHeight(x, y, z, instanceId);
+		target.z = GeoEngine.getHeight(target, instanceId);
 
-		PathFind n = new PathFind(x, y, z, target.x, target.y, target.z, obj);
+		PathFind n = new PathFind(x, y, z, target.x, target.y, target.z, obj, instanceId);
 
 		if (n.getPath() == null || n.getPath().isEmpty())
 		{
@@ -47,18 +47,18 @@ public class GeoMove
 
 		if (Config.PATH_CLEAN)
 		{
-			pathClean(targetRecorder);
+			pathClean(targetRecorder, instanceId);
 		}
 
 		return targetRecorder;
 	}
 
-	public static ArrayList<ArrayList<Location>> findMovePath(int x, int y, int z, Location target, L2Object obj)
+	public static ArrayList<ArrayList<Location>> findMovePath(int x, int y, int z, Location target, L2Object obj, int instanceId)
 	{
-		return getNodePath(findPath(x, y, z, target, obj));
+		return getNodePath(findPath(x, y, z, target, obj, instanceId), instanceId);
 	}
 
-	public static ArrayList<ArrayList<Location>> getNodePath(ArrayList<Location> path)
+	public static ArrayList<ArrayList<Location>> getNodePath(ArrayList<Location> path, int instanceId)
 	{
 		int size = path.size();
 		if (size <= 1)
@@ -70,7 +70,7 @@ public class GeoMove
 		{
 			Location p2 = path.get(i);
 			Location p1 = path.get(i - 1);
-			ArrayList<Location> moveList = GeoEngine.MoveList(p1.x, p1.y, p1.z, p2.x, p2.y, true); // onlyFullPath = true - проверяем весь путь до конца
+			ArrayList<Location> moveList = GeoEngine.MoveList(p1.x, p1.y, p1.z, p2.x, p2.y, true, instanceId); // onlyFullPath = true - проверяем весь путь до конца
 			if (moveList == null) // если хотя-бы через один из участков нельзя пройти, забраковываем весь путь
 			{
 				return emptyMovePath;
@@ -120,7 +120,7 @@ public class GeoMove
 	 *
 	 * @param path путь который следует очистить
 	 */
-	private static void pathClean(ArrayList<Location> path)
+	private static void pathClean(ArrayList<Location> path, int instanceId)
 	{
 		int size = path.size();
 		if (size > 2)
@@ -148,7 +148,7 @@ public class GeoMove
 			{
 				Location one = path.get(current);
 				Location two = path.get(sub);
-				if (one.equals(two) || GeoEngine.canMoveWithCollision(one.x, one.y, one.z, two.x, two.y, two.z)) //canMoveWithCollision  /  canMoveToCoord
+				if (one.equals(two) || GeoEngine.canMoveWithCollision(one.x, one.y, one.z, two.x, two.y, two.z, instanceId)) //canMoveWithCollision  /  canMoveToCoord
 				{
 					while (current + 1 < sub)
 					{

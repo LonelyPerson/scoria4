@@ -18,20 +18,15 @@
  */
 package com.l2scoria.gameserver.datatables.csv;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.LineNumberReader;
-import java.util.Map;
-import java.util.StringTokenizer;
-import java.util.logging.Logger;
-
-import javolution.util.FastMap;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.idfactory.IdFactory;
 import com.l2scoria.gameserver.model.actor.instance.L2StaticObjectInstance;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
+
+import java.io.*;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 public class StaticObjects
 {
@@ -54,7 +49,7 @@ public class StaticObjects
 	{
 		_staticObjects = new FastMap<Integer, L2StaticObjectInstance>();
 		parseData();
-		_log.config("StaticObject: Loaded " + _staticObjects.size() + " StaticObject Templates.");
+		_log.info("StaticObject: Loaded " + _staticObjects.size() + " StaticObject Templates.");
 	}
 
 	private void parseData()
@@ -82,11 +77,11 @@ public class StaticObjects
 		}
 		catch(FileNotFoundException e)
 		{
-			_log.warning("staticobjects.csv is missing in data folder");
+			_log.warn("staticobjects.csv is missing in data folder");
 		}
 		catch(Exception e)
 		{
-			_log.warning("error while creating StaticObjects table " + e);
+			_log.warn("error while creating StaticObjects table " + e);
 		}
 		finally
 		{

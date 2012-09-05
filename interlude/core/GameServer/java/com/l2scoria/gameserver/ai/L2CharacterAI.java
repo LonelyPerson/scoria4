@@ -502,7 +502,7 @@ public class L2CharacterAI extends AbstractAI
 					//String msgErr = "Player " + player.getName() + " tried pickup exploit, ban this player!";
 					//Util.handleIllegalPlayerAction(player, msgErr, Config.DEFAULT_PUNISH);\
 					player.sendMessage("Sorry, but this item is buged, you can`t pick up it.");
-					_log.warning("Item coordinates is 0! :: Item location is: " + ((L2ItemInstance) object).getLocation() + " :: player name: " + player.getName());
+					_log.warn("Item coordinates is 0! :: Item location is: " + ((L2ItemInstance) object).getLocation() + " :: player name: " + player.getName());
 					return;
 				}
 			}
@@ -1018,7 +1018,7 @@ public class L2CharacterAI extends AbstractAI
 		// Get the distance between the current position of the L2Character and the target (x,y)
 		if(target == null)
 		{
-			_log.warning("maybeMoveToPawn: target == NULL!");
+			_log.warn("maybeMoveToPawn: target == NULL!");
 			return false;
 		}
 

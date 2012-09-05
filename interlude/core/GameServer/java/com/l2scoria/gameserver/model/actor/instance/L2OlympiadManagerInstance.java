@@ -18,12 +18,6 @@
  */
 package com.l2scoria.gameserver.model.actor.instance;
 
-import java.util.List;
-import java.util.logging.Logger;
-
-import javolution.text.TextBuilder;
-import javolution.util.FastMap;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.model.entity.Hero;
 import com.l2scoria.gameserver.model.entity.olympiad.Olympiad;
@@ -34,6 +28,11 @@ import com.l2scoria.gameserver.network.serverpackets.InventoryUpdate;
 import com.l2scoria.gameserver.network.serverpackets.NpcHtmlMessage;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
 import com.l2scoria.gameserver.templates.L2NpcTemplate;
+import javolution.text.TextBuilder;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
+
+import java.util.List;
 
 public class L2OlympiadManagerInstance extends L2FolkInstance
 {
@@ -142,7 +141,7 @@ public class L2OlympiadManagerInstance extends L2FolkInstance
 					L2Multisell.getInstance().SeparateAndSend(102, player, false, getCastle().getTaxRate());
 					break;
 				default:
-					_logOlymp.warning("Olympiad System: Couldnt send packet for request " + val);
+					_logOlymp.warn("Olympiad System: Couldnt send packet for request " + val);
 					break;
 
 			}
@@ -151,6 +150,11 @@ public class L2OlympiadManagerInstance extends L2FolkInstance
 		}
 		else if(command.startsWith("Olympiad"))
 		{
+			if(player._event!=null) {
+				player.sendMessage("Вы не можете наблюдать, если зарегистрированы на эвент");
+				return;
+			}
+
 			int val = Integer.parseInt(command.substring(9, 10));
 
 			NpcHtmlMessage reply = new NpcHtmlMessage(getObjectId());
@@ -306,7 +310,7 @@ public class L2OlympiadManagerInstance extends L2FolkInstance
 					}
 					break;
 				default:
-					_logOlymp.warning("Olympiad System: Couldnt send packet for request " + val);
+					_logOlymp.warn("Olympiad System: Couldnt send packet for request " + val);
 					break;
 			}
 			reply = null;

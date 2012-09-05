@@ -18,47 +18,14 @@
  */
 package com.l2scoria.gameserver.handler;
 
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.logging.Logger;
-
 import com.l2scoria.gameserver.GameServer;
-import com.l2scoria.gameserver.handler.skillhandlers.BalanceLife;
-import com.l2scoria.gameserver.handler.skillhandlers.BeastFeed;
-import com.l2scoria.gameserver.handler.skillhandlers.Blow;
-import com.l2scoria.gameserver.handler.skillhandlers.Charge;
-import com.l2scoria.gameserver.handler.skillhandlers.ClanGate;
-import com.l2scoria.gameserver.handler.skillhandlers.CombatPointHeal;
-import com.l2scoria.gameserver.handler.skillhandlers.Continuous;
-import com.l2scoria.gameserver.handler.skillhandlers.CpDam;
-import com.l2scoria.gameserver.handler.skillhandlers.Craft;
-import com.l2scoria.gameserver.handler.skillhandlers.DeluxeKey;
-import com.l2scoria.gameserver.handler.skillhandlers.Disablers;
-import com.l2scoria.gameserver.handler.skillhandlers.DrainSoul;
-import com.l2scoria.gameserver.handler.skillhandlers.Fishing;
-import com.l2scoria.gameserver.handler.skillhandlers.FishingSkill;
-import com.l2scoria.gameserver.handler.skillhandlers.GetPlayer;
-import com.l2scoria.gameserver.handler.skillhandlers.Harvest;
-import com.l2scoria.gameserver.handler.skillhandlers.Heal;
-import com.l2scoria.gameserver.handler.skillhandlers.ManaHeal;
-import com.l2scoria.gameserver.handler.skillhandlers.Manadam;
-import com.l2scoria.gameserver.handler.skillhandlers.Mdam;
-import com.l2scoria.gameserver.handler.skillhandlers.Pdam;
-import com.l2scoria.gameserver.handler.skillhandlers.Recall;
-import com.l2scoria.gameserver.handler.skillhandlers.Resurrect;
-import com.l2scoria.gameserver.handler.skillhandlers.SiegeFlag;
-import com.l2scoria.gameserver.handler.skillhandlers.Sow;
-import com.l2scoria.gameserver.handler.skillhandlers.Spoil;
-import com.l2scoria.gameserver.handler.skillhandlers.StrSiegeAssault;
-import com.l2scoria.gameserver.handler.skillhandlers.SummonFriend;
-import com.l2scoria.gameserver.handler.skillhandlers.SummonTreasureKey;
-import com.l2scoria.gameserver.handler.skillhandlers.Sweep;
-import com.l2scoria.gameserver.handler.skillhandlers.TakeCastle;
-import com.l2scoria.gameserver.handler.skillhandlers.Unlock;
-import com.l2scoria.gameserver.handler.skillhandlers.ZakenPlayer;
-import com.l2scoria.gameserver.handler.skillhandlers.ZakenSelf;
+import com.l2scoria.gameserver.handler.skillhandlers.*;
 import com.l2scoria.gameserver.model.L2Skill;
 import com.l2scoria.gameserver.model.L2Skill.SkillType;
+import org.apache.log4j.Logger;
+
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * This class ...
@@ -120,7 +87,7 @@ public class SkillHandler
 		registerSkillHandler(new GetPlayer());
 		registerSkillHandler(new ZakenPlayer());
 		registerSkillHandler(new ZakenSelf());
-		_log.config("SkillHandler: Loaded " + _datatable.size() + " handlers.");
+		_log.info("SkillHandler: Loaded " + _datatable.size() + " handlers.");
 
 	}
 

@@ -18,25 +18,13 @@
  */
 package com.l2scoria.gameserver.handler;
 
-import java.util.Map;
-import java.util.logging.Logger;
-
-import javolution.util.FastMap;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.GameServer;
-import com.l2scoria.gameserver.handler.usercommandhandlers.ChannelDelete;
-import com.l2scoria.gameserver.handler.usercommandhandlers.ChannelLeave;
-import com.l2scoria.gameserver.handler.usercommandhandlers.ChannelListUpdate;
-import com.l2scoria.gameserver.handler.usercommandhandlers.ClanPenalty;
-import com.l2scoria.gameserver.handler.usercommandhandlers.ClanWarsList;
-import com.l2scoria.gameserver.handler.usercommandhandlers.DisMount;
-import com.l2scoria.gameserver.handler.usercommandhandlers.Escape;
-import com.l2scoria.gameserver.handler.usercommandhandlers.Loc;
-import com.l2scoria.gameserver.handler.usercommandhandlers.Mount;
-import com.l2scoria.gameserver.handler.usercommandhandlers.OlympiadStat;
-import com.l2scoria.gameserver.handler.usercommandhandlers.PartyInfo;
-import com.l2scoria.gameserver.handler.usercommandhandlers.Time;
+import com.l2scoria.gameserver.handler.usercommandhandlers.*;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
+
+import java.util.Map;
 
 /**
  * This class ...
@@ -76,7 +64,7 @@ public class UserCommandHandler
 		registerUserCommandHandler(new Loc());
 		registerUserCommandHandler(new Mount());
 		registerUserCommandHandler(new PartyInfo());
-		_log.config("UserCommandHandler: Loaded " + _datatable.size() + " handlers.");
+		_log.info("UserCommandHandler: Loaded " + _datatable.size() + " handlers.");
 	}
 
 	public void registerUserCommandHandler(IUserCommandHandler handler)
@@ -87,7 +75,7 @@ public class UserCommandHandler
 		{
 			if(Config.DEBUG)
 			{
-				_log.fine("Adding handler for user command " + id);
+				_log.info("Adding handler for user command " + id);
 			}
 			_datatable.put(new Integer(id), handler);
 		}
@@ -98,7 +86,7 @@ public class UserCommandHandler
 	{
 		if(Config.DEBUG)
 		{
-			_log.fine("getting handler for user command: " + userCommand);
+			_log.info("getting handler for user command: " + userCommand);
 		}
 
 		return _datatable.get(new Integer(userCommand));

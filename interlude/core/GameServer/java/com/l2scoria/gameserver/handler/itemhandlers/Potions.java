@@ -32,9 +32,7 @@ import com.l2scoria.gameserver.network.serverpackets.ExUseSharedGroupItem;
 import com.l2scoria.gameserver.network.serverpackets.MagicSkillUser;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 /**
  * This class ...
@@ -69,7 +67,7 @@ public class Potions implements IItemHandler
 			}
 			catch(Throwable t)
 			{
-				_log.log(Level.WARNING, "", t);
+				_log.warn("", t);
 			}
 		}
 	}
@@ -585,7 +583,7 @@ public class Potions implements IItemHandler
 				}
 				catch(Exception e)
 				{
-					_log.log(Level.WARNING, "", e);
+					_log.warn("", e);
 					return false;
 				}
 

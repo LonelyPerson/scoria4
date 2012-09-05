@@ -19,13 +19,12 @@
 
 package com.l2scoria.gameserver.datatables.csv;
 
-import java.io.File;
-import java.util.logging.Logger;
-import java.util.Scanner;
-
-import javolution.util.FastMap;
-
 import com.l2scoria.gameserver.model.L2SummonItem;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
+
+import java.io.File;
+import java.util.Scanner;
 
 public class SummonItemsData
 {
@@ -56,7 +55,7 @@ public class SummonItemsData
 		}
 		catch(Exception e)
 		{
-			_log.warning("Summon items data: Can not find './data/summon_items.csv'");
+			_log.warn("Summon items data: Can not find './data/summon_items.csv'");
 			return;
 		}
 
@@ -93,8 +92,8 @@ public class SummonItemsData
 			}
 			catch(Exception e)
 			{
-				_log.warning("Summon items data: Error in line " + lineCount + " -> incomplete/invalid data or wrong seperator!");
-				_log.warning("		" + line);
+				_log.warn("Summon items data: Error in line " + lineCount + " -> incomplete/invalid data or wrong seperator!");
+				_log.warn("		" + line);
 				ok = false;
 			}
 

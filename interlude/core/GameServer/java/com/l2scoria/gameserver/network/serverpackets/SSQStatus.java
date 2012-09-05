@@ -18,14 +18,13 @@
  */
 package com.l2scoria.gameserver.network.serverpackets;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.entity.sevensigns.SevenSigns;
 import com.l2scoria.gameserver.model.entity.sevensigns.SevenSignsFestival;
 import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.templates.StatsSet;
+import org.apache.log4j.Logger;
 
 /**
  * Seven Signs Record Update packet type id 0xf5 format: c cc (Page Num = 1 -> 4, period) 1: [ddd cc dd ddd c ddd c] 2:

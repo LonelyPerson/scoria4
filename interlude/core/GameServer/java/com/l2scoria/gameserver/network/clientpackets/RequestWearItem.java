@@ -18,21 +18,12 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.List;
-import java.util.concurrent.Future;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.TradeController;
 import com.l2scoria.gameserver.datatables.sql.ItemTable;
 import com.l2scoria.gameserver.model.L2Object;
 import com.l2scoria.gameserver.model.L2TradeList;
-import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2MercManagerInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2MerchantInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2NpcInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
+import com.l2scoria.gameserver.model.actor.instance.*;
 import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
 import com.l2scoria.gameserver.network.serverpackets.InventoryUpdate;
@@ -41,6 +32,10 @@ import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
 import com.l2scoria.gameserver.templates.L2Item;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.gameserver.util.Util;
+import org.apache.log4j.Logger;
+
+import java.util.List;
+import java.util.concurrent.Future;
 
 /**
  * This class ...
@@ -76,7 +71,7 @@ public final class RequestWearItem extends L2GameClientPacket
 			}
 			catch(Throwable e)
 			{
-				_log.log(Level.SEVERE, "", e);
+				_log.fatal("", e);
 			}
 		}
 	}

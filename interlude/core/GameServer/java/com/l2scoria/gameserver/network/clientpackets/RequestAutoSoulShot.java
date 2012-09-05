@@ -18,14 +18,13 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.ExAutoSoulShot;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
+import org.apache.log4j.Logger;
 
 /**
  * This class ...
@@ -60,7 +59,7 @@ public final class RequestAutoSoulShot extends L2GameClientPacket
 		{
 			if(Config.DEBUG)
 			{
-				_log.fine("AutoSoulShot:" + _itemId);
+				_log.info("AutoSoulShot:" + _itemId);
 			}
 
 			L2ItemInstance item = activeChar.getInventory().getItemByItemId(_itemId);

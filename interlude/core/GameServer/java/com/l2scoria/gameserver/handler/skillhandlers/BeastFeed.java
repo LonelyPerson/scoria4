@@ -18,14 +18,13 @@
  */
 package com.l2scoria.gameserver.handler.skillhandlers;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.gameserver.handler.ISkillHandler;
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.L2Object;
 import com.l2scoria.gameserver.model.L2Skill;
 import com.l2scoria.gameserver.model.L2Skill.SkillType;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
+import org.apache.log4j.Logger;
 
 /**
  * @author _drunk_ TODO To change the template for this generated type comment go to Window - Preferences - Java - Code
@@ -46,7 +45,7 @@ public class BeastFeed implements ISkillHandler
 
 		if(targetList == null){ return; }
 
-		_log.fine("Beast Feed casting succeded.");
+		_log.info("Beast Feed casting succeded.");
 
 		targetList = null;
 		// This is just a dummy skill handler for the golden food and crystal food skills,

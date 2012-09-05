@@ -18,8 +18,6 @@
  */
 package com.l2scoria.gameserver.model.actor.instance;
 
-import java.util.StringTokenizer;
-
 import com.l2scoria.gameserver.ai.CtrlIntention;
 import com.l2scoria.gameserver.datatables.SkillTable;
 import com.l2scoria.gameserver.datatables.sql.ClanTable;
@@ -27,15 +25,12 @@ import com.l2scoria.gameserver.managers.ClanHallManager;
 import com.l2scoria.gameserver.model.L2Clan;
 import com.l2scoria.gameserver.model.entity.ClanHall;
 import com.l2scoria.gameserver.network.SystemMessageId;
-import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
-import com.l2scoria.gameserver.network.serverpackets.MyTargetSelected;
-import com.l2scoria.gameserver.network.serverpackets.NpcHtmlMessage;
-import com.l2scoria.gameserver.network.serverpackets.Ride;
-import com.l2scoria.gameserver.network.serverpackets.SocialAction;
-import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
-import com.l2scoria.gameserver.network.serverpackets.ValidateLocation;
+import com.l2scoria.gameserver.network.clientpackets.RequestActionUse;
+import com.l2scoria.gameserver.network.serverpackets.*;
 import com.l2scoria.gameserver.templates.L2NpcTemplate;
 import com.l2scoria.util.random.Rnd;
+
+import java.util.StringTokenizer;
 
 /**
  * This class ...
@@ -61,13 +56,13 @@ public class L2DoormenInstance extends L2FolkInstance
 
 	public final ClanHall getClanHall()
 	{
-		//_log.warning(this.getName()+" searching ch");
+		//_log.warn(this.getName()+" searching ch");
 		if(_clanHall == null)
 		{
 			_clanHall = ClanHallManager.getInstance().getNearbyClanHall(getX(), getY(), 500);
 		}
 		//if (_ClanHall != null)
-		//    _log.warning(this.getName()+" found ch "+_ClanHall.getName());
+		//    _log.warn(this.getName()+" found ch "+_ClanHall.getName());
 		return _clanHall;
 	}
 
@@ -163,8 +158,14 @@ public class L2DoormenInstance extends L2FolkInstance
 						}
 						else
 						{
+							if (player._event!=null && !player._event.canDoAction(player, RequestActionUse.ACTION_MOUNT))
+							{
+								return;
+							}
+
 							if(!player.disarmWeapons())
 								return;
+
 							player.getPet().unSummon(player);
 							player.getInventory().destroyItemByItemId("Wyvern", 1460, 10, player, player.getTarget());
 							Ride mount = new Ride(player.getObjectId(), Ride.ACTION_MOUNT, 12621);

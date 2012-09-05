@@ -1,8 +1,8 @@
 package com.l2scoria;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.gameserver.GameServer;
+
+import java.util.logging.Logger;
 
 public class L2Scoria
 {
@@ -26,7 +26,7 @@ public class L2Scoria
 		_log.info("       /  ########/     ######/   ######     ###         ### / ####/ ##  ");
 		_log.info("      /     #####        #####     ####       ###         ##/   ###   ## ");
 		_log.info("      |                       Recreate by scoria.ru                      ");
-		_log.info("       \\)                     Copyright 2008-2011                       ");
+		_log.info("       \\)                     Copyright 2008-2012                       ");
 	}
 
 	public static void infoLS()
@@ -45,7 +45,7 @@ public class L2Scoria
 		_log.info(" |            @@@@@      @@@@      @@@      @     @   @@@@@   @    @          |");
 		_log.info(" |                                                                            |");
 		_log.info(" |                            Recreate by scoria.ru                           |");
-		_log.info(" |                             Copyright 2008-2011                            |");
+		_log.info(" |                             Copyright 2008-2012                            |");
 		_log.info(" |____________________________________________________________________________|");
 	}
 

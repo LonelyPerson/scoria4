@@ -28,13 +28,13 @@ import com.l2scoria.gameserver.network.serverpackets.PledgeShowInfoUpdate;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.util.database.L2DatabaseFactory;
 import javolution.util.FastList;
+import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Calendar;
 import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * @author programmos, scoria dev
@@ -380,7 +380,7 @@ public class Fort
 		}
 		catch(Exception e)
 		{
-			_log.warning("Exception: loadFortData(): " + e.getMessage());
+			_log.warn("Exception: loadFortData(): " + e.getMessage());
 			e.printStackTrace();
 		}
 		finally
@@ -418,7 +418,7 @@ public class Fort
 				}
 				catch (NullPointerException npe)
 				{
-					_log.warning("No door data for door ID: " + rs.getInt("id"));
+					_log.warn("No door data for door ID: " + rs.getInt("id"));
 				}
 			}
 
@@ -429,7 +429,7 @@ public class Fort
 		}
 		catch(Exception e)
 		{
-			_log.warning("Exception: loadFortDoor(): " + e.getMessage());
+			_log.warn("Exception: loadFortDoor(): " + e.getMessage());
 			e.printStackTrace();
 		}
 		finally
@@ -461,7 +461,7 @@ public class Fort
 		}
 		catch(Exception e)
 		{
-			_log.warning("Exception: loadFortDoorUpgrade(): " + e.getMessage());
+			_log.warn("Exception: loadFortDoorUpgrade(): " + e.getMessage());
 			e.printStackTrace();
 		}
 		finally
@@ -485,7 +485,7 @@ public class Fort
 		}
 		catch(Exception e)
 		{
-			_log.warning("Exception: removeDoorUpgrade(): " + e.getMessage());
+			_log.warn("Exception: removeDoorUpgrade(): " + e.getMessage());
 			e.printStackTrace();
 		}
 		finally
@@ -512,7 +512,7 @@ public class Fort
 		}
 		catch(Exception e)
 		{
-			_log.warning("Exception: saveDoorUpgrade(int doorId, int hp, int pDef, int mDef): " + e.getMessage());
+			_log.warn("Exception: saveDoorUpgrade(int doorId, int hp, int pDef, int mDef): " + e.getMessage());
 			e.printStackTrace();
 		}
 		finally
@@ -560,7 +560,7 @@ public class Fort
 		}
 		catch(Exception e)
 		{
-			_log.warning("Exception: updateOwnerInDB(L2Clan clan): " + e.getMessage());
+			_log.warn("Exception: updateOwnerInDB(L2Clan clan): " + e.getMessage());
 			e.printStackTrace();
 		}
 		finally

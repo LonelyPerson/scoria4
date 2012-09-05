@@ -18,17 +18,16 @@
  */
 package com.l2scoria.gameserver.datatables.sql;
 
+import com.l2scoria.Config;
+import com.l2scoria.gameserver.datatables.AccessLevel;
+import com.l2scoria.util.database.L2DatabaseFactory;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Logger;
-
-import javolution.util.FastMap;
-
-import com.l2scoria.Config;
-import com.l2scoria.gameserver.datatables.AccessLevel;
-import com.l2scoria.util.database.L2DatabaseFactory;
 
 /**
  * @author FBIagent<br>
@@ -89,17 +88,17 @@ public class AccessLevels
 
 				if(accessLevel == _userAccessLevelNum)
 				{
-					_log.warning("AccessLevels: Access level with name " + name + " is using reserved user access level " + _userAccessLevelNum + ". Ignoring it!");
+					_log.warn("AccessLevels: Access level with name " + name + " is using reserved user access level " + _userAccessLevelNum + ". Ignoring it!");
 					continue;
 				}
 				else if(accessLevel == _masterAccessLevelNum)
 				{
-					_log.warning("AccessLevels: Access level with name " + name + " is using reserved master access level " + _masterAccessLevelNum + ". Ignoring it!");
+					_log.warn("AccessLevels: Access level with name " + name + " is using reserved master access level " + _masterAccessLevelNum + ". Ignoring it!");
 					continue;
 				}
 				else if(accessLevel < 0)
 				{
-					_log.warning("AccessLevels: Access level with name " + name + " is using banned access level state(below 0). Ignoring it!");
+					_log.warn("AccessLevels: Access level with name " + name + " is using banned access level state(below 0). Ignoring it!");
 					continue;
 				}
 
@@ -152,7 +151,7 @@ public class AccessLevels
 		}
 		catch(SQLException e)
 		{
-			_log.warning("AccessLevels: Error loading from database:" + e);
+			_log.warn("AccessLevels: Error loading from database:" + e);
 		}
 		finally
 		{

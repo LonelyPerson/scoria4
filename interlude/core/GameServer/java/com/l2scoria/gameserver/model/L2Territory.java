@@ -28,9 +28,9 @@ package com.l2scoria.gameserver.model;
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.geodata.GeoEngine;
 import com.l2scoria.util.random.Rnd;
+import org.apache.log4j.Logger;
 
 import java.awt.*;
-import java.util.logging.Logger;
 
 public class L2Territory
 {
@@ -164,14 +164,14 @@ public class L2Territory
 
 			if(i == 40)
 			{
-				_log.warning("Heavy territory: " + this + ", need manual correction");
+				_log.warn("Heavy territory: " + this + ", need manual correction");
 			}
 
 			if(poly.contains(p[0], p[1]))
 			{
 				if(Config.GEODATA)
 				{
-					int tempz = GeoEngine.getHeight(p[0], p[1], _zMin + (_zMax - _zMin) / 2);
+					int tempz = GeoEngine.getHeight(p[0], p[1], _zMin + (_zMax - _zMin) / 2, 0);
 
 					if(_zMin != _zMax)
 					{
@@ -187,7 +187,7 @@ public class L2Territory
 
 					p[2] = tempz;
 
-					if(GeoEngine.getNSWE(p[0], p[1], p[2]) != 15)
+					if(GeoEngine.getNSWE(p[0], p[1], p[2], 0) != 15)
 					{
 						continue;
 					}
@@ -217,7 +217,7 @@ public class L2Territory
 				return p;
 			}
 		}
-		_log.warning("Can't make point for " + this);
+		_log.warn("Can't make point for " + this);
 		return p;
 	}
 

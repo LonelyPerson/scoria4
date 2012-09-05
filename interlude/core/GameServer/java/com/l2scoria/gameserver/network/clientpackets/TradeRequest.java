@@ -18,8 +18,6 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.model.BlockList;
 import com.l2scoria.gameserver.model.L2Object;
@@ -30,6 +28,7 @@ import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
 import com.l2scoria.gameserver.network.serverpackets.SendTradeRequest;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
 import com.l2scoria.gameserver.util.Util;
+import org.apache.log4j.Logger;
 
 /**
  * This class ...
@@ -134,7 +133,7 @@ public final class TradeRequest extends L2GameClientPacket
 		{
 			if(Config.DEBUG)
 			{
-				_log.fine("already trading with someone");
+				_log.info("already trading with someone");
 			}
 
 			player.sendPacket(new SystemMessage(SystemMessageId.ALREADY_TRADING));

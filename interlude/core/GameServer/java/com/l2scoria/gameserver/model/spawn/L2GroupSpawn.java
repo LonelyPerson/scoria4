@@ -17,14 +17,14 @@
  */
 package com.l2scoria.gameserver.model.spawn;
 
-import java.lang.reflect.Constructor;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.sql.TerritoryTable;
 import com.l2scoria.gameserver.idfactory.IdFactory;
 import com.l2scoria.gameserver.model.actor.instance.L2NpcInstance;
 import com.l2scoria.gameserver.templates.L2NpcTemplate;
 import com.l2scoria.util.random.Rnd;
+
+import java.lang.reflect.Constructor;
 
 /**
  * @author littlecrow A special spawn implementation to spawn controllable mob
@@ -99,7 +99,7 @@ public class L2GroupSpawn extends L2Spawn
 
 			if(Config.DEBUG)
 			{
-				_log.finest("spawned Mob ID: " + _template.npcId + " ,at: " + mob.getX() + " x, " + mob.getY() + " y, " + mob.getZ() + " z");
+				_log.info("spawned Mob ID: " + _template.npcId + " ,at: " + mob.getX() + " x, " + mob.getY() + " y, " + mob.getZ() + " z");
 			}
 
 			parameters = null;
@@ -110,7 +110,7 @@ public class L2GroupSpawn extends L2Spawn
 		}
 		catch(Exception e)
 		{
-			_log.warning("NPC class not found: " + e);
+			_log.warn("NPC class not found: " + e);
 			return null;
 		}
 	}

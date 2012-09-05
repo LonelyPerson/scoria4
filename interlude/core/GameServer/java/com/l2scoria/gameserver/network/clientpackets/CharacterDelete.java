@@ -18,13 +18,11 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.network.serverpackets.CharDeleteFail;
 import com.l2scoria.gameserver.network.serverpackets.CharDeleteOk;
 import com.l2scoria.gameserver.network.serverpackets.CharSelectInfo;
+import org.apache.log4j.Logger;
 
 /**
  * This class ...
@@ -51,7 +49,7 @@ public final class CharacterDelete extends L2GameClientPacket
 	{
 		if(Config.DEBUG)
 		{
-			_log.fine("deleting slot:" + _charSlot);
+			_log.info("deleting slot:" + _charSlot);
 		}
 
 		try
@@ -76,7 +74,7 @@ public final class CharacterDelete extends L2GameClientPacket
 		}
 		catch(Exception e)
 		{
-			_log.log(Level.SEVERE, "Error:", e);
+			_log.fatal("Error:", e);
 
 		}
 

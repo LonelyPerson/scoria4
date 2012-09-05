@@ -18,16 +18,15 @@
  */
 package com.l2scoria.gameserver.datatables.sql;
 
+import com.l2scoria.gameserver.model.L2Skill;
+import com.l2scoria.util.database.L2DatabaseFactory;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Map;
-import java.util.logging.Logger;
-
-import javolution.util.FastMap;
-
-import com.l2scoria.gameserver.model.L2Skill;
-import com.l2scoria.util.database.L2DatabaseFactory;
 
 public class SkillSpellbookTable
 {
@@ -65,13 +64,13 @@ public class SkillSpellbookTable
 			spbooks.close();
 			statement.close();
 
-			_log.config("SkillSpellbookTable: Loaded " + _skillSpellbooks.size() + " Spellbooks.");
+			_log.info("SkillSpellbookTable: Loaded " + _skillSpellbooks.size() + " Spellbooks.");
 			spbooks = null;
 			statement = null;
 		}
 		catch(Exception e)
 		{
-			_log.warning("Error while loading spellbook data: " + e);
+			_log.warn("Error while loading spellbook data: " + e);
 		}
 		finally
 		{

@@ -18,11 +18,10 @@
  */
 package com.l2scoria.gameserver.model.actor.instance;
 
-import com.l2scoria.Config;
 import com.l2scoria.gameserver.ai.CtrlIntention;
 import com.l2scoria.gameserver.ai.L2CharacterAI;
 import com.l2scoria.gameserver.ai.L2DoorAI;
-import com.l2scoria.gameserver.geodata.GeoControl;
+import com.l2scoria.gameserver.geodata.GeoCollision;
 import com.l2scoria.gameserver.geodata.GeoEngine;
 import com.l2scoria.gameserver.managers.CastleManager;
 import com.l2scoria.gameserver.managers.FortManager;
@@ -40,21 +39,20 @@ import com.l2scoria.gameserver.network.serverpackets.*;
 import com.l2scoria.gameserver.templates.L2CharTemplate;
 import com.l2scoria.gameserver.templates.L2Weapon;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
+import gnu.trove.TLongByteHashMap;
 import javolution.text.TextBuilder;
 import javolution.util.FastList;
+import org.apache.log4j.Logger;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.concurrent.ScheduledFuture;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * This class ...
  *
  * @version $Revision: 1.3.2.2.2.5 $ $Date: 2005/03/27 15:29:32 $
  */
-public class L2DoorInstance extends L2Character implements GeoControl
+public class L2DoorInstance extends L2Character implements GeoCollision
 {
 	protected static final Logger log = Logger.getLogger(L2DoorInstance.class.getName());
 
@@ -74,12 +72,14 @@ public class L2DoorInstance extends L2Character implements GeoControl
 	private boolean _unlockable;
 	private boolean _isHPVisible;
 
+	public boolean _geoOpen;
 	public boolean _open = true;
 	private boolean _geodata = true;
-	private L2Territory geoPos;
-	private HashMap<Long, Byte> geoAround;
+	private TLongByteHashMap geoAround;
 
 	private ClanHall _clanHall;
+
+	private L2Territory _pos;
 
 	protected int _autoActionDelay = -1;
 	private ScheduledFuture<?> _autoActionTask;
@@ -162,7 +162,7 @@ public class L2DoorInstance extends L2Character implements GeoControl
 				onClose();
 			} catch (Throwable e)
 			{
-				log.log(Level.SEVERE, "", e);
+				log.fatal("", e);
 			}
 		}
 	}
@@ -172,30 +172,16 @@ public class L2DoorInstance extends L2Character implements GeoControl
 	 */
 	class AutoOpenClose implements Runnable
 	{
+		@Override
 		public void run()
 		{
-			try
+			if (!getOpen())
 			{
-				String doorAction;
-
-				if (!getOpen())
-				{
-					doorAction = "opened";
-					openMe();
-				}
-				else
-				{
-					doorAction = "closed";
-					closeMe();
-				}
-
-				if (Config.DEBUG)
-				{
-					log.info("Auto " + doorAction + " door ID " + _doorId + " (" + _name + ") for " + _autoActionDelay / 60000 + " minute(s).");
-				}
-			} catch (Exception e)
+				openMe();
+			}
+			else
 			{
-				log.warning("Could not auto open/close door ID " + _doorId + " (" + _name + ")");
+				closeMe();
 			}
 		}
 	}
@@ -212,6 +198,7 @@ public class L2DoorInstance extends L2Character implements GeoControl
 		_name = name;
 		_unlockable = unlockable;
 		_isHPVisible = showHp;
+		_geoOpen = true;
 	}
 
 	@Override
@@ -284,28 +271,27 @@ public class L2DoorInstance extends L2Character implements GeoControl
 	 */
 	public void setOpen(boolean open)
 	{
-		//System.out.println("Door open: " + String.valueOf(_open));
-
-		if (_open == open)
-		{
-			return;
-		}
-
 		_open = open;
+	}
 
-		if (!Config.GEODATA || !getGeodata())
-		{
+	/**
+	 * Устанавливает значение закрытости\открытости в геодате<br>
+	 * @param val новое значение
+	 */
+	private void setGeoOpen(boolean val)
+	{
+		if(_geoOpen == val)
 			return;
-		}
 
-		if (open)
-		{
-			GeoEngine.returnGeoAtControl(this);
-		}
+		_geoOpen = val;
+
+		if(!getGeodata())
+			return;
+
+		if(val)
+			GeoEngine.removeGeoCollision(this, getInstanceId());
 		else
-		{
-			GeoEngine.applyControl(this);
-		}
+			GeoEngine.applyGeoCollision(this, getInstanceId());
 	}
 
 	/**
@@ -343,9 +329,7 @@ public class L2DoorInstance extends L2Character implements GeoControl
 
 		if (actionDelay > -1)
 		{
-			AutoOpenClose ao = new AutoOpenClose();
-			_autoActionTask = ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(ao, actionDelay, actionDelay);
-			ao = null;
+			_autoActionTask = ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(new AutoOpenClose(), actionDelay, actionDelay);
 		}
 		else
 		{
@@ -423,11 +407,7 @@ public class L2DoorInstance extends L2Character implements GeoControl
 		{
 			return true;
 		}
-		if (getFort() != null && getFort().getSiege().getIsInProgress())
-		{
-			return true;
-		}
-		return false;
+		return getFort() != null && getFort().getSiege().getIsInProgress();
 	}
 
 	@Override
@@ -500,24 +480,6 @@ public class L2DoorInstance extends L2Character implements GeoControl
 			return 0;
 		}
 		return 2000;
-	}
-
-	/**
-	 * Return the distance after which the object must be remove from _knownObject according to the type of the object.<BR>
-	 * <BR>
-	 * <B><U> Values </U> :</B><BR>
-	 * <BR>
-	 * <li>object is a L2PcInstance : 4000</li> <li>object is not a L2PcInstance : 0</li><BR>
-	 * <BR>
-	 */
-	public int getDistanceToForgetObject(L2Object object)
-	{
-		if (!(object instanceof L2PcInstance))
-		{
-			return 0;
-		}
-
-		return 4000;
 	}
 
 	/**
@@ -706,7 +668,7 @@ public class L2DoorInstance extends L2Character implements GeoControl
 	{
 		synchronized (this)
 		{
-			if (!getOpen())
+			if (!_open)
 			{
 				return;
 			}
@@ -714,6 +676,7 @@ public class L2DoorInstance extends L2Character implements GeoControl
 			setOpen(false);
 		}
 
+		setGeoOpen(false);
 		broadcastStatusUpdate();
 	}
 
@@ -721,13 +684,15 @@ public class L2DoorInstance extends L2Character implements GeoControl
 	{
 		synchronized (this)
 		{
-			if (getOpen())
+			if (_open)
 			{
 				return;
 			}
+
 			setOpen(true);
 		}
 
+		setGeoOpen(true);
 		broadcastStatusUpdate();
 	}
 
@@ -798,22 +763,12 @@ public class L2DoorInstance extends L2Character implements GeoControl
 		return _geodata;
 	}
 
-	public void setGeoAround(HashMap<Long, Byte> value)
+	public void setGeoAround(TLongByteHashMap value)
 	{
 		geoAround = value;
 	}
 
-	public L2Territory getGeoPos()
-	{
-		return geoPos;
-	}
-
-	public void setGeoPos(L2Territory value)
-	{
-		geoPos = value;
-	}
-
-	public HashMap<Long, Byte> getGeoAround()
+	public TLongByteHashMap getGeoAround()
 	{
 		return geoAround;
 	}
@@ -821,6 +776,39 @@ public class L2DoorInstance extends L2Character implements GeoControl
 	@Override
 	public boolean isGeoCloser()
 	{
+		return true;
+	}
+
+	public void setGeoPos(L2Territory pos)
+	{
+	 	_pos = pos;
+	}
+
+	@Override
+	public L2Territory getGeoPos()
+	{
+		return _pos;
+	}
+
+	/*@Override
+	public void onSpawn()
+	{
+		super.onSpawn();
+		if(!getOpen() && _geoOpen)
+			setGeoOpen(false);
+
+		closeMe();
+	}*/
+
+	@Override
+	public boolean doDie(L2Character killer)
+	{
+		if (!super.doDie(killer))
+		{
+			return false;
+		}
+
+		setGeoOpen(true);
 		return true;
 	}
 }
