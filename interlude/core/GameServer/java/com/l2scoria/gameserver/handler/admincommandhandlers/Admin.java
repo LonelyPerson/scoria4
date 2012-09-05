@@ -10,7 +10,7 @@ import org.apache.log4j.Logger;
  * @author Akumu
  * @date 19:50/05.09.12
  */
-public class Admin implements IAdminCommandHandler
+public abstract class Admin implements IAdminCommandHandler
 {
 	private static final Logger _log = Logger.getLogger("gmaudit");
 	protected String[] _commands = null;
