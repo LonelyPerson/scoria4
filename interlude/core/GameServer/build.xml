@@ -253,6 +253,7 @@
     	<mkdir dir="${build.dist.login}/config/network" />
     	<mkdir dir="${build.dist.login}/config/protected" />
     	
+        <mkdir dir="${build.dist.game}/config/events" />
     	<mkdir dir="${build.dist.game}/config/protected" />
     	<mkdir dir="${build.dist.game}/config/head" />
     	<mkdir dir="${build.dist.game}/config/functions" />
@@ -306,6 +307,12 @@
 				<include name="questionwords.txt"/>
 				<include name="key.cfg"/>
 				<include name="start.bin"/>
+			</fileset>
+        </copy>
+        
+        <copy todir="${build.dist.game}/config/events">
+			<fileset dir="config/events">
+				<include name="*.properties"/>
 			</fileset>
         </copy>
     	
