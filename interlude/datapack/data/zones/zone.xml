@@ -220,6 +220,7 @@
 		<stat name='name' val='Floran Village'/>
 		<stat name='townId' val='16'/>
 		<stat name='taxById' val='2'/>
+                <stat name='redirectTownId' val='8'/>
 		<spawn X='17817' Y='170079' Z='-3530'/>
 		<spawn X='15665' Y='169130' Z='-3541'/>
 		<spawn X='17577' Y='170128' Z='-3534'/>
