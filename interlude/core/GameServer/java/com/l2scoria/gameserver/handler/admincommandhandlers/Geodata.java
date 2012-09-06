@@ -227,6 +227,11 @@ public class Geodata extends Admin
 
 			case admin_geo_dump:
 
+				if(true)
+				{
+					break; // ибо нехуй
+				}
+
 				GeoEngine.DumpGeodata("./geodata_dump");
 				break;
 		}
