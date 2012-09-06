@@ -2,7 +2,7 @@ package com.l2scoria;
 
 import com.l2scoria.gameserver.GameServer;
 
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 public class L2Scoria
 {

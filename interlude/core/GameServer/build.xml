@@ -39,8 +39,7 @@
         	<include name="lameguard-1.9.5.jar"/>
                 <include name="ExtAPI.jar"/>
         	<include name="akumu.geoengine.1.2.0.7.jar"/>
-            <include name="trove-2.1.0.jar"/>
-            <include name="log4j-1.2.16.jar"/>
+                <include name="trove-2.1.0.jar"/>
         </fileset>
     </path>   
     

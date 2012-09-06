@@ -575,6 +575,7 @@ public class ItemTable
 			item.type = L2EtcItemType.OTHER;
 			item.set.set("bodypart", L2Item.SLOT_L_HAND);
 		}
+                // why not MATERIAL, DYE here? add or no?
 		else
 		{
 			_log.info("unknown etcitem type:" + itemType);

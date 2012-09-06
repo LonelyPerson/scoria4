@@ -79,6 +79,7 @@ import mmo.SelectorServerConfig;
 import mmo.SelectorThread;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.xml.DOMConfigurator;
 
 import java.io.File;
 import java.io.IOException;
@@ -105,6 +106,7 @@ public class GameServer
                 ServerType.serverMode = ServerType.MODE_GAMESERVER;
                 //Local Constants
                 new File(Config.DATAPACK_ROOT, "log").mkdir();
+                DOMConfigurator.configure("./config/log4j.xml");
 
 		long serverLoadStart = System.currentTimeMillis();
 

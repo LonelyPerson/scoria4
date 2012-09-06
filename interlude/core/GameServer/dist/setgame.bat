@@ -21,7 +21,7 @@ SET CLASSPATH=%CLASSPATH%;./lib/lameguard-1.9.5.jar
 REM Commons
 SET CLASSPATH=%CLASSPATH%;./lib/commons-logging-1.1.jar
 SET CLASSPATH=%CLASSPATH%;./lib/commons-lang-2.1.jar
-SET CLASSPATH=%CLASSPATH%;./lib/log4j-1.2.16.jar
+SET CLASSPATH=%CLASSPATH%;./lib/log4j-1.2.17.jar
 
 REM Javolution
 SET CLASSPATH=%CLASSPATH%;./lib/javolution.jar

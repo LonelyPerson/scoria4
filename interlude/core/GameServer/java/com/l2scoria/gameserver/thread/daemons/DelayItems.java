@@ -8,7 +8,8 @@ import com.l2scoria.util.database.L2DatabaseFactory;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.logging.Logger;
+
+import org.apache.log4j.Logger;
 
 /**
  *
