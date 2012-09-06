@@ -78,7 +78,7 @@ import com.lameguard.LameGuard;
 import mmo.SelectorServerConfig;
 import mmo.SelectorThread;
 
-import import org.apache.log4j.Logger;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -523,7 +523,7 @@ public class GameServer
 		}
 		catch (IOException e)
 		{
-			_log.severe("FATAL: Failed to open server socket. Reason: " + e.getMessage());
+			_log.error("FATAL: Failed to open server socket. Reason: " + e.getMessage());
 			System.exit(1);
 		}
 		_selectorThread.start();
