@@ -116,7 +116,7 @@ public class L2ArenaZone extends L2ZoneDefault
 			character.setInsideZone(L2Character.ZONE_PVP, true);
 		}
 
-		if(character instanceof L2PcInstance)
+		if(character.isPlayer)
 		{
 			character.sendPacket(new SystemMessage(SystemMessageId.ENTERED_COMBAT_ZONE));
 		}
@@ -132,7 +132,7 @@ public class L2ArenaZone extends L2ZoneDefault
 			character.setInsideZone(L2Character.ZONE_PVP, false);
 		}
 
-		if(character instanceof L2PcInstance)
+		if(character.isPlayer)
 		{
 			character.sendPacket(new SystemMessage(SystemMessageId.LEFT_COMBAT_ZONE));
 		}
@@ -155,7 +155,7 @@ public class L2ArenaZone extends L2ZoneDefault
 				continue;
 			}
 
-			if(character instanceof L2PcInstance)
+			if(character.isPlayer)
 			{
 				L2PcInstance player = (L2PcInstance) character;
 

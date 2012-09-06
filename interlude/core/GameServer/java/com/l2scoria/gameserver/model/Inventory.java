@@ -85,7 +85,7 @@ public abstract class Inventory extends ItemContainer
 	{
 		public void notifyUnequiped(int slot, L2ItemInstance item)
 		{
-			if(!(getOwner() != null && getOwner() instanceof L2PcInstance))
+			if(!(getOwner() != null && getOwner().isPlayer))
 				return;
 
 			L2PcInstance owner = (L2PcInstance) getOwner();
@@ -99,7 +99,7 @@ public abstract class Inventory extends ItemContainer
 
 		public void notifyEquiped(int slot, L2ItemInstance item)
 		{
-			if(!(getOwner() != null && getOwner() instanceof L2PcInstance))
+			if(!(getOwner() != null && getOwner().isPlayer))
 				return;
 
 			L2PcInstance owner = (L2PcInstance) getOwner();
@@ -208,7 +208,7 @@ public abstract class Inventory extends ItemContainer
 				L2Skill skill = null;
 				if(item.getItemId() == 9140)
 				{
-					if(getOwner() instanceof L2PcInstance)
+					if(getOwner().isPlayer)
 					{
 						player = (L2PcInstance) getOwner();
 
@@ -252,7 +252,7 @@ public abstract class Inventory extends ItemContainer
 				L2Skill skill = null;
 				if(item.getItemId() == 9140)
 				{
-					if(getOwner() instanceof L2PcInstance)
+					if(getOwner().isPlayer)
 					{
 						player = (L2PcInstance) getOwner();
 
@@ -296,7 +296,7 @@ public abstract class Inventory extends ItemContainer
 		{
 			L2PcInstance player;
 
-			if(getOwner() instanceof L2PcInstance)
+			if(getOwner().isPlayer)
 			{
 				player = (L2PcInstance) getOwner();
 			}
@@ -337,7 +337,7 @@ public abstract class Inventory extends ItemContainer
 		public void notifyEquiped(int slot, L2ItemInstance item)
 		{
 			L2PcInstance player;
-			if(getOwner() instanceof L2PcInstance)
+			if(getOwner().isPlayer)
 			{
 				player = (L2PcInstance) getOwner();
 			}
@@ -384,7 +384,7 @@ public abstract class Inventory extends ItemContainer
 	{
 		public void notifyEquiped(int slot, L2ItemInstance item)
 		{
-			if(!(getOwner() instanceof L2PcInstance))
+			if(!(getOwner().isPlayer))
 				return;
 
 			L2PcInstance player = (L2PcInstance) getOwner();
@@ -481,7 +481,7 @@ public abstract class Inventory extends ItemContainer
 
 		public void notifyUnequiped(int slot, L2ItemInstance item)
 		{
-			if(!(getOwner() instanceof L2PcInstance))
+			if(!(getOwner().isPlayer))
 				return;
 
 			L2PcInstance player = (L2PcInstance) getOwner();
@@ -916,7 +916,7 @@ public abstract class Inventory extends ItemContainer
 
 				if(old.isAugmented())
 				{
-					if(getOwner() != null && getOwner() instanceof L2PcInstance)
+					if(getOwner() != null && getOwner().isPlayer)
 						old.getAugmentation().removeBoni((L2PcInstance)getOwner());
 				}
 
@@ -1034,7 +1034,7 @@ public abstract class Inventory extends ItemContainer
 		{
 			unEquipItemInBodySlot(slot);
 
-			if(getOwner() instanceof L2PcInstance)
+			if(getOwner().isPlayer)
 			{
 				((L2PcInstance) getOwner()).refreshExpertisePenalty();
 			}
@@ -1074,7 +1074,7 @@ public abstract class Inventory extends ItemContainer
 		{
 			unEquipItemInSlot(slot);
 
-			if(getOwner() instanceof L2PcInstance)
+			if(getOwner().isPlayer)
 			{
 				((L2PcInstance) getOwner()).refreshExpertisePenalty();
 			}
@@ -1200,10 +1200,10 @@ public abstract class Inventory extends ItemContainer
 	 */
 	public void equipItem(L2ItemInstance item)
 	{
-		if(getOwner() instanceof L2PcInstance && ((L2PcInstance) getOwner()).getPrivateStoreType() != 0)
+		if(getOwner().isPlayer && ((L2PcInstance) getOwner()).getPrivateStoreType() != 0)
 			return;
 
-		if(getOwner() instanceof L2PcInstance)
+		if(getOwner().isPlayer)
 		{
 			L2PcInstance player = (L2PcInstance) getOwner();
 
@@ -1492,7 +1492,7 @@ public abstract class Inventory extends ItemContainer
 					continue;
 				}
 
-				if(getOwner() instanceof L2PcInstance)
+				if(getOwner().isPlayer)
 				{
 					L2PcInstance player = (L2PcInstance) getOwner();
 

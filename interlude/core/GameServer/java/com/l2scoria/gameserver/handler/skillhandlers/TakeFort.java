@@ -44,7 +44,7 @@ public class TakeFort implements ISkillHandler
 
  public void useSkill(L2Character activeChar, @SuppressWarnings("unused") L2Skill skill, @SuppressWarnings("unused") L2Object[] targets)
  {
-     if (activeChar == null || !(activeChar instanceof L2PcInstance)) return;
+     if (activeChar == null || !(activeChar.isPlayer)) return;
 
      L2PcInstance player = (L2PcInstance)activeChar;
 
@@ -81,7 +81,7 @@ public static boolean checkIfOkToCastFlagDisplay(L2Character activeChar, boolean
 
 public static boolean checkIfOkToCastFlagDisplay(L2Character activeChar, Fort fort, boolean isCheckOnly)
 {
- if (activeChar == null || !(activeChar instanceof L2PcInstance))
+ if (activeChar == null || !(activeChar.isPlayer))
      return false;
 
  SystemMessage sm = new SystemMessage(SystemMessageId.S1_S2);

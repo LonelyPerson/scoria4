@@ -332,7 +332,7 @@ public class Menu extends Admin
 
 		if(target != null)
 		{
-			if(target instanceof L2PcInstance)
+			if(target.isPlayer)
 			{
 				target.reduceCurrentHp(target.getMaxHp() + target.getMaxCp() + 1, activeChar);
 				filename = "charmanage.htm";
@@ -373,7 +373,7 @@ public class Menu extends Admin
 	{
 		L2PcInstance player = null;
 
-		if(target != null && target instanceof L2PcInstance)
+		if(target != null && target.isPlayer)
 		{
 			player = (L2PcInstance) target;
 		}

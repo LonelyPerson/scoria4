@@ -46,13 +46,13 @@ public class PaganKeys implements IItemHandler
 
 		int itemId = item.getItemId();
 
-		if(!(playable instanceof L2PcInstance))
+		if(!(playable.isPlayer))
 			return;
 
 		L2PcInstance activeChar = (L2PcInstance) playable;
 		L2Object target = activeChar.getTarget();
 
-		if(!(target instanceof L2DoorInstance))
+		if(!(target.isDoor))
 		{
 			activeChar.sendPacket(new SystemMessage(SystemMessageId.INCORRECT_TARGET));
 			activeChar.sendPacket(ActionFailed.STATIC_PACKET);

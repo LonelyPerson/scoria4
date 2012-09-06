@@ -17,25 +17,24 @@
  */
 package com.l2scoria.loginserver;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.nio.ByteBuffer;
-import java.security.interfaces.RSAPrivateKey;
-import java.util.logging.Logger;
-
-import mmo.MMOClient;
-import mmo.MMOConnection;
-import mmo.SendablePacket;
-
 import com.l2scoria.Config;
 import com.l2scoria.crypt.LoginCrypt;
 import com.l2scoria.crypt.ScrambledKeyPair;
 import com.l2scoria.loginserver.network.serverpackets.L2LoginServerPacket;
 import com.l2scoria.loginserver.network.serverpackets.LoginFail;
-import com.l2scoria.loginserver.network.serverpackets.PlayFail;
 import com.l2scoria.loginserver.network.serverpackets.LoginFail.LoginFailReason;
+import com.l2scoria.loginserver.network.serverpackets.PlayFail;
 import com.l2scoria.loginserver.network.serverpackets.PlayFail.PlayFailReason;
 import com.l2scoria.util.random.Rnd;
+import mmo.MMOClient;
+import mmo.MMOConnection;
+import mmo.SendablePacket;
+import org.apache.log4j.Logger;
+
+import java.io.IOException;
+import java.net.InetAddress;
+import java.nio.ByteBuffer;
+import java.security.interfaces.RSAPrivateKey;
 
 /**
  * Represents a client connected into the LoginServer
@@ -128,7 +127,7 @@ public final class L2LoginClient extends MMOClient<MMOConnection<L2LoginClient>>
 		{
 			byte[] dump = new byte[size];
 			System.arraycopy(buf.array(), buf.position(), dump, 0, size);
-			_log.warning("Wrong checksum from client: " + toString());
+			_log.warn("Wrong checksum from client: " + toString());
 			super.getConnection().close((SendablePacket<L2LoginClient>)null);
 			dump = null;
 		}

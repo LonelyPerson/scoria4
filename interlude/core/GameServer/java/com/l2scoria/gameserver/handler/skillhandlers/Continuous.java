@@ -74,7 +74,7 @@ public class Continuous implements ISkillHandler
 	
 		L2Character target = null;
 		L2PcInstance player = null;
-		if(activeChar instanceof L2PcInstance)
+		if(activeChar.isPlayer)
 			player = (L2PcInstance) activeChar;
 
 		if(skill.getEffectId() != 0)
@@ -98,9 +98,9 @@ public class Continuous implements ISkillHandler
 		{
 			target = (L2Character) target2;
 
-			if (target instanceof L2PcInstance && activeChar instanceof L2PlayableInstance && skill.isOffensive())
+			if (target.isPlayer && activeChar.isPlayable && skill.isOffensive())
 			{
-				L2PcInstance _char = (activeChar instanceof L2PcInstance)?(L2PcInstance)activeChar:((L2Summon)activeChar).getOwner();
+				L2PcInstance _char = (activeChar.isPlayer)?(L2PcInstance)activeChar:((L2Summon)activeChar).getOwner();
 				L2PcInstance _attacked = (L2PcInstance) target;
 				if(_attacked.getClanId()!=0 && _char.getClanId()!=0 && 
 					_attacked.getClanId() == _char.getClanId() && _attacked.getPvpFlag()==0 && !_attacked.isInOlympiadMode())
@@ -117,7 +117,7 @@ public class Continuous implements ISkillHandler
 			}
 
 			// Walls and Door should not be buffed
-			if(target instanceof L2DoorInstance && (skill.getSkillType() == L2Skill.SkillType.BUFF || skill.getSkillType() == L2Skill.SkillType.HOT))
+			if(target.isDoor && (skill.getSkillType() == L2Skill.SkillType.BUFF || skill.getSkillType() == L2Skill.SkillType.HOT))
 				continue;
 
 			// Player holding a cursed weapon can't be buffed and can't buff
@@ -125,7 +125,7 @@ public class Continuous implements ISkillHandler
 			{
 				if(target != activeChar)
 				{
-					if(target instanceof L2PcInstance && ((L2PcInstance) target).isCursedWeaponEquiped())
+					if(target.isPlayer && target.getPlayer().isCursedWeaponEquiped())
 						continue;
 					else if(player != null && player.isCursedWeaponEquiped())
 						continue;
@@ -133,12 +133,12 @@ public class Continuous implements ISkillHandler
 			}
 
 			//Possibility of a lethal strike
-			if(!target.isRaid() && !(target instanceof L2NpcInstance && ((L2NpcInstance) target).getNpcId() == 35062))
+			if(!target.isRaid() && !(target.isNpc && ((L2NpcInstance) target).getNpcId() == 35062))
 			{
 				int chance = Rnd.get(100);
 				if(skill.getLethalChance2() > 0 && chance < Formulas.getInstance().calcLethal(activeChar, target, skill.getLethalChance2()))
 				{
-					if(target instanceof L2NpcInstance)
+					if(target.isNpc)
 					{
 						target.reduceCurrentHp(target.getCurrentHp() - 1, activeChar);
 						activeChar.sendPacket(new SystemMessage(SystemMessageId.LETHAL_STRIKE));
@@ -146,7 +146,7 @@ public class Continuous implements ISkillHandler
 				}
 				else if(skill.getLethalChance1() > 0 && chance < Formulas.getInstance().calcLethal(activeChar, target, skill.getLethalChance1()))
 				{
-					if(target instanceof L2NpcInstance)
+					if(target.isNpc)
 					{
 						target.reduceCurrentHp(target.getCurrentHp() / 2, activeChar);
 						activeChar.sendPacket(new SystemMessage(SystemMessageId.LETHAL_STRIKE));
@@ -189,7 +189,7 @@ public class Continuous implements ISkillHandler
 					}
 					weaponInst = null;
 				}
-				else if(activeChar instanceof L2Summon)
+				else if(activeChar.isSummon)
 				{
 					L2Summon activeSummon = (L2Summon) activeChar;
 					if(skill.isMagic())
@@ -287,12 +287,12 @@ public class Continuous implements ISkillHandler
 			// if this is a debuff let the duel manager know about it
 			// so the debuff can be removed after the duel
 			// (player & target must be in the same duel)
-			if(player != null && target instanceof L2PcInstance && ((L2PcInstance) target).isInDuel() && (skill.getSkillType() == L2Skill.SkillType.DEBUFF || skill.getSkillType() == L2Skill.SkillType.BUFF) && player.getDuelId() == ((L2PcInstance) target).getDuelId())
+			if(player != null && target.isPlayer && target.getPlayer().isInDuel() && (skill.getSkillType() == L2Skill.SkillType.DEBUFF || skill.getSkillType() == L2Skill.SkillType.BUFF) && player.getDuelId() == target.getPlayer().getDuelId())
 			{
 				DuelManager dm = DuelManager.getInstance();
 				for(L2Effect buff : skill.getEffects(activeChar, target))
 					if(buff != null)
-						dm.onBuff(((L2PcInstance) target), buff);
+						dm.onBuff(target.getPlayer(), buff);
 				dm = null;
 			}
 			else
@@ -300,9 +300,9 @@ public class Continuous implements ISkillHandler
 
 			if(skill.getSkillType() == L2Skill.SkillType.AGGDEBUFF)
 			{
-				if(target instanceof L2Attackable)
+				if(target.isAttackable)
 					target.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, activeChar, (int) skill.getPower());
-				else if(target instanceof L2PlayableInstance)
+				else if(target.isPlayable)
 				{
 					if(target.getTarget() == activeChar)
 						target.getAI().setIntention(CtrlIntention.AI_INTENTION_ATTACK, activeChar);
@@ -311,7 +311,7 @@ public class Continuous implements ISkillHandler
 				}
 			}
 
-			if(target.isDead() && skill.getTargetType() == L2Skill.SkillTargetType.TARGET_AREA_CORPSE_MOB && target instanceof L2NpcInstance)
+			if(target.isDead() && skill.getTargetType() == L2Skill.SkillTargetType.TARGET_AREA_CORPSE_MOB && target.isNpc)
 			{
 				((L2NpcInstance) target).endDecayTask();
 			}

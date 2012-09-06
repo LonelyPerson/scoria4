@@ -47,7 +47,7 @@ public class SiegeFlag implements ISkillHandler
 
 	public void useSkill(L2Character activeChar, L2Skill skill, L2Object[] targets)
 	{
-		if(activeChar == null || !(activeChar instanceof L2PcInstance))
+		if(activeChar == null || !(activeChar.isPlayer))
 			return;
 
 		L2PcInstance player = (L2PcInstance) activeChar;
@@ -123,7 +123,7 @@ public class SiegeFlag implements ISkillHandler
 
 	public static boolean checkIfOkToPlaceFlag(L2Character activeChar, Castle castle, boolean isCheckOnly)
 	{
-		if(activeChar == null || !(activeChar instanceof L2PcInstance))
+		if(activeChar == null || !(activeChar.isPlayer))
 			return false;
 
 		SystemMessage sm = new SystemMessage(SystemMessageId.S1_S2);
@@ -153,7 +153,7 @@ public class SiegeFlag implements ISkillHandler
 
 	public static boolean checkIfOkToPlaceFlag(L2Character activeChar, Fort fort, boolean isCheckOnly)
 	{
-		if(activeChar == null || !(activeChar instanceof L2PcInstance))
+		if(activeChar == null || !(activeChar.isPlayer))
 			return false;
 
 		SystemMessage sm = new SystemMessage(SystemMessageId.S1_S2);

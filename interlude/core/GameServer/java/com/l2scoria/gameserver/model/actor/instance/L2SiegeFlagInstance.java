@@ -69,7 +69,7 @@ public class L2SiegeFlagInstance extends L2NpcInstance
 	public boolean isAutoAttackable(L2Character attacker)
 	{
 		// Attackable during siege by attacker only
-		return attacker != null && attacker instanceof L2PcInstance && getCastle() != null && getCastle().getCastleId() > 0 && getCastle().getSiege().getIsInProgress();
+		return attacker != null && attacker.isPlayer && getCastle() != null && getCastle().getCastleId() > 0 && getCastle().getSiege().getIsInProgress();
 	}
 
 	@Override

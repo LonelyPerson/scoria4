@@ -51,7 +51,7 @@ public class RaceManagerKnownList extends NpcKnownList
 			return false;
 
 		/* DONT KNOW WHY WE NEED THIS WHEN RACE MANAGER HAS A METHOD THAT BROADCAST TO ITS KNOW PLAYERS
-		if (object instanceof L2PcInstance)
+		if (object.isPlayer)
 		{
 		    if (packet != null)
 		        ((L2PcInstance) object).sendPacket(packet);
@@ -67,7 +67,7 @@ public class RaceManagerKnownList extends NpcKnownList
 		if(!super.removeKnownObject(object))
 			return false;
 
-		if(object instanceof L2PcInstance)
+		if(object.isPlayer)
 		{
 			//System.out.println("Sending delete monsrac info.");
 			DeleteObject obj = null;

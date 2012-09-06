@@ -41,11 +41,11 @@ public class SevenSignsRecord implements IItemHandler
 	{
 		L2PcInstance activeChar;
 
-		if(playable instanceof L2PcInstance)
+		if(playable.isPlayer)
 		{
 			activeChar = (L2PcInstance) playable;
 		}
-		else if(playable instanceof L2PetInstance)
+		else if(playable.isPet)
 		{
 			activeChar = ((L2PetInstance) playable).getOwner();
 		}

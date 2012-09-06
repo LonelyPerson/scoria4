@@ -73,14 +73,14 @@ public class InstanceControl extends Admin
 				}
 
 				L2Object target = activeChar.getTarget();
-				if (target == null || target instanceof L2Summon)
+				if (target == null || target.isSummon)
 				{
 					activeChar.sendPacket(SystemMessageId.INCORRECT_TARGET);
 					return false;
 				}
 
 				target.setInstanceId(val);
-				if (target instanceof L2PcInstance)
+				if (target.isPlayer)
 				{
 					L2PcInstance player = (L2PcInstance) target;
 					player.sendMessage("GM отправил Вас в инстанс:" + val);

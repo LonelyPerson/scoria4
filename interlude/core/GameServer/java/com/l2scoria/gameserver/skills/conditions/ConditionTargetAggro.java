@@ -41,10 +41,10 @@ public class ConditionTargetAggro extends Condition
 	public boolean testImpl(Env env)
 	{
 		L2Character target = env.target;
-		if(target instanceof L2MonsterInstance)
+		if(target.isMonster)
 			return ((L2MonsterInstance) target).isAggressive() == _isAggro;
-		if(target instanceof L2PcInstance)
-			return ((L2PcInstance) target).getKarma() > 0;
+		if(target.isPlayer)
+			return target.getPlayer().getKarma() > 0;
 		return false;
 	}
 }

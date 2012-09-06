@@ -17,32 +17,25 @@
  */
 package com.l2scoria.telnet;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Properties;
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.l2scoria.crypt.Base64;
 import com.l2scoria.gameserver.datatables.GameServerTable;
 import com.l2scoria.gameserver.services.FService;
 import com.l2scoria.loginserver.L2LoginServer;
 import com.l2scoria.loginserver.LoginController;
-import java.sql.Connection;
 import com.l2scoria.util.database.L2DatabaseFactory;
+import org.apache.log4j.Logger;
+
+import java.io.*;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Properties;
 
 public class LoginTelnetThread extends Thread
 {
@@ -342,7 +335,7 @@ public class LoginTelnetThread extends Thread
 						_usrCommand = _usrCommand.substring(8);
 						if(LoginController.getInstance().removeBanForAddress(_usrCommand))
 						{
-							_log.warning("IP removed via TELNET by host: " + _cSocket.getInetAddress().getHostAddress());
+							_log.warn("IP removed via TELNET by host: " + _cSocket.getInetAddress().getHostAddress());
 							_print.println("The IP " + _usrCommand + " has been removed from the hack protection list!");
 						}
 						else

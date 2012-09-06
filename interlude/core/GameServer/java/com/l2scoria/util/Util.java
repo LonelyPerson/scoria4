@@ -20,6 +20,7 @@ package com.l2scoria.util;
 
 import com.l2scoria.gameserver.taskmanager.MemoryWatchDog;
 import javolution.text.TextBuilder;
+import org.apache.log4j.Logger;
 
 import java.io.InputStream;
 import java.security.MessageDigest;
@@ -29,7 +30,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.logging.Logger;
 
 /**
  * This class ...
@@ -57,10 +57,10 @@ public class Util
 		{
 			if(counter % 16 == 0)
 			{
-				result.append(fillHex(i, 4) + ": ");
+				result.append(fillHex(i, 4)).append(": ");
 			}
 
-			result.append(fillHex(data[i] & 0xff, 2) + " ");
+			result.append(fillHex(data[i] & 0xff, 2)).append(" ");
 			counter++;
 			if(counter == 16)
 			{
@@ -304,7 +304,7 @@ public class Util
 				seq = z;
 				seq = md.digest(seq);
 				
-				StringBuffer hexString = new StringBuffer();
+				StringBuilder hexString = new StringBuilder();
 				for (int i =0; i < 8; i++)
 				{
 					String hex = Integer.toHexString(0xFF & seq[i]);

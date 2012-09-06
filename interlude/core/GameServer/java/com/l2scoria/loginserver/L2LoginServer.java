@@ -17,6 +17,17 @@
  */
 package com.l2scoria.loginserver;
 
+import com.l2scoria.Config;
+import com.l2scoria.L2Scoria;
+import com.l2scoria.ServerType;
+import com.l2scoria.gameserver.datatables.GameServerTable;
+import com.l2scoria.telnet.Status;
+import com.l2scoria.util.database.L2DatabaseFactory;
+import com.l2scoria.util.database.SqlUtils;
+import mmo.SelectorServerConfig;
+import mmo.SelectorThread;
+import org.apache.log4j.Logger;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -30,18 +41,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.LogManager;
-import java.util.logging.Logger;
-
-import mmo.SelectorServerConfig;
-import mmo.SelectorThread;
-
-import com.l2scoria.Config;
-import com.l2scoria.L2Scoria;
-import com.l2scoria.ServerType;
-import com.l2scoria.gameserver.datatables.GameServerTable;
-import com.l2scoria.telnet.Status;
-import com.l2scoria.util.database.L2DatabaseFactory;
-import com.l2scoria.util.database.SqlUtils;
 
 public class L2LoginServer
 {
@@ -117,7 +116,7 @@ public class L2LoginServer
 		}
 		catch(SQLException e)
 		{
-			_log.severe("FATAL: Failed initializing database. Reason: " + e.getMessage());
+			_log.fatal("FATAL: Failed initializing database. Reason: " + e.getMessage());
 
 			if(Config.DEVELOPER)
 			{
@@ -133,7 +132,7 @@ public class L2LoginServer
 		}
 		catch(GeneralSecurityException e)
 		{
-			_log.severe("FATAL: Failed initializing LoginController. Reason: " + e.getMessage());
+			_log.fatal("FATAL: Failed initializing LoginController. Reason: " + e.getMessage());
 			if(Config.DEVELOPER)
 			{
 				e.printStackTrace();
@@ -148,7 +147,7 @@ public class L2LoginServer
 		}
 		catch(GeneralSecurityException e)
 		{
-			_log.severe("FATAL: Failed to load GameServerTable. Reason: " + e.getMessage());
+			_log.fatal("FATAL: Failed to load GameServerTable. Reason: " + e.getMessage());
 
 			if(Config.DEVELOPER)
 			{
@@ -159,7 +158,7 @@ public class L2LoginServer
 		}
 		catch(SQLException e)
 		{
-			_log.severe("FATAL: Failed to load GameServerTable. Reason: " + e.getMessage());
+			_log.fatal("FATAL: Failed to load GameServerTable. Reason: " + e.getMessage());
 
 			if(Config.DEVELOPER)
 			{
@@ -180,7 +179,7 @@ public class L2LoginServer
 			}
 			catch(UnknownHostException e1)
 			{
-				_log.severe("WARNING: The LoginServer bind address is invalid, using all avaliable IPs. Reason: " + e1.getMessage());
+				_log.fatal("WARNING: The LoginServer bind address is invalid, using all avaliable IPs. Reason: " + e1.getMessage());
 
 				if(Config.DEVELOPER)
 				{
@@ -199,7 +198,7 @@ public class L2LoginServer
 		}
 		catch(IOException e)
 		{
-			_log.severe("FATAL: Failed to open Selector. Reason: " + e.getMessage());
+			_log.fatal("FATAL: Failed to open Selector. Reason: " + e.getMessage());
 
 			if(Config.DEVELOPER)
 			{
@@ -217,7 +216,7 @@ public class L2LoginServer
 		}
 		catch(IOException e)
 		{
-			_log.severe("FATAL: Failed to start the Game Server Listener. Reason: " + e.getMessage());
+			_log.fatal("FATAL: Failed to start the Game Server Listener. Reason: " + e.getMessage());
 
 			if(Config.DEVELOPER)
 			{
@@ -236,7 +235,7 @@ public class L2LoginServer
 			}
 			catch(IOException e)
 			{
-				_log.severe("Failed to start the Telnet Server. Reason: " + e.getMessage());
+				_log.fatal("Failed to start the Telnet Server. Reason: " + e.getMessage());
 				if(Config.DEVELOPER)
 				{
 					e.printStackTrace();
@@ -254,7 +253,7 @@ public class L2LoginServer
 		}
 		catch(IOException e)
 		{
-			_log.severe("FATAL: Failed to open server socket. Reason: " + e.getMessage());
+			_log.fatal("FATAL: Failed to open server socket. Reason: " + e.getMessage());
 			if(Config.DEVELOPER)
 			{
 				e.printStackTrace();
@@ -272,7 +271,7 @@ public class L2LoginServer
 				 ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 				 scheduler.schedule(new CloseSocketSchedule(), Config.AUTO_REBOOT_TIMER_TASK*60000L, TimeUnit.MILLISECONDS);
 
-				_log.severe("+==> Auto reboot login initialized in " +Config.AUTO_REBOOT_TIMER_TASK + " minute(s).");
+				_log.fatal("+==> Auto reboot login initialized in " +Config.AUTO_REBOOT_TIMER_TASK + " minute(s).");
 			}
 			catch(Exception e)
 			{
@@ -327,7 +326,7 @@ public class L2LoginServer
 			}
 			catch(UnknownHostException e)
 			{
-				_log.warning("Skipped: Invalid address \"" + pattern + "\" on \"" + Config.BANS + "\"");
+				_log.warn("Skipped: Invalid address \"" + pattern + "\" on \"" + Config.BANS + "\"");
 			}
 		} while(true);
 
@@ -342,7 +341,7 @@ public class L2LoginServer
 			}
 			catch (FileNotFoundException e)
 			{
-				_log.warning("Failed to load banned IPs file ("+bannedFile.getName()+") for reading. Reason: "+e.getMessage());
+				_log.warn("Failed to load banned IPs file ("+bannedFile.getName()+") for reading. Reason: "+e.getMessage());
 				if (Config.DEVELOPER)
 				{
 					e.printStackTrace();
@@ -383,7 +382,7 @@ public class L2LoginServer
 							}
 							catch (NumberFormatException e)
 							{
-								_log.warning("Skipped: Incorrect ban duration (" + parts[1] + ") on (" + bannedFile.getName() + "). Line: " + reader.getLineNumber());
+								_log.warn("Skipped: Incorrect ban duration (" + parts[1] + ") on (" + bannedFile.getName() + "). Line: " + reader.getLineNumber());
 								continue;
 							}
 						}
@@ -394,7 +393,7 @@ public class L2LoginServer
 						}
 						catch (UnknownHostException e)
 						{
-							_log.warning("Skipped: Invalid address \"" + parts[0] + "\" on \"" + bannedFile.getName() + "\". Line: " + reader.getLineNumber() + "\"");
+							_log.warn("Skipped: Invalid address \"" + parts[0] + "\" on \"" + bannedFile.getName() + "\". Line: " + reader.getLineNumber() + "\"");
 						}
 						
 						address = null;
@@ -403,7 +402,7 @@ public class L2LoginServer
 			}
 			catch (IOException e)
 			{
-				_log.warning("Error while reading the bans file (" + bannedFile.getName() + "). Details: " + e.getMessage());
+				_log.warn("Error while reading the bans file (" + bannedFile.getName() + "). Details: " + e.getMessage());
 
 				if (Config.DEVELOPER)
 				{

@@ -277,7 +277,7 @@ public final class Formulas
 		@Override
 		public void calc(Env env)
 		{
-			if(env.player instanceof L2PcInstance)
+			if(env.player.isPlayer)
 			{
 				L2PcInstance p = (L2PcInstance) env.player;
 				if(p.getInventory().getPaperdollItem(Inventory.PAPERDOLL_LFINGER) != null)
@@ -322,7 +322,7 @@ public final class Formulas
 		@Override
 		public void calc(Env env)
 		{
-			if(env.player instanceof L2PcInstance)
+			if(env.player.isPlayer)
 			{
 				L2PcInstance p = (L2PcInstance) env.player;
 				boolean magePDef = (p.getClassId().isMage() || p.getClassId().getId() == 0x31); // orc mystics are a special case
@@ -396,7 +396,7 @@ public final class Formulas
 			//[Square(DEX)]*6 + lvl + weapon hitbonus;
 			env.value += Math.sqrt(p.getDEX()) * 6;
 			env.value += p.getLevel();
-			if(p instanceof L2Summon)
+			if(p.isSummon)
 			{
 				env.value += p.getLevel() < 60 ? 4 : 5;
 			}
@@ -445,11 +445,11 @@ public final class Formulas
 		public void calc(Env env)
 		{
 			L2Character p = env.player;
-			if(p instanceof L2Summon)
+			if(p.isSummon)
 			{
 				env.value = 40;
 			}
-			else if(p instanceof L2PcInstance && p.getActiveWeaponInstance() == null)
+			else if(p.isPlayer && p.getActiveWeaponInstance() == null)
 			{
 				env.value = 40 * DEXbonus[p.getDEX()];
 			}
@@ -480,11 +480,11 @@ public final class Formulas
 		public void calc(Env env)
 		{
 			L2Character p = env.player;
-			if(p instanceof L2Summon)
+			if(p.isSummon)
 			{
 				env.value = 8;
 			}
-			else if(p instanceof L2PcInstance && p.getActiveWeaponInstance() == null)
+			else if(p.isPlayer && p.getActiveWeaponInstance() == null)
 			{
 				env.value = 8;
 			}
@@ -877,7 +877,7 @@ public final class Formulas
 	 */
 	public int getRegeneratePeriod(L2Character cha)
 	{
-		if(cha instanceof L2DoorInstance)
+		if(cha.isDoor)
 			return HP_REGENERATE_PERIOD * 100; // 5 mins
 
 		return HP_REGENERATE_PERIOD; // 3s
@@ -929,7 +929,7 @@ public final class Formulas
 	 */
 	public void addFuncsToNewCharacter(L2Character cha)
 	{
-		if(cha instanceof L2PcInstance)
+		if(cha.isPlayer)
 		{
 			cha.addStatFunc(FuncMaxHpAdd.getInstance());
 			cha.addStatFunc(FuncMaxHpMul.getInstance());
@@ -963,14 +963,14 @@ public final class Formulas
 			cha.addStatFunc(FuncHennaCON.getInstance());
 			cha.addStatFunc(FuncHennaWIT.getInstance());
 		}
-		else if(cha instanceof L2PetInstance)
+		else if(cha.isPet)
 		{
 			cha.addStatFunc(FuncPAtkMod.getInstance());
 			cha.addStatFunc(FuncMAtkMod.getInstance());
 			cha.addStatFunc(FuncPDefMod.getInstance());
 			cha.addStatFunc(FuncMDefMod.getInstance());
 		}
-		else if(cha instanceof L2Summon)
+		else if(cha.isSummon)
 		{
 			//cha.addStatFunc(FuncMultRegenResting.getInstance(Stats.REGENERATE_HP_RATE));
 			//cha.addStatFunc(FuncMultRegenResting.getInstance(Stats.REGENERATE_MP_RATE));
@@ -996,7 +996,7 @@ public final class Formulas
 			hpRegenMultiplier *= Config.L2JMOD_CHAMPION_HP_REGEN;
 		}
 
-		if(cha instanceof L2PcInstance)
+		if(cha.isPlayer)
 		{
 			L2PcInstance player = (L2PcInstance) cha;
 
@@ -1073,7 +1073,7 @@ public final class Formulas
 		double mpRegenMultiplier = cha.isRaid() ? Config.RAID_MP_REGEN_MULTIPLIER : Config.MP_REGEN_MULTIPLIER;
 		double mpRegenBonus = 0;
 
-		if(cha instanceof L2PcInstance)
+		if(cha.isPlayer)
 		{
 			L2PcInstance player = (L2PcInstance) cha;
 
@@ -1142,7 +1142,7 @@ public final class Formulas
 		double cpRegenMultiplier = Config.CP_REGEN_MULTIPLIER;
 		double cpRegenBonus = 0;
 
-		if(cha instanceof L2PcInstance)
+		if(cha.isPlayer)
 		{
 			L2PcInstance player = (L2PcInstance) cha;
 
@@ -1245,7 +1245,7 @@ public final class Formulas
 		double proximityBonus = 1;
 		double pvpBonus = 1;
 
-		if ((attacker instanceof L2PlayableInstance) && (target instanceof L2PlayableInstance))
+		if ((attacker.isPlayable) && (target.isPlayable))
 		{
 			pvpBonus *= attacker.calcStat(Stats.PVP_PHYS_SKILL_DMG, 1, null, null);
 		}
@@ -1267,7 +1267,7 @@ public final class Formulas
 					* proximityBonus * pvpBonus + (attacker.calcStat(Stats.CRITICAL_DAMAGE_ADD, 0, target, skill) * 6.1 * 70 / defence);
 
 		// get the natural vulnerability for the template
-		if(target instanceof L2NpcInstance)
+		if(target.isNpc)
 		{
 			damage *= ((L2NpcInstance) target).getTemplate().getVulnerability(Stats.DAGGER_WPN_VULN);
 		}
@@ -1281,20 +1281,20 @@ public final class Formulas
 		// armor resistances vs dagger. daggerWpnRes could also be used if a skill
 		// was given to all classes. The values here try to be a compromise.
 		// They were originally added in a late C4 rev (2289).
-		if(target instanceof L2PcInstance)
+		if(target.isPlayer)
 		{
-			L2Armor armor = ((L2PcInstance) target).getActiveChestArmorItem();
+			L2Armor armor = target.getPlayer().getActiveChestArmorItem();
 			if(armor != null)
 			{
-				if(((L2PcInstance) target).isWearingHeavyArmor())
+				if(target.getPlayer().isWearingHeavyArmor())
 				{
 					damage /= Config.ALT_DAGGER_DMG_VS_HEAVY;
 				}
-				if(((L2PcInstance) target).isWearingLightArmor())
+				if(target.getPlayer().isWearingLightArmor())
 				{
 					damage /= Config.ALT_DAGGER_DMG_VS_LIGHT;
 				}
-				if(((L2PcInstance) target).isWearingMagicArmor())
+				if(target.getPlayer().isWearingMagicArmor())
 				{
 					damage /= Config.ALT_DAGGER_DMG_VS_ROBE;
 				}
@@ -1317,7 +1317,7 @@ public final class Formulas
 	 */
 	public final double calcPhysDam(L2Character attacker, L2Character target, L2Skill skill, boolean shld, boolean crit, boolean dual, boolean ss)
 	{
-		if(attacker instanceof L2PcInstance)
+		if(attacker.isPlayer)
 		{
 			L2PcInstance pcInst = (L2PcInstance) attacker;
 			if(pcInst.isGM() && !pcInst.getAccessLevel().canGiveDamage())
@@ -1354,13 +1354,13 @@ public final class Formulas
 		}
 
 		// In C5 summons make 10 % less dmg in PvP.
-		if(attacker instanceof L2Summon && target instanceof L2PcInstance)
+		if(attacker.isSummon && target.isPlayer)
 		{
 			damage *= 0.9;
 		}
 
 		// After C4 nobles make 4% more dmg in PvP.
-		if(attacker instanceof L2PcInstance && ((L2PcInstance) attacker).isNoble() && (target instanceof L2PcInstance || target instanceof L2Summon))
+		if(attacker.isPlayer && ((L2PcInstance) attacker).isNoble() && (target.isPlayer || target.isSummon))
 		{
 			damage *= 1.04;
 		}
@@ -1427,7 +1427,7 @@ public final class Formulas
 		{
 			// get the vulnerability due to skills (buffs, passives, toggles, etc)
 			damage = target.calcStat(stat, damage, target, null);
-			if(target instanceof L2NpcInstance)
+			if(target.isNpc)
 			{
 				// get the natural vulnerability for the template
 				damage *= ((L2NpcInstance) target).getTemplate().getVulnerability(stat);
@@ -1446,27 +1446,27 @@ public final class Formulas
 			}
 		}
 
-		if(target instanceof L2PcInstance && weapon != null && weapon.getItemType() == L2WeaponType.DAGGER && skill != null)
+		if(target.isPlayer && weapon != null && weapon.getItemType() == L2WeaponType.DAGGER && skill != null)
 		{
-			L2Armor armor = ((L2PcInstance) target).getActiveChestArmorItem();
+			L2Armor armor = target.getPlayer().getActiveChestArmorItem();
 			if(armor != null)
 			{
-				if(((L2PcInstance) target).isWearingHeavyArmor())
+				if(target.getPlayer().isWearingHeavyArmor())
 				{
 					damage /= Config.ALT_DAGGER_DMG_VS_HEAVY;
 				}
-				if(((L2PcInstance) target).isWearingLightArmor())
+				if(target.getPlayer().isWearingLightArmor())
 				{
 					damage /= Config.ALT_DAGGER_DMG_VS_LIGHT;
 				}
-				if(((L2PcInstance) target).isWearingMagicArmor())
+				if(target.getPlayer().isWearingMagicArmor())
 				{
 					damage /= Config.ALT_DAGGER_DMG_VS_ROBE;
 				}
 			}
 		}
 
-		if(attacker instanceof L2NpcInstance)
+		if(attacker.isNpc)
 		{
 			switch(((L2NpcInstance) attacker).getTemplate().getRace())
 			{
@@ -1500,7 +1500,7 @@ public final class Formulas
 			}
 		}
 
-		if(target instanceof L2NpcInstance)
+		if(target.isNpc)
 		{
 			switch(((L2NpcInstance) target).getTemplate().getRace())
 			{
@@ -1553,7 +1553,7 @@ public final class Formulas
 		}
 
 		// Dmg bonusses in PvP fight
-		if((attacker instanceof L2PcInstance || attacker instanceof L2Summon) && (target instanceof L2PcInstance || target instanceof L2Summon))
+		if((attacker.isPlayer || attacker.isSummon) && (target.isPlayer || target.isSummon))
 		{
 			if(skill == null)
 			{
@@ -1565,7 +1565,7 @@ public final class Formulas
 			}
 		}
 
-		if(attacker instanceof L2PcInstance)
+		if(attacker.isPlayer)
 		{
 			if(((L2PcInstance) attacker).getClassId().isMage())
 			{
@@ -1576,11 +1576,11 @@ public final class Formulas
 				damage = damage * Config.ALT_FIGHTERS_PHYSICAL_DAMAGE_MULTI;
 			}
 		}
-		else if(attacker instanceof L2Summon)
+		else if(attacker.isSummon)
 		{
 			damage = damage * Config.ALT_PETS_PHYSICAL_DAMAGE_MULTI;
 		}
-		else if(attacker instanceof L2NpcInstance)
+		else if(attacker.isNpc)
 		{
 			damage = damage * Config.ALT_NPC_PHYSICAL_DAMAGE_MULTI;
 		}
@@ -1590,7 +1590,7 @@ public final class Formulas
 
 	public final static double calcMagicDam(L2Character attacker, L2Character target, L2Skill skill, boolean ss, boolean bss, boolean mcrit)
 	{
-		if(attacker instanceof L2PcInstance)
+		if(attacker.isPlayer)
 		{
 			L2PcInstance pcInst = (L2PcInstance) attacker;
 			if(pcInst.isGM() && !pcInst.getAccessLevel().canGiveDamage())
@@ -1611,13 +1611,13 @@ public final class Formulas
 		double damage = 91 * Math.sqrt(mAtk) / mDef * skill.getPower(attacker) * calcSkillVulnerability(target, skill);
 
 		// In C5 summons make 10 % less dmg in PvP.
-		if(attacker instanceof L2Summon && target instanceof L2PcInstance)
+		if(attacker.isSummon && target.isPlayer)
 		{
 			damage *= 0.9;
 		}
 
 		// After C4 nobles make 4% more dmg in PvP.
-		if(attacker instanceof L2PcInstance && ((L2PcInstance) attacker).isNoble() && (target instanceof L2PcInstance || target instanceof L2Summon))
+		if(attacker.isPlayer && ((L2PcInstance) attacker).isNoble() && (target.isPlayer || target.isSummon))
 		{
 			damage *= 1.04;
 		}
@@ -1625,7 +1625,7 @@ public final class Formulas
 		// Failure calculation
 		if(Config.ALT_GAME_MAGICFAILURES && !calcMagicSuccess(attacker, target, skill))
 		{
-			if(attacker instanceof L2PcInstance)
+			if(attacker.isPlayer)
 			{
 				if(calcMagicSuccess(attacker, target, skill) && target.getLevel() - attacker.getLevel() <= 9)
 				{
@@ -1651,7 +1651,7 @@ public final class Formulas
 				}
 			}
 
-			if(target instanceof L2PcInstance)
+			if(target.isPlayer)
 			{
 				if(skill.getSkillType() == SkillType.DRAIN)
 				{
@@ -1673,7 +1673,7 @@ public final class Formulas
 		}
 
 		// Pvp bonusses for dmg
-		if((attacker instanceof L2PcInstance || attacker instanceof L2Summon) && (target instanceof L2PcInstance || target instanceof L2Summon))
+		if((attacker.isPlayer || attacker.isSummon) && (target.isPlayer || target.isSummon))
 		{
 			if(skill.isMagic())
 			{
@@ -1685,7 +1685,7 @@ public final class Formulas
 			}
 		}
 
-		if(attacker instanceof L2PcInstance)
+		if(attacker.isPlayer)
 		{
 			if(((L2PcInstance) attacker).getClassId().isMage())
 			{
@@ -1696,11 +1696,11 @@ public final class Formulas
 				damage = damage * Config.ALT_FIGHTERS_MAGICAL_DAMAGE_MULTI;
 			}
 		}
-		else if(attacker instanceof L2Summon)
+		else if(attacker.isSummon)
 		{
 			damage = damage * Config.ALT_PETS_MAGICAL_DAMAGE_MULTI;
 		}
-		else if(attacker instanceof L2NpcInstance)
+		else if(attacker.isNpc)
 		{
 			damage = damage * Config.ALT_NPC_MAGICAL_DAMAGE_MULTI;
 		}
@@ -1708,7 +1708,7 @@ public final class Formulas
 		if(skill != null)
 		{
 
-			if(target instanceof L2PlayableInstance)
+			if(target.isPlayable)
 			{
 				damage *= skill.getPvpMulti();
 			}
@@ -1820,9 +1820,9 @@ public final class Formulas
 	/** Returns true in case when ATTACK is canceled due to hit */
 	public final static boolean calcAtkBreak(L2Character target, double dmg)
 	{
-		if(target instanceof L2PcInstance)
+		if(target.isPlayer)
 		{
-			if(((L2PcInstance) target).getForceBuff() != null)
+			if(target.getPlayer().getForceBuff() != null)
 				return true;
 
 			//			if (target.isCastingNow()&& target.getLastSkillCast() != null)
@@ -2331,7 +2331,7 @@ public final class Formulas
 
 		double val = actor.getStat().calcStat(Stats.SKILL_MASTERY, 0, null, null);
 
-		if(actor instanceof L2PcInstance)
+		if(actor.isPlayer)
 		{
 			if(((L2PcInstance) actor).isMageClass())
 			{

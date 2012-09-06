@@ -110,6 +110,8 @@ public class GameServer
 
 		long serverLoadStart = System.currentTimeMillis();
 
+		DOMConfigurator.configure("./config/log4j.xml");
+
 		Util.printSection("Configs");
 		Config.load();
 

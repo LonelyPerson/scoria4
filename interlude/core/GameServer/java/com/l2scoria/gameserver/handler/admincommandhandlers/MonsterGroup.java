@@ -106,7 +106,7 @@ public class MonsterGroup extends Admin
 		}
 		else if(command.startsWith("admin_mobgroup_attack"))
 		{
-			if(activeChar.getTarget() instanceof L2Character)
+			if(activeChar.getTarget().isCharacter)
 			{
 				L2Character target = (L2Character) activeChar.getTarget();
 				attack(command, activeChar, target);

@@ -18,13 +18,12 @@
  */
 package com.l2scoria.util.database;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.l2scoria.Config;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
+import org.apache.log4j.Logger;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class LoginRemoteDbFactory
 {
@@ -51,7 +50,7 @@ public class LoginRemoteDbFactory
 			if(Config.RL_DATABASE_MAX_CONNECTIONS < 10)
 			{
 				Config.RL_DATABASE_MAX_CONNECTIONS = 10;
-				_log.warning("at least " + Config.RL_DATABASE_MAX_CONNECTIONS + " db connections are required.");
+				_log.warn("at least " + Config.RL_DATABASE_MAX_CONNECTIONS + " db connections are required.");
 			}
 			_source = new ComboPooledDataSource();
 			_source.setDebugUnreturnedConnectionStackTraces(Config.DEBUG); //debug func
@@ -101,7 +100,7 @@ public class LoginRemoteDbFactory
 
 			if(Config.DEBUG)
 			{
-				_log.fine("RemoteLoginFactory: Database Connection Working");
+				_log.info("RemoteLoginFactory: Database Connection Working");
 			}
 
 			if(Config.DATABASE_DRIVER.toLowerCase().contains("microsoft"))
@@ -117,7 +116,7 @@ public class LoginRemoteDbFactory
 		{
 			if(Config.DEBUG)
 			{
-				_log.fine("RemoteLoginFactory: Database Connection FAILED");
+				_log.info("RemoteLoginFactory: Database Connection FAILED");
 			}
 			// rethrow the exception
 			throw x;
@@ -126,7 +125,7 @@ public class LoginRemoteDbFactory
 		{
 			if(Config.DEBUG)
 			{
-				_log.fine("RemoteLoginFactory: Database Connection FAILED");
+				_log.info("RemoteLoginFactory: Database Connection FAILED");
 			}
 			throw new SQLException("RemoteLoginFactory: could not init DB connection:" + e);
 		}
@@ -150,8 +149,7 @@ public class LoginRemoteDbFactory
 				mySqlTop1 = " Limit 1 ";
 			}
 		}
-		String query = "SELECT " + msSqlTop1 + safetyString(fields) + " FROM " + tableName + " WHERE " + whereClause + mySqlTop1;
-		return query;
+		return "SELECT " + msSqlTop1 + safetyString(fields) + " FROM " + tableName + " WHERE " + whereClause + mySqlTop1;
 	}
 
 	public void shutdown()
@@ -162,7 +160,7 @@ public class LoginRemoteDbFactory
 		}
 		catch(Exception e)
 		{
-			_log.log(Level.INFO, "", e);
+			_log.info(e.getMessage(), e);
 		}
 
 		try
@@ -171,7 +169,7 @@ public class LoginRemoteDbFactory
 		}
 		catch(Exception e)
 		{
-			_log.log(Level.INFO, "", e);
+			_log.info(e.getMessage(), e);
 		}
 	}
 
@@ -188,13 +186,14 @@ public class LoginRemoteDbFactory
 		}
 
 		String result = "";
-
+		int i = 0;
 		for(String word : whatToCheck)
 		{
-			if(result != "")
+			if(i++ > 0)
 			{
 				result += ", ";
 			}
+
 			result += braceLeft + word + braceRight;
 		}
 		return result;
@@ -223,7 +222,7 @@ public class LoginRemoteDbFactory
 			}
 			catch(SQLException e)
 			{
-				_log.warning("RemoteLoginFactory: getConnection() failed, trying again \n" + e);
+				_log.warn("RemoteLoginFactory: getConnection() failed, trying again \n" + e);
 			}
 		}
 

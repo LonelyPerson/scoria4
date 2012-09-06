@@ -53,7 +53,7 @@ public class ConditionPlayerState extends Condition
 		switch(_check)
 		{
 			case RESTING:
-				if(env.player instanceof L2PcInstance)
+				if(env.player.isPlayer)
 					return ((L2PcInstance) env.player).isSitting() == _required;
 				return !_required;
 			case MOVING:

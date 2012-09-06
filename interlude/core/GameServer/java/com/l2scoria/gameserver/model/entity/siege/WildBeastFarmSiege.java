@@ -206,7 +206,7 @@ public class WildBeastFarmSiege extends ClanHallSiege
 	{
 		zone = clanhall.getZone();
 		for(L2Character cha : zone.getCharactersInside().values())
-			if(cha instanceof L2PcInstance)
+			if(cha.isPlayer)
 			{
 				L2Clan clan = ((L2PcInstance) cha).getClan();
 				if(!isPlayerRegister(clan, cha.getName()))

@@ -25,7 +25,7 @@ public class NobleCustomItem implements IItemHandler
 	{
 		if(Config.NOBLE_CUSTOM_ITEMS)
 		{
-			if(!(playable instanceof L2PcInstance))
+			if(!(playable.isPlayer))
 				return;
 
 			L2PcInstance activeChar = (L2PcInstance) playable;

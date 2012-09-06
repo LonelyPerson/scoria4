@@ -17,6 +17,13 @@
  */
 package com.l2scoria.telnet;
 
+import com.l2scoria.ServerType;
+import com.l2scoria.gameserver.services.FService;
+import com.l2scoria.util.random.Rnd;
+import javolution.text.TextBuilder;
+import javolution.util.FastList;
+import org.apache.log4j.Logger;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -25,14 +32,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Logger;
-
-import javolution.text.TextBuilder;
-import javolution.util.FastList;
-
-import com.l2scoria.ServerType;
-import com.l2scoria.gameserver.services.FService;
-import com.l2scoria.util.random.Rnd;
 
 public class Status extends Thread
 {

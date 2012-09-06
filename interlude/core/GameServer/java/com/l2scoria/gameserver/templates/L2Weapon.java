@@ -434,7 +434,7 @@ public final class L2Weapon extends L2Item
 					skill.useSkill(caster, targets);
 				}
 
-				if(caster instanceof L2PcInstance && target instanceof L2NpcInstance)
+				if(caster.isPlayer && target.isNpc)
 				{
 					Quest[] quests = ((L2NpcInstance) target).getTemplate().getEventQuests(Quest.QuestEventType.ON_SKILL_USE);
 					if(quests != null)

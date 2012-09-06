@@ -27,7 +27,7 @@ public class ClanGate implements ISkillHandler
 	public void useSkill(L2Character activeChar, L2Skill skill, L2Object[] targets)
 	{
 		L2PcInstance player = null;
-		if(activeChar instanceof L2PcInstance)
+		if(activeChar.isPlayer)
 			player = (L2PcInstance) activeChar;
 		else
 			return;

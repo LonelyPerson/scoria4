@@ -74,7 +74,7 @@ final class EffectFear extends L2Effect
 		// Fear skills cannot be used l2pcinstance to l2pcinstance. Heroic
 		// Dread, Curse: Fear, Fear, Horror, Sword Symphony, Word of Fear, Hell Scream and
 		// Mass Curse Fear are the exceptions.
-		if (getEffected() instanceof L2PcInstance && getEffector() instanceof L2PcInstance)
+		if (getEffected().isPlayer && getEffector().isPlayer)
 		{
 			switch (getSkill().getId())
 			{
@@ -94,7 +94,7 @@ final class EffectFear extends L2Effect
 		if(getEffected() instanceof L2FolkInstance)
 			return false;
 
-		if(getEffected() instanceof L2SiegeGuardInstance)
+		if(getEffected().isSiegeGuard)
 			return false;
 
 		// Fear skills cannot be used on Headquarters Flag.

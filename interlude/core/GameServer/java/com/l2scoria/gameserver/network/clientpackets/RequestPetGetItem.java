@@ -22,7 +22,6 @@ import com.l2scoria.gameserver.ai.CtrlIntention;
 import com.l2scoria.gameserver.model.L2World;
 import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PetInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2SummonInstance;
 import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
 
 /**
@@ -52,7 +51,7 @@ public final class RequestPetGetItem extends L2GameClientPacket
 		if(item == null || getClient().getActiveChar() == null)
 			return;
 
-		if(getClient().getActiveChar().getPet() instanceof L2SummonInstance)
+		if(getClient().getActiveChar().getPet().isSummonInstance)
 		{
 			sendPacket(ActionFailed.STATIC_PACKET);
 			return;

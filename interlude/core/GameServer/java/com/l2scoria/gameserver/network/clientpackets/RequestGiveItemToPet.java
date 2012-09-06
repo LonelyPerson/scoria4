@@ -51,7 +51,7 @@ public final class RequestGiveItemToPet extends L2GameClientPacket
 	protected void runImpl()
 	{
 		L2PcInstance player = getClient().getActiveChar();
-		if(player == null || !(player.getPet() instanceof L2PetInstance))
+		if(player == null || !(player.getPet().isPet))
 			return;
 
 		// Alt game - Karma punishment

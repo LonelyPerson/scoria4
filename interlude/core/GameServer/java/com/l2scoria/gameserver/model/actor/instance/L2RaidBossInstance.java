@@ -79,9 +79,9 @@ public final class L2RaidBossInstance extends L2MonsterInstance
 
 		L2PcInstance player = null;
 
-		if (killer instanceof L2PcInstance)
+		if (killer.isPlayer)
 			player = (L2PcInstance) killer;
-		else if (killer instanceof L2Summon)
+		else if (killer.isSummon)
 			player = ((L2Summon) killer).getOwner();
 
 		if (player != null)

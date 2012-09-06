@@ -17,17 +17,15 @@
  */
 package com.l2scoria.loginserver;
 
+import com.l2scoria.Config;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javolution.util.FastMap;
-
-import com.l2scoria.Config;
 
 /**
  * @author -Wooden-
@@ -81,7 +79,7 @@ public abstract class FloodProtectedListener extends Thread
 
 							if(!fConnection.isFlooding)
 							{
-								_log.warning("Potential Flood from " + connection.getInetAddress().getHostAddress());
+								_log.warn("Potential Flood from " + connection.getInetAddress().getHostAddress());
 							}
 
 							fConnection.isFlooding = true;
@@ -126,7 +124,7 @@ public abstract class FloodProtectedListener extends Thread
 					}
 					catch(IOException io)
 					{
-						_log.log(Level.INFO, "", io);
+						_log.warn(io.getMessage(), io);
 					}
 					break;
 				}
@@ -170,7 +168,7 @@ public abstract class FloodProtectedListener extends Thread
 		}
 		else
 		{
-			_log.warning("Removing a flood protection for a GameServer that was not in the connection map??? :" + ip);
+			_log.warn("Removing a flood protection for a GameServer that was not in the connection map??? :" + ip);
 		}
 
 		fConnection = null;

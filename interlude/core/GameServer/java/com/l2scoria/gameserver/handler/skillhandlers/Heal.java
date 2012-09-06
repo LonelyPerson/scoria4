@@ -75,7 +75,7 @@ public class Heal implements ISkillHandler
 		L2ItemInstance weaponInst = activeChar.getActiveWeaponInstance();
 
 		L2PcInstance player = null;
-		if(activeChar instanceof L2PcInstance)
+		if(activeChar.isPlayer)
 			player = (L2PcInstance) activeChar;
 		boolean clearSpiritShot = false;
 
@@ -88,17 +88,17 @@ public class Heal implements ISkillHandler
 				continue;
 
 			// We should not heal walls and door
-			if(target instanceof L2DoorInstance)
+			if(target.isDoor)
 				continue;
 
 			// Player holding a cursed weapon can't be healed and can't heal
 			if(target != activeChar)
 			{
-				if(target instanceof L2PcInstance && ((L2PcInstance) target).isCursedWeaponEquiped())
+				if(target.isPlayer && target.getPlayer().isCursedWeaponEquiped())
 					continue;
 				if(player != null && player.isCursedWeaponEquiped())
 					continue;
-				if(Config.CANNOT_HEAL_RBGB && activeChar instanceof L2PcInstance && target.isRaid())
+				if(Config.CANNOT_HEAL_RBGB && activeChar.isPlayer && target.isRaid())
 					continue;
 			}
 
@@ -125,7 +125,7 @@ public class Heal implements ISkillHandler
 					}
 				}
 				// If there is no weapon equipped, check for an active summon.
-				else if(activeChar instanceof L2Summon)
+				else if(activeChar.isSummon)
 				{
 					L2Summon activeSummon = (L2Summon) activeChar;
 
@@ -157,7 +157,7 @@ public class Heal implements ISkillHandler
 			target.sendPacket(su);
 			su = null;
 
-			if(target instanceof L2PcInstance)
+			if(target.isPlayer)
 			{
 				if(skill.getId() == 4051)
 				{
@@ -167,7 +167,7 @@ public class Heal implements ISkillHandler
 				}
 				else
 				{
-					if(activeChar instanceof L2PcInstance && activeChar != target)
+					if(activeChar.isPlayer && activeChar != target)
 					{
 						SystemMessage sm = new SystemMessage(SystemMessageId.S2_HP_RESTORED_BY_S1);
 						sm.addString(activeChar.getName());
@@ -188,7 +188,7 @@ public class Heal implements ISkillHandler
 		}
 		if(clearSpiritShot)
 		{
-			if(activeChar instanceof L2Summon)
+			if(activeChar.isSummon)
 			{
 				L2Summon activeSummon = (L2Summon) activeChar;
 				activeSummon.setChargedSpiritShot(L2ItemInstance.CHARGED_NONE);

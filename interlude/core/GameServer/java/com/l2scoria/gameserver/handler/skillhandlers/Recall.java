@@ -38,7 +38,7 @@ public class Recall implements ISkillHandler
 	{
 		try
 		{
-			if (activeChar instanceof L2PcInstance)
+			if (activeChar.isPlayer)
 			{
 				if (((L2PcInstance) activeChar).isInOlympiadMode() || ((L2PcInstance) activeChar).inObserverMode())
 				{
@@ -59,14 +59,14 @@ public class Recall implements ISkillHandler
 
 			for (L2Object target1 : targets)
 			{
-				if (!(target1 instanceof L2Character))
+				if (!(target1.isCharacter))
 				{
 					continue;
 				}
 
 				L2Character target = (L2Character) target1;
 
-				if (target instanceof L2PcInstance)
+				if (target.isPlayer)
 				{
 					L2PcInstance targetChar = (L2PcInstance) target;
 

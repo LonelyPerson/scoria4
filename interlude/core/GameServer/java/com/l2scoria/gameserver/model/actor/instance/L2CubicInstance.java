@@ -209,9 +209,9 @@ public class L2CubicInstance
 
 						if (skill != null)
 						{
-							if(_owner != null && _owner._event != null && _target.getActingPlayer() != null)
+							if(_owner != null && _owner._event != null && _target.getPlayer() != null)
 							{
-								_owner._event.canBeSkillTarget(_owner, _target.getActingPlayer(), skill);
+								_owner._event.canBeSkillTarget(_owner, _target.getPlayer(), skill);
 							}
 
 							L2Character[] targets = {_target};

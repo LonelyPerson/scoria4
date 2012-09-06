@@ -20,7 +20,7 @@ package com.l2scoria.loginserver.network.serverpackets;
 
 import com.l2scoria.Config;
 
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 /**
  * Fromat: d d: response
@@ -38,7 +38,7 @@ public final class GGAuth extends L2LoginServerPacket
 
 		if(Config.DEBUG)
 		{
-			_log.warning("Reason Hex: " + Integer.toHexString(response));
+			_log.warn("Reason Hex: " + Integer.toHexString(response));
 		}
 	}
 

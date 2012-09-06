@@ -88,7 +88,7 @@ public class DecayTaskManager
 				{
 					for(L2Character actor : _decayTasks.keySet())
 					{
-						if(actor instanceof L2RaidBossInstance)
+						if(actor.isRaid)
 						{
 							delay = 30000;
 						}

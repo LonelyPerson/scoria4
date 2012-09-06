@@ -42,7 +42,7 @@ public class RecipeShopItemInfo extends L2GameServerPacket
 	@Override
 	protected final void writeImpl()
 	{
-		if(!(L2World.getInstance().findObject(_shopId) instanceof L2PcInstance))
+		if(!(L2World.getInstance().findObject(_shopId).isPlayer))
 			return;
 
 		L2PcInstance manufacturer = (L2PcInstance) L2World.getInstance().findObject(_shopId);

@@ -52,7 +52,7 @@ public class L2SwampZone extends L2ZoneDefault
 	protected void onEnter(L2Character character)
 	{
 		character.setInsideZone(L2Character.ZONE_SWAMP, true);
-		if(character instanceof L2PcInstance)
+		if(character.isPlayer)
 		{
 			((L2PcInstance) character).broadcastUserInfo();
 		}
@@ -64,7 +64,7 @@ public class L2SwampZone extends L2ZoneDefault
 	protected void onExit(L2Character character)
 	{
 		character.setInsideZone(L2Character.ZONE_SWAMP, false);
-		if(character instanceof L2PcInstance)
+		if(character.isPlayer)
 		{
 			((L2PcInstance) character).broadcastUserInfo();
 		}

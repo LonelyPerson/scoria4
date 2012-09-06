@@ -193,7 +193,7 @@ public class L2SummonInstance extends L2Summon
 		super.reduceCurrentHp(damage, attacker);
 		SystemMessage sm = new SystemMessage(SystemMessageId.SUMMON_RECEIVED_DAMAGE_S2_BY_S1);
 
-		if(attacker instanceof L2NpcInstance)
+		if(attacker.isNpc)
 		{
 			sm.addNpcName(((L2NpcInstance) attacker).getTemplate().npcId);
 		}
@@ -364,7 +364,7 @@ public class L2SummonInstance extends L2Summon
 				getOwner().sendPacket(new SystemMessage(SystemMessageId.CRITICAL_HIT_BY_SUMMONED_MOB));
 			}
 
-			if(getOwner().isInOlympiadMode() && target instanceof L2PcInstance && ((L2PcInstance) target).isInOlympiadMode() && ((L2PcInstance) target).getOlympiadGameId() == getOwner().getOlympiadGameId())
+			if(getOwner().isInOlympiadMode() && target.isPlayer && target.getPlayer().isInOlympiadMode() && target.getPlayer().getOlympiadGameId() == getOwner().getOlympiadGameId())
 			{
 				getOwner().dmgDealt += damage;
 			}
@@ -377,7 +377,7 @@ public class L2SummonInstance extends L2Summon
 	}
 
 	@Override
-	public final L2PcInstance getActingPlayer()
+	public final L2PcInstance getPlayer()
 	{
 		return getOwner();
 	}

@@ -107,7 +107,7 @@ public class Polymorph extends Admin
 			obj.getPoly().setPolyInfo(type, id);
 
 			//animation
-			if(obj instanceof L2Character)
+			if(obj.isCharacter)
 			{
 				L2Character Char = (L2Character) obj;
 				MagicSkillUser msk = new MagicSkillUser(Char, 1008, 1, 4000, 0);

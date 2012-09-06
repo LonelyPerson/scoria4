@@ -69,12 +69,12 @@ public class RequestRecordInfo extends L2GameClientPacket
 				{
 					_activeChar.sendPacket(new SpawnItem((L2ItemInstance) object));
 				}
-				else if(object instanceof L2DoorInstance)
+				else if(object.isDoor)
 				{
 					_activeChar.sendPacket(new DoorInfo((L2DoorInstance) object));
 					_activeChar.sendPacket(new DoorStatusUpdate((L2DoorInstance) object));
 				}
-				else if(object instanceof L2BoatInstance)
+				else if(object.isBoat)
 				{
 					if(!_activeChar.isInBoat() && object != _activeChar.getBoat())
 					{
@@ -86,7 +86,7 @@ public class RequestRecordInfo extends L2GameClientPacket
 				{
 					_activeChar.sendPacket(new StaticObject((L2StaticObjectInstance) object));
 				}
-				else if(object instanceof L2NpcInstance)
+				else if(object.isNpc)
 				{
 					if(((L2NpcInstance)object).getCustomNpcInstance() != null)
 					{
@@ -97,7 +97,7 @@ public class RequestRecordInfo extends L2GameClientPacket
 						_activeChar.sendPacket(new NpcInfo((L2NpcInstance) object, _activeChar));
 					}
 				}
-				else if(object instanceof L2Summon)
+				else if(object.isSummon)
 				{
 					L2Summon summon = (L2Summon) object;
 
@@ -106,7 +106,7 @@ public class RequestRecordInfo extends L2GameClientPacket
 					{
 						_activeChar.sendPacket(new PetInfo(summon));
 
-						if(summon instanceof L2PetInstance)
+						if(summon.isPet)
 						{
 							_activeChar.sendPacket(new PetItemList((L2PetInstance) summon));
 						}
@@ -119,7 +119,7 @@ public class RequestRecordInfo extends L2GameClientPacket
 					// The PetInfo packet wipes the PartySpelled (list of active spells' icons).  Re-add them
 					summon.updateEffectIcons(true);
 				}
-				else if(object instanceof L2PcInstance)
+				else if(object.isPlayer)
 				{
 					L2PcInstance otherPlayer = (L2PcInstance) object;
 
@@ -148,7 +148,7 @@ public class RequestRecordInfo extends L2GameClientPacket
 					}
 				}
 
-				if(object instanceof L2Character)
+				if(object.isCharacter)
 				{
 					// Update the state of the L2Character object client side by sending Server->Client packet MoveToPawn/CharMoveToLocation and AutoAttackStart to the L2PcInstance
 					L2Character obj = (L2Character) object;

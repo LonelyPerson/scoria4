@@ -87,10 +87,10 @@ public class L2SiegeGuardInstance extends L2Attackable
 	@Override
 	public boolean isAutoAttackable(L2Character attacker)
 	{
-		if(attacker instanceof L2Summon)
+		if(attacker.isSummon)
 			attacker = ((L2Summon)attacker).getOwner();
 		// Attackable during siege by all except defenders ( Castle or Fort )
-		return attacker != null && attacker instanceof L2PcInstance && (getCastle() != null && getCastle().getCastleId() > 0 && getCastle().getSiege().getIsInProgress() && !getCastle().getSiege().checkIsDefender(((L2PcInstance) attacker).getClan()) || DevastatedCastle.getInstance().getIsInProgress());
+		return attacker != null && attacker.isPlayer && (getCastle() != null && getCastle().getCastleId() > 0 && getCastle().getSiege().getIsInProgress() && !getCastle().getSiege().checkIsDefender(((L2PcInstance) attacker).getClan()) || DevastatedCastle.getInstance().getIsInProgress());
 	}
 
 	/**
@@ -215,7 +215,7 @@ public class L2SiegeGuardInstance extends L2Attackable
 		if(attacker == null)
 			return;
 
-		if(!(attacker instanceof L2SiegeGuardInstance))
+		if(!(attacker.isSiegeGuard))
 		{
 			super.addDamageHate(attacker, damage, aggro);
 		}

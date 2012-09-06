@@ -96,12 +96,12 @@ public class Manadam implements ISkillHandler
 
 				SystemMessage sm = new SystemMessage(SystemMessageId.S2_MP_HAS_BEEN_DRAINED_BY_S1);
 
-				if(activeChar instanceof L2NpcInstance)
+				if(activeChar.isNpc)
 				{
 					int mobId = ((L2NpcInstance) activeChar).getNpcId();
 					sm.addNpcName(mobId);
 				}
-				else if(activeChar instanceof L2Summon)
+				else if(activeChar.isSummon)
 				{
 					int mobId = ((L2Summon) activeChar).getNpcId();
 					sm.addNpcName(mobId);
@@ -116,7 +116,7 @@ public class Manadam implements ISkillHandler
 				target = null;
 				sm = null;
 
-				if(activeChar instanceof L2PcInstance)
+				if(activeChar.isPlayer)
 				{
 					SystemMessage sm2 = new SystemMessage(SystemMessageId.YOUR_OPPONENTS_MP_WAS_REDUCED_BY_S1);
 					sm2.addNumber((int) mp);

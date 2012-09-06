@@ -42,7 +42,7 @@ class EffectHealOverTime extends L2Effect
 		if(getEffected().isDead())
 			return false;
 
-		if(getEffected() instanceof L2DoorInstance)
+		if(getEffected().isDoor)
 			return false;
 
 		double hp = getEffected().getCurrentHp();

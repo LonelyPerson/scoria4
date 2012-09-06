@@ -452,7 +452,7 @@ public abstract class L2Effect
 			_state = EffectState.ACTING;
 			onStart();
 
-			if(_skill.isPvpSkill() && getEffected() != null && getEffected() instanceof L2PcInstance && getShowIcon())
+			if(_skill.isPvpSkill() && getEffected() != null && getEffected().isPlayer && getShowIcon())
 			{
 				SystemMessage smsg = new SystemMessage(SystemMessageId.YOU_FEEL_S1_EFFECT);
 				smsg.addString(_skill.getName());

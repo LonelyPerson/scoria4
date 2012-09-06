@@ -91,12 +91,12 @@ public class SoulCrystals implements IItemHandler
 	// Our main method, where everything goes on
 	public void useItem(L2PlayableInstance playable, L2ItemInstance item)
 	{
-		if(!(playable instanceof L2PcInstance))
+		if(!(playable.isPlayer))
 			return;
 
 		L2PcInstance activeChar = (L2PcInstance) playable;
 		L2Object target = activeChar.getTarget();
-		if(!(target instanceof L2MonsterInstance))
+		if(!(target.isMonster))
 		{
 			// Send a System Message to the caster
 			SystemMessage sm = new SystemMessage(SystemMessageId.INCORRECT_TARGET);

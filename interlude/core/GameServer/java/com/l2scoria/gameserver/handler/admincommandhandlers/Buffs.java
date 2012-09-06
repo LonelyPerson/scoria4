@@ -88,7 +88,7 @@ public class Buffs extends Admin
 						return false;
 					}
 				}
-				else if(activeChar.getTarget() != null && activeChar.getTarget() instanceof L2PcInstance)
+				else if(activeChar.getTarget() != null && activeChar.getTarget().isPlayer)
 				{
 					showBuffs((L2PcInstance) activeChar.getTarget(), activeChar);
 					return true;
@@ -143,7 +143,7 @@ public class Buffs extends Admin
 				}
 				else
 				{
-					if(activeChar.getTarget() != null && activeChar.getTarget() instanceof L2PcInstance)
+					if(activeChar.getTarget() != null && activeChar.getTarget().isPlayer)
 					{
 						removeAllBuffs(activeChar, activeChar.getTarget().getName());
 						st = null;
@@ -163,7 +163,7 @@ public class Buffs extends Admin
 
 					for(L2Character knownChar : activeChar.getKnownList().getKnownCharactersInRadius(radius))
 					{
-						if(knownChar instanceof L2PcInstance && !knownChar.equals(activeChar))
+						if(knownChar.isPlayer && !knownChar.equals(activeChar))
 						{
 							knownChar.stopAllEffects();
 						}

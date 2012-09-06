@@ -63,13 +63,13 @@ public class NpcKnownList extends CharKnownList
 		if(object instanceof L2FestivalGuideInstance)
 			return 10000;
 
-		if(object instanceof L2FolkInstance || !(object instanceof L2Character))
+		if(object instanceof L2FolkInstance || !(object.isCharacter))
 			return 0;
 
 		if(object instanceof L2CabaleBufferInstance)
 			return 900;
 
-		if(object instanceof L2PlayableInstance)
+		if(object.isPlayable)
 			return 1500;
 
 		return 500;

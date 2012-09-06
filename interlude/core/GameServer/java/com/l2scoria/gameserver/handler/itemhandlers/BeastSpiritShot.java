@@ -53,13 +53,13 @@ public class BeastSpiritShot implements IItemHandler
 
 		L2PcInstance activeOwner = null;
 
-		if(playable instanceof L2Summon)
+		if(playable.isSummon)
 		{
 			activeOwner = ((L2Summon) playable).getOwner();
 			activeOwner.sendPacket(new SystemMessage(SystemMessageId.PET_CANNOT_USE_ITEM));
 			return;
 		}
-		else if(playable instanceof L2PcInstance)
+		else if(playable.isPlayer)
 		{
 			activeOwner = (L2PcInstance) playable;
 		}
@@ -84,13 +84,13 @@ public class BeastSpiritShot implements IItemHandler
 		boolean isBlessed = itemId == 6647;
 		int shotConsumption = 1;
 
-		L2ItemInstance weaponInst = null;
-		L2Weapon weaponItem = null;
+		L2ItemInstance weaponInst;
+		L2Weapon weaponItem;
 
-		if(activePet instanceof L2PetInstance && !(activePet instanceof L2BabyPetInstance))
+		if(activePet.isPet && !(activePet instanceof L2BabyPetInstance))
 		{
-			weaponInst = ((L2PetInstance) activePet).getActiveWeaponInstance();
-			weaponItem = ((L2PetInstance) activePet).getActiveWeaponItem();
+			weaponInst = activePet.getActiveWeaponInstance();
+			weaponItem = activePet.getActiveWeaponItem();
 
 			if(weaponInst == null)
 			{
@@ -104,8 +104,6 @@ public class BeastSpiritShot implements IItemHandler
 
 			int shotCount = item.getCount();
 			shotConsumption = weaponItem.getSpiritShotCount();
-
-			weaponItem = null;
 
 			if(shotConsumption == 0)
 			{
@@ -156,7 +154,6 @@ public class BeastSpiritShot implements IItemHandler
 					SystemMessage sm = new SystemMessage(SystemMessageId.AUTO_USE_OF_S1_CANCELLED);
 					sm.addString(item.getItem().getName());
 					activeOwner.sendPacket(sm);
-					sm = null;
 
 					return;
 				}
@@ -169,10 +166,6 @@ public class BeastSpiritShot implements IItemHandler
 		// Pet uses the power of spirit.
 		activeOwner.sendPacket(new SystemMessage(SystemMessageId.PET_USE_THE_POWER_OF_SPIRIT));
 		Broadcast.toSelfAndKnownPlayersInRadius(activeOwner, new MagicSkillUser(activePet, activePet, isBlessed ? 2009 : 2008, 1, 0, 0), 360000/*600*/);
-
-		activeOwner = null;
-		activePet = null;
-		weaponInst = null;
 	}
 
 	public int[] getItemIds()

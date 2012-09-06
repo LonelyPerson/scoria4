@@ -43,7 +43,7 @@ public class L2SkillCharge extends L2Skill
 
 		// get the effect
 		EffectCharge effect = null;
-		if(caster instanceof L2PcInstance)
+		if(caster.isPlayer)
 		{
 			effect = ((L2PcInstance) caster).getChargeEffect();
 		}
@@ -57,7 +57,7 @@ public class L2SkillCharge extends L2Skill
 			if(effect.numCharges < getNumCharges())
 			{
 				effect.numCharges++;
-				if(caster instanceof L2PcInstance)
+				if(caster.isPlayer)
 				{
 					caster.sendPacket(new EtcStatusUpdate((L2PcInstance) caster));
 					SystemMessage sm = new SystemMessage(SystemMessageId.FORCE_INCREASED_TO_S1);

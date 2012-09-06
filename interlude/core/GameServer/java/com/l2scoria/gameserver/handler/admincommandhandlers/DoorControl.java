@@ -91,7 +91,7 @@ public class DoorControl extends Admin
 		{
 			target2 = activeChar.getTarget();
 
-			if(target2 instanceof L2DoorInstance)
+			if(target2.isDoor)
 			{
 				((L2DoorInstance) target2).closeMe();
 			}
@@ -132,7 +132,7 @@ public class DoorControl extends Admin
 		{
 			target2 = activeChar.getTarget();
 
-			if(target2 instanceof L2DoorInstance)
+			if(target2.isDoor)
 			{
 				((L2DoorInstance) target2).openMe();
 			}

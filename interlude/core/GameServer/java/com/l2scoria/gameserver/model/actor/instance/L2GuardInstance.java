@@ -101,7 +101,7 @@ public final class L2GuardInstance extends L2Attackable
 	@Override
 	public boolean isAutoAttackable(L2Character attacker)
 	{
-		return attacker instanceof L2MonsterInstance;
+		return attacker.isMonster;
 	}
 
 	/**

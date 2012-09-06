@@ -91,7 +91,7 @@ public final class RequestChangePetName extends L2GameClientPacket
 		pet.updateEffectIcons(true);
 
 		// set the flag on the control item to say that the pet has a name
-		if(pet instanceof L2PetInstance)
+		if(pet.isPet)
 		{
 			L2ItemInstance controlItem = pet.getOwner().getInventory().getItemByObjectId(pet.getControlItemId());
 

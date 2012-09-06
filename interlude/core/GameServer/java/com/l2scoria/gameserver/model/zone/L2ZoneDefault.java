@@ -205,7 +205,7 @@ public class L2ZoneDefault extends L2Zone
 			return false;
 		}
 
-		if (character instanceof L2PcInstance)
+		if (character.isPlayer)
 		{
 			// Check class type
 			if (_classType != 0)
@@ -396,7 +396,7 @@ public class L2ZoneDefault extends L2Zone
 				continue;
 			}
 
-			if (character instanceof L2PcInstance)
+			if (character.isPlayer)
 			{
 				playerList.put(character.getObjectId(), (L2PcInstance) character);
 			}
@@ -416,7 +416,7 @@ public class L2ZoneDefault extends L2Zone
 
 		for (L2Character character : _characterList.values())
 		{
-			if (character != null && character instanceof L2PcInstance)
+			if (character != null && character.isPlayer)
 			{
 				character.sendPacket(packet);
 			}
@@ -426,7 +426,7 @@ public class L2ZoneDefault extends L2Zone
 	@Override
 	protected void onEnter(L2Character character)
 	{
-		if (_instanceName != null && _instanceGroup != null && character instanceof L2PcInstance)
+		if (_instanceName != null && _instanceGroup != null && character.isPlayer)
 		{
 			L2PcInstance pl = (L2PcInstance) character;
 			InstanceResult ir = new InstanceResult();
@@ -491,7 +491,7 @@ public class L2ZoneDefault extends L2Zone
 	@Override
 	protected void onExit(L2Character character)
 	{
-		if (character instanceof L2PcInstance && _instanceName != null && character.getInstanceId() > 0)
+		if (character.isPlayer && _instanceName != null && character.getInstanceId() > 0)
 			portIntoInstance((L2PcInstance) character, 0);
 	}
 

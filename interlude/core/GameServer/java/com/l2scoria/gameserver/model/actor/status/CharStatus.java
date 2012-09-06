@@ -20,7 +20,6 @@ package com.l2scoria.gameserver.model.actor.status;
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.model.L2Attackable;
 import com.l2scoria.gameserver.model.L2Character;
-import com.l2scoria.gameserver.model.actor.instance.L2NpcInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2SummonInstance;
 import com.l2scoria.gameserver.model.actor.stat.CharStat;
@@ -122,7 +121,7 @@ public class CharStatus
 		if(getActiveChar().isInvul())
 			return;
 
-		if(attacker instanceof L2PcInstance && ((L2PcInstance) attacker).isInDuel() && !(getActiveChar() instanceof L2SummonInstance && ((L2SummonInstance) getActiveChar()).getOwner().getDuelId() == ((L2PcInstance) attacker).getDuelId())) // Duelling player attacks mob
+		if(attacker.isPlayer && ((L2PcInstance) attacker).isInDuel() && !(getActiveChar().isSummonInstance && ((L2SummonInstance) getActiveChar()).getOwner().getDuelId() == ((L2PcInstance) attacker).getDuelId())) // Duelling player attacks mob
 		{
 			((L2PcInstance) attacker).setDuelState(Duel.DUELSTATE_INTERRUPTED);
 		}
@@ -148,7 +147,7 @@ public class CharStatus
 		}
 
 		// Add attackers to npc's attacker list
-		if(getActiveChar() instanceof L2NpcInstance)
+		if(getActiveChar().isNpc)
 		{
 			getActiveChar().addAttackerToAttackByList(attacker);
 		}
@@ -157,7 +156,7 @@ public class CharStatus
 		{
 			// If we're dealing with an L2Attackable Instance and the attacker hit it with an over-hit enabled skill, set the over-hit values.
 			// Anything else, clear the over-hit flag
-			if(getActiveChar() instanceof L2Attackable)
+			if(getActiveChar().isAttackable)
 			{
 				if(((L2Attackable) getActiveChar()).isOverhit())
 				{
@@ -180,7 +179,7 @@ public class CharStatus
 		else
 		{
 			// If we're dealing with an L2Attackable Instance and the attacker's hit didn't kill the mob, clear the over-hit flag
-			if(getActiveChar() instanceof L2Attackable)
+			if(getActiveChar().isAttackable)
 			{
 				((L2Attackable) getActiveChar()).overhitEnabled(false);
 			}
@@ -204,7 +203,7 @@ public class CharStatus
 		else
 		{
 			// If we're dealing with an L2Attackable Instance and the attacker's hit didn't kill the mob, clear the over-hit flag
-			if(getActiveChar() instanceof L2Attackable)
+			if(getActiveChar().isAttackable)
 			{
 				((L2Attackable) getActiveChar()).overhitEnabled(false);
 			}

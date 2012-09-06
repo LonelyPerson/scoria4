@@ -62,7 +62,7 @@ public class PetInfo extends L2GameServerPacket
 		_swimWalkSpd = _flWalkSpd = _flyWalkSpd = _walkSpd;
 		_maxHp = _summon.getMaxHp();
 		_maxMp = _summon.getMaxMp();
-		if(_summon instanceof L2PetInstance)
+		if(_summon.isPet)
 		{
 			L2PetInstance pet = (L2PetInstance) _summon;
 			_curFed = pet.getCurrentFed(); // how fed it is
@@ -87,7 +87,7 @@ public class PetInfo extends L2GameServerPacket
 		_swimWalkSpd = _flWalkSpd = _flyWalkSpd = _walkSpd;
 		_maxHp = _summon.getMaxHp();
 		_maxMp = _summon.getMaxMp();
-		if(_summon instanceof L2PetInstance)
+		if(_summon.isPet)
 		{
 			L2PetInstance pet = (L2PetInstance) _summon;
 			_curFed = pet.getCurrentFed(); // how fed it is
@@ -149,7 +149,7 @@ public class PetInfo extends L2GameServerPacket
 		writeQ(_summon.getStat().getExp());
 		writeQ(_summon.getExpForThisLevel());// 0%  absolute value
 		writeQ(_summon.getExpForNextLevel());// 100% absoulte value
-		writeD(_summon instanceof L2PetInstance ? _summon.getInventory().getTotalWeight() : 0);//weight
+		writeD(_summon.isPet ? _summon.getInventory().getTotalWeight() : 0);//weight
 		writeD(_summon.getMaxLoad());//max weight it can carry
 		writeD(_summon.getPAtk(null));//patk
 		writeD(_summon.getPDef(null));//pdef

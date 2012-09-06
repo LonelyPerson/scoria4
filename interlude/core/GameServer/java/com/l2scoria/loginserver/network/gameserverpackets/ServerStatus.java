@@ -18,7 +18,7 @@
  */
 package com.l2scoria.loginserver.network.gameserverpackets;
 
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 import com.l2scoria.gameserver.datatables.GameServerTable;
 import com.l2scoria.gameserver.datatables.GameServerTable.GameServerInfo;

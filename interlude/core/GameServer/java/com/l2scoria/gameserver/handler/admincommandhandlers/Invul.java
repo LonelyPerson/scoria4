@@ -54,9 +54,9 @@ public class Invul extends Admin
 		{
 			L2Object target = activeChar.getTarget();
 
-			if(target instanceof L2PcInstance)
+			if(target.isPlayer)
 			{
-				handleInvul((L2PcInstance) target);
+				handleInvul(target.getPlayer());
 			}
 
 			target = null;

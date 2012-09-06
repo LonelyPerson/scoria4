@@ -51,7 +51,7 @@ public class L2SummonOff extends L2ZoneDefault
 	@Override
 	protected void onEnter(L2Character character)
 	{
-		if(character instanceof L2PcInstance)
+		if(character.isPlayer)
 		{
 			character.setInsideZone(L2Character.ZONE_NOSUMMONFRIEND, true);
 		}
@@ -62,7 +62,7 @@ public class L2SummonOff extends L2ZoneDefault
 	@Override
 	protected void onExit(L2Character character)
 	{
-		if(character instanceof L2PcInstance)
+		if(character.isPlayer)
 		{
 			character.setInsideZone(L2Character.ZONE_NOSUMMONFRIEND, false);
 		}

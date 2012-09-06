@@ -80,7 +80,7 @@ public class L2FortZone extends L2ZoneDefault
 			character.setInsideZone(L2Character.ZONE_PVP, true);
 			character.setInsideZone(L2Character.ZONE_SIEGE, true);
 
-			if(character instanceof L2PcInstance)
+			if(character.isPlayer)
 			{
 				character.sendPacket(new SystemMessage(SystemMessageId.ENTERED_COMBAT_ZONE));
 			}
@@ -97,7 +97,7 @@ public class L2FortZone extends L2ZoneDefault
 			character.setInsideZone(L2Character.ZONE_PVP, false);
 			character.setInsideZone(L2Character.ZONE_SIEGE, false);
 
-			if(character instanceof L2PcInstance)
+			if(character.isPlayer)
 			{
 				character.sendPacket(new SystemMessage(SystemMessageId.LEFT_COMBAT_ZONE));
 
@@ -140,7 +140,7 @@ public class L2FortZone extends L2ZoneDefault
 					character.setInsideZone(L2Character.ZONE_PVP, false);
 					character.setInsideZone(L2Character.ZONE_SIEGE, false);
 
-					if(character instanceof L2PcInstance)
+					if(character.isPlayer)
 					{
 						character.sendPacket(new SystemMessage(SystemMessageId.LEFT_COMBAT_ZONE));
 					}
@@ -165,7 +165,7 @@ public class L2FortZone extends L2ZoneDefault
 	{
 		for(L2Character temp : _characterList.values())
 		{
-			if(!(temp instanceof L2PcInstance))
+			if(!(temp.isPlayer))
 			{
 				continue;
 			}
@@ -188,7 +188,7 @@ public class L2FortZone extends L2ZoneDefault
 	{
 		for(L2Character temp : _characterList.values())
 		{
-			if(temp instanceof L2PcInstance)
+			if(temp.isPlayer)
 			{
 				((L2PcInstance) temp).sendMessage(message);
 			}
@@ -206,7 +206,7 @@ public class L2FortZone extends L2ZoneDefault
 
 		for(L2Character temp : _characterList.values())
 		{
-			if(temp instanceof L2PcInstance)
+			if(temp.isPlayer)
 			{
 				players.add((L2PcInstance) temp);
 			}

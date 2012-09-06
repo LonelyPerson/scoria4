@@ -59,7 +59,7 @@ public class TaskRaidPointsReset extends Task
 				for (Map.Entry<Integer, Integer> entry : rankList.entrySet())
 				{
 					L2Object obj = L2World.getInstance().findObject(entry.getKey());
-					if (obj instanceof L2PcInstance)
+					if (obj.isPlayer)
 						playerId = ((L2PcInstance) obj).getObjectId();					
 					if (entry.getValue() <= 100 && c.isMember(playerId))
 					{

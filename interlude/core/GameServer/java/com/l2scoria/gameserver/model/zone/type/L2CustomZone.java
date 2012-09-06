@@ -76,7 +76,7 @@ public class L2CustomZone extends L2ZoneDefault
 	@Override
 	protected void onEnter(L2Character character)
 	{
-		if(character instanceof L2PcInstance)
+		if(character.isPlayer)
 		{
 			L2PcInstance player = (L2PcInstance) character;
 			if(!player.isGM() && player.isFlying() && !player.isInJail() && !_IsFlyingEnable)
@@ -103,7 +103,7 @@ public class L2CustomZone extends L2ZoneDefault
 	@Override
 	protected void onExit(L2Character character)
 	{
-		if(character instanceof L2PcInstance)
+		if(character.isPlayer)
 		{
 			L2PcInstance player = (L2PcInstance) character;
 

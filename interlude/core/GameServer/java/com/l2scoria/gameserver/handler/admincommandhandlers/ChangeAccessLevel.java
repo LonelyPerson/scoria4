@@ -56,7 +56,7 @@ public class ChangeAccessLevel extends Admin
 		{
 			int lvl = Integer.parseInt(parts[1]);
 
-			if(activeChar.getTarget() instanceof L2PcInstance)
+			if(activeChar.getTarget().isPlayer)
 			{
 				((L2PcInstance) activeChar.getTarget()).setAccessLevel(lvl);
                                 if(lvl < 0) 

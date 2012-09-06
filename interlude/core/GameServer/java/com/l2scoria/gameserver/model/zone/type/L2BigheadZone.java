@@ -61,7 +61,7 @@ public class L2BigheadZone extends L2ZoneDefault
 
 	private void startEffect(L2Character character)
 	{
-		if(character instanceof L2PcInstance)
+		if(character.isPlayer)
 		{
 			character.stopAbnormalEffect((short) 0x2000);
 		}
@@ -70,7 +70,7 @@ public class L2BigheadZone extends L2ZoneDefault
 
 	private void stopEffect(L2Character character)
 	{
-		if(character instanceof L2PcInstance)
+		if(character.isPlayer)
 		{
 			character.startAbnormalEffect(0x2000);
 		}

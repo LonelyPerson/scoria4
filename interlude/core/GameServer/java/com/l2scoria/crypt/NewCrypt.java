@@ -18,8 +18,9 @@
  */
 package com.l2scoria.crypt;
 
+import org.apache.log4j.Logger;
+
 import java.io.IOException;
-import java.util.logging.Logger;
 
 /**
  * This class ...

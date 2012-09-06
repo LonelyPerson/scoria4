@@ -40,8 +40,8 @@ public class ConditionTargetPvp extends Condition
 	public boolean testImpl(Env env)
 	{
 		L2Character target = env.target;
-		if(target instanceof L2PcInstance && ((L2PcInstance) target).getPvpFlag() != 0)
-			return ((L2PcInstance) target).getPvpFlag() == _pvp;
+		if(target.isPlayer && target.getPlayer().getPvpFlag() != 0)
+			return target.getPlayer().getPvpFlag() == _pvp;
 		return false;
 	}
 }

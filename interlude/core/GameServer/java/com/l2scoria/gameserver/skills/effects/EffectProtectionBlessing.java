@@ -41,7 +41,7 @@ public class EffectProtectionBlessing extends L2Effect
 	@Override
 	public void onStart()
 	{
-		if(getEffected() instanceof L2PlayableInstance)
+		if(getEffected().isPlayable)
 		{
 			((L2PlayableInstance) getEffected()).startProtectionBlessing();
 		}
@@ -51,7 +51,7 @@ public class EffectProtectionBlessing extends L2Effect
 	@Override
 	public void onExit()
 	{
-		if(getEffected() instanceof L2PlayableInstance)
+		if(getEffected().isPlayable)
 		{
 			((L2PlayableInstance) getEffected()).stopProtectionBlessing(this);
 		}

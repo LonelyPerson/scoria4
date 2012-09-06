@@ -309,7 +309,7 @@ public class Seed implements IItemHandler
 
 	public void useItem(L2PlayableInstance playable, L2ItemInstance item)
 	{
-		if(!(playable instanceof L2PcInstance))
+		if(!(playable.isPlayer))
 			return;
 
 		if(CastleManorManager.getInstance().isDisabled())
@@ -318,14 +318,14 @@ public class Seed implements IItemHandler
 		_activeChar = (L2PcInstance) playable;
 		L2Object target = _activeChar.getTarget();
 
-		if(!(target instanceof L2NpcInstance))
+		if(!(target.isNpc))
 		{
 			_activeChar.sendPacket(new SystemMessage(SystemMessageId.INCORRECT_TARGET));
 			_activeChar.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
 
-		if(!(target instanceof L2MonsterInstance) || target instanceof L2ChestInstance || target instanceof L2GrandBossInstance || target instanceof L2RaidBossInstance)
+		if(!(target.isMonster) || target instanceof L2ChestInstance || target instanceof L2GrandBossInstance || target.isRaid)
 		{
 			_activeChar.sendPacket(new SystemMessage(SystemMessageId.THE_TARGET_IS_UNAVAILABLE_FOR_SEEDING));
 			_activeChar.sendPacket(ActionFailed.STATIC_PACKET);

@@ -49,7 +49,7 @@ public class Charge implements ISkillHandler
 
 		for(int index = 0; index < targets.length; index++)
 		{
-			if(!(targets[index] instanceof L2PcInstance))
+			if(!(targets[index].isPlayer))
 				continue;
 			L2PcInstance target = (L2PcInstance) targets[index];
 			skill.getEffects(activeChar, target);

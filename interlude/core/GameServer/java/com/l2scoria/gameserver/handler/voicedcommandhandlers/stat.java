@@ -45,7 +45,7 @@ public class stat implements IVoicedCommandHandler
 				return false;
 			}
 
-			if(!(activeChar.getTarget() instanceof L2PcInstance))
+			if(!(activeChar.getTarget().isPlayer))
 			{
 				activeChar.sendMessage("You can only get the info of a player.");
 				return false;

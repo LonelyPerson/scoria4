@@ -292,7 +292,6 @@ public class L2NpcInstance extends L2Character
 
 		// Set the name of the L2Character
 		setName(template.name);
-
 	}
 
 	@Override
@@ -460,12 +459,12 @@ public class L2NpcInstance extends L2Character
 			return 10000;
 		}
 
-		if (object instanceof L2FolkInstance || !(object instanceof L2Character))
+		if (object instanceof L2FolkInstance || !(object.isCharacter))
 		{
 			return 0;
 		}
 
-		if (object instanceof L2PlayableInstance)
+		if (object.isPlayable)
 		{
 			return 1500;
 		}
@@ -817,7 +816,7 @@ public class L2NpcInstance extends L2Character
 			html1.append("<table border=\"0\" width=\"100%\">");
 			html1.append("<tr><td>Object ID</td><td>").append(getObjectId()).append("</td><td>NPC ID</td><td>").append(getTemplate().npcId).append("</td></tr>");
 			html1.append("<tr><td>Castle</td><td>").append(getCastle().getCastleId()).append("</td><td>Coords</td><td>").append(getX()).append(",").append(getY()).append(",").append(getZ()).append("</td></tr>");
-			html1.append("<tr><td>Level</td><td>").append(getLevel()).append("</td><td>Aggro</td><td>").append(this instanceof L2Attackable ? this.getAggroRange() : 0).append("</td></tr>");
+			html1.append("<tr><td>Level</td><td>").append(getLevel()).append("</td><td>Aggro</td><td>").append(this.isAttackable ? this.getAggroRange() : 0).append("</td></tr>");
 			html1.append("</table><br>");
 
 			html1.append("<font color=\"LEVEL\">Combat</font>");

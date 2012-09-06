@@ -41,7 +41,7 @@ public class Level extends Admin
 		{
 			try
 			{
-				if(targetChar instanceof L2PlayableInstance)
+				if(targetChar.isPlayable)
 				{
 					((L2PlayableInstance) targetChar).getStat().addLevel(Byte.parseByte(val));
 				}
@@ -55,7 +55,7 @@ public class Level extends Admin
 		{
 			try
 			{
-				if(targetChar == null || !(targetChar instanceof L2PlayableInstance))
+				if(targetChar == null || !(targetChar.isPlayable))
 				{
 					activeChar.sendPacket(new SystemMessage(SystemMessageId.TARGET_IS_INCORRECT)); // incorrect
 					return false;
@@ -66,7 +66,7 @@ public class Level extends Admin
 				final byte lvl = Byte.parseByte(val);
 				int max_level = Experience.MAX_LEVEL;
 
-				if(targetChar instanceof L2PcInstance && ((L2PcInstance) targetPlayer).isSubClassActive())
+				if(targetChar.isPlayer && ((L2PcInstance) targetPlayer).isSubClassActive())
 				{
 					max_level = Experience.MAX_SUBCLASS_LEVEL;
 				}

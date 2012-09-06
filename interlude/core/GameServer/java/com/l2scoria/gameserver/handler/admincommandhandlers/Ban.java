@@ -99,7 +99,7 @@ public class Ban extends Admin
 				{
 					L2Object target = activeChar.getTarget();
 
-					if(target != null && target instanceof L2PcInstance)
+					if(target != null && target.isPlayer)
 					{
 						plyr = (L2PcInstance) target;
 					}

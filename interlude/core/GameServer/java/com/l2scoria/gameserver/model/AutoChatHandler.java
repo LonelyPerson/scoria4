@@ -370,7 +370,7 @@ public class AutoChatHandler implements SpawnListener
 
 			AutoChatDefinition chatDef = new AutoChatDefinition(this, npcInst, chatTexts, chatDelay);
 
-			if(npcInst instanceof L2SiegeGuardInstance)
+			if(npcInst.isSiegeGuard)
 			{
 				chatDef.setRandomChat(true);
 			}
@@ -779,7 +779,7 @@ public class AutoChatHandler implements SpawnListener
 
 						for(L2Character player : chatNpc.getKnownList().getKnownCharactersInRadius(1500))
 						{
-							if(!(player instanceof L2PcInstance))
+							if(!(player.isPlayer))
 							{
 								continue;
 							}

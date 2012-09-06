@@ -177,7 +177,7 @@ public final class L2WorldRegion
 		{
 			for(L2Object o : _visibleObjects)
 			{
-				if(o instanceof L2Attackable)
+				if(o.isAttackable)
 				{
 					c++;
 					L2Attackable mob = (L2Attackable) o;
@@ -211,7 +211,7 @@ public final class L2WorldRegion
 		{
 			for(L2Object o : _visibleObjects)
 			{
-				if(o instanceof L2Attackable)
+				if(o.isAttackable)
 				{
 					c++;
 					// Start HP/MP/CP Regeneration task
@@ -220,7 +220,7 @@ public final class L2WorldRegion
 					// start the ai
 					//((L2AttackableAI) mob.getAI()).startAITask();
 				}
-				else if(o instanceof L2NpcInstance)
+				else if(o.isNpc)
 				{
 					// Create a RandomAnimation Task that will be launched after the calculated delay if the server allow it
 					// L2Monsterinstance/L2Attackable socials are handled by AI (TODO: check the instances)
@@ -340,7 +340,7 @@ public final class L2WorldRegion
 
 		_visibleObjects.put(object);
 
-		if(object instanceof L2PlayableInstance)
+		if(object.isPlayable)
 		{
 			_allPlayable.put((L2PlayableInstance) object);
 
@@ -371,7 +371,7 @@ public final class L2WorldRegion
 
 		_visibleObjects.remove(object);
 
-		if(object instanceof L2PlayableInstance)
+		if(object.isPlayable)
 		{
 			_allPlayable.remove((L2PlayableInstance) object);
 
@@ -426,7 +426,7 @@ public final class L2WorldRegion
 		_log.info("Deleting all visible NPC's in Region: " + getName());
 		for(L2Object obj : _visibleObjects)
 		{
-			if(obj instanceof L2NpcInstance)
+			if(obj.isNpc)
 			{
 				L2NpcInstance target = (L2NpcInstance) obj;
 				target.deleteMe();

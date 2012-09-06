@@ -43,7 +43,7 @@ public class Sweep implements ISkillHandler
 
 	public void useSkill(L2Character activeChar, L2Skill skill, L2Object[] targets)
 	{
-		if(!(activeChar instanceof L2PcInstance)){ return; }
+		if(!(activeChar.isPlayer)){ return; }
 
 		L2PcInstance player = (L2PcInstance) activeChar;
 		InventoryUpdate iu = Config.FORCE_INVENTORY_UPDATE ? null : new InventoryUpdate();
@@ -51,7 +51,7 @@ public class Sweep implements ISkillHandler
 
 		for(int index = 0; index < targets.length; index++)
 		{
-			if(!(targets[index] instanceof L2Attackable))
+			if(!(targets[index].isAttackable))
 				continue;
 
 			L2Attackable target = (L2Attackable) targets[index];

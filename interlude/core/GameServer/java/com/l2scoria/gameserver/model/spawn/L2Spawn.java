@@ -24,7 +24,6 @@ import com.l2scoria.gameserver.geodata.GeoEngine;
 import com.l2scoria.gameserver.idfactory.IdFactory;
 import com.l2scoria.gameserver.model.L2Object;
 import com.l2scoria.gameserver.model.Location;
-import com.l2scoria.gameserver.model.actor.instance.L2MonsterInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2NpcInstance;
 import com.l2scoria.gameserver.model.quest.Quest;
 import com.l2scoria.gameserver.templates.L2NpcTemplate;
@@ -530,28 +529,23 @@ public class L2Spawn
 			if (_template.type.equalsIgnoreCase("L2Pet") || _template.type.equalsIgnoreCase("L2Minion"))
 			{
 				_currentCount++;
-
 				return mob;
 			}
 
 			// Get L2NpcInstance Init parameters and its generate an Identifier
 			Object[] parameters = {IdFactory.getInstance().getNextId(), _template};
 
-			// Call the constructor of the L2NpcInstance
-			// (can be a L2ArtefactInstance, L2FriendlyMobInstance, L2GuardInstance, L2MonsterInstance, L2SiegeGuardInstance, L2BoxInstance,
-			// L2FeedableBeastInstance, L2TamedBeastInstance, L2FolkInstance)
-			Object tmp = _constructor.newInstance(parameters);
-
 			// Must be done before object is spawned into visible world
-			((L2Object) tmp).setInstanceId(_instanceId);
+			L2Object l2o = ((L2Object) _constructor.newInstance(parameters));
+			l2o.setInstanceId(_instanceId);
 
 			// Check if the Instance is a L2NpcInstance
-			if (!(tmp instanceof L2NpcInstance))
+			if (!(l2o.isNpc))
 			{
 				return mob;
 			}
 
-			mob = (L2NpcInstance) tmp;
+			mob = (L2NpcInstance) l2o;
 
 			return intializeNpcInstance(mob);
 		} catch (Exception e)
@@ -593,7 +587,7 @@ public class L2Spawn
 			newlocy = getLocy();
 			newlocz = getLocz();
 
-			if (Config.GEODATA && mob instanceof L2MonsterInstance)
+			if (Config.GEODATA && mob.isMonster)
 			{
 				newlocz = GeoEngine.getHeight(newlocx, newlocy, getLocz(), true, mob.getInstanceId());
 			}

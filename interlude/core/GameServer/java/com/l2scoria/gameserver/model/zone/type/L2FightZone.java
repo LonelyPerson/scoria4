@@ -81,7 +81,7 @@ public class L2FightZone extends L2ZoneDefault
 		character.setInsideZone(L2Character.ZONE_PVP, true);
 		character.setInsideZone(L2Character.ZONE_FIGHT, true);
 
-		if(character instanceof L2PcInstance)
+		if(character.isPlayer)
 		{
 			character.sendPacket(new SystemMessage(SystemMessageId.ENTERED_COMBAT_ZONE));
 		}
@@ -95,7 +95,7 @@ public class L2FightZone extends L2ZoneDefault
 		character.setInsideZone(L2Character.ZONE_PVP, false);
 		character.setInsideZone(L2Character.ZONE_FIGHT, false);
 
-		if(character instanceof L2PcInstance)
+		if(character.isPlayer)
 		{
 			character.sendPacket(new SystemMessage(SystemMessageId.LEFT_COMBAT_ZONE));
 		}

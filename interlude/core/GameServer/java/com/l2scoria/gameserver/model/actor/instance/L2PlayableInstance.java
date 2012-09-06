@@ -100,11 +100,11 @@ public abstract class L2PlayableInstance extends L2Character
 		if(killer != null)
 		{
 			L2PcInstance player = null;
-			if(killer instanceof L2PcInstance)
+			if(killer.isPlayer)
 			{
 				player = (L2PcInstance) killer;
 			}
-			else if(killer instanceof L2Summon)
+			else if(killer.isSummon)
 			{
 				player = ((L2Summon) killer).getOwner();
 			}
@@ -124,15 +124,15 @@ public abstract class L2PlayableInstance extends L2Character
 			return false; // Target is null
 		if(target == this)
 			return false; // Target is self
-		if(!(target instanceof L2PlayableInstance))
+		if(!(target.isPlayable))
 			return false; // Target is not a L2PlayableInstance
 
 		L2PcInstance player = null;
-		if(this instanceof L2PcInstance)
+		if(this.isPlayer)
 		{
 			player = (L2PcInstance) this;
 		}
-		else if(this instanceof L2Summon)
+		else if(this.isSummon)
 		{
 			player = ((L2Summon) this).getOwner();
 		}
@@ -143,11 +143,11 @@ public abstract class L2PlayableInstance extends L2Character
 			return false; // Active player has karma
 
 		L2PcInstance targetPlayer = null;
-		if(target instanceof L2PcInstance)
+		if(target.isPlayer)
 		{
 			targetPlayer = (L2PcInstance) target;
 		}
-		else if(target instanceof L2Summon)
+		else if(target.isSummon)
 		{
 			targetPlayer = ((L2Summon) target).getOwner();
 		}

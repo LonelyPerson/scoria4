@@ -98,7 +98,7 @@ final class EffectCancel extends L2Effect
 		}
 		else
 		{
-			if(getEffector() instanceof L2PcInstance)
+			if(getEffector().isPlayer)
 			{
 				SystemMessage sm = new SystemMessage(SystemMessageId.S1_WAS_UNAFFECTED_BY_S2);
 				sm.addString(getEffected().getName());

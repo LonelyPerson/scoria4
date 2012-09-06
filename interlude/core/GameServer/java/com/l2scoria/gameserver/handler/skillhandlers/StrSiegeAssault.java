@@ -46,7 +46,7 @@ public class StrSiegeAssault implements ISkillHandler
 	public void useSkill(L2Character activeChar, L2Skill skill, L2Object[] targets)
 	{
 
-		if(activeChar == null || !(activeChar instanceof L2PcInstance))
+		if(activeChar == null || !(activeChar.isPlayer))
 			return;
 
 		L2PcInstance player = (L2PcInstance) activeChar;
@@ -54,7 +54,7 @@ public class StrSiegeAssault implements ISkillHandler
 		if(!activeChar.isRiding())
 			return;
 
-		if(!(player.getTarget() instanceof L2DoorInstance))
+		if(!(player.getTarget().isDoor))
 			return;
 
 		Castle castle = CastleManager.getInstance().getCastle(player);
@@ -92,7 +92,7 @@ public class StrSiegeAssault implements ISkillHandler
 			{
 				L2Character target = (L2Character) target2;
 				L2ItemInstance weapon = activeChar.getActiveWeaponInstance();
-				if(activeChar instanceof L2PcInstance && target instanceof L2PcInstance && target.isAlikeDead() && target.isFakeDeath())
+				if(activeChar.isPlayer && target.isPlayer && target.isAlikeDead() && target.isFakeDeath())
 				{
 					target.stopFakeDeath(null);
 				}
@@ -166,7 +166,7 @@ public class StrSiegeAssault implements ISkillHandler
 
 	public static boolean checkIfOkToUseStriderSiegeAssault(L2Character activeChar, Castle castle, boolean isCheckOnly)
 	{
-		if(activeChar == null || !(activeChar instanceof L2PcInstance))
+		if(activeChar == null || !(activeChar.isPlayer))
 			return false;
 
 		SystemMessage sm = new SystemMessage(SystemMessageId.S1_S2);
@@ -176,7 +176,7 @@ public class StrSiegeAssault implements ISkillHandler
 			sm.addString("You must be on castle ground to use strider siege assault");
 		else if(!castle.getSiege().getIsInProgress())
 			sm.addString("You can only use strider siege assault during a siege.");
-		else if(!(player.getTarget() instanceof L2DoorInstance))
+		else if(!(player.getTarget().isDoor))
 			sm.addString("You can only use strider siege assault on doors and walls.");
 		else if(!activeChar.isRiding())
 			sm.addString("You can only use strider siege assault when on strider.");
@@ -198,7 +198,7 @@ public class StrSiegeAssault implements ISkillHandler
 
 	public static boolean checkIfOkToUseStriderSiegeAssault(L2Character activeChar, Fort fort, boolean isCheckOnly)
 	{
-		if(activeChar == null || !(activeChar instanceof L2PcInstance))
+		if(activeChar == null || !(activeChar.isPlayer))
 			return false;
 
 		SystemMessage sm = new SystemMessage(SystemMessageId.S1_S2);
@@ -208,7 +208,7 @@ public class StrSiegeAssault implements ISkillHandler
 			sm.addString("You must be on fort ground to use strider siege assault");
 		else if(!fort.getSiege().getIsInProgress())
 			sm.addString("You can only use strider siege assault during a siege.");
-		else if(!(player.getTarget() instanceof L2DoorInstance))
+		else if(!(player.getTarget().isDoor))
 			sm.addString("You can only use strider siege assault on doors and walls.");
 		//TODO: isRidingStrider -> isRiding
 		else if(!activeChar.isRiding())

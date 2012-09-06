@@ -44,7 +44,7 @@ public class TakeCastle implements ISkillHandler
 
 	public void useSkill(L2Character activeChar, L2Skill skill, L2Object[] targets)
 	{
-		if(activeChar == null || !(activeChar instanceof L2PcInstance))
+		if(activeChar == null || !(activeChar.isPlayer))
 			return;
 
 		L2PcInstance player = (L2PcInstance) activeChar;
@@ -111,7 +111,7 @@ public class TakeCastle implements ISkillHandler
 
 	public static boolean checkIfOkToCastSealOfRule(L2Character activeChar, Castle castle, boolean isCheckOnly)
 	{
-		if(activeChar == null || !(activeChar instanceof L2PcInstance))
+		if(activeChar == null || !(activeChar.isPlayer))
 			return false;
 
 		SystemMessage sm = new SystemMessage(SystemMessageId.S1_S2);
@@ -153,7 +153,7 @@ public class TakeCastle implements ISkillHandler
 
 	public static boolean checkIfOkToCastFlagDisplay(L2Character activeChar, Fort fort, boolean isCheckOnly)
 	{
-		if(activeChar == null || !(activeChar instanceof L2PcInstance))
+		if(activeChar == null || !(activeChar.isPlayer))
 			return false;
 
 		SystemMessage sm = new SystemMessage(SystemMessageId.S1_S2);

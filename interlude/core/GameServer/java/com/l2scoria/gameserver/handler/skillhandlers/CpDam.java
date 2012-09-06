@@ -74,7 +74,7 @@ public class CpDam implements ISkillHandler
 			}
 		}
 		// If there is no weapon equipped, check for an active summon.
-		else if(activeChar instanceof L2Summon)
+		else if(activeChar.isSummon)
 		{
 			L2Summon activeSummon = (L2Summon) activeChar;
 
@@ -98,7 +98,7 @@ public class CpDam implements ISkillHandler
 		{
 			L2Character target = (L2Character) target2;
 
-			if(activeChar instanceof L2PcInstance && target instanceof L2PcInstance && target.isAlikeDead() && target.isFakeDeath())
+			if(activeChar.isPlayer && target.isPlayer && target.isAlikeDead() && target.isFakeDeath())
 			{
 				target.stopFakeDeath(null);
 			}

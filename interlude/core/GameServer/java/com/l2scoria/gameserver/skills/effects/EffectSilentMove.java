@@ -40,7 +40,7 @@ final class EffectSilentMove extends L2Effect
 		super.onStart();
 
 		L2Character effected = getEffected();
-		if(effected instanceof L2PcInstance)
+		if(effected.isPlayer)
 		{
 			((L2PcInstance) effected).setSilentMoving(true);
 		}
@@ -53,7 +53,7 @@ final class EffectSilentMove extends L2Effect
 		super.onExit();
 
 		L2Character effected = getEffected();
-		if(effected instanceof L2PcInstance)
+		if(effected.isPlayer)
 		{
 			((L2PcInstance) effected).setSilentMoving(false);
 		}

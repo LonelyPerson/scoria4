@@ -559,7 +559,7 @@ public class Antharas extends Quest
 		{
 			for (L2Character characters : _Zone.getCharactersInside().values())
 			{
-				if (characters instanceof L2PcInstance)
+				if (characters.isPlayer)
 					characters.sendPacket(mov);
 			}
 		}

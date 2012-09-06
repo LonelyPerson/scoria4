@@ -61,7 +61,7 @@ public class PathFind
 
 			//статистика
 			buff.totalUses++;
-			if(obj instanceof L2PlayableInstance)
+			if(obj.isPlayable)
 				buff.playableUses++;
 
 			findPath();

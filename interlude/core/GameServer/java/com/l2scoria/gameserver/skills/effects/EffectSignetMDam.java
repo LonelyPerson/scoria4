@@ -79,7 +79,7 @@ public final class EffectSignetMDam extends L2Effect
 		int y = getEffector().getY();
 		int z = getEffector().getZ();
 
-		if(getEffector() instanceof L2PcInstance && getSkill().getTargetType() == L2Skill.SkillTargetType.TARGET_GROUND)
+		if(getEffector().isPlayer && getSkill().getTargetType() == L2Skill.SkillTargetType.TARGET_GROUND)
 		{
 			Point3D wordPosition = ((L2PcInstance) getEffector()).getCurrentSkillWorldPosition();
 
@@ -117,7 +117,7 @@ public final class EffectSignetMDam extends L2Effect
 				continue;
 			}
 
-			if(cha instanceof L2Attackable || cha instanceof L2PlayableInstance)
+			if(cha.isAttackable || cha.isPlayable)
 			{
 				if(cha.isAlikeDead())
 				{
@@ -132,9 +132,9 @@ public final class EffectSignetMDam extends L2Effect
 
 				caster.reduceCurrentMp(mpConsume);
 
-				if(cha instanceof L2PlayableInstance)
+				if(cha.isPlayable)
 				{
-					if(cha instanceof L2Summon && ((L2Summon) cha).getOwner() == caster)
+					if(cha.isSummon && ((L2Summon) cha).getOwner() == caster)
 					{}
 					else
 					{
@@ -154,7 +154,7 @@ public final class EffectSignetMDam extends L2Effect
 				boolean mcrit = Formulas.calcMCrit(caster.getMCriticalHit(target, getSkill()));
 				int mdam = (int) Formulas.calcMagicDam(caster, target, getSkill(), ss, bss, mcrit);
 
-				if(target instanceof L2Summon)
+				if(target.isSummon)
 				{
 					target.broadcastStatusUpdate();
 				}

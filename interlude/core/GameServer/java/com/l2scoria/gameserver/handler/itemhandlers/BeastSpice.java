@@ -20,7 +20,6 @@ package com.l2scoria.gameserver.handler.itemhandlers;
 
 import com.l2scoria.gameserver.datatables.SkillTable;
 import com.l2scoria.gameserver.handler.IItemHandler;
-import com.l2scoria.gameserver.model.L2Object;
 import com.l2scoria.gameserver.model.actor.instance.L2FeedableBeastInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
@@ -38,7 +37,7 @@ public class BeastSpice implements IItemHandler
 
 	public void useItem(L2PlayableInstance playable, L2ItemInstance item)
 	{
-		if(!(playable instanceof L2PcInstance))
+		if(!(playable.isPlayer))
 			return;
 
 		L2PcInstance activeChar = (L2PcInstance) playable;
@@ -48,9 +47,6 @@ public class BeastSpice implements IItemHandler
 			activeChar.sendPacket(new SystemMessage(SystemMessageId.TARGET_IS_INCORRECT));
 			return;
 		}
-
-		L2Object[] targets = new L2Object[1];
-		targets[0] = activeChar.getTarget();
 
 		int itemId = item.getItemId();
 		if(itemId == 6643) // Golden Spice

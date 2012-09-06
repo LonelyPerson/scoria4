@@ -40,16 +40,20 @@ public class BreakingArrow implements IItemHandler
 	public void useItem(L2PlayableInstance playable, L2ItemInstance item)
 	{
 		int itemId = item.getItemId();
-		if(!(playable instanceof L2PcInstance))
+
+		if(!(playable.isPlayer))
 			return;
+
 		L2PcInstance activeChar = (L2PcInstance) playable;
 		L2Object target = activeChar.getTarget();
-		if(!(target instanceof L2GrandBossInstance) || target == null)
+
+		if(!(target instanceof L2GrandBossInstance))
 		{
 			activeChar.sendPacket(new SystemMessage(SystemMessageId.INCORRECT_TARGET));
 			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
+
 		L2GrandBossInstance Frintezza = (L2GrandBossInstance) target;
 		if(!activeChar.isInsideRadius(Frintezza, 500, false, false))
 		{
@@ -57,6 +61,7 @@ public class BreakingArrow implements IItemHandler
 			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
+
 		if(itemId == 8192 && Frintezza.getObjectId() == 29045)
 		{
 			Frintezza.broadcastPacket(new SocialAction(Frintezza.getObjectId(), 2));

@@ -108,7 +108,7 @@ public class CreateItem extends Admin
 
 		if(activeChar.getTarget() != null)
 		{
-			if(activeChar.getTarget() instanceof L2PcInstance)
+			if(activeChar.getTarget().isPlayer)
 			{
 				player = (L2PcInstance) activeChar.getTarget();
 			}

@@ -419,14 +419,14 @@ public class L2DoorInstance extends L2Character implements GeoCollision
 		}
 
 		// Doors can`t be attacked by NPCs
-		if (attacker == null || !(attacker instanceof L2PlayableInstance))
+		if (attacker == null || !(attacker.isPlayable))
 		{
 			return false;
 		}
 
 		L2PcInstance character;
 
-		if (attacker instanceof L2Summon)
+		if (attacker.isSummon)
 		{
 			character = ((L2Summon) attacker).getOwner();
 		}
@@ -475,7 +475,7 @@ public class L2DoorInstance extends L2Character implements GeoCollision
 
 	public int getDistanceToWatchObject(L2Object object)
 	{
-		if (!(object instanceof L2PcInstance))
+		if (!(object.isPlayer))
 		{
 			return 0;
 		}
@@ -713,7 +713,7 @@ public class L2DoorInstance extends L2Character implements GeoCollision
 
 		for (L2Object obj : getKnownList().getKnownObjects().values())
 		{
-			if (obj instanceof L2SiegeGuardInstance)
+			if (obj.isSiegeGuard)
 			{
 				result.add((L2SiegeGuardInstance) obj);
 			}
@@ -743,7 +743,7 @@ public class L2DoorInstance extends L2Character implements GeoCollision
 	@Override
 	public void reduceCurrentHp(double damage, L2Character attacker, boolean awake)
 	{
-		if (this.isAutoAttackable(attacker) || (attacker instanceof L2PcInstance && ((L2PcInstance) attacker).isGM()))
+		if (this.isAutoAttackable(attacker) || (attacker.isPlayer && ((L2PcInstance) attacker).isGM()))
 		{
 			super.reduceCurrentHp(damage, attacker, awake);
 		}

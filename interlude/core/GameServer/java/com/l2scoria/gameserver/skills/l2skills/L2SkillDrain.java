@@ -82,7 +82,7 @@ public class L2SkillDrain extends L2Skill
 				}
 			}
 			// If there is no weapon equipped, check for an active summon.
-			else if(activeChar instanceof L2Summon)
+			else if(activeChar.isSummon)
 			{
 				L2Summon activeSummon = (L2Summon) activeChar;
 
@@ -178,7 +178,7 @@ public class L2SkillDrain extends L2Skill
 			}
 
 			// Check to see if we should do the decay right after the cast
-			if(target.isDead() && getTargetType() == SkillTargetType.TARGET_CORPSE_MOB && target instanceof L2NpcInstance)
+			if(target.isDead() && getTargetType() == SkillTargetType.TARGET_CORPSE_MOB && target.isNpc)
 			{
 				((L2NpcInstance) target).endDecayTask();
 			}

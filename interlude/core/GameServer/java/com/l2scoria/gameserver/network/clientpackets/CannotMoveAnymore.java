@@ -85,7 +85,7 @@ public final class CannotMoveAnymore extends L2GameClientPacket
 			}
 		}
 
-		if(player instanceof L2PcInstance && player.getParty() != null)
+		if(player.isPlayer && player.getParty() != null)
 		{
 			player.getParty().broadcastToPartyMembers(((L2PcInstance) player), new PartyMemberPosition((L2PcInstance) player));
 		}

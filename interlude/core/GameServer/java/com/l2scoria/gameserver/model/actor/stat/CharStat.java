@@ -172,7 +172,7 @@ public class CharStat
 		criticalHit /= 10;
 
 		// Set a cap of Critical Hit at 500
-		if(criticalHit > Config.MAX_PCRIT_RATE && _activeChar instanceof L2PcInstance && !((L2PcInstance)_activeChar).isGM())
+		if(criticalHit > Config.MAX_PCRIT_RATE && _activeChar.isPlayer && !((L2PcInstance)_activeChar).isGM())
 		{
 			criticalHit = Config.MAX_PCRIT_RATE;
 		}
@@ -372,7 +372,7 @@ public class CharStat
 
 		val /= _activeChar.getArmourExpertisePenalty();
 
-		if(val > Config.MAX_MATK_SPEED && _activeChar instanceof L2PcInstance)
+		if(val > Config.MAX_MATK_SPEED && _activeChar.isPlayer)
 		{
 			val = Config.MAX_MATK_SPEED;
 		}
@@ -388,7 +388,7 @@ public class CharStat
 
 		double mrate = calcStat(Stats.MCRITICAL_RATE, Config.MCRIT_RATE_MUL, target, skill);
 
-		if(mrate > Config.MAX_MCRIT_RATE && _activeChar instanceof L2PcInstance && !((L2PcInstance)_activeChar).isGM())
+		if(mrate > Config.MAX_MCRIT_RATE && _activeChar.isPlayer && !((L2PcInstance)_activeChar).isGM())
 		{
 			mrate = Config.MAX_MCRIT_RATE;
 		}
@@ -551,7 +551,7 @@ public class CharStat
 
 		val /= _activeChar.getArmourExpertisePenalty();
 
-		if(val > Config.MAX_PATK_SPEED && _activeChar instanceof L2PcInstance)
+		if(val > Config.MAX_PATK_SPEED && _activeChar.isPlayer)
 		{
 			val = Config.MAX_PATK_SPEED;
 		}
@@ -668,7 +668,7 @@ public class CharStat
 
 		val /= _activeChar.getArmourExpertisePenalty();
 
-		if(val > Config.MAX_RUN_SPEED && _activeChar instanceof L2PcInstance && !((L2PcInstance)_activeChar).isGM())
+		if(val > Config.MAX_RUN_SPEED && _activeChar.isPlayer && !((L2PcInstance)_activeChar).isGM())
 		{
 			val = Config.MAX_RUN_SPEED;
 		}
@@ -707,7 +707,7 @@ public class CharStat
 		if(_activeChar == null)
 			return 1;
 
-		if(_activeChar instanceof L2PcInstance)
+		if(_activeChar.isPlayer)
 			return getRunSpeed() * 70 / 100;
 		else
 			return (int) calcStat(Stats.WALK_SPEED, _activeChar.getTemplate().baseWalkSpd, null, null);

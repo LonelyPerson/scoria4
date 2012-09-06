@@ -141,7 +141,7 @@ public class AIExtend implements Runnable
 
 	/*public String onDeath (L2Character killer, L2Character victim, QuestState qs) 
 	{ 	
-		if (killer instanceof L2NpcInstance)
+		if (killer.isNpc)
 			return onAdvEvent("", (L2NpcInstance)killer,qs.getPlayer()); 
 		else 
 			return onAdvEvent("", null,qs.getPlayer());

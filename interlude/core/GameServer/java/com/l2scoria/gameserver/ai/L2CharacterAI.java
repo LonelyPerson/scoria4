@@ -126,7 +126,7 @@ public class L2CharacterAI extends AbstractAI
 	 */
 	protected void onIntentionActive(L2Character target)
 	{
-		if(target instanceof L2PcInstance && _actor instanceof L2PcInstance)
+		if(target.isPlayer && _actor.isPlayer)
 		{
 			if(((L2PcInstance) _actor).getKarma() > 0 && _actor.getLevel() - target.getLevel() >= 10 && ((L2PlayableInstance) target).getProtectionBlessing() && !target.isInsideZone(ZONE_PVP))
 			{
@@ -154,7 +154,7 @@ public class L2CharacterAI extends AbstractAI
 
 			// Also enable random animations for this L2Character if allowed
 			// This is only for mobs - town npcs are handled in their constructor
-			if(_actor instanceof L2Attackable)
+			if(_actor.isAttackable)
 			{
 				((L2NpcInstance) _actor).startRandomAnimationTimer();
 			}
@@ -287,9 +287,9 @@ public class L2CharacterAI extends AbstractAI
 			return;
 		}
 
-		if(target instanceof L2PcInstance && _actor instanceof L2PcInstance)
+		if(target.isPlayer && _actor.isPlayer)
 		{
-			if(((L2PcInstance) _actor).getKarma() > 0 && _actor.getLevel() - ((L2PcInstance) target).getLevel() >= 10 && ((L2PlayableInstance) target).getProtectionBlessing() && !((L2Character) target).isInsideZone(ZONE_PVP))
+			if(((L2PcInstance) _actor).getKarma() > 0 && _actor.getLevel() - target.getPlayer().getLevel() >= 10 && ((L2PlayableInstance) target).getProtectionBlessing() && !((L2Character) target).isInsideZone(ZONE_PVP))
 			{
 				//If attacker have karma and have level >= 10 than his target and target have Newbie Protection Buff,
 				clientActionFailed();
@@ -492,9 +492,9 @@ public class L2CharacterAI extends AbstractAI
 			if(object instanceof L2ItemInstance && ((L2ItemInstance) object).getLocation() != L2ItemInstance.ItemLocation.VOID)
 			{
 				L2PcInstance player = null;
-				if(getActor() instanceof L2PcInstance)
+				if(getActor().isPlayer)
 					player = (L2PcInstance) getActor();
-				else if(getActor() instanceof L2Summon)
+				else if(getActor().isSummon)
 					player = ((L2Summon) getActor()).getOwner();
 
 				if(player != null)
@@ -758,7 +758,7 @@ public class L2CharacterAI extends AbstractAI
 	protected void onEvtArrived()
 	{
 		// Launch an explore task if necessary
-		if(_accessor.getActor() instanceof L2PcInstance)
+		if(_accessor.getActor().isPlayer)
 		{
 			((L2PcInstance) _accessor.getActor()).revalidateZone(true);
 		}
@@ -770,7 +770,7 @@ public class L2CharacterAI extends AbstractAI
 		if(_accessor.getActor().moveToNextRoutePoint())
 			return;
 
-		if(_accessor.getActor() instanceof L2Attackable)
+		if(_accessor.getActor().isAttackable)
 			((L2Attackable) _accessor.getActor()).setisReturningToSpawnPoint(false);
 
 		clientStoppedMoving();
@@ -784,7 +784,7 @@ public class L2CharacterAI extends AbstractAI
 		// Launch actions corresponding to the Event Think
 		onEvtThink();
 
-		if(_actor instanceof L2BoatInstance)
+		if(_actor.isBoat)
 		{
 			((L2BoatInstance) _actor).evtArrived();
 		}
@@ -955,7 +955,7 @@ public class L2CharacterAI extends AbstractAI
 		// Kill the actor client side by sending Server->Client packet AutoAttackStop, StopMove/StopRotation, Die (broadcast)
 		clientNotifyDead();
 
-		if(!(_actor instanceof L2PcInstance))
+		if(!(_actor.isPlayer))
 		{
 			_actor.setWalking();
 		}
@@ -1028,7 +1028,7 @@ public class L2CharacterAI extends AbstractAI
 
 		offset += _actor.getTemplate().collisionRadius;
 
-		if(target instanceof L2Character)
+		if(target.isCharacter)
 		{
 			offset += ((L2Character) target).getTemplate().collisionRadius;
 		}
@@ -1039,12 +1039,12 @@ public class L2CharacterAI extends AbstractAI
 			if(getFollowTarget() != null)
 			{
 				// prevent attack-follow into peace zones
-				if(getAttackTarget() != null && _actor instanceof L2PlayableInstance && target instanceof L2PlayableInstance)
+				if(getAttackTarget() != null && _actor.isPlayable && target.isPlayable)
 				{
 					if(getAttackTarget() == getFollowTarget())
 					{
 						// allow GMs to keep following
-						boolean isGM = _actor instanceof L2PcInstance && ((L2PcInstance) _actor).isGM();
+						boolean isGM = _actor.isPlayer && ((L2PcInstance) _actor).isGM();
 						if(L2Character.isInsidePeaceZone(_actor, target) && !isGM)
 						{
 							stopFollow();
@@ -1079,7 +1079,7 @@ public class L2CharacterAI extends AbstractAI
 
 			stopFollow();
 
-			if(target instanceof L2Character && !(target instanceof L2DoorInstance))
+			if(target.isCharacter && !(target.isDoor))
 			{
 				if(((L2Character) target).isMoving())
 				{
@@ -1166,7 +1166,7 @@ public class L2CharacterAI extends AbstractAI
 	protected boolean checkTargetLost(L2Object target)
 	{
 		// check if player is fakedeath
-		if(target instanceof L2PcInstance)
+		if(target.isPlayer)
 		{
 			L2PcInstance target2 = (L2PcInstance) target; //convert object to chara
 
@@ -1211,7 +1211,7 @@ public class L2CharacterAI extends AbstractAI
 
 			// Also enable random animations for this L2Character if allowed
 			// This is only for mobs - town npcs are handled in their constructor
-			if(_actor instanceof L2Attackable)
+			if(_actor.isAttackable)
 			{
 				((L2NpcInstance) _actor).startRandomAnimationTimer();
 			}
@@ -1274,7 +1274,7 @@ public class L2CharacterAI extends AbstractAI
 					break;
 			}
 			// water movement analysis
-			/*if (_actor instanceof L2NpcInstance)
+			/*if (_actor.isNpc)
 			{
 				switch (((L2NpcInstance) _actor).getNpcId())
 				{

@@ -386,7 +386,7 @@ public final class L2World
 	{
 		// If selected L2Object is a L2PcIntance, add it in L2ObjectHashSet(L2PcInstance) _allPlayers of L2World
 		// 
-		if(object instanceof L2PcInstance)
+		if(object.isPlayer)
 		{
 			L2PcInstance player = (L2PcInstance) object;
 
@@ -542,7 +542,7 @@ public final class L2World
 			object.getKnownList().removeAllKnownObjects();
 
 			// If selected L2Object is a L2PcIntance, remove it from L2ObjectHashSet(L2PcInstance) _allPlayers of L2World
-			if(object instanceof L2PcInstance)
+			if(object.isPlayer)
 			{
 				if(!((L2PcInstance) object).isTeleporting())
 				{

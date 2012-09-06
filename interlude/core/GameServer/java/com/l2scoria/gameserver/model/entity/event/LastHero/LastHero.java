@@ -223,9 +223,9 @@ public class LastHero extends GameEvent
 	{
 		if (_state == GameEvent.STATE_RUNNING)
 		{
-			if (victim._event == this && killer._event == this && victim instanceof L2PcInstance)
+			if (victim._event == this && killer._event == this && victim.isPlayer)
 			{
-				if (LH_REWARD_KILLS && killer instanceof L2PcInstance)
+				if (LH_REWARD_KILLS && killer.isPlayer)
 				{
 					((L2PcInstance) killer).addItem("LastHero Kill", _rewardId, _rewardAmount, null, true);
 					((L2PcInstance) killer).sendMessage("Вы получили награду за убийство.");
@@ -427,7 +427,7 @@ public class LastHero extends GameEvent
 			actor.getStatus().setCurrentCp(actor.getMaxCp());
 			actor.getStatus().setCurrentHp(actor.getMaxHp());
 			actor.getStatus().setCurrentMp(actor.getMaxMp());
-			if (actor instanceof L2PcInstance)
+			if (actor.isPlayer)
 			{
 				remove((L2PcInstance) actor);
 			}

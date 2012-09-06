@@ -115,11 +115,11 @@ public class L2SiegeGuardAI extends L2CharacterAI implements Runnable
 	private boolean autoAttackCondition(L2Character target)
 	{
 		// Check if the target isn't another guard, folk or a door
-		if(target == null || target instanceof L2SiegeGuardInstance || target instanceof L2FolkInstance || target instanceof L2DoorInstance || target.isAlikeDead() || target.isInvul())
+		if(target == null || target.isSiegeGuard || target instanceof L2FolkInstance || target.isDoor || target.isAlikeDead() || target.isInvul())
 			return false;
 
 		// Get the owner if the target is a summon
-		if(target instanceof L2Summon)
+		if(target.isSummon)
 		{
 			L2PcInstance owner = ((L2Summon) target).getOwner();
 			if(_actor.isInsideRadius(owner, 1000, true, false))
@@ -131,10 +131,10 @@ public class L2SiegeGuardAI extends L2CharacterAI implements Runnable
 		}
 
 		// Check if the target is a L2PcInstance
-		if(target instanceof L2PcInstance)
+		if(target.isPlayer)
 		{
 			// Check if the target isn't in silent move mode AND too far (>100)
-			if(((L2PcInstance) target).isSilentMoving() && !_actor.isInsideRadius(target, 250, false, false))
+			if(target.getPlayer().isSilentMoving() && !_actor.isInsideRadius(target, 250, false, false))
 				return false;
 		}
 		// Los Check Here
@@ -349,7 +349,7 @@ public class L2SiegeGuardAI extends L2CharacterAI implements Runnable
 		}
 
 		// never attack defenders
-		if(_attackTarget instanceof L2PcInstance && sGuard.getCastle().getSiege().checkIsDefender(((L2PcInstance) _attackTarget).getClan()))
+		if(_attackTarget.isPlayer && sGuard.getCastle().getSiege().checkIsDefender(((L2PcInstance) _attackTarget).getClan()))
 		{
 			// Cancel the target
 			sGuard.stopHating(_attackTarget);
@@ -372,7 +372,7 @@ public class L2SiegeGuardAI extends L2CharacterAI implements Runnable
 		if(!_actor.isMuted() && dist_2 > (range + 20) * (range + 20))
 		{
 			// check for long ranged skills and heal/buff skills
-			if(!Config.ALT_GAME_MOB_ATTACK_AI || _actor instanceof L2MonsterInstance && Rnd.nextInt(100) <= 5)
+			if(!Config.ALT_GAME_MOB_ATTACK_AI || _actor.isMonster && Rnd.nextInt(100) <= 5)
 			{
 				for(L2Skill sk : skills)
 				{
@@ -634,9 +634,9 @@ public class L2SiegeGuardAI extends L2CharacterAI implements Runnable
 				continue;
 			}
 
-			if(!(cha instanceof L2NpcInstance))
+			if(!(cha.isNpc))
 			{
-				if (_selfAnalysis.hasHealOrResurrect && cha instanceof L2PcInstance && ((L2NpcInstance) _actor).getCastle().getSiege().checkIsDefender(((L2PcInstance) cha).getClan()))
+				if (_selfAnalysis.hasHealOrResurrect && cha.isPlayer && ((L2NpcInstance) _actor).getCastle().getSiege().checkIsDefender(((L2PcInstance) cha).getClan()))
 				{
 					if (!_actor.isAttackingDisabled() && cha.getStatus().getCurrentHp() < cha.getMaxHp() * 0.6 && _actor.getStatus().getCurrentHp() > _actor.getMaxHp() / 2 && _actor.getStatus().getCurrentMp() > _actor.getMaxMp() / 2 && cha.isInCombat())
 					{

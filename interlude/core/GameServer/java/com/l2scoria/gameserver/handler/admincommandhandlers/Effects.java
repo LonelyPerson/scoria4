@@ -176,7 +176,7 @@ public class Effects extends Admin
 				}
 				else
 				{
-					if(target != null && target instanceof L2NpcInstance)
+					if(target != null && target.isNpc)
 					{
 						activeChar.setSayMode(target);
 						activeChar.sendMessage("NpcSay mode on for " + target.getName());
@@ -232,7 +232,7 @@ public class Effects extends Admin
 			{
 				L2Object target = activeChar.getTarget();
 				L2Character player = null;
-				if(target instanceof L2Character)
+				if(target.isCharacter)
 				{
 					player = (L2Character) target;
 
@@ -270,7 +270,7 @@ public class Effects extends Admin
 				L2Object target = activeChar.getTarget();
 				L2Character player = null;
 
-				if(target instanceof L2Character)
+				if(target.isCharacter)
 				{
 					player = (L2Character) target;
 					player.stopAbnormalEffect((short) 0x0400);
@@ -332,7 +332,7 @@ public class Effects extends Admin
 				L2Object target = activeChar.getTarget();
 				L2Character player = null;
 
-				if(target instanceof L2Character)
+				if(target.isCharacter)
 				{
 					player = (L2Character) target;
 					player.startAbnormalEffect(0x2000);
@@ -354,7 +354,7 @@ public class Effects extends Admin
 				L2Object target = activeChar.getTarget();
 				L2Character player = null;
 
-				if(target instanceof L2Character)
+				if(target.isCharacter)
 				{
 					player = (L2Character) target;
 					player.stopAbnormalEffect((short) 0x2000);
@@ -503,7 +503,7 @@ public class Effects extends Admin
 			L2Object target = activeChar.getTarget();
 			L2PcInstance player = null;
 
-			if(target instanceof L2PcInstance)
+			if(target.isPlayer)
 			{
 				player = (L2PcInstance) target;
 			}
@@ -623,7 +623,7 @@ public class Effects extends Admin
 				L2Object target = activeChar.getTarget();
 				L2Character player = null;
 
-				if(target instanceof L2Character)
+				if(target.isCharacter)
 				{
 					player = (L2Character) target;
 					player.stopAllEffects();
@@ -762,7 +762,7 @@ public class Effects extends Admin
 
 				if(obj != null)
 				{
-					if(!(obj instanceof L2Character))
+					if(!(obj.isCharacter))
 					{
 						activeChar.sendPacket(new SystemMessage(SystemMessageId.INCORRECT_TARGET));
 					}
@@ -804,7 +804,7 @@ public class Effects extends Admin
 	 */
 	private boolean performAbnormal(int action, L2Object target)
 	{
-		if(target instanceof L2Character)
+		if(target.isCharacter)
 		{
 			L2Character character = (L2Character) target;
 
@@ -829,23 +829,23 @@ public class Effects extends Admin
 	{
 		try
 		{
-			if(target instanceof L2Character)
+			if(target.isCharacter)
 			{
-				if(target instanceof L2Summon || target instanceof L2ChestInstance)
+				if(target.isSummon || target instanceof L2ChestInstance)
 				{
 					activeChar.sendPacket(new SystemMessage(SystemMessageId.NOTHING_HAPPENED));
 
 					return false;
 				}
 
-				if(target instanceof L2NpcInstance && (action < 1 || action > 3))
+				if(target.isNpc && (action < 1 || action > 3))
 				{
 					activeChar.sendPacket(new SystemMessage(SystemMessageId.NOTHING_HAPPENED));
 
 					return false;
 				}
 
-				if(target instanceof L2PcInstance && (action < 2 || action > 16))
+				if(target.isPlayer && (action < 2 || action > 16))
 				{
 					activeChar.sendPacket(new SystemMessage(SystemMessageId.NOTHING_HAPPENED));
 

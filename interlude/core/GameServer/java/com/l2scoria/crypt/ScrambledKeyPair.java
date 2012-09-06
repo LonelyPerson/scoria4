@@ -17,10 +17,11 @@
  */
 package com.l2scoria.crypt;
 
+import org.apache.log4j.Logger;
+
 import java.math.BigInteger;
 import java.security.KeyPair;
 import java.security.interfaces.RSAPublicKey;
-import java.util.logging.Logger;
 
 /**
  *
@@ -52,8 +53,8 @@ public class ScrambledKeyPair
 		// step 1 : 0x4d-0x50 <-> 0x00-0x04
 		for(int i = 0; i < 4; i++)
 		{
-			byte temp = scrambledMod[0x00 + i];
-			scrambledMod[0x00 + i] = scrambledMod[0x4d + i];
+			byte temp = scrambledMod[i];
+			scrambledMod[i] = scrambledMod[0x4d + i];
 			scrambledMod[0x4d + i] = temp;
 		}
 
@@ -75,7 +76,7 @@ public class ScrambledKeyPair
 			scrambledMod[0x40 + i] = (byte) (scrambledMod[0x40 + i] ^ scrambledMod[i]);
 		}
 
-		_log.fine("Modulus was scrambled");
+		_log.info("Modulus was scrambled");
 
 		return scrambledMod;
 	}

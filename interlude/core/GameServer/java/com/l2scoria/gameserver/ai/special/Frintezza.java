@@ -547,7 +547,7 @@ public class Frintezza extends Quest
 			
 			for (L2Character pc : _Zone.getCharactersInside().values())
 			{
-				if (pc instanceof L2PcInstance)
+				if (pc.isPlayer)
 				{
 					if (pc.getX() < 174232)
 						pc.broadcastPacket(new SpecialCamera(_portraitDummy1.getObjectId(),1000, 118, 0, 0, 1000));
@@ -561,7 +561,7 @@ public class Frintezza extends Quest
 		{
 			for (L2Character pc : _Zone.getCharactersInside().values())
 			{
-				if (pc instanceof L2PcInstance)
+				if (pc.isPlayer)
 				{
 					if (pc.getX() < 174232)
 						pc.broadcastPacket(new SpecialCamera(_portraitDummy1.getObjectId(),1000, 118, 0, 0, 10000));
@@ -971,7 +971,7 @@ public class Frintezza extends Quest
 			{
 				for (L2Character cha : _Zone.getCharactersInside().values())
 				{
-					if (cha instanceof L2PcInstance && Rnd.get(100) < 80)
+					if (cha.isPlayer && Rnd.get(100) < 80)
 					{
 						frintezza.setTarget(cha);
 						frintezza.doCast(skill);
@@ -984,7 +984,7 @@ public class Frintezza extends Quest
 			{
 				for (L2Character cha : _Zone.getCharactersInside().values())
 				{
-					if (cha instanceof L2PcInstance && Rnd.get(100) < 70)
+					if (cha.isPlayer && Rnd.get(100) < 70)
 					{
 						cha.abortAttack();
 						cha.abortCast();
@@ -1007,7 +1007,7 @@ public class Frintezza extends Quest
 		{
 			for (L2Character cha : _Zone.getCharactersInside().values())
 			{
-				if (cha instanceof L2PcInstance)
+				if (cha.isPlayer)
 				{
 					cha.stopAbnormalEffect(L2Character.ABNORMAL_EFFECT_DANCE_STUNNED);
 					cha.stopAbnormalEffect(L2Character.ABNORMAL_EFFECT_FLOATING_ROOT);
@@ -1130,7 +1130,7 @@ public class Frintezza extends Quest
 			{
 				for (L2Character cha : _Zone.getCharactersInside().values())
 				{
-					if (cha instanceof L2PcInstance)
+					if (cha.isPlayer)
 					{
 						if (cha.getFirstEffect(5016) != null)
 						{

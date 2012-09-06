@@ -45,7 +45,7 @@ public class EffectTargetMe extends L2Effect
 	@Override
 	public void onStart()
 	{
-		if(getEffected() instanceof L2PlayableInstance)
+		if(getEffected().isPlayable)
 		{
 			if(getEffected() instanceof L2SiegeSummonInstance)
 				return;

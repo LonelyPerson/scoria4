@@ -317,9 +317,9 @@ public class CursedWeapons extends Admin
 				{
 					L2Object target = activeChar.getTarget();
 
-					if(target != null && target instanceof L2PcInstance)
+					if(target != null && target.isPlayer)
 					{
-						((L2PcInstance) target).addItem("AdminCursedWeaponAdd", id, 1, target, true);
+						target.getPlayer().addItem("AdminCursedWeaponAdd", id, 1, target, true);
 					}
 					else
 					{

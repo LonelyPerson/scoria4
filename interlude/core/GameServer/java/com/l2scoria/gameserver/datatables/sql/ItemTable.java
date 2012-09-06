@@ -790,7 +790,7 @@ public class ItemTable
 			ScheduledFuture<?> itemLootShedule;
 
 			// if in CommandChannel and was killing a World/RaidBoss
-			if(reference != null && (reference instanceof L2GrandBossInstance || reference instanceof L2RaidBossInstance))
+			if(reference != null && (reference instanceof L2GrandBossInstance || reference.isRaid))
 			{
 				L2Attackable raid = (L2Attackable) reference;
 				if(raid.getFirstCommandChannelAttacked() != null && !Config.AUTO_LOOT_BOSS)

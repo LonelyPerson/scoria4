@@ -69,7 +69,7 @@ public class Donator extends Admin
 
 			L2Object target = activeChar.getTarget();
 
-			if(target instanceof L2PcInstance)
+			if(target.isPlayer)
 			{
 				L2PcInstance targetPlayer = (L2PcInstance) target;
 				boolean newDonator = !targetPlayer.isDonator();

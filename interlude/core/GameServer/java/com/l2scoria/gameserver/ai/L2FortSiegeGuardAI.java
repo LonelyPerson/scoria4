@@ -123,14 +123,14 @@ public class L2FortSiegeGuardAI extends L2CharacterAI implements Runnable
 	private boolean autoAttackCondition(L2Character target)
 	{
 		// Check if the target isn't another guard, folk or a door
-		if(target == null || target instanceof L2FortSiegeGuardInstance || target instanceof L2FolkInstance || target instanceof L2DoorInstance || target.isAlikeDead() || target instanceof L2CommanderInstance || target instanceof L2PlayableInstance)
+		if(target == null || target instanceof L2FortSiegeGuardInstance || target instanceof L2FolkInstance || target.isDoor || target.isAlikeDead() || target instanceof L2CommanderInstance || target.isPlayable)
 		{
 			L2PcInstance player = null;
-			if(target instanceof L2PcInstance)
+			if(target.isPlayer)
 			{
 				player = (L2PcInstance) target;
 			}
-			else if(target instanceof L2Summon)
+			else if(target.isSummon)
 			{
 				player = ((L2Summon) target).getOwner();
 			}
@@ -142,14 +142,14 @@ public class L2FortSiegeGuardAI extends L2CharacterAI implements Runnable
 		if(target.isInvul())
 		{
 			// However EffectInvincible requires to check GMs specially
-			if(target instanceof L2PcInstance && ((L2PcInstance) target).isGM())
+			if(target.isPlayer && target.getPlayer().isGM())
 				return false;
-			if(target instanceof L2Summon && ((L2Summon) target).getOwner().isGM())
+			if(target.isSummon && ((L2Summon) target).getOwner().isGM())
 				return false;
 		}
 
 		// Get the owner if the target is a summon
-		if(target instanceof L2Summon)
+		if(target.isSummon)
 		{
 			L2PcInstance owner = ((L2Summon) target).getOwner();
 			if(_actor.isInsideRadius(owner, 1000, true, false))
@@ -159,10 +159,10 @@ public class L2FortSiegeGuardAI extends L2CharacterAI implements Runnable
 		}
 
 		// Check if the target is a L2PcInstance
-		if(target instanceof L2PcInstance)
+		if(target.isPlayer)
 		{
 			// Check if the target isn't in silent move mode AND too far (>100)
-			if(((L2PcInstance) target).isSilentMoving() && !_actor.isInsideRadius(target, 250, false, false))
+			if(target.getPlayer().isSilentMoving() && !_actor.isInsideRadius(target, 250, false, false))
 				return false;
 		}
 		// Los Check Here
@@ -465,9 +465,9 @@ public class L2FortSiegeGuardAI extends L2CharacterAI implements Runnable
 				continue;
 			}
 
-			if(!(cha instanceof L2NpcInstance))
+			if(!(cha.isNpc))
 			{
-				if(/*_selfAnalysis.hasHealOrResurrect &&*/cha instanceof L2PcInstance && ((L2NpcInstance) _actor).getFort().getSiege().checkIsDefender(((L2PcInstance) cha).getClan()))
+				if(/*_selfAnalysis.hasHealOrResurrect &&*/cha.isPlayer && ((L2NpcInstance) _actor).getFort().getSiege().checkIsDefender(((L2PcInstance) cha).getClan()))
 				{
 					// heal friends
 					if(!_actor.isAttackingDisabled() && cha.getCurrentHp() < cha.getMaxHp() * 0.6 && _actor.getCurrentHp() > _actor.getMaxHp() / 2 && _actor.getCurrentMp() > _actor.getMaxMp() / 2 && cha.isInCombat())
@@ -597,7 +597,7 @@ public class L2FortSiegeGuardAI extends L2CharacterAI implements Runnable
 		}
 
 		// never attack defenders
-		if(attackTarget instanceof L2PcInstance && sGuard.getFort().getSiege().checkIsDefender(((L2PcInstance) attackTarget).getClan()))
+		if(attackTarget.isPlayer && sGuard.getFort().getSiege().checkIsDefender(((L2PcInstance) attackTarget).getClan()))
 		{
 			// Cancel the target
 			sGuard.stopHating(attackTarget);

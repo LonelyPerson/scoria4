@@ -116,7 +116,7 @@ public class L2TownZone extends L2ZoneDefault
 	@Override
 	protected void onEnter(L2Character character)
 	{
-		if(character instanceof L2PcInstance)
+		if(character.isPlayer)
 		{
 			// PVP possible during siege, now for siege participants only
 			// Could also check if this town is in siege, or if any siege is going on
@@ -145,7 +145,7 @@ public class L2TownZone extends L2ZoneDefault
 			character.setInsideZone(L2Character.ZONE_PEACE, false);
 		}
 
-		if(character instanceof L2PcInstance)
+		if(character.isPlayer)
 		{
 			if (((L2PcInstance) character).isGM())
 			{

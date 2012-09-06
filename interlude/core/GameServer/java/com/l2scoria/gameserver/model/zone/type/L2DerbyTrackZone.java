@@ -35,7 +35,7 @@ public class L2DerbyTrackZone extends L2PeaceZone
 	@Override
 	protected void onEnter(L2Character character)
 	{
-		if(character instanceof L2PcInstance)
+		if(character.isPlayer)
 		{
 			character.setInsideZone(L2Character.ZONE_MONSTERTRACK, true);
 		}
@@ -46,7 +46,7 @@ public class L2DerbyTrackZone extends L2PeaceZone
 	@Override
 	protected void onExit(L2Character character)
 	{
-		if(character instanceof L2PcInstance)
+		if(character.isPlayer)
 		{
 			character.setInsideZone(L2Character.ZONE_MONSTERTRACK, false);
 		}

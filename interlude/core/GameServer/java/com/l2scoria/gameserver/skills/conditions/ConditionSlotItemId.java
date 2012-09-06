@@ -43,7 +43,7 @@ public final class ConditionSlotItemId extends ConditionInventory
 	@Override
 	public boolean testImpl(Env env)
 	{
-		if(!(env.player instanceof L2PcInstance))
+		if(!(env.player.isPlayer))
 			return false;
 		Inventory inv = ((L2PcInstance) env.player).getInventory();
 		L2ItemInstance item = inv.getPaperdollItem(_slot);

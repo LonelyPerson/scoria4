@@ -59,7 +59,7 @@ public class Target extends Admin
 			String targetName = command.substring(13);
 			L2Object obj = L2World.getInstance().getPlayer(targetName);
 
-			if(obj != null && obj instanceof L2PcInstance)
+			if(obj != null && obj.isPlayer)
 			{
 				obj.onAction(activeChar);
 			}

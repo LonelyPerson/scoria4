@@ -18,17 +18,11 @@
 package com.l2scoria.gameserver.handler.skillhandlers;
 
 import com.l2scoria.gameserver.handler.ISkillHandler;
-import com.l2scoria.gameserver.model.L2Character;
-import com.l2scoria.gameserver.model.L2Effect;
-import com.l2scoria.gameserver.model.L2Object;
-import com.l2scoria.gameserver.model.L2Skill;
-import com.l2scoria.gameserver.model.L2Summon;
+import com.l2scoria.gameserver.model.*;
 import com.l2scoria.gameserver.model.L2Skill.SkillType;
-import com.l2scoria.gameserver.model.actor.instance.L2DoorInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2NpcInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2SummonInstance;
 import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
 import com.l2scoria.gameserver.skills.Formulas;
@@ -63,13 +57,13 @@ public class Blow implements ISkillHandler
 			// Calculate skill evasion
 			if(Formulas.getInstance().calcPhysicalSkillEvasion(target, skill))
 			{
-				if (activeChar instanceof L2PcInstance)
+				if (activeChar.isPlayer)
 				{
 					SystemMessage sm = new SystemMessage(SystemMessageId.S1_DODGES_ATTACK);
 					sm.addString(target.getName());
 					activeChar.sendPacket(sm);
 				}
-				if (target instanceof L2PcInstance)
+				if (target.isPlayer)
 				{
 					SystemMessage sm = new SystemMessage(SystemMessageId.AVOIDED_S1_ATTACK);
 					sm.addString(activeChar.getName());
@@ -83,14 +77,14 @@ public class Blow implements ISkillHandler
 				// Calculate vengeance
 				if(target.vengeanceSkill(skill))
 				{
-					if (target instanceof L2PcInstance)
+					if (target.isPlayer)
 					{
 						SystemMessage sm = new SystemMessage(SystemMessageId.COUNTERED_S1_ATTACK);
 						sm.addString(activeChar.getName());
 						target.sendPacket(sm);
 						sm = null;
 					}
-					if (activeChar instanceof L2PcInstance)
+					if (activeChar.isPlayer)
 					{
 						SystemMessage sm = new SystemMessage(SystemMessageId.S1_PERFORMING_COUNTERATTACK);
 						sm.addString(target.getName());
@@ -146,19 +140,19 @@ public class Blow implements ISkillHandler
 					damage *= 2;
 				}
 
-				if(soul && weapon != null)
+				if(soul)
 					weapon.setChargedSoulshot(L2ItemInstance.CHARGED_NONE);
 
 				weapon = null;
 
-				if(skill.getDmgDirectlyToHP() && target instanceof L2PcInstance)
+				if(skill.getDmgDirectlyToHP() && target.isPlayer)
 				{
 					L2PcInstance player = (L2PcInstance) target;
 					if(!player.isInvul())
 					{
 						// Check and calculate transfered damage 
 						L2Summon summon = player.getPet();
-						if(summon != null && summon instanceof L2SummonInstance && Util.checkIfInRange(900, player, summon, true))
+						if(summon != null && summon.isSummonInstance && Util.checkIfInRange(900, player, summon, true))
 						{
 							int tDmg = (int) damage * (int) player.getStat().calcStat(Stats.TRANSFER_DAMAGE_PERCENT, 0, null, null) / 100;
 
@@ -210,15 +204,15 @@ public class Blow implements ISkillHandler
 				activeChar.sendDamageMessage(target, (int)damage, false, true, false);
 			}
 			//Possibility of a lethal strike
-			if(!target.isRaid() && !(target instanceof L2DoorInstance) && !(target instanceof L2NpcInstance && ((L2NpcInstance) target).getNpcId() == 35062))
+			if(!target.isRaid() && !(target.isDoor) && !(target.isNpc && ((L2NpcInstance) target).getNpcId() == 35062))
 			{
 				int chance = Rnd.get(100);
 				//2nd lethal effect activate (cp,hp to 1 or if target is npc then hp to 1)
 				if(skill.getLethalChance2() > 0 && chance < Formulas.getInstance().calcLethal(activeChar, target, skill.getLethalChance2()))
 				{
-					if(target instanceof L2NpcInstance)
+					if(target.isNpc)
 						target.reduceCurrentHp(target.getCurrentHp() - 1, activeChar);
-					else if(target instanceof L2PcInstance) // If is a active player set his HP and CP to 1
+					else if(target.isPlayer) // If is a active player set his HP and CP to 1
 					{
 						L2PcInstance player = (L2PcInstance) target;
 						if(!player.isInvul() && !player.isDead())
@@ -232,14 +226,14 @@ public class Blow implements ISkillHandler
 				}
 				else if(skill.getLethalChance1() > 0 && chance < Formulas.getInstance().calcLethal(activeChar, target, skill.getLethalChance1()))
 				{
-					if(target instanceof L2PcInstance)
+					if(target.isPlayer)
 					{
 						L2PcInstance player = (L2PcInstance) target;
 						if(!player.isInvul())
 							player.setCurrentCp(1); // Set CP to 1
 						player = null;
 					}
-					else if(target instanceof L2NpcInstance) // If is a monster remove first damage and after 50% of current hp
+					else if(target.isNpc) // If is a monster remove first damage and after 50% of current hp
 						target.reduceCurrentHp(target.getCurrentHp() / 2, activeChar);
 					activeChar.sendPacket(new SystemMessage(SystemMessageId.LETHAL_STRIKE));
 				}

@@ -18,7 +18,7 @@
  */
 package com.l2scoria.loginserver.network.gameserverpackets;
 
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 import com.l2scoria.loginserver.network.clientpackets.ClientBasePacket;
 
@@ -48,8 +48,8 @@ public class GameServerAuth extends ClientBasePacket
 		super(decrypt);
 
 		_desiredId = readC();
-		_acceptAlternativeId = readC() == 0 ? false : true;
-		_hostReserved = readC() == 0 ? false : true;
+		_acceptAlternativeId = readC() != 0;
+		_hostReserved = readC() != 0;
 		_externalHost = readS();
 		_internalHost = readS();
 		_port = readH();

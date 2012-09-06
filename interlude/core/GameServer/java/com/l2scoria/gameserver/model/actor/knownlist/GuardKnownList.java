@@ -61,7 +61,7 @@ public class GuardKnownList extends AttackableKnownList
 			getActiveChar().getHomeLocation();
 		}
 
-		if(object instanceof L2PcInstance)
+		if(object.isPlayer)
 		{
 			// Check if the object added is a L2PcInstance that owns Karma
 			L2PcInstance player = (L2PcInstance) object;
@@ -82,7 +82,7 @@ public class GuardKnownList extends AttackableKnownList
 
 			player = null;
 		}
-		else if(Config.ALLOW_GUARDS && object instanceof L2MonsterInstance)
+		else if(Config.ALLOW_GUARDS && object.isMonster)
 		{
 			// Check if the object added is an aggressive L2MonsterInstance
 			L2MonsterInstance mob = (L2MonsterInstance) object;

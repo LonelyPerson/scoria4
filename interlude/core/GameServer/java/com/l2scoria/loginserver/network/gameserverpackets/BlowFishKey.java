@@ -18,13 +18,12 @@
  */
 package com.l2scoria.loginserver.network.gameserverpackets;
 
-import java.security.GeneralSecurityException;
-import java.security.interfaces.RSAPrivateKey;
-import java.util.logging.Logger;
+import com.l2scoria.loginserver.network.clientpackets.ClientBasePacket;
+import org.apache.log4j.Logger;
 
 import javax.crypto.Cipher;
-
-import com.l2scoria.loginserver.network.clientpackets.ClientBasePacket;
+import java.security.GeneralSecurityException;
+import java.security.interfaces.RSAPrivateKey;
 
 /**
  * @author -Wooden-
@@ -71,7 +70,7 @@ public class BlowFishKey extends ClientBasePacket
 		}
 		catch(GeneralSecurityException e)
 		{
-			_log.severe("Error While decrypting blowfish key (RSA)");
+			_log.fatal("Error While decrypting blowfish key (RSA)");
 			e.printStackTrace();
 		}
 		/*catch(IOException ioe)

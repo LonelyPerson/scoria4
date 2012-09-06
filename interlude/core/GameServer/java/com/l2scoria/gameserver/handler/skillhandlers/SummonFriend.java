@@ -87,7 +87,7 @@ public class SummonFriend implements ISkillHandler
 		{
 			for (L2Object object : objects)
 			{
-				if (object instanceof L2RaidBossInstance || object instanceof L2GrandBossInstance)
+				if (object.isRaid || object instanceof L2GrandBossInstance)
 				{
 					summonerChar.sendPacket(new SystemMessage(SystemMessageId.YOU_MAY_NOT_SUMMON_FROM_YOUR_CURRENT_LOCATION));
 					return false;
@@ -230,7 +230,7 @@ public class SummonFriend implements ISkillHandler
 
 	public void useSkill(L2Character activeChar, L2Skill skill, L2Object[] targets)
 	{
-		if (!(activeChar instanceof L2PcInstance)) // currently not implemented for others
+		if (!(activeChar.isPlayer)) // currently not implemented for others
 		{
 			return;
 		}
@@ -244,7 +244,7 @@ public class SummonFriend implements ISkillHandler
 
 		for (L2Object element : targets)
 		{
-			if (!(element instanceof L2PcInstance))
+			if (!(element.isPlayer))
 			{
 				continue;
 			}

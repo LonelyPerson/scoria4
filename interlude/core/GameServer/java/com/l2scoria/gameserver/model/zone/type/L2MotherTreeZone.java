@@ -39,7 +39,7 @@ public class L2MotherTreeZone extends L2ZoneDefault
 	@Override
 	protected void onEnter(L2Character character)
 	{
-		if (character instanceof L2PcInstance)
+		if (character.isPlayer)
 		{
 			L2PcInstance player = (L2PcInstance) character;
 
@@ -70,7 +70,7 @@ public class L2MotherTreeZone extends L2ZoneDefault
 	@Override
 	protected void onExit(L2Character character)
 	{
-		if (character instanceof L2PcInstance && character.isInsideZone(L2Character.ZONE_MOTHERTREE))
+		if (character.isPlayer && character.isInsideZone(L2Character.ZONE_MOTHERTREE))
 		{
 			character.setInsideZone(L2Character.ZONE_MOTHERTREE, false);
 			character.sendPacket(new SystemMessage(SystemMessageId.EXIT_SHADOW_MOTHER_TREE));

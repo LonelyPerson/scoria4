@@ -54,7 +54,7 @@ public class FuncEnchant extends Func
 			enchant = 3;
 		}
 
-		if(env.player != null && env.player instanceof L2PcInstance)
+		if(env.player != null && env.player.isPlayer)
 		{
 			L2PcInstance player = (L2PcInstance) env.player;
 			if(player.isInOlympiadMode() && Config.ALT_OLY_ENCHANT_LIMIT >= 0 && enchant + overenchant > Config.ALT_OLY_ENCHANT_LIMIT)

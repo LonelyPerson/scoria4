@@ -312,7 +312,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 				default:
 				{
 					L2Object mainTarget = skill.getFirstOfTargetList(L2PcInstance.this);
-					if(mainTarget == null || !(mainTarget instanceof L2Character))
+					if(mainTarget == null || !(mainTarget.isCharacter))
 						return;
 					for(L2CubicInstance cubic : getCubics().values())
 						if(cubic.getId() != L2CubicInstance.LIFE_CUBIC)
@@ -1425,7 +1425,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			if(getLastQuestNpcObject() > 0)
 			{
 				L2Object object = L2World.getInstance().findObject(getLastQuestNpcObject());
-				if(object instanceof L2NpcInstance && isInsideRadius(object, L2NpcInstance.INTERACTION_DISTANCE, false, false))
+				if(object.isNpc && isInsideRadius(object, L2NpcInstance.INTERACTION_DISTANCE, false, false))
 				{
 					L2NpcInstance npc = (L2NpcInstance) object;
 					QuestState[] states = getQuestsForTalk(npc.getNpcId());
@@ -2013,7 +2013,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		{
 			for(L2Object object : getKnownList().getKnownObjects().values())
 			{
-				if(object == null || !(object instanceof L2GuardInstance))
+				if(object == null || !(object.isGuard))
 				{
 					continue;
 				}
@@ -4318,7 +4318,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 					}
 					else if (forced)
 					{
-						if(player.getTarget() == null || !(player.getTarget() instanceof L2Character))
+						if(player.getTarget() == null || !(player.getTarget().isCharacter))
 						{
 							// If target is not attackable, send a Server->Client packet ActionFailed
 							player.sendPacket(ActionFailed.STATIC_PACKET);
@@ -4333,11 +4333,11 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 							return;
 						}
 
-						if(player.getTarget() != null && player.getTarget() instanceof L2PlayableInstance)
+						if(player.getTarget() != null && player.getTarget().isPlayable)
 						{
 							L2PcInstance target;
 
-							if(player.getTarget() instanceof L2Summon)
+							if(player.getTarget().isSummon)
 							{
 								target = ((L2Summon) player.getTarget()).getOwner();
 							}
@@ -4775,7 +4775,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 	 */
 	public void doInteract(L2Character target)
 	{
-		if(target instanceof L2PcInstance)
+		if(target.isPlayer)
 		{
 			L2PcInstance temp = (L2PcInstance) target;
 			sendPacket(ActionFailed.STATIC_PACKET);
@@ -5036,7 +5036,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		// Prevents /target exploiting
 		if(newTarget != null)
 		{
-			if (!(newTarget instanceof L2PcInstance) || !isInParty() || !((L2PcInstance) newTarget).isInParty() || getParty().getPartyLeaderOID() != ((L2PcInstance) newTarget).getParty().getPartyLeaderOID())
+			if (!(newTarget.isPlayer) || !isInParty() || !((L2PcInstance) newTarget).isInParty() || getParty().getPartyLeaderOID() != ((L2PcInstance) newTarget).getParty().getPartyLeaderOID())
 			{
 				if (Math.abs(newTarget.getZ() - getZ()) > Config.DIFFERENT_Z_NEW_MOVIE)
 				{
@@ -5073,7 +5073,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 				return; // no target change
 
 			// Remove the L2PcInstance from the _statusListener of the old target if it was a L2Character
-			if(oldTarget instanceof L2Character)
+			if(oldTarget.isCharacter)
 			{
 				((L2Character) oldTarget).removeStatusListener(this);
 			}
@@ -5081,7 +5081,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		oldTarget = null;
 
 		// Add the L2PcInstance to the _statusListener of the new target if it's a L2Character
-		if(newTarget != null && newTarget instanceof L2Character)
+		if(newTarget != null && newTarget.isCharacter)
 		{
 			((L2Character) newTarget).addStatusListener(this);
 			TargetSelected my = new TargetSelected(getObjectId(), newTarget.getObjectId(), getX(), getY(), getZ());
@@ -5364,7 +5364,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		{
 			L2PcInstance pk = null;
 
-			if(killer instanceof L2PcInstance)
+			if(killer.isPlayer)
 			{
 				pk = (L2PcInstance) killer;
 
@@ -5399,7 +5399,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 
 					if(!(isInsideZone(ZONE_PVP) && !isInsideZone(ZONE_SIEGE)))
 					{
-						boolean isKillerPc = killer instanceof L2PcInstance;
+						boolean isKillerPc = killer.isPlayer;
 						if(isKillerPc && ((L2PcInstance) killer).getClan() != null && getClan() != null && !isAcademyMember() && !((L2PcInstance) killer).isAcademyMember() && _clan.isAtWarWith(((L2PcInstance) killer).getClanId()) && ((L2PcInstance) killer).getClan().isAtWarWith(_clan.getClanId()))
 						{
 							if(getClan().getReputationScore() > 0)
@@ -5476,14 +5476,14 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		if ((_event!=null && _event.isRunning()) || killer == null)
 			return;
 
-		if(getKarma() <= 0 && killer instanceof L2PcInstance && ((L2PcInstance) killer).getClan() != null && getClan() != null && ((L2PcInstance) killer).getClan().isAtWarWith(getClanId()))
+		if(getKarma() <= 0 && killer.isPlayer && ((L2PcInstance) killer).getClan() != null && getClan() != null && ((L2PcInstance) killer).getClan().isAtWarWith(getClanId()))
 		//|| this.getClan().isAtWarWith(((L2PcInstance)killer).getClanId()))
 			return;
 
 		if(!isInsideZone(ZONE_PVP) && (!isGM() || Config.KARMA_DROP_GM))
 		{
 			boolean isKarmaDrop = false;
-			boolean isKillerNpc = killer instanceof L2NpcInstance;
+			boolean isKillerNpc = killer.isNpc;
 			int pkLimit = Config.KARMA_PK_LIMIT;;
 
 			int dropEquip = 0;
@@ -5596,7 +5596,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		if(target == null)
 			return;
 
-		if(!(target instanceof L2PlayableInstance))
+		if(!(target.isPlayable))
 			return;
 
 		if (_event!=null && _event.isRunning())
@@ -5610,11 +5610,11 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 
 		L2PcInstance targetPlayer = null;
 
-		if(target instanceof L2PcInstance)
+		if(target.isPlayer)
 		{
 			targetPlayer = (L2PcInstance) target;
 		}
-		else if(target instanceof L2Summon)
+		else if(target.isSummon)
 		{
 			targetPlayer = ((L2Summon) target).getOwner();
 		}
@@ -5655,11 +5655,11 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 
 						if(!isInsideZone(ZONE_FIGHT) && !targetPlayer.isInsideZone(ZONE_FIGHT))
 						{
-							if(target instanceof L2PcInstance && Config.ANNOUNCE_PVP_KILL)
+							if(target.isPlayer && Config.ANNOUNCE_PVP_KILL)
 							{
 								Announcements.getInstance().announceToAll("Player " + getName() + " hunted Player " + target.getName());
 							}
-							else if(target instanceof L2PcInstance && Config.ANNOUNCE_ALL_KILL)
+							else if(target.isPlayer && Config.ANNOUNCE_ALL_KILL)
 							{
 								Announcements.getInstance().announceToAll("Player " + getName() + " killed Player " + target.getName());
 							}
@@ -5679,7 +5679,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 
 				if(!isInsideZone(ZONE_FIGHT) && !targetPlayer.isInsideZone(ZONE_FIGHT))
 				{
-					if(target instanceof L2PcInstance && Config.ANNOUNCE_PVP_KILL)
+					if(target.isPlayer && Config.ANNOUNCE_PVP_KILL)
 					{
 						Announcements.getInstance().announceToAll("Player " + getName() + " hunted Player " + target.getName());
 					}
@@ -5695,7 +5695,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 				{
 					increasePkKillsAndKarma(target);
 
-					if(target instanceof L2PcInstance && Config.ANNOUNCE_PK_KILL)
+					if(target.isPlayer && Config.ANNOUNCE_PK_KILL)
 					{
 						Announcements.getInstance().announceToAll("Player " + getName() + " has assassinated Player " + target.getName());
 					}
@@ -5705,7 +5705,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 
 		if(!isInsideZone(ZONE_FIGHT) && !targetPlayer.isInsideZone(ZONE_FIGHT))
 		{
-			if(target instanceof L2PcInstance && Config.ANNOUNCE_ALL_KILL)
+			if(target.isPlayer && Config.ANNOUNCE_ALL_KILL)
 			{
 				Announcements.getInstance().announceToAll("Player " + getName() + " killed Player " + target.getName());
 			}
@@ -5782,7 +5782,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 	 */
 	public void increasePvpKills(L2Character target)
 	{
-		if (target instanceof L2PcInstance)
+		if (target.isPlayer)
 		{
 			// Add karma to attacker and increase its PK counter
 			setPvpKills(getPvpKills() + 1);
@@ -6015,7 +6015,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 
 		// Add karma to attacker and increase its PK counter
 		setKarma(getKarma() + newKarma);
-		if (target instanceof L2PcInstance) 
+		if (target.isPlayer)
 		{
 			setPkKills(getPkKills() + 1);
 		}
@@ -6088,7 +6088,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		if (_event!=null && _event.isRunning())
 			return;
 
-		L2PcInstance player_target = target.getActingPlayer();
+		L2PcInstance player_target = target.getPlayer();
 
 		if(player_target == null)
 			return;
@@ -8929,7 +8929,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			return false;
 
 		// Check if the attacker is a L2MonsterInstance
-		if(attacker instanceof L2MonsterInstance)
+		if(attacker.isMonster)
 			return true;
 
 		// Check if the attacker is not in the same party
@@ -8937,7 +8937,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			return false;
 
 		// Check if the attacker is in olympia and olympia start
-		if(attacker instanceof L2PcInstance)
+		if(attacker.isPlayer)
 		{
 			if (((L2PcInstance) attacker).isInOlympiadMode())
 			{
@@ -8953,10 +8953,10 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		}
 
 		// Check if the attacker is not in the same clan
-		if(getClan() != null && attacker != null && getClan().isMember(attacker.getObjectId()))
+		if(getClan() != null && getClan().isMember(attacker.getObjectId()))
 			return false;
 
-		if(attacker instanceof L2PlayableInstance && isInsideZone(ZONE_PEACE))
+		if(attacker.isPlayable && isInsideZone(ZONE_PEACE))
 			return false;
 
 		// Check if the L2PcInstance has Karma
@@ -8964,10 +8964,10 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			return true;
 
 		// Check if the attacker is a L2PcInstance
-		if(attacker instanceof L2PlayableInstance)
+		if(attacker.isPlayable)
 		{
 			L2PcInstance cha = null;
-			if(attacker instanceof L2Summon)
+			if(attacker.isSummon)
 			{
 				cha = ((L2Summon) attacker).getOwner();
 			}
@@ -9029,7 +9029,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 					return true;
 			}
 		}
-		else if(attacker instanceof L2SiegeGuardInstance)
+		else if(attacker.isSiegeGuard)
 		{
 			if(getClan() != null)
 			{
@@ -9220,7 +9220,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		// Are the target and the player in the same duel?
 		if(isInDuel())
 		{
-			if(!(target instanceof L2PcInstance && ((L2PcInstance) target).getDuelId() == getDuelId()) && !(target instanceof L2SummonInstance && ((L2Summon) target).getOwner().getDuelId() == getDuelId()))
+			if(!(target.isPlayer && target.getPlayer().getDuelId() == getDuelId()) && !(target.isSummonInstance && ((L2Summon) target).getOwner().getDuelId() == getDuelId()))
 			{
 				sendMessage("You cannot do this while duelling.");
 				sendPacket(ActionFailed.STATIC_PACKET);
@@ -9358,7 +9358,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			return;
 		}
 
-		if(Config.CANNOT_HEAL_RBGB && target instanceof L2Character)
+		if(Config.CANNOT_HEAL_RBGB && target.isCharacter)
 		{
 			if((skill.getSkillType() == SkillType.HEAL || skill.getSkillType() == SkillType.HEAL_PERCENT) && ((L2Character)target).isRaid())
 			{
@@ -9368,7 +9368,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			}
 		}
                 
-                if(Config.CANNOT_BUFF_RBGB && target instanceof L2Character) {
+                if(Config.CANNOT_BUFF_RBGB && target.isCharacter) {
                     L2Character TargetBoss = (L2Character)target;
                     if(skill.getSkillType() == SkillType.BUFF && TargetBoss.isRaid()) {
                         	sendPacket(new SystemMessage(SystemMessageId.TARGET_IS_INCORRECT));
@@ -9412,7 +9412,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 				return;
 			}
 
-			if(!(target instanceof L2MonsterInstance) && sklType == SkillType.CONFUSE_MOB_ONLY)
+			if(!(target.isMonster) && sklType == SkillType.CONFUSE_MOB_ONLY)
 			{
 				sendPacket(ActionFailed.STATIC_PACKET);
 				return;
@@ -9464,7 +9464,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		else
 		{
 			// check if the target is a monster and if force attack is set.. if not then we don't want to cast.
-			if(target instanceof L2MonsterInstance && !forceUse && sklTargetType != SkillTargetType.TARGET_PET && sklTargetType != SkillTargetType.TARGET_AURA && sklTargetType != SkillTargetType.TARGET_FRONT_AURA && sklTargetType != SkillTargetType.TARGET_BEHIND_AURA && sklTargetType != SkillTargetType.TARGET_CLAN && sklTargetType != SkillTargetType.TARGET_SELF && sklTargetType != SkillTargetType.TARGET_PARTY && sklTargetType != SkillTargetType.TARGET_ALLY && sklTargetType != SkillTargetType.TARGET_CORPSE_MOB && sklTargetType != SkillTargetType.TARGET_AREA_CORPSE_MOB && sklTargetType != SkillTargetType.TARGET_GROUND && sklType != SkillType.BEAST_FEED && sklType != SkillType.DELUXE_KEY_UNLOCK && sklType != SkillType.UNLOCK)
+			if(target.isMonster && !forceUse && sklTargetType != SkillTargetType.TARGET_PET && sklTargetType != SkillTargetType.TARGET_AURA && sklTargetType != SkillTargetType.TARGET_FRONT_AURA && sklTargetType != SkillTargetType.TARGET_BEHIND_AURA && sklTargetType != SkillTargetType.TARGET_CLAN && sklTargetType != SkillTargetType.TARGET_SELF && sklTargetType != SkillTargetType.TARGET_PARTY && sklTargetType != SkillTargetType.TARGET_ALLY && sklTargetType != SkillTargetType.TARGET_CORPSE_MOB && sklTargetType != SkillTargetType.TARGET_AREA_CORPSE_MOB && sklTargetType != SkillTargetType.TARGET_GROUND && sklType != SkillType.BEAST_FEED && sklType != SkillType.DELUXE_KEY_UNLOCK && sklType != SkillType.UNLOCK)
 			{
 				// send the action failed so that the skill doens't go off.
 				sendPacket(ActionFailed.STATIC_PACKET);
@@ -9475,7 +9475,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		// Check if the skill is Spoil type and if the target isn't already spoiled
 		if(sklType == SkillType.SPOIL)
 		{
-			if(!(target instanceof L2MonsterInstance))
+			if(!(target.isMonster))
 			{
 				// Send a System Message to the L2PcInstance
 				sendPacket(new SystemMessage(SystemMessageId.TARGET_IS_INCORRECT));
@@ -9487,7 +9487,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		}
 
 		// Check if the skill is Sweep type and if conditions not apply
-		if(sklType == SkillType.SWEEP && target instanceof L2Attackable)
+		if(sklType == SkillType.SWEEP && target.isAttackable)
 		{
 			int spoilerId = ((L2Attackable) target).getIsSpoiledBy();
 
@@ -9518,7 +9518,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		// Check if the skill is Drain Soul (Soul Crystals) and if the target is a MOB
 		if(sklType == SkillType.DRAIN_SOUL)
 		{
-			if(!(target instanceof L2MonsterInstance))
+			if(!(target.isMonster))
 			{
 				// Send a System Message to the L2PcInstance
 				sendPacket(new SystemMessage(SystemMessageId.TARGET_IS_INCORRECT));
@@ -9639,10 +9639,10 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 	 */
 	public boolean checkPvpSkill(L2Object target, L2Skill skill)
 	{
-		if (target != null && (target instanceof L2PcInstance || target instanceof L2Summon))
+		if (target != null && (target.isPlayer || target.isSummon))
 		{
 			L2PcInstance character;
-			if (target instanceof L2Summon)
+			if (target.isSummon)
 			{
 				if (((L2Summon) target).isInsideZone(ZONE_PVP))
 				{
@@ -10876,7 +10876,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 	}
 
 	@Override
-	public final L2PcInstance getActingPlayer()
+	public final L2PcInstance getPlayer()
 	{
 		return this;
 	}
@@ -11351,7 +11351,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			 * 10.Unsummon any active servitor from the player.
 			 */
 
-			if(getPet() != null && getPet() instanceof L2SummonInstance)
+			if(getPet() != null && getPet().isSummonInstance)
 			{
 				getPet().unSummon(this);
 			}
@@ -13447,7 +13447,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 	public void calculateDeathPenaltyBuffLevel(L2Character killer)
 	{
 		if(Rnd.get(100) < Config.DEATH_PENALTY_CHANCE &&
-			!(killer instanceof L2PlayableInstance) && !isGM() &&
+			!(killer.isPlayable) && !isGM() &&
 			!(getCharmOfLuck() && killer.isRaid()) &&
 			!(isInsideZone(L2Character.ZONE_PVP) || isInsideZone(L2Character.ZONE_SIEGE)))
 		{
@@ -13774,13 +13774,13 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			sendPacket(new SystemMessage(SystemMessageId.CRITICAL_HIT_MAGIC));
 		}
 
-		if(isInOlympiadMode() && target instanceof L2PcInstance && ((L2PcInstance) target).isInOlympiadMode() && ((L2PcInstance) target).getOlympiadGameId() == getOlympiadGameId())
+		if(isInOlympiadMode() && target.isPlayer && target.getPlayer().isInOlympiadMode() && target.getPlayer().getOlympiadGameId() == getOlympiadGameId())
 		{
 			dmgDealt += damage;
 		}
 
 		SystemMessage sm;
-		if (target.isInvul() && !(target instanceof L2NpcInstance))
+		if (target.isInvul() && !(target.isNpc))
 		{
 			sm = new SystemMessage(SystemMessageId.ATTACK_WAS_BLOCKED);
 		}

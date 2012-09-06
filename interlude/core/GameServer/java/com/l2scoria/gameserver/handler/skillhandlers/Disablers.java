@@ -84,7 +84,7 @@ public class Disablers implements ISkillHandler
 
 		L2ItemInstance weaponInst = activeChar.getActiveWeaponInstance();
 
-		if(activeChar instanceof L2PcInstance)
+		if(activeChar.isPlayer)
 		{
 			if(weaponInst == null && skill.isOffensive())
 			{
@@ -121,7 +121,7 @@ public class Disablers implements ISkillHandler
 			}
 		}
 		// If there is no weapon equipped, check for an active summon.
-		else if(activeChar instanceof L2Summon)
+		else if(activeChar.isSummon)
 		{
 			L2Summon activeSummon = (L2Summon) activeChar;
 
@@ -150,7 +150,7 @@ public class Disablers implements ISkillHandler
 		for(int index = 0; index < targets.length; index++)
 		{
 			// Get a target
-			if(!(targets[index] instanceof L2Character))
+			if(!(targets[index].isCharacter))
 				continue;
 
 			L2Character target = (L2Character) targets[index];
@@ -201,7 +201,7 @@ public class Disablers implements ISkillHandler
 						skill.getEffects(activeChar, target);
 					else
 					{
-						if(activeChar instanceof L2PcInstance)
+						if(activeChar.isPlayer)
 						{
 							SystemMessage sm = new SystemMessage(SystemMessageId.S1_WAS_UNAFFECTED_BY_S2);
 							sm.addString(target.getName());
@@ -222,7 +222,7 @@ public class Disablers implements ISkillHandler
 						skill.getEffects(activeChar, target);
 					else
 					{
-						if(activeChar instanceof L2PcInstance)
+						if(activeChar.isPlayer)
 						{
 							SystemMessage sm = new SystemMessage(SystemMessageId.S1_WAS_UNAFFECTED_BY_S2);
 							sm.addString(target.getName());
@@ -245,7 +245,7 @@ public class Disablers implements ISkillHandler
 					}
 					else
 					{
-						if(activeChar instanceof L2PcInstance)
+						if(activeChar.isPlayer)
 						{
 							SystemMessage sm = new SystemMessage(SystemMessageId.S1_WAS_UNAFFECTED_BY_S2);
 							sm.addString(target.getName());
@@ -271,7 +271,7 @@ public class Disablers implements ISkillHandler
 					}
 					else
 					{
-						if(activeChar instanceof L2PcInstance)
+						if(activeChar.isPlayer)
 						{
 							SystemMessage sm = new SystemMessage(SystemMessageId.S1_WAS_UNAFFECTED_BY_S2);
 							activeChar.sendPacket(sm);
@@ -282,7 +282,7 @@ public class Disablers implements ISkillHandler
 				}
 				case AGGDAMAGE:
 				{
-					if(target instanceof L2Attackable)
+					if(target.isAttackable)
 						target.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, activeChar, (int) ((150 * skill.getPower()) / (target.getLevel() + 7)));
 					//TODO [Nemesiss] should this have 100% chance?
 					skill.getEffects(activeChar, target);
@@ -291,7 +291,7 @@ public class Disablers implements ISkillHandler
 				case AGGREDUCE:
 				{
 					// these skills needs to be rechecked
-					if(target instanceof L2Attackable)
+					if(target.isAttackable)
 					{
 						skill.getEffects(activeChar, target);
 
@@ -309,7 +309,7 @@ public class Disablers implements ISkillHandler
 					// these skills needs to be rechecked
 					if(Formulas.getInstance().calcSkillSuccess(activeChar, target, skill, ss, sps, bss))
 					{
-						if(target instanceof L2Attackable)
+						if(target.isAttackable)
 						{
 							L2Attackable targ = (L2Attackable) target;
 							targ.stopHating(activeChar);
@@ -326,7 +326,7 @@ public class Disablers implements ISkillHandler
 					}
 					else
 					{
-						if(activeChar instanceof L2PcInstance)
+						if(activeChar.isPlayer)
 						{
 							SystemMessage sm = new SystemMessage(SystemMessageId.S1_WAS_UNAFFECTED_BY_S2);
 							sm.addString(target.getName());
@@ -340,7 +340,7 @@ public class Disablers implements ISkillHandler
 				case AGGREMOVE:
 				{
 					// these skills needs to be rechecked
-					if(target instanceof L2Attackable && !target.isRaid())
+					if(target.isAttackable && !target.isRaid())
 					{
 						if(Formulas.getInstance().calcSkillSuccess(activeChar, target, skill, ss, sps, bss))
 						{
@@ -354,7 +354,7 @@ public class Disablers implements ISkillHandler
 						}
 						else
 						{
-							if(activeChar instanceof L2PcInstance)
+							if(activeChar.isPlayer)
 							{
 								SystemMessage sm = new SystemMessage(SystemMessageId.S1_WAS_UNAFFECTED_BY_S2);
 								sm.addString(target.getName());
@@ -394,7 +394,7 @@ public class Disablers implements ISkillHandler
 					}
 					else
 					{
-						if(activeChar instanceof L2PcInstance)
+						if(activeChar.isPlayer)
 						{
 							SystemMessage sm = new SystemMessage(SystemMessageId.S1_WAS_UNAFFECTED_BY_S2);
 							sm.addString(target.getName());
@@ -477,7 +477,7 @@ public class Disablers implements ISkillHandler
 					{
 						if(target.isRaid())
 						{
-							if(activeChar instanceof L2PcInstance)
+							if(activeChar.isPlayer)
 							{
 								SystemMessage sm = new SystemMessage(SystemMessageId.S1_WAS_UNAFFECTED_BY_S2);
 								sm.addString(target.getName());
@@ -541,7 +541,7 @@ public class Disablers implements ISkillHandler
 						}
 						else
 						{
-							if(activeChar instanceof L2PcInstance)
+							if(activeChar.isPlayer)
 							{
 								SystemMessage sm = new SystemMessage(SystemMessageId.S1_WAS_UNAFFECTED_BY_S2);
 								sm.addString(target.getName());
@@ -600,7 +600,7 @@ public class Disablers implements ISkillHandler
 						}
 						else
 						{
-							if(activeChar instanceof L2PcInstance)
+							if(activeChar.isPlayer)
 							{
 								SystemMessage sm = new SystemMessage(SystemMessageId.S1_WAS_UNAFFECTED_BY_S2);
 								sm.addString(target.getName());
@@ -679,7 +679,7 @@ public class Disablers implements ISkillHandler
 
 							if(stat == "heal")
 							{
-								if(Config.CANNOT_HEAL_RBGB && activeChar instanceof L2PcInstance && target.isRaid())
+								if(Config.CANNOT_HEAL_RBGB && activeChar.isPlayer && target.isRaid())
 								{
 									activeChar.sendPacket(new SystemMessage(SystemMessageId.TARGET_IS_INCORRECT));
 									activeChar.sendPacket(ActionFailed.STATIC_PACKET);

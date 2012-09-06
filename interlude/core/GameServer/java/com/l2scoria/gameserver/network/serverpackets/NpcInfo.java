@@ -85,7 +85,7 @@ public class NpcInfo extends L2GameServerPacket
 			_title = cha.getTitle();
 		}
 
-		if(Config.SHOW_NPC_LVL && _activeChar instanceof L2MonsterInstance)
+		if(Config.SHOW_NPC_LVL && _activeChar.isMonster)
 		{
 			String t = "Lv " + cha.getLevel() + (cha.getAggroRange() > 0 ? "*" : "");
 			if(_title != null)
@@ -138,7 +138,7 @@ public class NpcInfo extends L2GameServerPacket
 	@Override
 	protected final void writeImpl()
 	{
-		if(_activeChar instanceof L2Summon)
+		if(_activeChar.isSummon)
 			if(((L2Summon) _activeChar).getOwner() != null && ((L2Summon) _activeChar).getOwner().getAppearance().getInvisible())
 				return;
 		writeC(0x16);

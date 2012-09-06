@@ -18,10 +18,6 @@
  */
 package com.l2scoria.gameserver.model.actor.instance;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.ScheduledFuture;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.model.L2Attackable;
 import com.l2scoria.gameserver.model.L2Character;
@@ -30,6 +26,10 @@ import com.l2scoria.gameserver.templates.L2NpcTemplate;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.gameserver.util.MinionList;
 import com.l2scoria.util.random.Rnd;
+
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.ScheduledFuture;
 
 /**
  * This class manages all Monsters. L2MonsterInstance :<BR>
@@ -86,7 +86,7 @@ public class L2MonsterInstance extends L2Attackable
 	@Override
 	public boolean isAutoAttackable(L2Character attacker)
 	{
-		if(attacker instanceof L2MonsterInstance)
+		if(attacker.isMonster)
 			return false;
 
 		return !isEventMob;
@@ -196,7 +196,7 @@ public class L2MonsterInstance extends L2Attackable
 					// Trigger the aggro condition of the minion
 					if(minion != null && !minion.isDead())
 					{
-						if(this instanceof L2RaidBossInstance)
+						if(this.isRaid)
 						{
 							minion.addDamage(attacker, 100);
 						}
@@ -228,7 +228,7 @@ public class L2MonsterInstance extends L2Attackable
 			_returnHomeTask.cancel(true);
 		}
 
-		if(Config.ALT_MINION_REMOVE || this instanceof L2RaidBossInstance)
+		if(Config.ALT_MINION_REMOVE || this.isRaid)
 		{
 			deleteSpawnedMinions(false);
 		}
@@ -268,7 +268,7 @@ public class L2MonsterInstance extends L2Attackable
 	@Override
 	public void addDamageHate(L2Character attacker, int damage, int aggro)
 	{
-		if(!(attacker instanceof L2MonsterInstance))
+		if(!(attacker.isMonster))
 		{
 			super.addDamageHate(attacker, damage, aggro);
 		}

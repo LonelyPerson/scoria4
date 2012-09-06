@@ -62,7 +62,7 @@ public final class EffectSignetAntiSummon extends L2Effect
 				continue;
 			}
 
-			if(cha instanceof L2PlayableInstance)
+			if(cha.isPlayable)
 			{
 				L2PcInstance owner = (L2PcInstance) cha;
 

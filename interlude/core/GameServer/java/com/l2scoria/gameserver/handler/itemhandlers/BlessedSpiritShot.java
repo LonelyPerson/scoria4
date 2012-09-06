@@ -56,7 +56,7 @@ public class BlessedSpiritShot implements IItemHandler
 	 */
 	public void useItem(L2PlayableInstance playable, L2ItemInstance item)
 	{
-		if(!(playable instanceof L2PcInstance))
+		if(!(playable.isPlayer))
 			return;
 
 		L2PcInstance activeChar = (L2PcInstance) playable;
@@ -77,7 +77,6 @@ public class BlessedSpiritShot implements IItemHandler
 			SystemMessage sm = new SystemMessage(SystemMessageId.THIS_ITEM_IS_NOT_AVAILABLE_FOR_THE_OLYMPIAD_EVENT);
 			sm.addString(item.getItemName());
 			activeChar.sendPacket(sm);
-			sm = null;
 
 			return;
 		}
@@ -121,7 +120,6 @@ public class BlessedSpiritShot implements IItemHandler
 					SystemMessage sm = new SystemMessage(SystemMessageId.AUTO_USE_OF_S1_CANCELLED);
 					sm.addString(item.getItem().getName());
 					activeChar.sendPacket(sm);
-					sm = null;
 
 					return;
 				}
@@ -137,10 +135,6 @@ public class BlessedSpiritShot implements IItemHandler
 		// Send message to client
 		activeChar.sendPacket(new SystemMessage(SystemMessageId.ENABLED_SPIRITSHOT));
 		Broadcast.toSelfAndKnownPlayersInRadius(activeChar, new MagicSkillUser(activeChar, activeChar, SKILL_IDS[weaponGrade], 1, 0, 0), 360000/*600*/);
-
-		activeChar = null;
-		weaponInst = null;
-		weaponItem = null;
 	}
 
 	public int[] getItemIds()

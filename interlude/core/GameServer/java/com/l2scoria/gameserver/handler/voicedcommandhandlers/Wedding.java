@@ -114,7 +114,7 @@ public class Wedding implements IVoicedCommandHandler
 		}
 
 		// check if target is a l2pcinstance
-		if(!(activeChar.getTarget() instanceof L2PcInstance))
+		if(!(activeChar.getTarget().isPlayer))
 		{
 			activeChar.sendMessage("You can only ask another player to engage you.");
 			return false;

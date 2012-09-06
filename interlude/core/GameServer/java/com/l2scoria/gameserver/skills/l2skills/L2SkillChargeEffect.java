@@ -41,7 +41,7 @@ public class L2SkillChargeEffect extends L2Skill
 	@Override
 	public boolean checkCondition(L2Character activeChar, L2Object target, boolean itemOrWeapon)
 	{
-		if(activeChar instanceof L2PcInstance)
+		if(activeChar.isPlayer)
 		{
 			L2PcInstance player = (L2PcInstance) activeChar;
 			EffectCharge e = (EffectCharge) player.getFirstEffect(chargeSkillId);
@@ -92,7 +92,7 @@ public class L2SkillChargeEffect extends L2Skill
 				getEffects(activeChar, (L2Character) target);
 			}
 		}
-		if(activeChar instanceof L2PcInstance)
+		if(activeChar.isPlayer)
 		{
 			activeChar.sendPacket(new EtcStatusUpdate((L2PcInstance) activeChar));
 		}

@@ -43,7 +43,7 @@ class EffectRelax extends L2Effect
 	public void onStart()
 	{
 
-		if(getEffected() instanceof L2PcInstance)
+		if(getEffected().isPlayer)
 		{
 			setRelax(true);
 			((L2PcInstance) getEffected()).sitDown();
@@ -74,7 +74,7 @@ class EffectRelax extends L2Effect
 			retval = false;
 		}
 
-		if(getEffected() instanceof L2PcInstance)
+		if(getEffected().isPlayer)
 		{
 			if(!((L2PcInstance) getEffected()).isSitting())
 			{
@@ -89,7 +89,7 @@ class EffectRelax extends L2Effect
 				SystemMessage sm = new SystemMessage(SystemMessageId.S1_S2);
 				sm.addString("Fully rested. Effect of " + getSkill().getName() + " has been removed.");
 				getEffected().sendPacket(sm);
-				//if (getEffected() instanceof L2PcInstance)
+				//if (getEffected().isPlayer)
 				//((L2PcInstance)getEffected()).standUp();
 				retval = false;
 			}
@@ -103,7 +103,7 @@ class EffectRelax extends L2Effect
 			{
 				SystemMessage sm = new SystemMessage(SystemMessageId.SKILL_REMOVED_DUE_LACK_MP);
 				getEffected().sendPacket(sm);
-				//if (getEffected() instanceof L2PcInstance)
+				//if (getEffected().isPlayer)
 				//((L2PcInstance)getEffected()).standUp();
 				retval = false;
 			}
@@ -123,7 +123,7 @@ class EffectRelax extends L2Effect
 
 	private void setRelax(boolean val)
 	{
-		if(getEffected() instanceof L2PcInstance)
+		if(getEffected().isPlayer)
 		{
 			((L2PcInstance) getEffected()).setRelax(val);
 		}

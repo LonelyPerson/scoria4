@@ -75,7 +75,7 @@ public class BanChat extends Admin
 			{
 				targetObject = activeChar.getTarget();
 
-				if(targetObject != null && targetObject instanceof L2PcInstance)
+				if(targetObject != null && targetObject.isPlayer)
 				{
 					targetPlayer = (L2PcInstance) targetObject;
 				}

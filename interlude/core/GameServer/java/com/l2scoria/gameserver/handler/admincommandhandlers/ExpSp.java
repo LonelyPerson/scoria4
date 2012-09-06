@@ -101,7 +101,7 @@ public class ExpSp extends Admin
 		L2Object target = activeChar.getTarget();
 		L2PcInstance player = null;
 
-		if(target instanceof L2PcInstance)
+		if(target.isPlayer)
 		{
 			player = (L2PcInstance) target;
 		}
@@ -130,7 +130,7 @@ public class ExpSp extends Admin
 		L2Object target = activeChar.getTarget();
 		L2PcInstance player = null;
 
-		if(target instanceof L2PcInstance)
+		if(target.isPlayer)
 		{
 			player = (L2PcInstance) target;
 		}
@@ -193,7 +193,7 @@ public class ExpSp extends Admin
 		L2Object target = activeChar.getTarget();
 		L2PcInstance player = null;
 
-		if(target instanceof L2PcInstance)
+		if(target.isPlayer)
 		{
 			player = (L2PcInstance) target;
 		}

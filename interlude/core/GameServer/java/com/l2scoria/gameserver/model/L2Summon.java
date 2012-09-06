@@ -701,7 +701,7 @@ public abstract class L2Summon extends L2PlayableInstance
 			}
 
 			// Check if the target is attackable
-			if(target instanceof L2DoorInstance)
+			if(target.isDoor)
 			{
 				if(!((L2DoorInstance) target).isAttackable(getOwner()))
 					return;

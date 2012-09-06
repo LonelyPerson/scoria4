@@ -222,7 +222,7 @@ public class EditChar extends Admin
 			L2Object target = activeChar.getTarget();
 			L2PcInstance player = null;
 
-			if(target instanceof L2PcInstance)
+			if(target.isPlayer)
 			{
 				player = (L2PcInstance) target;
 			}
@@ -250,7 +250,7 @@ public class EditChar extends Admin
 				L2Object target = activeChar.getTarget();
 				L2PcInstance player = null;
 
-				if(target instanceof L2PcInstance)
+				if(target.isPlayer)
 				{
 					player = (L2PcInstance) target;
 				}
@@ -284,7 +284,7 @@ public class EditChar extends Admin
 				L2Object target = activeChar.getTarget();
 				L2PcInstance player = null;
 
-				if(target instanceof L2PcInstance)
+				if(target.isPlayer)
 				{
 					player = (L2PcInstance) target;
 				}
@@ -344,11 +344,11 @@ public class EditChar extends Admin
 			{
 				player = activeChar;
 			}
-			else if(target instanceof L2PcInstance)
+			else if(target.isPlayer)
 			{
 				player = (L2PcInstance) target;
 			}
-			else if(target instanceof L2NpcInstance)
+			else if(target.isNpc)
 			{
 				npc = (L2NpcInstance) target;
 			}
@@ -397,7 +397,7 @@ public class EditChar extends Admin
 
 				String oldName = null;
 
-				if(target instanceof L2PcInstance)
+				if(target.isPlayer)
 				{
 					player = (L2PcInstance) target;
 					oldName = player.getName();
@@ -430,7 +430,7 @@ public class EditChar extends Admin
 
 					RegionBBSManager.getInstance().changeCommunityBoard();
 				}
-				else if(target instanceof L2NpcInstance)
+				else if(target.isNpc)
 				{
 					L2NpcInstance npc = (L2NpcInstance) target;
 					oldName = npc.getName();
@@ -461,7 +461,7 @@ public class EditChar extends Admin
 			L2Object target = activeChar.getTarget();
 			L2PcInstance player = null;
 
-			if(target instanceof L2PcInstance)
+			if(target.isPlayer)
 			{
 				player = (L2PcInstance) target;
 			}
@@ -487,7 +487,7 @@ public class EditChar extends Admin
 				return false;
 			}
 
-			if(!(target instanceof L2PcInstance))
+			if(!(target.isPlayer))
 			{
 				activeChar.sendMessage("Your target is not a player!");
 				return false;
@@ -516,7 +516,7 @@ public class EditChar extends Admin
 		{
 			L2Object target = activeChar.getTarget();
 
-			if(target instanceof L2PetInstance)
+			if(target.isPet)
 			{
 				L2PetInstance targetPet = (L2PetInstance) target;
 				targetPet.setCurrentFed(targetPet.getMaxFed());
@@ -535,7 +535,7 @@ public class EditChar extends Admin
 			L2Object target = activeChar.getTarget();
 			L2PcInstance player = null;
 
-			if(target instanceof L2PcInstance)
+			if(target.isPlayer)
 			{
 				player = (L2PcInstance) target;
 			}
@@ -623,13 +623,13 @@ public class EditChar extends Admin
 				activeChar.sendMessage("Usage: //admin_setchar_cp <new_CP_value>");
 			}
 
-			if(activeChar.getTarget() instanceof L2PcInstance)
+			if(activeChar.getTarget().isPlayer)
 			{
 				L2PcInstance pc = (L2PcInstance) activeChar.getTarget();
 				pc.getStatus().setCurrentCp(cp);
 				pc = null;
 			}
-			else if(activeChar.getTarget() instanceof L2PetInstance)
+			else if(activeChar.getTarget().isPet)
 			{
 				L2PetInstance pet = (L2PetInstance) activeChar.getTarget();
 				pet.getStatus().setCurrentCp(cp);
@@ -654,13 +654,13 @@ public class EditChar extends Admin
 				activeChar.sendMessage("Usage: //admin_setchar_hp <new_HP_value>");
 			}
 
-			if(activeChar.getTarget() instanceof L2PcInstance)
+			if(activeChar.getTarget().isPlayer)
 			{
 				L2PcInstance pc = (L2PcInstance) activeChar.getTarget();
 				pc.getStatus().setCurrentHp(hp);
 				pc = null;
 			}
-			else if(activeChar.getTarget() instanceof L2PetInstance)
+			else if(activeChar.getTarget().isPet)
 			{
 				L2PetInstance pet = (L2PetInstance) activeChar.getTarget();
 				pet.getStatus().setCurrentHp(hp);
@@ -685,13 +685,13 @@ public class EditChar extends Admin
 				activeChar.sendMessage("Usage: //admin_setchar_mp <new_MP_value>");
 			}
 
-			if(activeChar.getTarget() instanceof L2PcInstance)
+			if(activeChar.getTarget().isPlayer)
 			{
 				L2PcInstance pc = (L2PcInstance) activeChar.getTarget();
 				pc.getStatus().setCurrentMp(mp);
 				pc = null;
 			}
-			else if(activeChar.getTarget() instanceof L2PetInstance)
+			else if(activeChar.getTarget().isPet)
 			{
 				L2PetInstance pet = (L2PetInstance) activeChar.getTarget();
 				pet.getStatus().setCurrentMp(mp);
@@ -843,7 +843,7 @@ public class EditChar extends Admin
 		L2Object target = activeChar.getTarget();
 		L2PcInstance player = null;
 
-		if(target instanceof L2PcInstance)
+		if(target.isPlayer)
 		{
 			player = (L2PcInstance) target;
 		}
@@ -890,7 +890,7 @@ public class EditChar extends Admin
 	{
 		L2Object target = activeChar.getTarget();
 
-		if(!(target instanceof L2PcInstance))
+		if(!(target.isPlayer))
 			return;
 
 		L2PcInstance player = (L2PcInstance) target;
@@ -964,7 +964,7 @@ public class EditChar extends Admin
 	{
 		L2Object target = activeChar.getTarget();
 
-		if(!(target instanceof L2PcInstance))
+		if(!(target.isPlayer))
 			return;
 
 		L2PcInstance player = (L2PcInstance) target;
@@ -1226,7 +1226,7 @@ public class EditChar extends Admin
 		{
 			L2Object target = activeChar.getTarget();
 
-			if(target instanceof L2PcInstance)
+			if(target.isPlayer)
 			{
 				player = (L2PcInstance) target;
 			}

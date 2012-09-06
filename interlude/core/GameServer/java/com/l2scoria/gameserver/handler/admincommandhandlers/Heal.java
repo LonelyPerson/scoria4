@@ -101,12 +101,12 @@ public class Heal extends Admin
 					int radius = Integer.parseInt(player);
 					for(L2Object object : activeChar.getKnownList().getKnownObjects().values())
 					{
-						if(object instanceof L2Character)
+						if(object.isCharacter)
 						{
 							L2Character character = (L2Character) object;
 							character.setCurrentHpMp(character.getMaxHp(), character.getMaxMp());
 
-							if(object instanceof L2PcInstance)
+							if(object.isPlayer)
 							{
 								character.setCurrentCp(character.getMaxCp());
 							}
@@ -131,12 +131,12 @@ public class Heal extends Admin
 			obj = activeChar;
 		}
 
-		if(obj != null && obj instanceof L2Character)
+		if(obj != null && obj.isCharacter)
 		{
 			L2Character target = (L2Character) obj;
 			target.setCurrentHpMp(target.getMaxHp(), target.getMaxMp());
 
-			if(target instanceof L2PcInstance)
+			if(target.isPlayer)
 			{
 				target.setCurrentCp(target.getMaxCp());
 			}

@@ -238,7 +238,7 @@ public class DeathMatch extends GameEvent
 			return;
 		}
 
-		if (killer instanceof L2PcInstance && victim instanceof L2PcInstance)
+		if (killer.isPlayer && victim.isPlayer)
 		{
 			L2PcInstance plk = (L2PcInstance) killer;
 			L2PcInstance pld = (L2PcInstance) victim;

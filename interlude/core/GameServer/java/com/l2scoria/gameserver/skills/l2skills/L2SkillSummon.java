@@ -52,7 +52,7 @@ public class L2SkillSummon extends L2Skill
 
 	public boolean checkCondition(L2Character activeChar)
 	{
-		if(activeChar instanceof L2PcInstance)
+		if(activeChar.isPlayer)
 		{
 			L2PcInstance player = (L2PcInstance) activeChar;
 			if(_isCubic)
@@ -92,7 +92,7 @@ public class L2SkillSummon extends L2Skill
 	@Override
 	public void useSkill(L2Character caster, L2Object[] targets)
 	{
-		if(caster.isAlikeDead() || !(caster instanceof L2PcInstance))
+		if(caster.isAlikeDead() || !(caster.isPlayer))
 			return;
 
 		L2PcInstance activeChar = (L2PcInstance) caster;
@@ -111,7 +111,7 @@ public class L2SkillSummon extends L2Skill
 			{
 				for(L2Object obj : targets)
 				{
-					if(!(obj instanceof L2PcInstance))
+					if(!(obj.isPlayer))
 					{
 						continue;
 					}
@@ -221,7 +221,7 @@ public class L2SkillSummon extends L2Skill
 		if (getTargetType() == SkillTargetType.TARGET_CORPSE_MOB)
 		{
 			L2Character target = (L2Character) targets[0];
-			if(target.isDead() && target instanceof L2NpcInstance)
+			if(target.isDead() && target.isNpc)
 			{
 				summon.spawnMe(target.getX(), target.getY(), target.getZ() + 5);
 				((L2NpcInstance) target).endDecayTask();

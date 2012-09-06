@@ -22,7 +22,7 @@ import com.l2scoria.Config;
 import com.l2scoria.gameserver.idfactory.IdFactory;
 import com.l2scoria.gameserver.instancemanager.InstanceManager;
 import com.l2scoria.gameserver.managers.ItemsOnGroundManager;
-import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
+import com.l2scoria.gameserver.model.actor.instance.*;
 import com.l2scoria.gameserver.model.actor.knownlist.ObjectKnownList;
 import com.l2scoria.gameserver.model.actor.poly.ObjectPoly;
 import com.l2scoria.gameserver.model.actor.position.ObjectPosition;
@@ -64,10 +64,91 @@ public abstract class L2Object
 	// =========================================================
 	// Constructor
 
+
+	// ======================================
+	// Это быстрей чем проверки instance of
+	// ======================================
+	public boolean isPlayable;
+	public boolean isPlayer;
+	public boolean isPet;
+	public boolean isSummon;
+	public boolean isSummonInstance;
+	public boolean isMonster;
+	public boolean isAttackable;
+	public boolean isSiegeGuard;
+	public boolean isGuard;
+	public boolean isNpc;
+	public boolean isCharacter;
+	public boolean isMinion;
+	public boolean isDoor;
+	public boolean isBoat;
+	public boolean isRaid;
+
 	public L2Object(int objectId)
 	{
 		_objectId = objectId;
-		// by Azagthtot СЃРѕР·РґР°РЅРёРµ pre-defined СЌРєСЃС‚РµРґРµСЂРѕРІ
+
+		if (this instanceof L2Character)
+		{
+			isCharacter = true;
+		}
+		if (this.isAttackable)
+		{
+			isAttackable = true;
+		}
+		if (this instanceof L2PlayableInstance)
+		{
+			isPlayable = true;
+		}
+		if (this instanceof L2PcInstance)
+		{
+			isPlayer = true;
+		}
+		if (this instanceof L2PetInstance)
+		{
+			isPet = true;
+		}
+		if (this instanceof L2Summon)
+		{
+			isSummon = true;
+		}
+		if (this instanceof L2SummonInstance)
+		{
+			isSummonInstance = true;
+		}
+		if (this instanceof L2MonsterInstance)
+		{
+			isMonster = true;
+		}
+		if (this instanceof L2NpcInstance)
+		{
+			isNpc = true;
+		}
+		if (this instanceof L2RaidBossInstance)
+		{
+			isRaid = true;
+		}
+		if (this instanceof L2MinionInstance)
+		{
+			isMinion = true;
+		}
+		if (this instanceof L2GuardInstance)
+		{
+			isGuard = true;
+		}
+		if (this instanceof L2SiegeGuardInstance)
+		{
+			isSiegeGuard = true;
+		}
+		if (this instanceof L2DoorInstance)
+		{
+			isDoor = true;
+		}
+		if (this instanceof L2BoatInstance)
+		{
+			isBoat = true;
+		}
+
 		if (Config.EXTENDERS.get(this.getClass().getName()) != null)
 		{
 			for (String className : Config.EXTENDERS.get(this.getClass().getName()))
@@ -539,7 +620,7 @@ public abstract class L2Object
 
 	public boolean isInFunEvent()
 	{
-		L2PcInstance player = getActingPlayer();
+		L2PcInstance player = getPlayer();
 
 		return (player != null && player.isInFunEvent());
 	}
@@ -554,7 +635,7 @@ public abstract class L2Object
 			return;
 		}
 
-		if (this instanceof L2PcInstance)
+		if (this.isPlayer)
 		{
 
 			if (_instanceId > 0)
@@ -586,7 +667,7 @@ public abstract class L2Object
 		// If we change it for visible objects, we must clear & revalidate knownlists
 		if (_isVisible && _knownList != null)
 		{
-			if (this instanceof L2PcInstance)
+			if (this.isPlayer)
 			{
 				// We don't want some ugly looking disappear/appear effects, so don't update
 				// the knownlist here, but players usually enter instancezones through teleporting
@@ -606,7 +687,7 @@ public abstract class L2Object
 		return "" + getObjectId();
 	}
 
-	public L2PcInstance getActingPlayer()
+	public L2PcInstance getPlayer()
 	{
 		return null;
 	}

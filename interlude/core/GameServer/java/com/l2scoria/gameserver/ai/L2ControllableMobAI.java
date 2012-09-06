@@ -316,7 +316,7 @@ public class L2ControllableMobAI extends L2AttackableAI
 			{
 				for(L2Object obj : _actor.getKnownList().getKnownObjects().values())
 				{
-					if(!(obj instanceof L2NpcInstance))
+					if(!(obj.isNpc))
 					{
 						continue;
 					}
@@ -447,12 +447,12 @@ public class L2ControllableMobAI extends L2AttackableAI
 
 	private boolean autoAttackCondition(L2Character target)
 	{
-		if(target == null || !(_actor instanceof L2Attackable))
+		if(target == null || !(_actor.isAttackable))
 			return false;
 
 		L2Attackable me = (L2Attackable) _actor;
 
-		if(target instanceof L2FolkInstance || target instanceof L2DoorInstance)
+		if(target instanceof L2FolkInstance || target.isDoor)
 			return false;
 
 		if(target.isAlikeDead() || !me.isInsideRadius(target, me.getAggroRange(), false, false) || Math.abs(_actor.getZ() - target.getZ()) > 100)
@@ -463,14 +463,14 @@ public class L2ControllableMobAI extends L2AttackableAI
 			return false;
 
 		// Check if the target is a L2PcInstance
-		if(target instanceof L2PcInstance)
+		if(target.isPlayer)
 		{
 			// Check if the target isn't in silent move mode
-			if(((L2PcInstance) target).isSilentMoving())
+			if(target.getPlayer().isSilentMoving())
 				return false;
 		}
 
-		return !(target instanceof L2NpcInstance) && me.isAggressive();
+		return !(target.isNpc) && me.isAggressive();
 
 	}
 
@@ -488,7 +488,7 @@ public class L2ControllableMobAI extends L2AttackableAI
 
 		for(L2Object obj : npc.getKnownList().getKnownObjects().values())
 		{
-			if(!(obj instanceof L2Character))
+			if(!(obj.isCharacter))
 			{
 				continue;
 			}

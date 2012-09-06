@@ -17,7 +17,7 @@
  */
 package com.l2scoria.loginserver.network.clientpackets;
 
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 import mmo.ReceivablePacket;
 
@@ -43,7 +43,7 @@ public abstract class L2LoginClientPacket extends ReceivablePacket<L2LoginClient
 		}
 		catch(Exception e)
 		{
-			_log.severe("ERROR READING: " + this.getClass().getSimpleName());
+			_log.fatal("ERROR READING: " + this.getClass().getSimpleName());
 			e.printStackTrace();
 			return false;
 		}

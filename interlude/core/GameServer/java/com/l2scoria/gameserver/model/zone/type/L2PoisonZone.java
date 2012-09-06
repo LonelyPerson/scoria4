@@ -93,7 +93,7 @@ public class L2PoisonZone extends L2ZoneDefault
 	@Override
 	protected void onEnter(L2Character character)
 	{
-		if((character instanceof L2PlayableInstance && _target.equalsIgnoreCase("pc") || character instanceof L2PcInstance && _target.equalsIgnoreCase("pc_only") || character instanceof L2MonsterInstance && _target.equalsIgnoreCase("npc")) && _task == null)
+		if((character.isPlayable && _target.equalsIgnoreCase("pc") || character.isPlayer && _target.equalsIgnoreCase("pc_only") || character.isMonster && _target.equalsIgnoreCase("npc")) && _task == null)
 		{
 			_task = ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(new ApplySkill(/*this*/), _initialDelay, _reuse);
 		}
@@ -148,7 +148,7 @@ public class L2PoisonZone extends L2ZoneDefault
 				{
 					if(temp != null && !temp.isDead())
 					{
-						if((temp instanceof L2PlayableInstance && getTargetType().equalsIgnoreCase("pc") || temp instanceof L2PcInstance && getTargetType().equalsIgnoreCase("pc_only") || temp instanceof L2MonsterInstance && getTargetType().equalsIgnoreCase("npc")) && Rnd.get(100) < getChance())
+						if((temp.isPlayable && getTargetType().equalsIgnoreCase("pc") || temp.isPlayer && getTargetType().equalsIgnoreCase("pc_only") || temp.isMonster && getTargetType().equalsIgnoreCase("npc")) && Rnd.get(100) < getChance())
 						{
 							getSkill().getEffects(temp, temp);
 						}

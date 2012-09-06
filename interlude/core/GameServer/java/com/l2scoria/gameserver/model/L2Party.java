@@ -725,20 +725,20 @@ public class L2Party
 
 				penalty = 0;
 
-				if(member instanceof L2Summon)
+				if(member.isSummon)
 					expReward = (long)(xpReward * (((L2Summon) member).getOwner().getXpRate()));
 				else
 					expReward = (long)(xpReward * ((L2PcInstance) member).getXpRate());
 
 				// The L2SummonInstance penalty
-				if(member.getPet() instanceof L2SummonInstance)
+				if(member.getPet().isSummonInstance)
 				{
 					summon = (L2SummonInstance) member.getPet();
 					penalty = summon.getExpPenalty();
 				}
 
 				// Pets that leech xp from the owner (like babypets) do not get rewarded directly
-				if(member instanceof L2PetInstance)
+				if(member.isPet)
 				{
 					if(((L2PetInstance) member).getPetData().getOwnerExpTaken() > 0)
 					{

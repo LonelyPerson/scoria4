@@ -45,7 +45,7 @@ public final class EffectChameleonRest extends L2Effect
 	public void onStart()
 	{
 		L2Character effected = getEffected();
-		if(effected instanceof L2PcInstance)
+		if(effected.isPlayer)
 		{
 			setChameleon(true);
 			((L2PcInstance) effected).setSilentMoving(true);
@@ -66,7 +66,7 @@ public final class EffectChameleonRest extends L2Effect
 		setChameleon(false);
 
 		L2Character effected = getEffected();
-		if(effected instanceof L2PcInstance)
+		if(effected.isPlayer)
 		{
 			((L2PcInstance) effected).setSilentMoving(false);
 		}
@@ -87,7 +87,7 @@ public final class EffectChameleonRest extends L2Effect
 		if(getSkill().getSkillType() != SkillType.CONT)
 			return false;
 
-		if(effected instanceof L2PcInstance)
+		if(effected.isPlayer)
 		{
 			if(!((L2PcInstance) effected).isSitting())
 			{
@@ -118,7 +118,7 @@ public final class EffectChameleonRest extends L2Effect
 	private void setChameleon(boolean val)
 	{
 		L2Character effected = getEffected();
-		if(effected instanceof L2PcInstance)
+		if(effected.isPlayer)
 		{
 			((L2PcInstance) effected).setRelax(val);
 		}

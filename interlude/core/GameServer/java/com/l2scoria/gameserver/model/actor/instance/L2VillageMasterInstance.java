@@ -179,7 +179,7 @@ public final class L2VillageMasterInstance extends L2FolkInstance
 				return;
 			}
 
-			if(player.getPet() != null && player.getPet() instanceof L2SummonInstance)
+			if(player.getPet() != null && player.getPet().isSummonInstance)
 			{
 				if(player.getPet().isCastingNow() || player.getPet().isAllSkillsDisabled())
 				{

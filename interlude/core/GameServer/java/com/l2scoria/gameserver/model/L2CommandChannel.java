@@ -222,7 +222,7 @@ public class L2CommandChannel
 	 */
 	public boolean meetRaidWarCondition(L2Object obj)
 	{
-		if(!(obj instanceof L2RaidBossInstance) || !(obj instanceof L2GrandBossInstance))
+		if(!(obj.isRaid) || !(obj instanceof L2GrandBossInstance))
 			return false;
 
 			return getMemberCount() > Config.LOOT_RAIDS_PRIVILEGE_CC_SIZE;

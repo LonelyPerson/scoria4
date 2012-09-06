@@ -103,12 +103,12 @@ public class PcKnownList extends PlayableKnownList
 					getActiveChar().sendPacket(new SpawnItem((L2ItemInstance) object));
 				}
 			}
-			else if(object instanceof L2DoorInstance)
+			else if(object.isDoor)
 			{
 				getActiveChar().sendPacket(new DoorInfo((L2DoorInstance) object));
 				getActiveChar().sendPacket(new DoorStatusUpdate((L2DoorInstance) object));
 			}
-			else if(object instanceof L2BoatInstance)
+			else if(object.isBoat)
 			{
 				if(!getActiveChar().isInBoat())
 					if(object != getActiveChar().getBoat())
@@ -121,7 +121,7 @@ public class PcKnownList extends PlayableKnownList
 			{
 				getActiveChar().sendPacket(new StaticObject((L2StaticObjectInstance) object));
 			}
-			else if(object instanceof L2NpcInstance)
+			else if(object.isNpc)
 			{
 				if(Config.CHECK_KNOWN)
 				{
@@ -137,7 +137,7 @@ public class PcKnownList extends PlayableKnownList
 					getActiveChar().sendPacket(new NpcInfo((L2NpcInstance) object, getActiveChar()));
 				}
 			}
-			else if(object instanceof L2Summon)
+			else if(object.isSummon)
 			{
 				L2Summon summon = (L2Summon) object;
 
@@ -148,7 +148,7 @@ public class PcKnownList extends PlayableKnownList
 					// The PetInfo packet wipes the PartySpelled (list of active  spells' icons).  Re-add them
 					summon.updateEffectIcons(true);
 
-					if(summon instanceof L2PetInstance)
+					if(summon.isPet)
 					{
 						getActiveChar().sendPacket(new PetItemList((L2PetInstance) summon));
 					}
@@ -160,7 +160,7 @@ public class PcKnownList extends PlayableKnownList
 
 				summon = null;
 			}
-			else if(object instanceof L2PcInstance)
+			else if(object.isPlayer)
 			{
 				L2PcInstance otherPlayer = (L2PcInstance) object;
 				if(otherPlayer.isInBoat())
@@ -208,7 +208,7 @@ public class PcKnownList extends PlayableKnownList
 				otherPlayer = null;
 			}
 
-			if(object instanceof L2Character)
+			if(object.isCharacter)
 			{
 				// Update the state of the L2Character object client side by sending Server->Client packet MoveToPawn/CharMoveToLocation and AutoAttackStart to the L2PcInstance
 				L2Character obj = (L2Character) object;
@@ -241,7 +241,7 @@ public class PcKnownList extends PlayableKnownList
 		// Send Server-Client Packet DeleteObject to the L2PcInstance
 		getActiveChar().sendPacket(new DeleteObject(object));
 
-		if(Config.CHECK_KNOWN && object instanceof L2NpcInstance)
+		if(Config.CHECK_KNOWN && object.isNpc)
 		{
 			getActiveChar().sendMessage("Removed NPC: " + ((L2NpcInstance) object).getName());
 		}

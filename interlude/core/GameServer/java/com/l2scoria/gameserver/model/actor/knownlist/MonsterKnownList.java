@@ -51,7 +51,7 @@ public class MonsterKnownList extends AttackableKnownList
 			return false;
 
 		// Set the L2MonsterInstance Intention to AI_INTENTION_ACTIVE if the state was AI_INTENTION_IDLE
-		if(object instanceof L2PcInstance && getActiveChar().getAI().getIntention() == CtrlIntention.AI_INTENTION_IDLE)
+		if(object.isPlayer && getActiveChar().getAI().getIntention() == CtrlIntention.AI_INTENTION_IDLE)
 		{
 			getActiveChar().getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE, null);
 		}
@@ -65,7 +65,7 @@ public class MonsterKnownList extends AttackableKnownList
 		if(!super.removeKnownObject(object))
 			return false;
 
-		if(!(object instanceof L2Character))
+		if(!(object.isCharacter))
 			return true;
 
 		if(getActiveChar().hasAI())

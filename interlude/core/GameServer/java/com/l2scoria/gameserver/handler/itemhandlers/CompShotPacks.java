@@ -44,7 +44,7 @@ public class CompShotPacks implements IItemHandler
 
 	public void useItem(L2PlayableInstance playable, L2ItemInstance item)
 	{
-		if(!(playable instanceof L2PcInstance))
+		if(!(playable.isPlayer))
 			return;
 
 		L2PcInstance activeChar = (L2PcInstance) playable;

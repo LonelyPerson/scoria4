@@ -49,7 +49,7 @@ public class Resurrect implements ISkillHandler
 	public void useSkill(L2Character activeChar, L2Skill skill, L2Object[] targets)
 	{
 		L2PcInstance player = null;
-		if(activeChar instanceof L2PcInstance)
+		if(activeChar.isPlayer)
 			player = (L2PcInstance) activeChar;
 
 		L2Character target = null;
@@ -59,7 +59,7 @@ public class Resurrect implements ISkillHandler
 		for(L2Object target2 : targets)
 		{
 			target = (L2Character) target2;
-			if(target instanceof L2PcInstance)
+			if(target.isPlayer)
 			{
 				targetPlayer = (L2PcInstance) target;
 
@@ -88,11 +88,11 @@ public class Resurrect implements ISkillHandler
 		}
 
 		for(L2Character cha : targetToRes)
-			if(activeChar instanceof L2PcInstance)
+			if(activeChar.isPlayer)
 			{
-				if(cha instanceof L2PcInstance)
+				if(cha.isPlayer)
 					((L2PcInstance) cha).reviveRequest((L2PcInstance) activeChar, skill, false);
-				else if(cha instanceof L2PetInstance)
+				else if(cha.isPet)
 				{
 					if(((L2PetInstance) cha).getOwner() == activeChar)
 						cha.doRevive(Formulas.getInstance().calculateSkillResurrectRestorePercent(skill.getPower(), activeChar.getWIT()));

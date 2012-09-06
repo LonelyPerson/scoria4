@@ -620,7 +620,7 @@ public class Quest extends ManagedScript
 
 	public String onDeath(L2Character killer, L2Character victim, QuestState qs)
 	{
-		if(killer instanceof L2NpcInstance)
+		if(killer.isNpc)
 			return onAdvEvent("", (L2NpcInstance) killer, qs.getPlayer());
 		else
 			return onAdvEvent("", null, qs.getPlayer());
@@ -712,7 +712,7 @@ public class Quest extends ManagedScript
 		if(object == null)
 			return false;
 
-		if(object instanceof L2PcInstance)
+		if(object.isPlayer)
 		{
 			L2PcInstance player = (L2PcInstance) object;
 			if(player.getAccessLevel().isGm())
@@ -766,7 +766,7 @@ public class Quest extends ManagedScript
 		if(res == null)
 			return true;
 
-		if(object instanceof L2PcInstance)
+		if(object.isPlayer)
 		{
 			L2PcInstance player = (L2PcInstance) object;
 

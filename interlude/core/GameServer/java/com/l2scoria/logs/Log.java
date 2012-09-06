@@ -23,14 +23,14 @@
 
 package com.l2scoria.logs;
 
+import com.l2scoria.Config;
+import org.apache.log4j.Logger;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.logging.Logger;
-
-import com.l2scoria.Config;
 
 public class Log
 {
@@ -45,19 +45,15 @@ public class Log
 		try
 		{
 			File file = new File("log/game/" + (cat != null ? cat : "_all") + ".txt");
-			//			file.getAbsolutePath().mkdirs();
 			FileWriter save = new FileWriter(file, true);
-			String out = "[" + date + "] '---': " + text + "\n"; // "+char_name()+"
+			String out = "[" + date + "] '---': " + text + "\n";
 			save.write(out);
 			save.flush();
 			save.close();
-			save = null;
-			file = null;
-			out = null;
 		}
 		catch(IOException e)
 		{
-			_log.warning("saving chat log failed: " + e);
+			_log.warn("saving chat log failed: " + e);
 			e.printStackTrace();
 		}
 

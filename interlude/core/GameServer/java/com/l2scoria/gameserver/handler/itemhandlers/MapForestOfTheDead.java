@@ -38,7 +38,7 @@ public class MapForestOfTheDead implements IItemHandler
 
 	public void useItem(L2PlayableInstance playable, L2ItemInstance item)
 	{
-		if(!(playable instanceof L2PcInstance))
+		if(!(playable.isPlayer))
 			return;
 		int itemId = item.getItemId();
 		if(itemId == 7063)

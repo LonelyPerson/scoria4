@@ -114,7 +114,7 @@ public class PcStat extends PlayableStat
 
 		// if this player has a pet that takes from the owner's Exp, give the pet Exp now
 
-		if(activeChar.getPet() instanceof L2PetInstance)
+		if(activeChar.getPet().isPet)
 		{
 			L2PetInstance pet = (L2PetInstance) activeChar.getPet();
 			ratioTakenByPet = pet.getPetData().getOwnerExpTaken();

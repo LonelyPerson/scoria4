@@ -357,7 +357,7 @@ public class ChristmasManager
 					obj = SpawnTable.getInstance().getTemplate(_iterator).getLastSpawn();
 					_iterator++;
 
-					if(obj != null && obj instanceof L2Attackable)
+					if(obj != null && obj.isAttackable)
 						if(rand.nextInt(100) > 10)
 						{
 							obj = null;
@@ -688,13 +688,13 @@ public class ChristmasManager
 				{
 					obj = SpawnTable.getInstance().getTemplate(_iterator).getLastSpawn();
 					_iterator++;
-					if(obj != null && obj instanceof L2Attackable)
+					if(obj != null && obj.isAttackable)
 					{
 						obj = null;
 					}
 				}
 
-				if(obj != null && rand.nextInt(100) < 80 && obj instanceof L2NpcInstance)
+				if(obj != null && rand.nextInt(100) < 80 && obj.isNpc)
 				{
 					spawnOneTree(getSantaId(), obj.getX() + rand.nextInt(500) - 250, obj.getY() + rand.nextInt(500) - 250, obj.getZ());
 				}

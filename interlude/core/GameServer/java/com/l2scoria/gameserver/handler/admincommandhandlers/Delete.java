@@ -59,7 +59,7 @@ public class Delete extends Admin
 	{
 		L2Object obj = activeChar.getTarget();
 
-		if(obj != null && obj instanceof L2NpcInstance)
+		if(obj != null && obj.isNpc)
 		{
 			L2NpcInstance target = (L2NpcInstance) obj;
 			target.deleteMe();

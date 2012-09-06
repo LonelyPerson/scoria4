@@ -18,6 +18,23 @@
  */
 package com.l2scoria.loginserver;
 
+import com.l2scoria.Config;
+import com.l2scoria.crypt.Base64;
+import com.l2scoria.crypt.ScrambledKeyPair;
+import com.l2scoria.gameserver.datatables.GameServerTable;
+import com.l2scoria.gameserver.datatables.GameServerTable.GameServerInfo;
+import com.l2scoria.loginserver.network.gameserverpackets.ServerStatus;
+import com.l2scoria.loginserver.network.serverpackets.LoginFail.LoginFailReason;
+import com.l2scoria.logs.Log;
+import com.l2scoria.util.NetList;
+import com.l2scoria.util.database.L2DatabaseFactory;
+import com.l2scoria.util.random.Rnd;
+import javolution.util.FastCollection.Record;
+import javolution.util.FastList;
+import javolution.util.FastMap;
+import org.apache.log4j.Logger;
+
+import javax.crypto.Cipher;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.security.GeneralSecurityException;
@@ -30,25 +47,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Collection;
 import java.util.Map;
-import java.util.logging.Logger;
-
-import javax.crypto.Cipher;
-
-import javolution.util.FastList;
-import javolution.util.FastMap;
-import javolution.util.FastCollection.Record;
-
-import com.l2scoria.Config;
-import com.l2scoria.crypt.Base64;
-import com.l2scoria.crypt.ScrambledKeyPair;
-import com.l2scoria.gameserver.datatables.GameServerTable;
-import com.l2scoria.gameserver.datatables.GameServerTable.GameServerInfo;
-import com.l2scoria.loginserver.network.gameserverpackets.ServerStatus;
-import com.l2scoria.loginserver.network.serverpackets.LoginFail.LoginFailReason;
-import com.l2scoria.logs.Log;
-import com.l2scoria.util.database.L2DatabaseFactory;
-import com.l2scoria.util.random.Rnd;
-import com.l2scoria.util.NetList;
 
 /**
  * This class ...
@@ -191,7 +189,7 @@ public class LoginController
 		if (_clients.size()>=Config.MAX_LOGINSESSIONS || this.PosibleMemoryOverflow())
 		{
                     // or mb bug here, client mb not removed
-			_log.warning("DDoS-Protection: To many connections or memory lost < 100MB. Closing all and free memory.");
+			_log.warn("DDoS-Protection: To many connections or memory lost < 100MB. Closing all and free memory.");
 			for(L2LoginClient cl : _clients)
 			{
 				try
@@ -231,7 +229,7 @@ public class LoginController
 					_clients.remove(client);
 				}
 				catch(Exception e) {
-                                    _log.warning("Error remove account from loginlist. Account:"+client);
+                                    _log.warn("Error remove account from loginlist. Account:"+client);
                                 }
 			}
 		}
@@ -253,7 +251,7 @@ public class LoginController
 			_loginServerClients.remove(account);
 		}
 		catch(Exception e){
-                    _log.warning("Account "+account+" use dupe bug with relogin");
+                    _log.warn("Account "+account+" use dupe bug with relogin");
                 }
 	}
 
@@ -513,7 +511,7 @@ public class LoginController
 				}
 				catch(Exception e)
 				{
-					_log.warning("Could not set lastServer: " + e);
+					_log.warn("Could not set lastServer: " + e);
 				}
 				finally
 				{
@@ -543,7 +541,7 @@ public class LoginController
 		}
 		catch(Exception e)
 		{
-			_log.warning("Could not set accessLevel: " + e);
+			_log.warn("Could not set accessLevel: " + e);
 		}
 		finally
 		{
@@ -580,7 +578,7 @@ public class LoginController
 		}
 		catch(Exception e)
 		{
-			_log.warning("could not check gm state:" + e);
+			_log.warn("could not check gm state:" + e);
 			ok = false;
 		}
 		finally
@@ -607,7 +605,7 @@ public class LoginController
 			statement = null;
 			rset = null;
 		} catch(Exception e) {
-			_log.warning("Has some errors in statment Activator");
+			_log.warn("Has some errors in statment Activator");
 		}
 		finally
 		{
@@ -628,7 +626,7 @@ public class LoginController
 			statement.setString(1, address.getHostAddress());
 			statement.execute();
 		} catch(Exception e) {
-			_log.warning("Has some errors in activator delete ip");
+			_log.warn("Has some errors in activator delete ip");
 		}
 		finally
 		{
@@ -706,7 +704,7 @@ public class LoginController
 
 				if(Config.DEBUG)
 				{
-					_log.fine("Account already exists.");
+					_log.info("Account already exists.");
 				}
 			}
 
@@ -736,10 +734,10 @@ public class LoginController
 						return true;
 
 					}
-					_log.warning("Invalid username creation/use attempt: " + user);
+					_log.warn("Invalid username creation/use attempt: " + user);
 					return false;
 				}
-				_log.warning("Account missing for user " + user);
+				_log.warn("Account missing for user " + user);
 				banControl(address, user, password);
 				return false;
 			}
@@ -781,7 +779,7 @@ public class LoginController
 		}
 		catch(Exception e)
 		{
-			_log.warning("Could not check password:" + e);
+			_log.warn("Could not check password:" + e);
 			ok = false;
 		}
 		finally
@@ -863,7 +861,7 @@ public class LoginController
 		{
 			// digest algo not found ??
 			// out of bounds should not be possible
-			_log.warning("could not check ban state:" + e);
+			_log.warn("could not check ban state:" + e);
 			ok = false;
 		}
 		finally

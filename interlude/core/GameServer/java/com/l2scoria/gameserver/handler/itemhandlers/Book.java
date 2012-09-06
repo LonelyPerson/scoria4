@@ -71,7 +71,7 @@ public class Book implements IItemHandler
 
 	public void useItem(L2PlayableInstance playable, L2ItemInstance item)
 	{
-		if(!(playable instanceof L2PcInstance))
+		if(!(playable.isPlayer))
 			return;
 
 		L2PcInstance activeChar = (L2PcInstance) playable;
@@ -92,21 +92,15 @@ public class Book implements IItemHandler
 			NpcHtmlMessage html = new NpcHtmlMessage(1);
 			html.setHtml("<html><body>My Text is missing:<br>" + filename + "</body></html>");
 			activeChar.sendPacket(html);
-			html = null;
 		}
 		else
 		{
 			NpcHtmlMessage itemReply = new NpcHtmlMessage(5);
 			itemReply.setHtml(content);
 			activeChar.sendPacket(itemReply);
-			itemReply = null;
 		}
 
 		activeChar.sendPacket(ActionFailed.STATIC_PACKET);
-
-		activeChar = null;
-		filename = null;
-		content = null;
 	}
 
 	public int[] getItemIds()

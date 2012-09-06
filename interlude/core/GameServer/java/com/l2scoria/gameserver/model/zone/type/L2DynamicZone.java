@@ -66,7 +66,7 @@ public class L2DynamicZone extends L2ZoneDefault
 	{
 		try
 		{
-			if(character instanceof L2PcInstance)
+			if(character.isPlayer)
 			{
 				((L2PcInstance) character).sendMessage("You have entered a temporary zone!");
 			}
@@ -82,7 +82,7 @@ public class L2DynamicZone extends L2ZoneDefault
 	@Override
 	protected void onExit(L2Character character)
 	{
-		if(character instanceof L2PcInstance)
+		if(character.isPlayer)
 		{
 			((L2PcInstance) character).sendMessage("You have left a temporary zone!");
 		}

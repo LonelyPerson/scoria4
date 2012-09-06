@@ -41,14 +41,14 @@ public class Spoil implements ISkillHandler
 
 	public void useSkill(L2Character activeChar, L2Skill skill, L2Object[] targets)
 	{
-		if(!(activeChar instanceof L2PcInstance))
+		if(!(activeChar.isPlayer))
 			return;
 
 		if(targets == null){ return; }
 
 		for(int index = 0; index < targets.length; index++)
 		{
-			if(!(targets[index] instanceof L2MonsterInstance))
+			if(!(targets[index].isMonster))
 				continue;
 
 			L2MonsterInstance target = (L2MonsterInstance) targets[index];

@@ -21,7 +21,6 @@ package com.l2scoria.gameserver.model.zone.type;
 import com.l2scoria.gameserver.datatables.SkillTable;
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2SummonInstance;
 import com.l2scoria.gameserver.model.zone.L2ZoneDefault;
 
 public class L2SkillZone extends L2ZoneDefault
@@ -90,9 +89,9 @@ public class L2SkillZone extends L2ZoneDefault
 
 	private void startSkill(L2Character character)
 	{
-		if((character instanceof L2PcInstance || character instanceof L2SummonInstance) && (!_onSiege || character.isInsideZone(L2Character.ZONE_SIEGE)))
+		if((character.isPlayer || character.isSummonInstance) && (!_onSiege || character.isInsideZone(L2Character.ZONE_SIEGE)))
 		{
-			if(character instanceof L2PcInstance)
+			if(character.isPlayer)
 			{
 				((L2PcInstance) character).enterDangerArea();
 			}
@@ -103,11 +102,11 @@ public class L2SkillZone extends L2ZoneDefault
 
 	private void stopSkill(L2Character character)
 	{
-		if(character instanceof L2PcInstance || character instanceof L2SummonInstance)
+		if(character.isPlayer || character.isSummonInstance)
 		{
 			character.stopSkillEffects(_skillId);
 
-			if(character instanceof L2PcInstance)
+			if(character.isPlayer)
 			{
 				((L2PcInstance) character).exitDangerArea();
 			}

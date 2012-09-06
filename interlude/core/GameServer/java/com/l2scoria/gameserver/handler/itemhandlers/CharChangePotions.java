@@ -47,11 +47,11 @@ public class CharChangePotions implements IItemHandler
 
 		L2PcInstance activeChar;
 
-		if(playable instanceof L2PcInstance)
+		if(playable.isPlayer)
 		{
 			activeChar = (L2PcInstance) playable;
 		}
-		else if(playable instanceof L2PetInstance)
+		else if(playable.isPet)
 		{
 			activeChar = ((L2PetInstance) playable).getOwner();
 		}
@@ -124,9 +124,6 @@ public class CharChangePotions implements IItemHandler
 		// Broadcast the changes to the char and all those nearby.
 		UserInfo ui = new UserInfo(activeChar);
 		activeChar.broadcastPacket(ui);
-
-		ui = null;
-		activeChar = null;
 	}
 
 	public int[] getItemIds()

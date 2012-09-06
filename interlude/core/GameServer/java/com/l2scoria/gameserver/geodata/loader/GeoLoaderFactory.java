@@ -14,7 +14,6 @@ public class GeoLoaderFactory
 
 	public static GeoLoaderFactory getInstance()
 	{
-
 		if (instance == null)
 		{
 			instance = new GeoLoaderFactory();
@@ -25,7 +24,6 @@ public class GeoLoaderFactory
 
 	private GeoLoaderFactory()
 	{
-
 		geoLoaders = new GeoLoader[]{new L2JGeoLoader(), new OffGeoLoader()};
 	}
 

@@ -179,7 +179,7 @@ public final class RequestActionUse extends L2GameClientPacket
 
 					if(target.isAutoAttackable(activeChar) || _ctrlPressed)
 					{
-						if(target instanceof L2DoorInstance)
+						if(target.isDoor)
 						{
 							if(((L2DoorInstance) target).isAttackable(activeChar) && pet.getNpcId() != L2SiegeSummonInstance.SWOOP_CANNON_ID)
 							{
@@ -216,7 +216,7 @@ public final class RequestActionUse extends L2GameClientPacket
 					else
 					{
 						// if it is a pet and not a summon
-						if(pet instanceof L2PetInstance)
+						if(pet.isPet)
 						{
 							L2PetInstance petInst = (L2PetInstance) pet;
 
@@ -369,7 +369,7 @@ public final class RequestActionUse extends L2GameClientPacket
 			case 41: // Wild Hog Cannon - Attack
 				if(pet != null && pet instanceof L2SiegeSummonInstance)
 				{
-					if(target != null && (target instanceof L2DoorInstance || target instanceof L2SiegeFlagInstance))
+					if(target != null && (target.isDoor || target instanceof L2SiegeFlagInstance))
 					{
 						if (((L2SiegeSummonInstance)pet).isOnSiegeMode())
 							useSkill(4230);
@@ -428,7 +428,7 @@ public final class RequestActionUse extends L2GameClientPacket
 				activeChar.sendPacket(new RecipeShopManageList(activeChar, false));
 				break;
 			case 52: // unsummon
-				if(pet != null && pet instanceof L2SummonInstance)
+				if(pet != null && pet.isSummonInstance)
 				{
 					pet.unSummon(activeChar);
 				}
@@ -464,7 +464,7 @@ public final class RequestActionUse extends L2GameClientPacket
 				//PartyCommandManager.getInstance().getActiveChannelInfo(activeChar);
 				break;
 			case 1000: // Siege Golem - Siege Hammer
-				if(target instanceof L2DoorInstance)
+				if(target.isDoor)
 				{
 					useSkill(4079);
 				}
@@ -541,13 +541,13 @@ public final class RequestActionUse extends L2GameClientPacket
 				useSkill(5140);
 				break;
 			case 1039: // Swoop Cannon - Cannon Fodder
-				if(!(target instanceof L2DoorInstance))
+				if(!(target.isDoor))
 				{
 					useSkill(5110);
 				}
 				break;
 			case 1040: // Swoop Cannon - Big Bang
-				if(!(target instanceof L2DoorInstance))
+				if(!(target.isDoor))
 				{
 					useSkill(5111);
 				}

@@ -46,7 +46,7 @@ public class Harvest implements ISkillHandler
 
 	public void useSkill(L2Character activeChar, L2Skill skill, L2Object[] targets)
 	{
-		if(!(activeChar instanceof L2PcInstance))
+		if(!(activeChar.isPlayer))
 			return;
 
 		_activeChar = (L2PcInstance) activeChar;
@@ -57,14 +57,16 @@ public class Harvest implements ISkillHandler
 
 		if(targetList == null){ return; }
 
-		for(int index = 0; index < targetList.length; index++)
+		for (L2Object aTargetList : targetList)
 		{
-			if(!(targetList[index] instanceof L2MonsterInstance))
+			if (!(aTargetList.isMonster))
+			{
 				continue;
+			}
 
-			_target = (L2MonsterInstance) targetList[index];
+			_target = (L2MonsterInstance) aTargetList;
 
-			if(_activeChar != _target.getSeeder())
+			if (_activeChar != _target.getSeeder())
 			{
 				SystemMessage sm = new SystemMessage(SystemMessageId.YOU_ARE_NOT_AUTHORIZED_TO_HARVEST);
 				_activeChar.sendPacket(sm);
@@ -77,29 +79,33 @@ public class Harvest implements ISkillHandler
 			int cropId = 0;
 
 			// TODO: check items and amount of items player harvest
-			if(_target.isSeeded())
+			if (_target.isSeeded())
 			{
-				if(calcSuccess())
+				if (calcSuccess())
 				{
 					L2Attackable.RewardItem[] items = _target.takeHarvest();
-					if(items != null && items.length > 0)
+					if (items != null && items.length > 0)
 					{
-						for(L2Attackable.RewardItem ritem : items)
+						for (L2Attackable.RewardItem ritem : items)
 						{
 							cropId = ritem.getItemId(); // always got 1 type of crop as reward
-							if(_activeChar.isInParty())
+							if (_activeChar.isInParty())
+							{
 								_activeChar.getParty().distributeItem(_activeChar, ritem, true, _target);
+							}
 							else
 							{
 								L2ItemInstance item = _activeChar.getInventory().addItem("Manor", ritem.getItemId(), ritem.getCount(), _activeChar, _target);
-								if(iu != null)
+								if (iu != null)
+								{
 									iu.addItem(item);
+								}
 								send = true;
 								total += ritem.getCount();
 								item = null;
 							}
 						}
-						if(send)
+						if (send)
 						{
 							SystemMessage smsg = new SystemMessage(SystemMessageId.YOU_PICKED_UP_S1_S2);
 							smsg.addNumber(total);
@@ -107,7 +113,7 @@ public class Harvest implements ISkillHandler
 							_activeChar.sendPacket(smsg);
 							smsg = null;
 
-							if(_activeChar.getParty() != null)
+							if (_activeChar.getParty() != null)
 							{
 								smsg = new SystemMessage(SystemMessageId.S1_HARVESTED_S3_S2S);
 								smsg.addString(_activeChar.getName());
@@ -117,10 +123,14 @@ public class Harvest implements ISkillHandler
 								smsg = null;
 							}
 
-							if(iu != null)
+							if (iu != null)
+							{
 								_activeChar.sendPacket(iu);
+							}
 							else
+							{
 								_activeChar.sendPacket(new ItemList(_activeChar, false));
+							}
 						}
 					}
 					items = null;
@@ -160,11 +170,7 @@ public class Harvest implements ISkillHandler
 		if(basicSuccess < 1)
 			basicSuccess = 1;
 
-		int rate = Rnd.nextInt(99);
-
-		if(rate < basicSuccess)
-			return true;
-		return false;
+		return Rnd.nextInt(99) < basicSuccess;
 	}
 
 	public SkillType[] getSkillIds()

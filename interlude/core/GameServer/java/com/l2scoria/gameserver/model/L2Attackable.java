@@ -379,7 +379,7 @@ public class L2Attackable extends L2NpcInstance
 	@Deprecated
 	public boolean getCondition2(L2Character target)
 	{
-		if(target instanceof L2FolkInstance || target instanceof L2DoorInstance)
+		if(target instanceof L2FolkInstance || target.isDoor)
 			return false;
 
 		if(target.isAlikeDead() || !isInsideRadius(target, getAggroRange(), false, false) || Math.abs(getZ() - target.getZ()) > 100)
@@ -448,11 +448,11 @@ public class L2Attackable extends L2NpcInstance
 		}
 
 		// If this L2Attackable is a L2MonsterInstance and it has spawned minions, call its minions to battle
-		if(this instanceof L2MonsterInstance)
+		if(this.isMonster)
 		{
 			L2MonsterInstance master = (L2MonsterInstance) this;
 
-			if(this instanceof L2MinionInstance)
+			if(this.isMinion)
 			{
 				master = ((L2MinionInstance) this).getLeader();
 
@@ -514,7 +514,7 @@ public class L2Attackable extends L2NpcInstance
 		// Enhance soul crystals of the attacker if this L2Attackable had its soul absorbed
 		try
 		{
-			if(killer instanceof L2PcInstance)
+			if(killer.isPlayer)
 			{
 				levelSoulCrystals(killer);
 			}
@@ -527,9 +527,9 @@ public class L2Attackable extends L2NpcInstance
 		// Notify the Quest Engine of the L2Attackable death if necessary
 		try
 		{
-			if(killer instanceof L2PcInstance || killer instanceof L2Summon)
+			if(killer.isPlayer || killer.isSummon)
 			{
-				L2PcInstance player = killer instanceof L2PcInstance ? (L2PcInstance) killer : ((L2Summon) killer).getOwner();
+				L2PcInstance player = killer.isPlayer ? (L2PcInstance) killer : ((L2Summon) killer).getOwner();
 
 				//only 1 randomly choosen quest of all quests registered to this character can be applied
 				Quest[] allOnKillQuests = getTemplate().getEventQuests(Quest.QuestEventType.ON_KILL);
@@ -538,7 +538,7 @@ public class L2Attackable extends L2NpcInstance
 				{
 					for(Quest quest : allOnKillQuests)
 					{
-						quest.notifyKill(this, player, killer instanceof L2Summon);
+						quest.notifyKill(this, player, killer.isSummon);
 					}
 				}
 
@@ -556,7 +556,7 @@ public class L2Attackable extends L2NpcInstance
 		if(Config.L2JMOD_CHAMPION_ENABLE)
 		{
 			//Set champion on next spawn
-			if(!(this instanceof L2GrandBossInstance) && !(this instanceof L2RaidBossInstance) && this instanceof L2MonsterInstance
+			if(!(this instanceof L2GrandBossInstance) && !(this.isRaid) && this.isMonster
 			/*&& !getTemplate().isQuestMonster*/&& Config.L2JMOD_CHAMPION_FREQUENCY > 0 && getLevel() >= Config.L2JMOD_CHAMP_MIN_LVL && getLevel() <= Config.L2JMOD_CHAMP_MAX_LVL)
 			{
 				int random = Rnd.get(100);
@@ -652,7 +652,7 @@ public class L2Attackable extends L2NpcInstance
 					// Prevent unwanted behavior
 					if(damage > 1)
 					{
-						if(attacker instanceof L2SummonInstance || attacker instanceof L2PetInstance && ((L2PetInstance) attacker).getPetData().getOwnerExpTaken() > 0)
+						if(attacker.isSummonInstance || attacker.isPet && ((L2PetInstance) attacker).getPetData().getOwnerExpTaken() > 0)
 						{
 							ddealer = ((L2Summon) attacker).getOwner();
 						}
@@ -718,11 +718,11 @@ public class L2Attackable extends L2NpcInstance
 					damage = reward._dmg;
 
 					// If the attacker is a Pet, get the party of the owner
-					if(attacker instanceof L2PetInstance)
+					if(attacker.isPet)
 					{
 						attackerParty = ((L2PetInstance) attacker).getParty();
 					}
-					else if(attacker instanceof L2PcInstance)
+					else if(attacker.isPlayer)
 					{
 						attackerParty = ((L2PcInstance) attacker).getParty();
 					}
@@ -730,7 +730,7 @@ public class L2Attackable extends L2NpcInstance
 						return;
 
 					// If this attacker is a L2PcInstance with a summoned L2SummonInstance, get Exp Penalty applied for the current summoned L2SummonInstance
-					if(attacker instanceof L2PcInstance && ((L2PcInstance) attacker).getPet() instanceof L2SummonInstance)
+					if(attacker.isPlayer && ((L2PcInstance) attacker).getPet().isSummonInstance)
 					{
 						penalty = ((L2SummonInstance) ((L2PcInstance) attacker).getPet()).getExpPenalty();
 					}
@@ -754,7 +754,7 @@ public class L2Attackable extends L2NpcInstance
 							levelDiff = attacker.getLevel() - getLevel();
 
 							tmp = calculateExpAndSp(levelDiff, damage);
-							if(attacker instanceof L2Summon)
+							if(attacker.isSummon)
 								exp = (long)(tmp[0] * (((L2Summon) attacker).getOwner().getXpRate()));
 							else
 								exp = (long)(tmp[0] * ((L2PcInstance) attacker).getXpRate());
@@ -768,7 +768,7 @@ public class L2Attackable extends L2NpcInstance
 							}
 
 							// Check for an over-hit enabled strike and Donator options
-							if(attacker instanceof L2PcInstance)
+							if(attacker.isPlayer)
 							{
 								L2PcInstance player = (L2PcInstance) attacker;
 								if(isOverhit() && attacker == getOverhitAttacker())
@@ -871,7 +871,7 @@ public class L2Attackable extends L2NpcInstance
 
 							L2PlayableInstance summon = pl.getPet();
 
-							if(summon != null && summon instanceof L2PetInstance)
+							if(summon != null && summon.isPet)
 							{
 								reward2 = rewards.get(summon);
 
@@ -931,7 +931,7 @@ public class L2Attackable extends L2NpcInstance
 
 						// Check for an over-hit enabled strike
 						// (When in party, the over-hit exp bonus is given to the whole party and splitted proportionally through the party members)
-						if(attacker instanceof L2PcInstance)
+						if(attacker.isPlayer)
 						{
 							L2PcInstance player = (L2PcInstance) attacker;
 
@@ -1040,15 +1040,15 @@ public class L2Attackable extends L2NpcInstance
 
 			try
 			{
-				if(attacker instanceof L2PcInstance || attacker instanceof L2Summon)
+				if(attacker.isPlayer || attacker.isSummon)
 				{
-					L2PcInstance player = attacker instanceof L2PcInstance ? (L2PcInstance) attacker : ((L2Summon) attacker).getOwner();
+					L2PcInstance player = attacker.isPlayer ? (L2PcInstance) attacker : ((L2Summon) attacker).getOwner();
 
 					if(getTemplate().getEventQuests(Quest.QuestEventType.ON_ATTACK) != null)
 					{
 						for(Quest quest : getTemplate().getEventQuests(Quest.QuestEventType.ON_ATTACK))
 						{
-							quest.notifyAttack(this, player, damage, attacker instanceof L2Summon);
+							quest.notifyAttack(this, player, damage, attacker.isSummon);
 						}
 					}
 
@@ -1239,7 +1239,7 @@ public class L2Attackable extends L2NpcInstance
 		if(ai == null)
 			return 0;
 
-		if(ai._attacker instanceof L2PcInstance && (((L2PcInstance) ai._attacker).getAppearance().getInvisible() || ai._attacker.isInvul()))
+		if(ai._attacker.isPlayer && (((L2PcInstance) ai._attacker).getAppearance().getInvisible() || ai._attacker.isInvul()))
 		{
 			//Remove Object Should Use This Method and Can be Blocked While Interating
 			getAggroList().remove(target);
@@ -1308,7 +1308,7 @@ public class L2Attackable extends L2NpcInstance
 		// Applies Drop rates
 		if(drop.getItemId() == 57)
 		{
-			if(this instanceof L2RaidBossInstance)
+			if(this.isRaid)
 			{
 				dropChance *= Config.ADENA_RAID;
 			}
@@ -1316,7 +1316,7 @@ public class L2Attackable extends L2NpcInstance
 			{
 				dropChance *= Config.ADENA_BOSS;
 			}
-			else if(this instanceof L2MinionInstance && this.isRaid())
+			else if(this.isMinion && this.isRaid())
 			{
 				dropChance *= Config.ADENA_MINON;
 			}
@@ -1332,7 +1332,7 @@ public class L2Attackable extends L2NpcInstance
 		}
 		else if(isSweep)
 		{
-			if(this instanceof L2RaidBossInstance)
+			if(this.isRaid)
 			{
 				dropChance *= Config.SPOIL_RAID;
 			}
@@ -1340,7 +1340,7 @@ public class L2Attackable extends L2NpcInstance
 			{
 				dropChance *= Config.SPOIL_BOSS;
 			}
-			else if(this instanceof L2MinionInstance && this.isRaid())
+			else if(this.isMinion && this.isRaid())
 			{
 				dropChance *= Config.SPOIL_MINON;
 			}
@@ -1356,7 +1356,7 @@ public class L2Attackable extends L2NpcInstance
 		}
 		else
 		{
-			if(this instanceof L2RaidBossInstance)
+			if(this.isRaid)
 			{
 				dropChance *= Config.ITEMS_RAID;
 			}
@@ -1364,7 +1364,7 @@ public class L2Attackable extends L2NpcInstance
 			{
 				dropChance *= Config.ITEMS_BOSS;
 			}
-			else if(this instanceof L2MinionInstance && this.isRaid())
+			else if(this.isMinion && this.isRaid())
 			{
 				dropChance *= Config.ITEMS_MINON;
 			}
@@ -1510,7 +1510,7 @@ public class L2Attackable extends L2NpcInstance
 		}
 
 		// Applies Drop rates
-		if(this instanceof L2RaidBossInstance)
+		if(this.isRaid)
 		{
 			categoryDropChance *= Config.ITEMS_RAID;
 		}
@@ -1518,7 +1518,7 @@ public class L2Attackable extends L2NpcInstance
 		{
 			categoryDropChance *= Config.ITEMS_BOSS;
 		}
-		else if(this instanceof L2MinionInstance && this.isRaid())
+		else if(this.isMinion && this.isRaid())
 		{
 			categoryDropChance *= Config.ITEMS_MINON;
 		}
@@ -1565,7 +1565,7 @@ public class L2Attackable extends L2NpcInstance
 
 			if(drop.getItemId() == 57)
 			{
-				if(this instanceof L2RaidBossInstance)
+				if(this.isRaid)
 				{
 					dropChance *= Config.ADENA_RAID;
 				}
@@ -1573,7 +1573,7 @@ public class L2Attackable extends L2NpcInstance
 				{
 					dropChance *= Config.ADENA_BOSS;
 				}
-				else if(this instanceof L2MinionInstance && this.isRaid())
+				else if(this.isMinion && this.isRaid())
 				{
 					dropChance *= Config.ADENA_MINON;
 				}
@@ -1588,7 +1588,7 @@ public class L2Attackable extends L2NpcInstance
 			}
 			else
 			{
-				if(this instanceof L2RaidBossInstance)
+				if(this.isRaid)
 				{
 					dropChance *= Config.ITEMS_RAID;
 				}
@@ -1596,7 +1596,7 @@ public class L2Attackable extends L2NpcInstance
 				{
 					dropChance *= Config.ITEMS_BOSS;
 				}
-				else if(this instanceof L2MinionInstance && this.isRaid())
+				else if(this.isMinion && this.isRaid())
 				{
 					dropChance *= Config.ITEMS_MINON;
 				}
@@ -1756,11 +1756,11 @@ public class L2Attackable extends L2NpcInstance
 	{
 		L2PcInstance player = null;
 
-		if(lastAttacker instanceof L2PcInstance)
+		if(lastAttacker.isPlayer)
 		{
 			player = (L2PcInstance) lastAttacker;
 		}
-		else if(lastAttacker instanceof L2Summon)
+		else if(lastAttacker.isSummon)
 		{
 			player = ((L2Summon) lastAttacker).getOwner();
 		}
@@ -1849,7 +1849,7 @@ public class L2Attackable extends L2NpcInstance
 					// Check if the autoLoot mode is active
 					if(player.getAutoLoot())
 					{
-						if((!Config.AUTO_LOOT_BOSS && this instanceof L2RaidBossInstance) || (!Config.AUTO_LOOT_BOSS && this instanceof L2GrandBossInstance))
+						if((!Config.AUTO_LOOT_BOSS && this.isRaid) || (!Config.AUTO_LOOT_BOSS && this instanceof L2GrandBossInstance))
 							DropItem(player, item);
 						else
 							player.doAutoLoot(this, item); // Give this or these Item(s) to the L2PcInstance that has killed the L2Attackable
@@ -1860,7 +1860,7 @@ public class L2Attackable extends L2NpcInstance
 					}
 
 					// Broadcast message if RaidBoss was defeated
-					if(this instanceof L2RaidBossInstance || this instanceof L2GrandBossInstance)
+					if(this.isRaid || this instanceof L2GrandBossInstance)
 					{
 						SystemMessage sm;
 						sm = new SystemMessage(SystemMessageId.S1_DIED_DROPPED_S3_S2);
@@ -2207,11 +2207,11 @@ public class L2Attackable extends L2NpcInstance
 	{
 		L2PcInstance player = null;
 
-		if(lastAttacker instanceof L2PcInstance)
+		if(lastAttacker.isPlayer)
 		{
 			player = (L2PcInstance) lastAttacker;
 		}
-		else if(lastAttacker instanceof L2Summon)
+		else if(lastAttacker.isSummon)
 		{
 			player = ((L2Summon) lastAttacker).getOwner();
 		}
@@ -2470,7 +2470,7 @@ public class L2Attackable extends L2NpcInstance
 	public void addAbsorber(L2PcInstance attacker, int crystalId)
 	{
 		// This just works for targets like L2MonsterInstance
-		if(!(this instanceof L2MonsterInstance))
+		if(!(this.isMonster))
 			return;
 
 		// The attacker must not be null
@@ -2512,7 +2512,7 @@ public class L2Attackable extends L2NpcInstance
 	private void levelSoulCrystals(L2Character attacker)
 	{
 		// Only L2PcInstance can absorb a soul
-		if(!(attacker instanceof L2PcInstance) && !(attacker instanceof L2Summon))
+		if(!(attacker.isPlayer) && !(attacker.isSummon))
 		{
 			resetAbsorbList();
 			return;
@@ -2541,7 +2541,7 @@ public class L2Attackable extends L2NpcInstance
 
 		L2NpcTemplate.AbsorbCrystalType absorbType = getTemplate().absorbType;
 
-		L2PcInstance killer = attacker instanceof L2Summon ? ((L2Summon) attacker).getOwner() : (L2PcInstance) attacker;
+		L2PcInstance killer = attacker.isSummon ? ((L2Summon) attacker).getOwner() : (L2PcInstance) attacker;
 
 		// If this mob is a boss, then skip some checkings
 		if(!isBossMob)
@@ -2938,7 +2938,7 @@ public class L2Attackable extends L2NpcInstance
 		// check the region where this mob is, do not activate the AI if region is inactive.
 		if(!isInActiveRegion())
 		{
-			if(this instanceof L2SiegeGuardInstance)
+			if(this.isSiegeGuard)
 			{
 				((L2SiegeGuardAI) getAI()).stopAITask();
 			}

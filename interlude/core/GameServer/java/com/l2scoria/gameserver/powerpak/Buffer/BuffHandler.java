@@ -154,7 +154,7 @@ public class BuffHandler implements IVoicedCommandHandler, ICustomByPassHandler,
 
 		L2NpcInstance buffer = null;
 		if(player.getTarget()!=null)
-			if(player.getTarget() instanceof L2NpcInstance)
+			if(player.getTarget().isNpc)
 			{
 				buffer = (L2NpcInstance)player.getTarget();
 				if(buffer.getTemplate().getNpcId()!=50018)

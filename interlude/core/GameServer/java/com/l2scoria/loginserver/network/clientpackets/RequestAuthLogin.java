@@ -30,11 +30,11 @@ import com.l2scoria.loginserver.network.serverpackets.AccountKicked.AccountKicke
 import com.l2scoria.loginserver.network.serverpackets.LoginFail.LoginFailReason;
 import com.l2scoria.loginserver.network.serverpackets.LoginOk;
 import com.l2scoria.loginserver.network.serverpackets.ServerList;
+import org.apache.log4j.Logger;
 
 import javax.crypto.Cipher;
 import java.net.InetAddress;
 import java.security.GeneralSecurityException;
-import java.util.logging.Logger;
 
 /**
  * Format: x 0 (a leading null) x: the rsa encrypted block with the login an password
@@ -113,7 +113,7 @@ public class RequestAuthLogin extends L2LoginClientPacket
 		InetAddress address = getClient().getConnection().getInetAddress();
 		if(address == null)
 		{
-			_log.warning("Socket is not connected: " + client.getAccount());
+			_log.warn("Socket is not connected: " + client.getAccount());
 			client.close(LoginFailReason.REASON_ACCESS_FAILED);
 			return;
 		}

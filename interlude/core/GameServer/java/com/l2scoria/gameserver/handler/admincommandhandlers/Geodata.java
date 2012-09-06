@@ -226,13 +226,10 @@ public class Geodata extends Admin
 				break;
 
 			case admin_geo_dump:
-				GeoEngine.DumpGeodata("./geodata_dump/");
+
+				GeoEngine.DumpGeodata("./geodata_dump");
 				break;
 		}
-
-		wordList = null;
-		comm = null;
-		commandEnum = null;
 
 		return true;
 	}

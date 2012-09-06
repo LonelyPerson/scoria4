@@ -60,11 +60,11 @@ public class SiegeGuardKnownList extends AttackableKnownList
 		{
 			L2PcInstance player = null;
 
-			if(object instanceof L2PcInstance)
+			if(object.isPlayer)
 			{
 				player = (L2PcInstance) object;
 			}
-			else if(object instanceof L2Summon)
+			else if(object.isSummon)
 			{
 				player = ((L2Summon) object).getOwner();
 			}

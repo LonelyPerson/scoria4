@@ -201,8 +201,8 @@ public class TvT extends GameEvent
 		Team killerTeam = getPlayerTeam(killer);
 		Team victimTeam = getPlayerTeam(victim);
 
-		L2PcInstance pk = killer.getActingPlayer();
-		L2PcInstance pv = victim.getActingPlayer();
+		L2PcInstance pk = killer.getPlayer();
+		L2PcInstance pv = victim.getPlayer();
 
 		if (killerTeam != null && victimTeam != null)
 		{
@@ -369,7 +369,7 @@ public class TvT extends GameEvent
 
 		if (!result)
 		{
-			actor.getActingPlayer().sendMessage("Вы не можете использовать этот предемет на эвенте.");
+			actor.getPlayer().sendMessage("Вы не можете использовать этот предемет на эвенте.");
 		}
 
 		return result;
@@ -400,7 +400,7 @@ public class TvT extends GameEvent
 		}
 		if (!result)
 		{
-			caster.getActingPlayer().sendMessage("Это умение запрещено на эвенте.");
+			caster.getPlayer().sendMessage("Это умение запрещено на эвенте.");
 		}
 		return result;
 	}

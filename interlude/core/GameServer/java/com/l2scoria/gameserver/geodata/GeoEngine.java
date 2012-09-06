@@ -2026,10 +2026,14 @@ public class GeoEngine
 
 						//_log.info(" - hiegh bef.: " + height);
 
-						if(control.isGeoCloser())
+						if (control.isGeoCloser())
+						{
 							height |= around.get(geoXY);
+						}
 						else
+						{
 							height &= ~around.get(geoXY);
+						}
 
 						//_log.info(" - hiegh aft.: " + height);
 
@@ -2051,8 +2055,10 @@ public class GeoEngine
 						}
 						byte layers = block[index];
 						index++;
-						if(layers <= 0 || layers > MAX_LAYERS)
+						if (layers <= 0 || layers > MAX_LAYERS)
+						{
 							break;
+						}
 						short temph = Short.MIN_VALUE;
 						old_nswe = NSWE_ALL;
 						while(layers > 0)
@@ -2079,10 +2085,14 @@ public class GeoEngine
 
 						//_log.info(" - hiegh bef.: " + temph);
 
-						if(control.isGeoCloser())
+						if (control.isGeoCloser())
+						{
 							temph |= around.get(geoXY);
+						}
 						else
+						{
 							temph &= ~around.get(geoXY);
+						}
 
 						//_log.info(" - hiegh aft.: " + temph);
 
@@ -2111,10 +2121,16 @@ public class GeoEngine
 			int maxX = pos.getXmax() - L2World.MAP_MIN_X >> 4;
 			int minY = pos.getYmin() - L2World.MAP_MIN_Y >> 4;
 			int maxY = pos.getYmax() - L2World.MAP_MIN_Y >> 4;
-			for(int geoX = minX; geoX <= maxX; geoX++)
-				for(int geoY = minY; geoY <= maxY; geoY++)
-					if(check_cell_in_door(geoX, geoY, pos))
+			for (int geoX = minX; geoX <= maxX; geoX++)
+			{
+				for (int geoY = minY; geoY <= maxY; geoY++)
+				{
+					if (check_cell_in_door(geoX, geoY, pos))
+					{
 						around_blocks.add(makeLong(geoX, geoY));
+					}
+				}
+			}
 
 			for(long geoXY : around_blocks.toNativeArray())
 			{
@@ -2178,8 +2194,10 @@ public class GeoEngine
 				int blockIndex = getBlockIndex(blockX, blockY);
 
 				// Попытка скопировать блок геодаты, если уже существует, то не скопируется
-				if(first_time)
+				if (first_time)
+				{
 					copyBlock(ix, iy, blockIndex, geoIndex);
+				}
 
 				byte[][] region = geodata[ix][iy][geoIndex];
 				if(region == null)
@@ -2207,20 +2225,28 @@ public class GeoEngine
 						height &= 0xfff0;
 						height >>= 1;
 
-						if(first_time)
+						if (first_time)
 						{
 							close_nswe = around.remove(geoXY);
 							// подходящий слой не найден
-							if(!check_door_z(pos.getZmin(), pos.getZmax(), height))
+							if (!check_door_z(pos.getZmin(), pos.getZmax(), height))
+							{
 								break;
-							if(control.isGeoCloser())
+							}
+							if (control.isGeoCloser())
+							{
 								close_nswe &= old_nswe;
+							}
 							else
+							{
 								close_nswe &= ~old_nswe;
+							}
 							around.put(geoXY, close_nswe);
 						}
 						else
+						{
 							close_nswe = around.get(geoXY);
+						}
 
 						// around
 						height <<= 1;
@@ -2229,10 +2255,14 @@ public class GeoEngine
 
 						//_log.info(" - hiegh bef.: " + height);
 
-						if(control.isGeoCloser())
+						if (control.isGeoCloser())
+						{
 							height &= ~close_nswe;
+						}
 						else
+						{
 							height |= close_nswe;
+						}
 
 						//_log.info(" - hiegh aft.: " + height);
 
@@ -2254,8 +2284,10 @@ public class GeoEngine
 						}
 						byte layers = block[index];
 						index++;
-						if(layers <= 0 || layers > MAX_LAYERS)
+						if (layers <= 0 || layers > MAX_LAYERS)
+						{
 							break;
+						}
 						short temph = Short.MIN_VALUE;
 						old_nswe = NSWE_ALL;
 						while(layers > 0)
@@ -2276,20 +2308,28 @@ public class GeoEngine
 							index += 2;
 						}
 
-						if(first_time)
+						if (first_time)
 						{
 							close_nswe = around.remove(geoXY);
 							// подходящий слой не найден
-							if(temph == Short.MIN_VALUE || !check_door_z(pos.getZmin(), pos.getZmax(), temph))
+							if (temph == Short.MIN_VALUE || !check_door_z(pos.getZmin(), pos.getZmax(), temph))
+							{
 								break;
-							if(control.isGeoCloser())
+							}
+							if (control.isGeoCloser())
+							{
 								close_nswe &= old_nswe;
+							}
 							else
+							{
 								close_nswe &= ~old_nswe;
+							}
 							around.put(geoXY, close_nswe);
 						}
 						else
+						{
 							close_nswe = around.get(geoXY);
+						}
 
 						// around
 						temph <<= 1;
@@ -2298,10 +2338,14 @@ public class GeoEngine
 
 						//_log.info(" - hiegh bef.: " + temph);
 
-						if(control.isGeoCloser())
+						if (control.isGeoCloser())
+						{
 							temph &= ~close_nswe;
+						}
 						else
+						{
 							temph |= close_nswe;
+						}
 
 						//_log.info(" - hiegh aft.: " + temph);
 
@@ -2355,8 +2399,10 @@ public class GeoEngine
 				region[blockIndex] = newblock;
 				break;
 			default:
-				if(Config.COMPACT_GEO)
+				if (Config.COMPACT_GEO)
+				{
 					region[blockIndex] = region[blockIndex].clone();
+				}
 				break;
 		}
 	}

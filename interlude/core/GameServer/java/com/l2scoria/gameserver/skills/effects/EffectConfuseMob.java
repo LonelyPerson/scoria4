@@ -76,7 +76,7 @@ final class EffectConfuseMob extends L2Effect
 				continue;
 			}
 
-			if(obj instanceof L2Attackable && obj != getEffected())
+			if(obj.isAttackable && obj != getEffected())
 			{
 				targetList.add((L2Character) obj);
 			}

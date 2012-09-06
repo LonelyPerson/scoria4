@@ -105,7 +105,7 @@ public class CharSelectInfo extends L2GameServerPacket
 				tmp.deleteMe();
 			}
 			L2Object object = L2World.getInstance().findObject(charInfoPackage.getObjectId());
-			if(object != null && object instanceof L2PcInstance)
+			if(object != null && object.isPlayer)
 			{
 				tmp = (L2PcInstance)object;
 				tmp.closeNetConnection();

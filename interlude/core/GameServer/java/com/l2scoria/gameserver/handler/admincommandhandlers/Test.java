@@ -123,7 +123,7 @@ public class Test extends Admin
 		L2Character player;
 		L2Object target = activeChar.getTarget();
 
-		if(target == null || !(target instanceof L2Character))
+		if(target == null || !(target.isCharacter))
 		{
 			player = activeChar;
 		}

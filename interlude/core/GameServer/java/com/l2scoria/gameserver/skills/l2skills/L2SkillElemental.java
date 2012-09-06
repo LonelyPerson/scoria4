@@ -65,7 +65,7 @@ public class L2SkillElemental extends L2Skill
 
 		L2ItemInstance weaponInst = activeChar.getActiveWeaponInstance();
 
-		if(activeChar instanceof L2PcInstance)
+		if(activeChar.isPlayer)
 		{
 			if(weaponInst == null)
 			{
@@ -90,7 +90,7 @@ public class L2SkillElemental extends L2Skill
 			}
 		}
 		// If there is no weapon equipped, check for an active summon.
-		else if(activeChar instanceof L2Summon)
+		else if(activeChar.isSummon)
 		{
 			L2Summon activeSummon = (L2Summon) activeChar;
 

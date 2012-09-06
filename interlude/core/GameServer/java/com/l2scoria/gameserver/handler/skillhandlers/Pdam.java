@@ -73,7 +73,7 @@ public class Pdam implements ISkillHandler
 			Formulas f = Formulas.getInstance();
 			L2ItemInstance weapon = activeChar.getActiveWeaponInstance();
 
-			if(activeChar instanceof L2PcInstance && target instanceof L2PcInstance && target.isAlikeDead() && target.isFakeDeath())
+			if(activeChar.isPlayer && target.isPlayer && target.isAlikeDead() && target.isFakeDeath())
 			{
 				target.stopFakeDeath(null);
 			}
@@ -83,13 +83,13 @@ public class Pdam implements ISkillHandler
 			// Calculate skill evasion
 			if(f.calcPhysicalSkillEvasion(target, skill))
 			{
-				if (activeChar instanceof L2PcInstance)
+				if (activeChar.isPlayer)
 				{
 					SystemMessage sm = new SystemMessage(SystemMessageId.S1_DODGES_ATTACK);
 					sm.addString(target.getName());
 					activeChar.sendPacket(sm);
 				}
-				if (target instanceof L2PcInstance)
+				if (target.isPlayer)
 				{
 					SystemMessage sm = new SystemMessage(SystemMessageId.AVOIDED_S1_ATTACK);
 					sm.addString(activeChar.getName());
@@ -101,14 +101,14 @@ public class Pdam implements ISkillHandler
 			// Calculate vengeance
 			if(target.vengeanceSkill(skill))
 			{
-				if (target instanceof L2PcInstance)
+				if (target.isPlayer)
 				{
 					SystemMessage sm = new SystemMessage(SystemMessageId.COUNTERED_S1_ATTACK);
 					sm.addString(activeChar.getName());
 					target.sendPacket(sm);
 					sm = null;
 				}
-				if (activeChar instanceof L2PcInstance)
+				if (activeChar.isPlayer)
 				{
 					SystemMessage sm = new SystemMessage(SystemMessageId.S1_PERFORMING_COUNTERATTACK);
 					sm.addString(target.getName());
@@ -182,12 +182,12 @@ public class Pdam implements ISkillHandler
 
 				// Success of lethal effect
 				int chance = Rnd.get(100);
-				if(!target.isRaid() && chance < skill.getLethalChance1() && !(target instanceof L2DoorInstance) && !(target instanceof L2NpcInstance && ((L2NpcInstance) target).getNpcId() == 35062))
+				if(!target.isRaid() && chance < skill.getLethalChance1() && !(target.isDoor) && !(target.isNpc && ((L2NpcInstance) target).getNpcId() == 35062))
 				{
 					// 1st lethal effect activate (cp to 1 or if target is npc then hp to 50%)
 					if(skill.getLethalChance2() > 0 && chance >= skill.getLethalChance2())
 					{
-						if(target instanceof L2PcInstance)
+						if(target.isPlayer)
 						{
 							L2PcInstance player = (L2PcInstance) target;
 							if(!player.isInvul())
@@ -197,7 +197,7 @@ public class Pdam implements ISkillHandler
 							}
 							player = null;
 						}
-						else if(target instanceof L2MonsterInstance) // If is a monster remove first damage and after 50% of current hp
+						else if(target.isMonster) // If is a monster remove first damage and after 50% of current hp
 						{
 							target.reduceCurrentHp(damage, activeChar);
 							target.reduceCurrentHp(target.getCurrentHp() / 2, activeChar);
@@ -207,9 +207,9 @@ public class Pdam implements ISkillHandler
 					//2nd lethal effect activate (cp,hp to 1 or if target is npc then hp to 1)
 					{
 						// If is a monster damage is (CurrentHp - 1) so HP = 1
-						if(target instanceof L2NpcInstance)
+						if(target.isNpc)
 							target.reduceCurrentHp(target.getCurrentHp() - 1, activeChar);
-						else if(target instanceof L2PcInstance) // If is a active player set his HP and CP to 1
+						else if(target.isPlayer) // If is a active player set his HP and CP to 1
 						{
 							L2PcInstance player = (L2PcInstance) target;
 							if(!player.isInvul())
@@ -228,7 +228,7 @@ public class Pdam implements ISkillHandler
 					// Make damage directly to HP
 					if(skill.getDmgDirectlyToHP())
 					{
-						if(target instanceof L2PcInstance)
+						if(target.isPlayer)
 						{
 							L2PcInstance player = (L2PcInstance) target;
 							if(!player.isInvul())
@@ -294,7 +294,7 @@ public class Pdam implements ISkillHandler
 					{
 						effectcharge++;
 						effect.addNumCharges(1);
-						if(activeChar instanceof L2PcInstance)
+						if(activeChar.isPlayer)
 						{
 							activeChar.sendPacket(new EtcStatusUpdate((L2PcInstance) activeChar));
 							SystemMessage sm = new SystemMessage(SystemMessageId.FORCE_INCREASED_TO_S1);

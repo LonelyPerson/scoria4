@@ -59,7 +59,7 @@ public class CharKnownList extends ObjectKnownList
 		if (getActiveChar().getInstanceId() != -1 && getActiveChar().getInstanceId() != object.getInstanceId())
 			return false;
 
-		if(object instanceof L2PcInstance)
+		if(object.isPlayer)
 		{
 			getKnownPlayers().put(object.getObjectId(), (L2PcInstance) object);
 			getKnownRelations().put(object.getObjectId(), -1);
@@ -107,7 +107,7 @@ public class CharKnownList extends ObjectKnownList
 		if(!super.removeKnownObject(object))
 			return false;
 
-		if(object instanceof L2PcInstance)
+		if(object.isPlayer)
 		{
 			getKnownPlayers().remove(object.getObjectId());
 			getKnownRelations().remove(object.getObjectId());
@@ -137,7 +137,7 @@ public class CharKnownList extends ObjectKnownList
 
 		for(L2Object obj : getKnownObjects().values())
 		{
-			if(obj != null && obj instanceof L2Character)
+			if(obj != null && obj.isCharacter)
 			{
 				result.add((L2Character) obj);
 			}
@@ -152,7 +152,7 @@ public class CharKnownList extends ObjectKnownList
 
 		for(L2Object obj : getKnownObjects().values())
 		{
-			if(obj != null && obj instanceof L2Character)
+			if(obj != null && obj.isCharacter)
 			{
 				if(Util.checkIfInRange((int) radius, getActiveChar(), obj, true))
 				{

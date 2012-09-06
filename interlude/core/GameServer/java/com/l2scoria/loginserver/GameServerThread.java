@@ -27,6 +27,7 @@ import com.l2scoria.loginserver.network.loginserverpackets.*;
 import com.l2scoria.loginserver.network.serverpackets.ServerBasePacket;
 import com.l2scoria.util.Util;
 import javolution.util.FastSet;
+import org.apache.log4j.Logger;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -41,7 +42,6 @@ import java.security.interfaces.RSAPublicKey;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Logger;
 
 /**
  * @author -Wooden-
@@ -105,7 +105,7 @@ public class GameServerThread extends Thread
 
 				if(lengthHi < 0 || _connection.isClosed())
 				{
-					_log.finer("LoginServerThread: Login terminated the connection.");
+					_log.info("LoginServerThread: Login terminated the connection.");
 					break;
 				}
 
@@ -122,7 +122,7 @@ public class GameServerThread extends Thread
 
 				if(receivedBytes != length - 2)
 				{
-					_log.warning("Incomplete Packet is sent to the server, closing connection.(LS)");
+					_log.warn("Incomplete Packet is sent to the server, closing connection.(LS)");
 					break;
 				}
 
@@ -132,13 +132,13 @@ public class GameServerThread extends Thread
 
 				if(!checksumOk)
 				{
-					_log.warning("Incorrect packet checksum, closing connection (LS)");
+					_log.warn("Incorrect packet checksum, closing connection (LS)");
 					return;
 				}
 
 				if(Config.DEBUG)
 				{
-					_log.warning("[C]\n" + Util.printData(data));
+					_log.warn("[C]\n" + Util.printData(data));
 				}
 
 				int packetType = data[0] & 0xff;
@@ -167,7 +167,7 @@ public class GameServerThread extends Thread
 						onReceiveServerStatus(data);
 						break;
 					default:
-						_log.warning("Unknown Opcode (" + Integer.toHexString(packetType).toUpperCase() + ") from GameServer, closing connection.");
+						_log.warn("Unknown Opcode (" + Integer.toHexString(packetType).toUpperCase() + ") from GameServer, closing connection.");
 						forceClose(LoginServerFail.NOT_AUTHED);
 				}
 
@@ -213,7 +213,7 @@ public class GameServerThread extends Thread
 		/*}
 		else
 		{
-			_log.warning("GameServer attempted to re-initialize the blowfish key.");
+			_log.warn("GameServer attempted to re-initialize the blowfish key.");
 			// TODO get a better reason
 			this.forceClose(LoginServerFail.NOT_AUTHED);
 		}*/
@@ -493,7 +493,7 @@ public class GameServerThread extends Thread
 		}
 		catch(IOException e)
 		{
-			_log.finer("GameServerThread: Failed kicking banned server. Reason: " + e.getMessage());
+			_log.info("GameServerThread: Failed kicking banned server. Reason: " + e.getMessage());
 		}
 
 		try
@@ -502,7 +502,7 @@ public class GameServerThread extends Thread
 		}
 		catch(IOException e)
 		{
-			_log.finer("GameServerThread: Failed disconnecting banned server, server already disconnected.");
+			_log.info("GameServerThread: Failed disconnecting banned server, server already disconnected.");
 		}
 
 		lsf = null;
@@ -650,7 +650,7 @@ public class GameServerThread extends Thread
 
 		if(Config.DEBUG)
 		{
-			_log.finest("[S] " + sl.getClass().getSimpleName() + ":\n" + Util.printData(data));
+			_log.info("[S] " + sl.getClass().getSimpleName() + ":\n" + Util.printData(data));
 		}
 		data = _blowfish.crypt(data);
 
@@ -708,7 +708,7 @@ public class GameServerThread extends Thread
 			}
 			catch(UnknownHostException e)
 			{
-				_log.warning("Couldn't resolve hostname \"" + gameExternalHost + "\"");
+				_log.warn("Couldn't resolve hostname \"" + gameExternalHost + "\"");
 			}
 		}
 		else
@@ -724,7 +724,7 @@ public class GameServerThread extends Thread
 			}
 			catch(UnknownHostException e)
 			{
-				_log.warning("Couldn't resolve hostname \"" + gameInternalHost + "\"");
+				_log.warn("Couldn't resolve hostname \"" + gameInternalHost + "\"");
 			}
 		}
 		else

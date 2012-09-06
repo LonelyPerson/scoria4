@@ -17,14 +17,13 @@
  */
 package com.l2scoria.loginserver;
 
+import com.l2scoria.Config;
+import javolution.util.FastList;
+import org.apache.log4j.Logger;
+
 import java.io.IOException;
 import java.net.Socket;
 import java.util.List;
-import java.util.logging.Logger;
-
-import javolution.util.FastList;
-
-import com.l2scoria.Config;
 
 /**
  * @author KenM

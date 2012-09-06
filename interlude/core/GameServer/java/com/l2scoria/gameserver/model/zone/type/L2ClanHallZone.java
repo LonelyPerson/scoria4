@@ -74,7 +74,7 @@ public class L2ClanHallZone extends L2ZoneDefault
 	@Override
 	protected void onEnter(L2Character character)
 	{
-		if(character instanceof L2PcInstance)
+		if(character.isPlayer)
 		{
 			// Set as in clan hall
 			character.setInsideZone(L2Character.ZONE_CLANHALL, true);
@@ -103,7 +103,7 @@ public class L2ClanHallZone extends L2ZoneDefault
 	@Override
 	protected void onExit(L2Character character)
 	{
-		if(character instanceof L2PcInstance)
+		if(character.isPlayer)
 		{
 			// Unset clanhall zone
 			character.setInsideZone(L2Character.ZONE_CLANHALL, false);
@@ -127,7 +127,7 @@ public class L2ClanHallZone extends L2ZoneDefault
 	{
 		for(L2Character temp : _characterList.values())
 		{
-			if(!(temp instanceof L2PcInstance))
+			if(!(temp.isPlayer))
 			{
 				continue;
 			}

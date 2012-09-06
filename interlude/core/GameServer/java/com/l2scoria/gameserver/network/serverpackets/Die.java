@@ -58,7 +58,7 @@ public class Die extends L2GameServerPacket
 	{
 		_activeChar = cha;
 		L2Clan clan = null;
-		if (cha instanceof L2PcInstance)
+		if (cha.isPlayer)
 		{
 			L2PcInstance player = (L2PcInstance) cha;
 			clan = player.getClan();
@@ -72,7 +72,7 @@ public class Die extends L2GameServerPacket
 		_charObjId = cha.getObjectId();
 		_fallDown = cha.isDead();
 
-		if (cha instanceof L2Attackable)
+		if (cha.isAttackable)
 			_sweepable = ((L2Attackable) cha).isSweepActive();
 
 		if (clan != null)

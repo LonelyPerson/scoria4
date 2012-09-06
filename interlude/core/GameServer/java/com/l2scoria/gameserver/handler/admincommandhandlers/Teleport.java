@@ -345,7 +345,7 @@ public class Teleport extends Admin
 		L2Object target = activeChar.getTarget();
 		L2PcInstance player = null;
 
-		if(target instanceof L2PcInstance)
+		if(target.isPlayer)
 		{
 			player = (L2PcInstance) target;
 		}
@@ -386,7 +386,7 @@ public class Teleport extends Admin
 		L2Object target = activeChar.getTarget();
 		L2PcInstance player = null;
 
-		if(target instanceof L2PcInstance)
+		if(target.isPlayer)
 		{
 			player = (L2PcInstance) target;
 		}
@@ -456,7 +456,7 @@ public class Teleport extends Admin
 	{
 		L2PcInstance player = null;
 
-		if(target != null && target instanceof L2PcInstance)
+		if(target != null && target.isPlayer)
 		{
 			player = (L2PcInstance) target;
 		}
@@ -493,7 +493,7 @@ public class Teleport extends Admin
 	{
 		L2Object obj = activeChar.getTarget();
 
-		if(obj != null && obj instanceof L2NpcInstance)
+		if(obj != null && obj.isNpc)
 		{
 			L2NpcInstance target = (L2NpcInstance) obj;
 

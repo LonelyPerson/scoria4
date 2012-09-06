@@ -369,7 +369,7 @@ public class MapRegionTable
 	{
 		int[] coord;
 
-		if(activeChar instanceof L2PcInstance)
+		if(activeChar.isPlayer)
 		{
 			L2PcInstance player = (L2PcInstance) activeChar;
 

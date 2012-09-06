@@ -369,7 +369,7 @@ public abstract class ItemContainer
 				});
 				_logAudit.info(record);
 			}
-			else if(target.getOwner() instanceof L2PcInstance && ((L2PcInstance)target.getOwner()).isGM())
+			else if(target.getOwner().isPlayer && ((L2PcInstance)target.getOwner()).isGM())
 			{
 				LogRecord record = new LogRecord(Level.INFO, process + " item: " + sourceitem.getItemName() + "(" + count + ")");
 				record.setLoggerName("gmaudit");

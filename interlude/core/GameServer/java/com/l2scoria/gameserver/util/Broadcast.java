@@ -101,7 +101,7 @@ public final class Broadcast
 			try
 			{
 				player.sendPacket(mov);
-				if(mov instanceof CharInfo && character instanceof L2PcInstance)
+				if(mov instanceof CharInfo && character.isPlayer)
 				{
 					int relation = ((L2PcInstance) character).getRelation(player);
 
@@ -160,7 +160,7 @@ public final class Broadcast
 	 */
 	public static void toSelfAndKnownPlayers(L2Character character, L2GameServerPacket mov)
 	{
-		if(character instanceof L2PcInstance)
+		if(character.isPlayer)
 		{
 			character.sendPacket(mov);
 		}
@@ -176,7 +176,7 @@ public final class Broadcast
 			radiusSq = 360000;
 		}
 
-		if(character instanceof L2PcInstance)
+		if(character.isPlayer)
 		{
 			character.sendPacket(mov);
 		}

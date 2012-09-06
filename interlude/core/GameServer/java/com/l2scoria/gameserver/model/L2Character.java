@@ -234,7 +234,7 @@ public abstract class L2Character extends L2Object
 		// Set its template to the new L2Character
 		_template = template;
 
-		if(template != null && this instanceof L2NpcInstance)
+		if(template != null && this.isNpc)
 		{
 			// Copy the Standard Calcultors of the L2NPCInstance in _calculators
 			_calculators = NPC_STD_CALCULATOR;
@@ -262,7 +262,7 @@ public abstract class L2Character extends L2Object
 			Formulas.getInstance().addFuncsToNewCharacter(this);
 		}
 
-		if(!(this instanceof L2PcInstance) && !(this instanceof L2MonsterInstance) && !(this instanceof L2GuardInstance) && !(this instanceof L2SiegeGuardInstance) && !(this instanceof L2ControlTowerInstance) && !(this instanceof L2DoorInstance) && !(this instanceof L2FriendlyMobInstance) && !(this instanceof L2SiegeSummonInstance) && !(this instanceof L2PetInstance) && !(this instanceof L2SummonInstance) && !(this instanceof L2SiegeFlagInstance) && !(this instanceof L2EffectPointInstance) && !(this instanceof L2CommanderInstance) && !(this instanceof L2FortSiegeGuardInstance))
+		if(!(this.isPlayer) && !(this.isMonster) && !(this.isGuard) && !(this.isSiegeGuard) && !(this instanceof L2ControlTowerInstance) && !(this.isDoor) && !(this instanceof L2FriendlyMobInstance) && !(this instanceof L2SiegeSummonInstance) && !(this.isPet) && !(this.isSummonInstance) && !(this instanceof L2SiegeFlagInstance) && !(this instanceof L2EffectPointInstance) && !(this instanceof L2CommanderInstance) && !(this instanceof L2FortSiegeGuardInstance))
 		{
 			/////////////////////////////////////////////////////////////////////////////////////////////
 			setIsInvul(true);
@@ -377,7 +377,7 @@ public abstract class L2Character extends L2Object
 			{
 				player.sendPacket(mov);
 
-				if(mov instanceof CharInfo && this instanceof L2PcInstance)
+				if(mov instanceof CharInfo && this.isPlayer)
 				{
 					int relation = ((L2PcInstance) this).getRelation(player);
 					if(getKnownList().getKnownRelations().get(player.getObjectId()) != null && getKnownList().getKnownRelations().get(player.getObjectId()) != relation)
@@ -425,7 +425,7 @@ public abstract class L2Character extends L2Object
 
 				player.sendPacket(mov);
 
-				if(mov instanceof CharInfo && this instanceof L2PcInstance)
+				if(mov instanceof CharInfo && this.isPlayer)
 				{
 					int relation = ((L2PcInstance) this).getRelation(player);
 					if(getKnownList().getKnownRelations().get(player.getObjectId()) != null && getKnownList().getKnownRelations().get(player.getObjectId()) != relation)
@@ -599,7 +599,7 @@ public abstract class L2Character extends L2Object
 
 		isFalling(false, 0);
 
-		if(!(this instanceof L2PcInstance))
+		if(!(this.isPlayer))
 		{
 			onTeleported();
 		}
@@ -616,7 +616,7 @@ public abstract class L2Character extends L2Object
 		int y = loc.getY();
 		int z = loc.getZ();
 
-		if(this instanceof L2PcInstance && DimensionalRiftManager.getInstance().checkIfInRiftZone(getX(), getY(), getZ(), true))
+		if(this.isPlayer && DimensionalRiftManager.getInstance().checkIfInRiftZone(getX(), getY(), getZ(), true))
 		{ // true -> ignore waiting room :)
 			L2PcInstance player = (L2PcInstance) this;
 			player.sendMessage("You have been sent to the waiting room.");
@@ -700,7 +700,7 @@ public abstract class L2Character extends L2Object
 
 		try
 		{
-			if(this instanceof L2PcInstance)
+			if(this.isPlayer)
 			{
 				safeFallHeight = ((L2PcInstance) this).getTemplate().getBaseFallSafeHeight(((L2PcInstance) this).getAppearance().getSex());
 			}
@@ -758,7 +758,7 @@ public abstract class L2Character extends L2Object
 		if(damage < 1)
 			return;
 
-		if(this instanceof L2PcInstance)
+		if(this.isPlayer)
 		{
 			SystemMessage sm = new SystemMessage(SystemMessageId.FALL_DAMAGE_S1);
 			sm.addNumber(damage);
@@ -824,7 +824,7 @@ public abstract class L2Character extends L2Object
 			return;
 		}
 
-		if(this instanceof L2NpcInstance && target.isAlikeDead())
+		if(this.isNpc && target.isAlikeDead())
 		{
 			// If L2PcInstance is dead or the target is dead, the action is stoped
 			getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE);
@@ -833,7 +833,7 @@ public abstract class L2Character extends L2Object
 			return;
 		}
 
-		if(this instanceof L2PcInstance && target.isDead() && !target.isFakeDeath())
+		if(this.isPlayer && target.isDead() && !target.isFakeDeath())
 		{
 			// If L2PcInstance is dead or the target is dead, the action is stoped
 			getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE);
@@ -851,7 +851,7 @@ public abstract class L2Character extends L2Object
 			return;
 		}
 
-		if(this instanceof L2PcInstance && isDead())
+		if(this.isPlayer && isDead())
 		{
 			// If L2PcInstance is dead or the target is dead, the action is stoped
 			getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE);
@@ -860,7 +860,7 @@ public abstract class L2Character extends L2Object
 			return;
 		}
 
-		if(target instanceof L2PcInstance && ((L2PcInstance) target).getDuelState() == Duel.DUELSTATE_DEAD)
+		if(target.isPlayer && target.getPlayer().getDuelState() == Duel.DUELSTATE_DEAD)
 		{
 			// If L2PcInstance is dead or the target is dead, the action is stoped
 			getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE);
@@ -869,7 +869,7 @@ public abstract class L2Character extends L2Object
 			return;
 		}
 
-		if(target instanceof L2DoorInstance && !((L2DoorInstance) target).isAttackable(this))
+		if(target.isDoor && !((L2DoorInstance) target).isAttackable(this))
 			return;
 
 		if(isAttackingDisabled())
@@ -881,7 +881,7 @@ public abstract class L2Character extends L2Object
 			return;
 		}
 
-		if(this instanceof L2PcInstance)
+		if(this.isPlayer)
 		{
 			if(((L2PcInstance) this).inObserverMode())
 			{
@@ -890,9 +890,9 @@ public abstract class L2Character extends L2Object
 				return;
 			}
 
-			if(target instanceof L2PcInstance)
+			if(target.isPlayer)
 			{
-				if(((L2PcInstance) target).isCursedWeaponEquiped() && this.getLevel() <= Config.MAX_LEVEL_NEWBIE)
+				if(target.getPlayer().isCursedWeaponEquiped() && this.getLevel() <= Config.MAX_LEVEL_NEWBIE)
 				{
 					((L2PcInstance) this).sendMessage("Can't attack a cursed player when under level 21.");
 					sendPacket(ActionFailed.STATIC_PACKET);
@@ -953,7 +953,7 @@ public abstract class L2Character extends L2Object
 		if(weaponItem != null && weaponItem.getItemType() == L2WeaponType.BOW)
 		{
 			//Check for arrows and MP
-			if(this instanceof L2PcInstance)
+			if(this.isPlayer)
 			{
 				// Checking if target has moved to peace zone - only for player-bow attacks at the moment
 				// Other melee is checked in movement code and for offensive spells a check is done every time
@@ -1006,7 +1006,7 @@ public abstract class L2Character extends L2Object
 					return;
 				}
 			}
-			else if(this instanceof L2NpcInstance)
+			else if(this.isNpc)
 			{
 				if(_disableBowAttackEndTime > GameTimeController.getGameTicks())
 					return;
@@ -1025,11 +1025,11 @@ public abstract class L2Character extends L2Object
 		// Verify if soulshots are charged.
 		boolean wasSSCharged;
 
-		if(this instanceof L2Summon && !(this instanceof L2PetInstance))
+		if(this.isSummon && !(this.isPet))
 		{
 			wasSSCharged = ((L2Summon) this).getChargedSoulShot() != L2ItemInstance.CHARGED_NONE;
 		}
-		else if(this instanceof L2MonsterInstance && ((L2MonsterInstance) this).getTemplate().getRace() == L2NpcTemplate.Race.HUMANOID && !this.isRaid())
+		else if(this.isMonster && ((L2MonsterInstance) this).getTemplate().getRace() == L2NpcTemplate.Race.HUMANOID && !this.isRaid())
 		{
 			if(this.getLevel() > 20 && this.getLevel() >= Rnd.get(100))
 			{
@@ -1103,11 +1103,11 @@ public abstract class L2Character extends L2Object
 		// Flag the attacker if it's a L2PcInstance outside a PvP area
 		L2PcInstance player = null;
 
-		if(this instanceof L2PcInstance)
+		if(this.isPlayer)
 		{
 			player = (L2PcInstance) this;
 		}
-		else if(this instanceof L2Summon)
+		else if(this.isSummon)
 		{
 			player = ((L2Summon) this).getOwner();
 		}
@@ -1132,7 +1132,7 @@ public abstract class L2Character extends L2Object
 			 */
 
 			// If we didn't miss the hit, discharge the shoulshots, if any
-			if(this instanceof L2Summon && !(this instanceof L2PetInstance))
+			if(this.isSummon && !(this.isPet))
 			{
 				((L2Summon) this).setChargedSoulShot(L2ItemInstance.CHARGED_NONE);
 			}
@@ -1153,7 +1153,7 @@ public abstract class L2Character extends L2Object
 				}
 				else if(player.isHero())
 				{
-					if(target instanceof L2PcInstance && ((L2PcInstance) target).isCursedWeaponEquiped())
+					if(target.isPlayer && target.getPlayer().isCursedWeaponEquiped())
 					{
 						// If a cursed weapon is hitted by a Hero, Cp is reduced to 0
 						target.setCurrentCp(0);
@@ -1229,7 +1229,7 @@ public abstract class L2Character extends L2Object
 		}
 
 		// Check if the L2Character is a L2PcInstance
-		if(this instanceof L2PcInstance)
+		if(this.isPlayer)
 		{
 			// Send a system message
 			sendPacket(new SystemMessage(SystemMessageId.GETTING_READY_TO_SHOOT_AN_ARROW));
@@ -1391,9 +1391,9 @@ public abstract class L2Character extends L2Object
 		for(L2Object obj : getKnownList().getKnownObjects().values())
 		{
 			//Check if the L2Object is a L2Character
-			if(obj instanceof L2Character)
+			if(obj.isCharacter)
 			{
-				if(obj instanceof L2PetInstance && this instanceof L2PcInstance && ((L2PetInstance) obj).getOwner() == (L2PcInstance) this)
+				if(obj.isPet && this.isPlayer && ((L2PetInstance) obj).getOwner() == (L2PcInstance) this)
 				{
 					continue;
 				}
@@ -1521,7 +1521,7 @@ public abstract class L2Character extends L2Object
 
 		if(isSkillDisabled(skill.getId()))
 		{
-			if(this instanceof L2PcInstance)
+			if(this.isPlayer)
 			{
 				SystemMessage sm = new SystemMessage(SystemMessageId.S1_PREPARED_FOR_REUSE);
 				sm.addSkillName(skill.getId(), skill.getLevel());
@@ -1547,7 +1547,7 @@ public abstract class L2Character extends L2Object
 		}
 
 		// Can't use Hero and resurrect skills during Olympiad
-		if(this instanceof L2PcInstance && ((L2PcInstance) this).isInOlympiadMode() && (skill.isHeroSkill() || skill.getSkillType() == SkillType.RESURRECT || (Config.ALT_OLY_DENY_LS_SKILLS && skill.isLifeStoneSkill())))
+		if(this.isPlayer && ((L2PcInstance) this).isInOlympiadMode() && (skill.isHeroSkill() || skill.getSkillType() == SkillType.RESURRECT || (Config.ALT_OLY_DENY_LS_SKILLS && skill.isLifeStoneSkill())))
 		{
 			SystemMessage sm = new SystemMessage(SystemMessageId.THIS_SKILL_IS_NOT_AVAILABLE_FOR_THE_OLYMPIAD_EVENT);
 			sendPacket(sm);
@@ -1597,11 +1597,11 @@ public abstract class L2Character extends L2Object
 			return;
 		}
 
-		if(this instanceof L2PlayableInstance && skill.getItemConsume() > 0)
+		if(this.isPlayable && skill.getItemConsume() > 0)
 		{
 			L2ItemInstance requiredItems;
 
-			if(this instanceof L2Summon)
+			if(this.isSummon)
 			{
 				requiredItems = ((L2Summon)this).getOwner().getInventory().getItemByItemId(skill.getItemConsumeId());
 			}
@@ -1645,7 +1645,7 @@ public abstract class L2Character extends L2Object
 		int coolTime = skill.getCoolTime();
 		final boolean effectWhileCasting = skill.hasEffectWhileCasting();
 
-		boolean forceBuff = skill.getSkillType() == SkillType.FORCE_BUFF && target instanceof L2PcInstance;
+		boolean forceBuff = skill.getSkillType() == SkillType.FORCE_BUFF && target.isPlayer;
 
 		// Calculate the casting time of the skill (base + modifier of MAtkSpd)
 		// Don't modify the skill time for FORCE_BUFF skills. The skill time for those skills represent the buff time.
@@ -1693,7 +1693,7 @@ public abstract class L2Character extends L2Object
 		//reuseDelay *= 333.0 / (skill.isMagic() ? getMAtkSpd() : getPAtkSpd());
 		int reuseDelay = skill.getReuseDelay();
 
-		if (this instanceof L2PcInstance && Formulas.getInstance().calcSkillMastery(this))
+		if (this.isPlayer && Formulas.getInstance().calcSkillMastery(this))
 		{
 			reuseDelay = 0;
 			SystemMessage sm = new SystemMessage(SystemMessageId.S1_PREPARED_FOR_REUSE);
@@ -1720,7 +1720,7 @@ public abstract class L2Character extends L2Object
 		broadcastPacket(new MagicSkillUser(this, target, displayId, level, hitTime, reuseDelay));
 
 		// Send a system message USE_S1 to the L2Character
-		if(this instanceof L2PcInstance && magicId != 1312)
+		if(this.isPlayer && magicId != 1312)
 		{
 			SystemMessage sm = new SystemMessage(SystemMessageId.USE_S1);
 			sm.addSkillName(magicId, skill.getLevel());
@@ -1781,7 +1781,7 @@ public abstract class L2Character extends L2Object
 		if(hitTime > 210)
 		{
 			// Send a Server->Client packet SetupGauge with the color of the gauge and the casting time
-			if(this instanceof L2PcInstance && !forceBuff)
+			if(this.isPlayer && !forceBuff)
 			{
 				SetupGauge sg = new SetupGauge(SetupGauge.BLUE, hitTime);
 				sendPacket(sg);
@@ -1905,7 +1905,7 @@ public abstract class L2Character extends L2Object
 
 		// Stop all active skills effects in progress on the L2Character,
 		// if the Character isn't affected by Soul of The Phoenix or Salvation
-		if(this instanceof L2PlayableInstance && ((L2PlayableInstance) this).isPhoenixBlessed())
+		if(this.isPlayable && ((L2PlayableInstance) this).isPhoenixBlessed())
 		{
 			if(((L2PlayableInstance) this).isNoblesseBlessed())
 			{
@@ -1917,7 +1917,7 @@ public abstract class L2Character extends L2Object
 			}
 		}
 		// Same thing if the Character isn't a Noblesse Blessed L2PlayableInstance
-		else if(this instanceof L2PlayableInstance && ((L2PlayableInstance) this).isNoblesseBlessed())
+		else if(this.isPlayable && ((L2PlayableInstance) this).isNoblesseBlessed())
 		{
 			((L2PlayableInstance) this).stopNoblesseBlessing(null);
 
@@ -1926,7 +1926,7 @@ public abstract class L2Character extends L2Object
 				((L2PlayableInstance) this).stopCharmOfLuck(null);
 			}
 		}
-		else if(this instanceof L2PlayableInstance && Config.DONT_STOP_BUFFS)
+		else if(this.isPlayable && Config.DONT_STOP_BUFFS)
 		{
 			//Do nothing
 		}
@@ -1959,7 +1959,7 @@ public abstract class L2Character extends L2Object
 		getAttackByList().clear();
 
 		//If character is PhoenixBlessed a resurrection popup will show up
-		if(this instanceof L2PlayableInstance && ((L2PlayableInstance) this).isPhoenixBlessed())
+		if(this.isPlayable && ((L2PlayableInstance) this).isPhoenixBlessed())
 		{
 			((L2PcInstance) this).reviveRequest(((L2PcInstance) this), null, false);
 		}
@@ -1980,7 +1980,7 @@ public abstract class L2Character extends L2Object
 		{
 			setIsPendingRevive(false);
 
-			if(this instanceof L2PlayableInstance && ((L2PlayableInstance) this).isPhoenixBlessed())
+			if(this.isPlayable && ((L2PlayableInstance) this).isPhoenixBlessed())
 			{
 				((L2PlayableInstance) this).stopPhoenixBlessing(null);
 			}
@@ -2475,7 +2475,7 @@ public abstract class L2Character extends L2Object
 	 * <BR>
 	 * <B><U> Assert </U> :</B><BR>
 	 * <BR>
-	 * <li>this instanceof L2Character</li><BR>
+	 * <li>this.isCharacter</li><BR>
 	 * <BR
 	 */
 	protected final void setTemplate(L2CharTemplate template)
@@ -2512,7 +2512,7 @@ public abstract class L2Character extends L2Object
 			return;
 		}
 
-		if(this instanceof L2PcInstance && value.length() > 16)
+		if(this.isPlayer && value.length() > 16)
 		{
 			value = value.substring(0, 15);
 		}
@@ -3101,7 +3101,7 @@ public abstract class L2Character extends L2Object
 				if (e == effect)
 				{
 					_effects.remove(e);
-					if (this instanceof L2PcInstance)
+					if (this.isPlayer)
 					{
 						SystemMessage msg = new SystemMessage(SystemMessageId.S1_HAS_WORN_OFF);
 						msg.addString(effect.getSkill().getName());
@@ -3168,7 +3168,7 @@ public abstract class L2Character extends L2Object
 	 */
 	public final void startFakeDeath()
 	{
-		if (this instanceof L2PcInstance)
+		if (this.isPlayer)
 		{
 			L2PcInstance player = (L2PcInstance)this;
 			if (player._event != null && player._event.getState() == GameEvent.STATE_RUNNING)
@@ -3330,7 +3330,7 @@ public abstract class L2Character extends L2Object
 			}
 		}
 
-		if(this instanceof L2PcInstance)
+		if(this.isPlayer)
 		{
 			((L2PcInstance) this).updateAndBroadcastStatus(2);
 		}
@@ -3500,7 +3500,7 @@ public abstract class L2Character extends L2Object
 		setIsFakeDeath(false);
 		setIsFallsdown(false);
 		// if this is a player instance, start the grace period for this character (grace from mobs only)!
-		if(this instanceof L2PcInstance)
+		if(this.isPlayer)
 		{
 			((L2PcInstance) this).setRecentFakeDeath(true);
 		}
@@ -3688,14 +3688,14 @@ public abstract class L2Character extends L2Object
 		// Create a L2PcInstance of this if needed
 		L2PcInstance player = null;
 
-		if(this instanceof L2PcInstance)
+		if(this.isPlayer)
 		{
 			player = (L2PcInstance) this;
 		}
 
 		// Create a L2Summon of this if needed
 		L2Summon summon = null;
-		if(this instanceof L2Summon)
+		if(this.isSummon)
 		{
 			summon = (L2Summon) this;
 			player = summon.getOwner();
@@ -4414,7 +4414,7 @@ public abstract class L2Character extends L2Object
 			}
 
 			// If possible, free the memory and just create a link on NPC_STD_CALCULATOR
-			if(this instanceof L2NpcInstance)
+			if(this.isNpc)
 			{
 				int i = 0;
 
@@ -4526,7 +4526,7 @@ public abstract class L2Character extends L2Object
 			}
 
 			// If possible, free the memory and just create a link on NPC_STD_CALCULATOR
-			if(this instanceof L2NpcInstance)
+			if(this.isNpc)
 			{
 				i = 0;
 				for(; i < Stats.NUM_STATS; i++)
@@ -4588,7 +4588,7 @@ public abstract class L2Character extends L2Object
 			//}
 			else if(stat == Stats.MAX_CP)
 			{
-				if(this instanceof L2PcInstance)
+				if(this.isPlayer)
 				{
 					if(su == null)
 					{
@@ -4613,7 +4613,7 @@ public abstract class L2Character extends L2Object
 			}
 		}
 
-		if(this instanceof L2PcInstance)
+		if(this.isPlayer)
 		{
 			if(broadcastFull)
 			{
@@ -4645,7 +4645,7 @@ public abstract class L2Character extends L2Object
 				}
 			}
 		}
-		else if(this instanceof L2NpcInstance)
+		else if(this.isNpc)
 		{
 			if(broadcastFull)
 			{
@@ -4667,7 +4667,7 @@ public abstract class L2Character extends L2Object
 				broadcastPacket(su);
 			}
 		}
-		else if(this instanceof L2Summon)
+		else if(this.isSummon)
 		{
 			if(broadcastFull)
 			{
@@ -4919,7 +4919,7 @@ public abstract class L2Character extends L2Object
 
 			// cancels the skill hit scheduled task
 			enableAllSkills(); // re-enables the skills
-			if(this instanceof L2PcInstance)
+			if(this.isPlayer)
 			{
 				getAI().notifyEvent(CtrlEvent.EVT_FINISH_CASTING); // setting back previous intention
 			}
@@ -5003,13 +5003,13 @@ public abstract class L2Character extends L2Object
 				&& !isInsideZone(L2Character.ZONE_WATER)
 				&& !m.disregardingGeodata
 				&& GameTimeController.getGameTicks() % 10 == 0 // once a second to reduce possible cpu load
-				&& !(this instanceof L2BoatInstance))
+				&& !(this.isBoat))
 		{
 			int geoHeight = GeoEngine.getHeight(xPrev, yPrev, zPrev, getInstanceId());
 			dz = m._zDestination - geoHeight;
 
 			// quite a big difference, compare to validatePosition packet
-			if (this instanceof L2PcInstance && Math.abs(getClientZ() - geoHeight) > 200 && Math.abs(getClientZ() - geoHeight) < 1500)
+			if (this.isPlayer && Math.abs(getClientZ() - geoHeight) > 200 && Math.abs(getClientZ() - geoHeight) < 1500)
 			{
 				dz = m._zDestination - zPrev; // allow diff
 			}
@@ -5026,7 +5026,7 @@ public abstract class L2Character extends L2Object
 			dz = m._zDestination - zPrev;
 
 		float speed;
-		if (this instanceof L2BoatInstance)
+		if (this.isBoat)
 		{
 			speed = ((L2BoatInstance)this).boatSpeed;
 		}
@@ -5049,7 +5049,7 @@ public abstract class L2Character extends L2Object
 		{
 			// Set the position of the L2Character to the destination
 			super.getPosition().setXYZ(m._xDestination, m._yDestination, m._zDestination);
-			if (this instanceof L2BoatInstance)
+			if (this.isBoat)
 			{
 				((L2BoatInstance)this).updatePeopleInTheBoat(m._xDestination, m._yDestination, m._zDestination);
 			}
@@ -5064,7 +5064,7 @@ public abstract class L2Character extends L2Object
 			m._yAccurate += dy * distFraction;
 
 			super.getPosition().setXYZ((int)(m._xAccurate), (int)(m._yAccurate), zPrev + (int)(dz * distFraction + 0.5));
-			if(this instanceof L2BoatInstance)
+			if(this.isBoat)
 			{
 				((L2BoatInstance)this).updatePeopleInTheBoat((int)(m._xAccurate), (int)(m._yAccurate), zPrev + (int)(dz * distFraction + 0.5));
 			}
@@ -5146,7 +5146,7 @@ public abstract class L2Character extends L2Object
 			getPosition().setXYZ(pos.x, pos.y, GeoEngine.getHeight(pos.x, pos.y, pos.z, getInstanceId()));
 			setHeading(pos.heading);
 
-			if(this instanceof L2PcInstance)
+			if(this.isPlayer)
 			{
 				((L2PcInstance)this).revalidateZone(true);
 			}
@@ -5208,7 +5208,7 @@ public abstract class L2Character extends L2Object
 
 				getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE);
 
-				if (this instanceof L2PcInstance)
+				if (this.isPlayer)
 				{
 					sendPacket(ActionFailed.STATIC_PACKET);
 					SystemMessage sm = new SystemMessage(SystemMessageId.S1_S2);
@@ -5221,7 +5221,7 @@ public abstract class L2Character extends L2Object
 			{
 				abortCast();
 				getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE);
-				if (this instanceof L2PcInstance)
+				if (this.isPlayer)
 				{
 					sendPacket(ActionFailed.STATIC_PACKET);
 					SystemMessage sm = new SystemMessage(SystemMessageId.S1_S2);
@@ -5397,9 +5397,9 @@ public abstract class L2Character extends L2Object
 				// Movement checks:
 				// when geodata == 2, for all characters except mobs returning home (could be changed later to teleport if pathfinding fails)
 				// when geodata == 1, for l2playableinstance and l2riftinstance only
-				if (this instanceof L2Attackable
-						|| this instanceof L2PcInstance
-						|| (this instanceof L2Summon && !(this.getAI().getIntention() == AI_INTENTION_FOLLOW)) // assuming intention_follow only when following owner
+				if (this.isAttackable
+						|| this.isPlayer
+						|| (this.isSummon && !(this.getAI().getIntention() == AI_INTENTION_FOLLOW)) // assuming intention_follow only when following owner
 						|| isAfraid()
 						|| this instanceof L2RiftInvaderInstance)
 				{
@@ -5421,15 +5421,15 @@ public abstract class L2Character extends L2Object
 						// Temporary fix for character outside world region errors
 						_log.warn("Character "+this.getName()+" outside world area, in coordinates x:"+curX+" y:"+curY);
 						getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE);
-						if (this instanceof L2PcInstance) ((L2PcInstance)this).deleteMe();
-						else if (this instanceof L2Summon) return; // preventation when summon get out of world coords, player will not loose him, unsummon handled from pcinstance
+						if (this.isPlayer) ((L2PcInstance)this).deleteMe();
+						else if (this.isSummon) return; // preventation when summon get out of world coords, player will not loose him, unsummon handled from pcinstance
 						else this.onDecay();
 						return;
 					}
 
 					// Path calculation
 					// Overrides previous movement check
-					//if(this instanceof L2PlayableInstance || this.isInCombat() || this instanceof L2MinionInstance)
+					//if(this.isPlayable || this.isInCombat() || this.isMinion)
 					{
 						geoPath.clear();
 						ArrayList<Location> path = findPath(curX, curY, curZ, originalX, originalY, originalZ, offset);
@@ -5445,11 +5445,11 @@ public abstract class L2Character extends L2Object
 							// * Summons will follow their masters no matter what.
 							// * Currently minions also must move freely since L2AttackableAI commands
 							// them to move along with their leader
-							if (this instanceof L2PcInstance
-									|| (!(this instanceof L2PlayableInstance)
-									&& !(this instanceof L2MinionInstance)
+							if (this.isPlayer
+									|| (!(this.isPlayable)
+									&& !(this.isMinion)
 									&& Math.abs(z - curZ) > 140)
-									|| (this instanceof L2Summon && !((L2Summon)this).getFollowStatus()))
+									|| (this.isSummon && !((L2Summon)this).getFollowStatus()))
 							{
 								getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE);
 								sendPacket(ActionFailed.STATIC_PACKET);
@@ -5486,11 +5486,11 @@ public abstract class L2Character extends L2Object
 				}
 				// If no distance to go through, the movement is canceled
 				if (distance < 1 && (Config.GEODATA
-						|| this instanceof L2PlayableInstance
+						|| this.isPlayable
 						|| this.isAfraid()
 						|| this instanceof L2RiftInvaderInstance))
 				{
-					if(this instanceof L2Summon) ((L2Summon)this).setFollowStatus(false);
+					if(this.isSummon) ((L2Summon)this).setFollowStatus(false);
 					getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE);
 					return;
 				}
@@ -5943,13 +5943,13 @@ public abstract class L2Character extends L2Object
 	{
 		// If the attacker/target is dead or use fake death, notify the AI with EVT_CANCEL
 		// and send a Server->Client packet ActionFailed (if attacker is a L2PcInstance)
-		if(target == null || isAlikeDead() || this instanceof L2NpcInstance && ((L2NpcInstance) this).isEventMob)
+		if(target == null || isAlikeDead() || this.isNpc && ((L2NpcInstance) this).isEventMob)
 		{
 			getAI().notifyEvent(CtrlEvent.EVT_CANCEL);
 			return;
 		}
 
-		if(this instanceof L2NpcInstance && target.isAlikeDead() || target.isDead() || !getKnownList().knowsObject(target) && !(this instanceof L2DoorInstance))
+		if(this.isNpc && target.isAlikeDead() || target.isDead() || !getKnownList().knowsObject(target) && !(this.isDoor))
 		{
 			//getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE, null);
 			getAI().notifyEvent(CtrlEvent.EVT_CANCEL);
@@ -5960,11 +5960,11 @@ public abstract class L2Character extends L2Object
 
 		if(miss)
 		{
-			if(target instanceof L2PcInstance)
+			if(target.isPlayer)
 			{
 				SystemMessage sm = new SystemMessage(SystemMessageId.AVOIDED_S1S_ATTACK);
 
-				if(this instanceof L2Summon)
+				if(this.isSummon)
 				{
 					int mobId = ((L2Summon) this).getTemplate().npcId;
 					sm.addNpcName(mobId);
@@ -5974,7 +5974,7 @@ public abstract class L2Character extends L2Object
 					sm.addString(getName());
 				}
 
-				((L2PcInstance) target).sendPacket(sm);
+				target.getPlayer().sendPacket(sm);
 
 				sm = null;
 			}
@@ -6000,7 +6000,7 @@ public abstract class L2Character extends L2Object
 
 					skill = null;
 
-					if(target instanceof L2MinionInstance)
+					if(target.isMinion)
 					{
 						((L2MinionInstance) target).getLeader().stopHating(this);
 
@@ -6071,7 +6071,7 @@ public abstract class L2Character extends L2Object
 			sendDamageMessage(target, damage, false, crit, miss);
 
 			// If L2Character target is a L2PcInstance, send a system message
-			if(target instanceof L2PcInstance)
+			if(target.isPlayer)
 			{
 				L2PcInstance enemy = (L2PcInstance) target;
 
@@ -6083,7 +6083,7 @@ public abstract class L2Character extends L2Object
 
 				enemy = null;
 			}
-			else if(target instanceof L2Summon)
+			else if(target.isSummon)
 			{
 				L2Summon activeSummon = (L2Summon) target;
 
@@ -6099,11 +6099,11 @@ public abstract class L2Character extends L2Object
 			if (!miss)
 			{
 				// Recharge any active auto soulshot tasks for player (or player's summon if one exists).
-				if(this instanceof L2PcInstance)
+				if(this.isPlayer)
 				{
 					((L2PcInstance) this).rechargeAutoSoulShot(true, false, false);
 				}
-				else if(this instanceof L2Summon)
+				else if(this.isSummon)
 				{
 					((L2Summon) this).getOwner().rechargeAutoSoulShot(true, false, true);
 				}
@@ -6161,7 +6161,7 @@ public abstract class L2Character extends L2Object
 				target.getAI().notifyEvent(CtrlEvent.EVT_ATTACKED, this);
 				getAI().clientStartAutoAttack();
 				
-				if(this instanceof L2Summon)
+				if(this.isSummon)
 				{
 					L2PcInstance owner = ((L2Summon)this).getOwner();
 					if (owner != null)
@@ -6220,7 +6220,7 @@ public abstract class L2Character extends L2Object
 			// Abort the attack of the L2Character and send Server->Client ActionFailed packet
 			abortAttack();
 
-			if(this instanceof L2PcInstance)
+			if(this.isPlayer)
 			{
 				// РїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р… РїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р… РїС—Р…РїС—Р…РїС—Р… РїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р… РїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р… РїС—Р… РїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р…РїС—Р…
 				sendPacket(ActionFailed.STATIC_PACKET);
@@ -6243,7 +6243,7 @@ public abstract class L2Character extends L2Object
 			// Abort the cast of the L2Character and send Server->Client MagicSkillCanceld/ActionFailed packet.
 			abortCast();
 
-			if(this instanceof L2PcInstance)
+			if(this.isPlayer)
 			{
 				// Send a system message
 				sendPacket(new SystemMessage(SystemMessageId.CASTING_INTERRUPTED));
@@ -6280,7 +6280,7 @@ public abstract class L2Character extends L2Object
 	@Override
 	public void onForcedAttack(L2PcInstance player)
 	{
-		if(player.getTarget() == null || !(player.getTarget() instanceof L2Character))
+		if(player.getTarget() == null || !(player.getTarget().isCharacter))
 		{
 			// If target is not attackable, send a Server->Client packet ActionFailed
 			player.sendPacket(ActionFailed.STATIC_PACKET);
@@ -6295,11 +6295,11 @@ public abstract class L2Character extends L2Object
 			return;
 		}
 
-		if(player.getTarget() != null && player.getTarget() instanceof L2PlayableInstance)
+		if(player.getTarget() != null && player.getTarget().isPlayable)
 		{
 			L2PcInstance target;
 
-			if(player.getTarget() instanceof L2Summon)
+			if(player.getTarget().isSummon)
 			{
 				target = ((L2Summon) player.getTarget()).getOwner();
 			}
@@ -6373,52 +6373,52 @@ public abstract class L2Character extends L2Object
 
 		if (Config.ALT_ALLOW_ATTACK_NPC)
 		{
-			if(target instanceof L2NpcInstance)
+			if(target.isNpc)
 				return false;
 		}
 		else
 		{
-			if(target instanceof L2Attackable)
+			if(target.isAttackable)
 				return false;
 		}
 
-		if(attacker instanceof L2MonsterInstance)
+		if(attacker.isMonster)
 			return false;
 
 		if(Config.ALT_GAME_KARMA_PLAYER_CAN_BE_KILLED_IN_PEACEZONE)
 		{
 			// allows red to be attacked and red to attack flagged players
-			if(target instanceof L2PcInstance && ((L2PcInstance) target).getKarma() > 0)
+			if(target.isPlayer && target.getPlayer().getKarma() > 0)
 				return false;
 
-			if(target instanceof L2Summon && ((L2Summon) target).getOwner().getKarma() > 0)
+			if(target.isSummon && ((L2Summon) target).getOwner().getKarma() > 0)
 				return false;
 
-			if(attacker instanceof L2PcInstance && ((L2PcInstance) attacker).getKarma() > 0)
+			if(attacker.isPlayer && ((L2PcInstance) attacker).getKarma() > 0)
 			{
-				if(target instanceof L2PcInstance && ((L2PcInstance) target).getPvpFlag() > 0)
+				if(target.isPlayer && target.getPlayer().getPvpFlag() > 0)
 					return false;
 
-				if(target instanceof L2Summon && ((L2Summon) target).getOwner().getPvpFlag() > 0)
+				if(target.isSummon && ((L2Summon) target).getOwner().getPvpFlag() > 0)
 					return false;
 			}
 
-			if(attacker instanceof L2Summon && ((L2Summon) attacker).getOwner().getKarma() > 0)
+			if(attacker.isSummon && ((L2Summon) attacker).getOwner().getKarma() > 0)
 			{
-				if(target instanceof L2PcInstance && ((L2PcInstance) target).getPvpFlag() > 0)
+				if(target.isPlayer && target.getPlayer().getPvpFlag() > 0)
 					return false;
 
-				if(target instanceof L2Summon && ((L2Summon) target).getOwner().getPvpFlag() > 0)
+				if(target.isSummon && ((L2Summon) target).getOwner().getPvpFlag() > 0)
 					return false;
 			}
 		}
 		// Right now only L2PcInstance has up-to-date zone status...
 		// 
 
-		if(attacker instanceof L2Character && target instanceof L2Character)
+		if(attacker.isCharacter && target.isCharacter)
 			return ((L2Character) target).isInsideZone(ZONE_PEACE) || ((L2Character) attacker).isInsideZone(ZONE_PEACE);
 
-		if(attacker instanceof L2Character)
+		if(attacker.isCharacter)
 			return TownManager.getInstance().getTown(target.getX(), target.getY(), target.getZ()) != null || ((L2Character) attacker).isInsideZone(ZONE_PEACE);
 
 		return TownManager.getInstance().getTown(target.getX(), target.getY(), target.getZ()) != null || TownManager.getInstance().getTown(attacker.getX(), attacker.getY(), attacker.getZ()) != null;
@@ -6436,7 +6436,7 @@ public abstract class L2Character extends L2Object
 		}
 		catch(Exception e)
 		{
-			if(this instanceof L2PcInstance)
+			if(this.isPlayer)
 			{
 				_log.warn("Player " + getName() + " at bad coords: (x: " + getX() + ", y: " + getY() + ", z: " + getZ() + ").");
 
@@ -6723,7 +6723,7 @@ public abstract class L2Character extends L2Object
 		}
 		catch(UnsupportedOperationException e)
 		{
-			if(this instanceof L2PcInstance)
+			if(this.isPlayer)
 			{
 				new Disconnection((L2PcInstance) this);
 			}
@@ -7032,7 +7032,7 @@ public abstract class L2Character extends L2Object
 
 			for(int i = 0; i < targets.length; i++)
 			{
-				if(targets[i] instanceof L2Character)
+				if(targets[i].isCharacter)
 				{
 					if(!Util.checkIfInRange(escapeRange, this, targets[i], true))
 					{
@@ -7041,7 +7041,7 @@ public abstract class L2Character extends L2Object
 
 					if(skill.isOffensive())
 					{
-						if(this instanceof L2PcInstance)
+						if(this.isPlayer)
 						{
 							if(((L2Character) targets[i]).isInsidePeaceZone((L2PcInstance) this))
 							{
@@ -7159,7 +7159,7 @@ public abstract class L2Character extends L2Object
 			// Go through targets table
 			for(L2Object target2 : targets)
 			{
-				if(target2 instanceof L2PlayableInstance)
+				if(target2.isPlayable)
 				{
 					L2Character target = (L2Character) target2;
 
@@ -7171,7 +7171,7 @@ public abstract class L2Character extends L2Object
 						smsg = null;
 					}
 
-					if(this instanceof L2PcInstance && target instanceof L2Summon)
+					if(this.isPlayer && target.isSummon)
 					{
 						((L2Summon) target).getOwner().sendPacket(new PetInfo((L2Summon) target));
 						sendPacket(new NpcInfo((L2Summon) target, this));
@@ -7236,7 +7236,7 @@ public abstract class L2Character extends L2Object
 			// Consume Items if necessary and Send the Server->Client packet InventoryUpdate with Item modification to all the L2Character
 			if(skill.getItemConsume() > 0)
 			{
-				if(this instanceof L2Summon)
+				if(this.isSummon)
 					((L2Summon)this).getOwner().consumeItem(skill.getItemConsumeId(), skill.getItemConsume());
 				else
 					consumeItem(skill.getItemConsumeId(), skill.getItemConsume());
@@ -7248,22 +7248,22 @@ public abstract class L2Character extends L2Object
 			//Recharge AutoSoulShot
 			if(skill.useSoulShot())
 			{
-				if(this instanceof L2PcInstance)
+				if(this.isPlayer)
 				{
 					((L2PcInstance) this).rechargeAutoSoulShot(true, false, false);
 				}
-				else if(this instanceof L2Summon)
+				else if(this.isSummon)
 				{
 					((L2Summon) this).getOwner().rechargeAutoSoulShot(true, false, true);
 				}
 			}
 			else if(skill.useSpiritShot())
 			{
-				if(this instanceof L2PcInstance)
+				if(this.isPlayer)
 				{
 					((L2PcInstance) this).rechargeAutoSoulShot(false, true, false);
 				}
-				else if(this instanceof L2Summon)
+				else if(this.isSummon)
 				{
 					((L2Summon) this).getOwner().rechargeAutoSoulShot(false, true, true);
 				}
@@ -7300,7 +7300,7 @@ public abstract class L2Character extends L2Object
 		{
 			if(getAI() == null || getAI().getNextIntention() == null || getAI().getNextIntention().getCtrlIntention() != CtrlIntention.AI_INTENTION_MOVE_TO)
 			{
-				if (targets[0] != null && targets[0] instanceof L2Character && getTarget() == targets[0] && getTarget() != this)
+				if (targets[0] != null && targets[0].isCharacter && getTarget() == targets[0] && getTarget() != this)
 				{
 					switch (skill.getSkillType())
 					{
@@ -7337,7 +7337,7 @@ public abstract class L2Character extends L2Object
 		 *
 		 * If there is a queued skill, launch it and wipe the queue.
 		 */
-		if(this instanceof L2PcInstance)
+		if(this.isPlayer)
 		{
 			L2PcInstance currPlayer = (L2PcInstance) this;
 			SkillDat queuedSkill = currPlayer.getQueuedSkill();
@@ -7361,16 +7361,16 @@ public abstract class L2Character extends L2Object
 	// Quest event ON_SPELL_FNISHED
 	private void notifyQuestEventSkillFinished(L2Skill skill, L2Object target)
 	{
-		if(this instanceof L2NpcInstance)
+		if(this.isNpc)
 		{
 			try
 			{
 				if(((L2NpcTemplate) getTemplate()).getEventQuests(Quest.QuestEventType.ON_SPELL_FINISHED) != null)
 				{
-					if (target instanceof L2PlayableInstance)
+					if (target.isPlayable)
 					{
 						L2PcInstance player;
-						if(target instanceof L2SummonInstance)
+						if(target.isSummonInstance)
 						{
 							player = ((L2SummonInstance) target).getOwner();
 						}
@@ -7421,7 +7421,7 @@ public abstract class L2Character extends L2Object
 
 		_disabledSkills.remove(new Integer(skillId));
 
-		if(this instanceof L2PcInstance)
+		if(this.isPlayer)
 		{
 			removeTimeStamp(skillId);
 		}
@@ -7540,7 +7540,7 @@ public abstract class L2Character extends L2Object
 			// Do initial checkings for skills and set pvp flag/draw aggro when needed
 			for(L2Object target : targets)
 			{
-				if(target instanceof L2Character)
+				if(target.isCharacter)
 				{
 					// Set some values inside target's instance for later use
 					L2Character player = (L2Character) target;
@@ -7580,7 +7580,7 @@ public abstract class L2Character extends L2Object
 
 								tempSkill = null;
 
-								if(player instanceof L2MinionInstance)
+								if(player.isMinion)
 								{
 									((L2MinionInstance) player).getLeader().stopHating(this);
 									List<L2MinionInstance> spawnedMinions = ((L2MonsterInstance) player).getSpawnedMinions();
@@ -7650,7 +7650,7 @@ public abstract class L2Character extends L2Object
 					// Check if over-hit is possible
 					if(skill.isOverhit())
 					{
-						if(player instanceof L2Attackable)
+						if(player.isAttackable)
 						{
 							((L2Attackable) player).overhitEnabled(true);
 						}
@@ -7660,13 +7660,13 @@ public abstract class L2Character extends L2Object
 					// Launch weapon Special ability skill effect if available
 					if(activeWeapon != null && !((L2Character) target).isDead())
 					{
-						if(activeWeapon.getSkillEffects(this, player, skill).length > 0 && this instanceof L2PcInstance)
+						if(activeWeapon.getSkillEffects(this, player, skill).length > 0 && this.isPlayer)
 						{
 							sendPacket(SystemMessage.sendString("Target affected by weapon special ability!"));
 						}
 					}
 					
-					if(target instanceof L2Character)
+					if(target.isCharacter)
 					{
 						L2Character targ = (L2Character) target;
 
@@ -7724,17 +7724,17 @@ public abstract class L2Character extends L2Object
 
 			for(L2Object target : targets)
 			{
-				if(target instanceof L2Character)
+				if(target.isCharacter)
 				{
 					// Set some values inside target's instance for later use
 					L2Character player = (L2Character) target;
 					L2PcInstance activeChar = null;
 
-					if(this instanceof L2PcInstance)
+					if(this.isPlayer)
 					{
 						activeChar = (L2PcInstance) this;
 					}
-					else if(this instanceof L2Summon)
+					else if(this.isSummon)
 					{
 						activeChar = ((L2Summon) this).getOwner();
 					}
@@ -7743,7 +7743,7 @@ public abstract class L2Character extends L2Object
 					{
 						if(skill.isOffensive())
 						{
-							if(player instanceof L2PcInstance || player instanceof L2Summon)
+							if(player.isPlayer || player.isSummon)
 							{
 								// Signets are a special case, casted on target_self but don't harm self
 								if(skill.getSkillType() != L2Skill.SkillType.SIGNET && skill.getSkillType() != L2Skill.SkillType.SIGNET_CASTTIME)
@@ -7752,7 +7752,7 @@ public abstract class L2Character extends L2Object
 									activeChar.updatePvPStatus(player);
 								}
 							}
-							else if(player instanceof L2Attackable)
+							else if(player.isAttackable)
 							{
 								switch(skill.getSkillType())
 								{
@@ -7770,7 +7770,7 @@ public abstract class L2Character extends L2Object
 						}
 						else
 						{
-							if(player instanceof L2PcInstance)
+							if(player.isPlayer)
 							{
 								// Casting non offensive skill on player with pvp flag set or with karma
 								if(!player.equals(this) && (((L2PcInstance) player).getPvpFlag() > 0 || ((L2PcInstance) player).getKarma() > 0))
@@ -7778,7 +7778,7 @@ public abstract class L2Character extends L2Object
 									activeChar.updatePvPStatus();
 								}
 							}
-							else if(player instanceof L2Attackable && !(skill.getSkillType() == L2Skill.SkillType.SUMMON) && !(skill.getSkillType() == L2Skill.SkillType.BEAST_FEED) && !(skill.getSkillType() == L2Skill.SkillType.UNLOCK) && !(skill.getSkillType() == L2Skill.SkillType.DELUXE_KEY_UNLOCK))
+							else if(player.isAttackable && !(skill.getSkillType() == L2Skill.SkillType.SUMMON) && !(skill.getSkillType() == L2Skill.SkillType.BEAST_FEED) && !(skill.getSkillType() == L2Skill.SkillType.UNLOCK) && !(skill.getSkillType() == L2Skill.SkillType.DELUXE_KEY_UNLOCK))
 							{
 								activeChar.updatePvPStatus(this);
 							}
@@ -7787,22 +7787,22 @@ public abstract class L2Character extends L2Object
 					player = null;
 					activeChar = null;
 				}
-				if(target instanceof L2MonsterInstance)
+				if(target.isMonster)
 				{
 					if(!skill.isOffensive() && skill.getSkillType() != SkillType.UNLOCK && skill.getSkillType() != SkillType.SUMMON && skill.getSkillType() != SkillType.DELUXE_KEY_UNLOCK && skill.getSkillType() != SkillType.BEAST_FEED)
 					{
 						L2PcInstance activeChar = null;
 
-						if(this instanceof L2PcInstance)
+						if(this.isPlayer)
 						{
 							activeChar = (L2PcInstance) this;
 						}
-						else if(this instanceof L2Summon)
+						else if(this.isSummon)
 						{
 							activeChar = ((L2Summon) this).getOwner();
 						}
 
-						if(activeChar instanceof L2PcInstance)
+						if(activeChar.isPlayer)
 						{
 							activeChar.updatePvPStatus(activeChar);
 						}
@@ -7810,12 +7810,12 @@ public abstract class L2Character extends L2Object
 				}
 			}
 
-			if(this instanceof L2PcInstance || this instanceof L2Summon)
+			if(this.isPlayer || this.isSummon)
 			{
-				L2PcInstance caster = this instanceof L2PcInstance ? (L2PcInstance) this : ((L2Summon) this).getOwner();
+				L2PcInstance caster = this.isPlayer ? (L2PcInstance) this : ((L2Summon) this).getOwner();
 				for(L2Object target : targets)
 				{
-					if(target instanceof L2NpcInstance)
+					if(target.isNpc)
 					{
 						L2NpcInstance npc = (L2NpcInstance) target;
 
@@ -7834,7 +7834,7 @@ public abstract class L2Character extends L2Object
 				if(skill.getAggroPoints() > 0)
 				{
 					for(L2Object spMob : caster.getKnownList().getKnownObjects().values())
-						if(spMob instanceof L2NpcInstance)
+						if(spMob.isNpc)
 						{
 							L2NpcInstance npcMob = (L2NpcInstance) spMob;
 
@@ -7871,7 +7871,7 @@ public abstract class L2Character extends L2Object
 
 	public void seeSpell(L2PcInstance caster, L2Object target, L2Skill skill)
 	{
-		if(this instanceof L2Attackable)
+		if(this.isAttackable)
 		{
 			((L2Attackable) this).addDamageHate(caster, 0, -skill.getAggroPoints());
 		}
@@ -7888,7 +7888,7 @@ public abstract class L2Character extends L2Object
 		if(target == null)
 			return false;
 
-		if(target instanceof L2Character)
+		if(target.isCharacter)
 		{
 			L2Character target1 = (L2Character) target;
 			angleChar = Util.calculateAngleFrom(this, target1);
@@ -7936,7 +7936,7 @@ public abstract class L2Character extends L2Object
 		if(target == null)
 			return false;
 
-		if(target instanceof L2Character)
+		if(target.isCharacter)
 		{
 			L2Character target1 = (L2Character) target;
 			angleTarget = Util.calculateAngleFrom(target1, this);

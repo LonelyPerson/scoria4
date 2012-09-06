@@ -22,7 +22,7 @@ public class EffectGrow extends L2Effect
 	@Override
 	public void onStart()
 	{
-		if(getEffected() instanceof L2NpcInstance)
+		if(getEffected().isNpc)
 		{
 			L2NpcInstance npc = (L2NpcInstance) getEffected();
 			npc.setCollisionHeight((int) (npc.getCollisionHeight() * 1.24));
@@ -35,7 +35,7 @@ public class EffectGrow extends L2Effect
 	@Override
 	public boolean onActionTime()
 	{
-		if(getEffected() instanceof L2NpcInstance)
+		if(getEffected().isNpc)
 		{
 			L2NpcInstance npc = (L2NpcInstance) getEffected();
 			npc.setCollisionHeight(npc.getTemplate().collisionHeight);
@@ -49,7 +49,7 @@ public class EffectGrow extends L2Effect
 	@Override
 	public void onExit()
 	{
-		if(getEffected() instanceof L2NpcInstance)
+		if(getEffected().isNpc)
 		{
 			L2NpcInstance npc = (L2NpcInstance) getEffected();
 			npc.setCollisionHeight(npc.getTemplate().collisionHeight);

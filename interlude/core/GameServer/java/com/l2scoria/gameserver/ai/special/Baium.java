@@ -402,21 +402,21 @@ public class Baium extends Quest
 		{
 			for(L2Object obj : objs)
 			{
-				if(obj instanceof L2Character)
+				if(obj.isCharacter)
 				{
 					if(obj.getZ() < npc.getZ() - 100 && obj.getZ() > npc.getZ() + 100 || !GeoEngine.canSeeTarget(obj, npc, false))
 					{
 						continue;
 					}
 				}
-				if(obj instanceof L2PcInstance)
+				if(obj.isPlayer)
 				{
 					if(Util.checkIfInRange(9000, npc, obj, true) && !((L2Character) obj).isDead())
 					{
 						result.add((L2PcInstance) obj);
 					}
 				}
-				if(obj instanceof L2Summon)
+				if(obj.isSummon)
 				{
 					if(Util.checkIfInRange(9000, npc, obj, true) && !((L2Character) obj).isDead())
 					{

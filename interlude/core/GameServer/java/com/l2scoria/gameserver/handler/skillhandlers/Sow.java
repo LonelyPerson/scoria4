@@ -47,7 +47,7 @@ public class Sow implements ISkillHandler
 
 	public void useSkill(L2Character activeChar, L2Skill skill, L2Object[] targets)
 	{
-		if(!(activeChar instanceof L2PcInstance))
+		if(!(activeChar.isPlayer))
 			return;
 
 		_activeChar = (L2PcInstance) activeChar;
@@ -55,32 +55,34 @@ public class Sow implements ISkillHandler
 		L2Object[] targetList = skill.getTargetList(activeChar);
 		if(targetList == null){ return; }
 
-		for(int index = 0; index < targetList.length; index++)
+		for (L2Object aTargetList : targetList)
 		{
-			if(!(targetList[0] instanceof L2MonsterInstance))
+			if (!(targetList[0].isMonster))
+			{
 				continue;
+			}
 
 			_target = (L2MonsterInstance) targetList[0];
-			if(_target.isSeeded())
+			if (_target.isSeeded())
 			{
 				_activeChar.sendPacket(ActionFailed.STATIC_PACKET);
 				continue;
 			}
 
-			if(_target.isDead())
+			if (_target.isDead())
 			{
 				_activeChar.sendPacket(ActionFailed.STATIC_PACKET);
 				continue;
 			}
 
-			if(_target.getSeeder() != _activeChar)
+			if (_target.getSeeder() != _activeChar)
 			{
 				_activeChar.sendPacket(ActionFailed.STATIC_PACKET);
 				continue;
 			}
 
 			_seedId = _target.getSeedType();
-			if(_seedId == 0)
+			if (_seedId == 0)
 			{
 				_activeChar.sendPacket(ActionFailed.STATIC_PACKET);
 				continue;
@@ -92,7 +94,7 @@ public class Sow implements ISkillHandler
 			item = null;
 
 			SystemMessage sm = null;
-			if(calcSuccess())
+			if (calcSuccess())
 			{
 				_activeChar.sendPacket(new PlaySound("Itemsound.quest_itemget"));
 				_target.setSeeded();
@@ -103,7 +105,7 @@ public class Sow implements ISkillHandler
 				sm = new SystemMessage(SystemMessageId.THE_SEED_WAS_NOT_SOWN);
 			}
 
-			if(_activeChar.getParty() == null)
+			if (_activeChar.getParty() == null)
 			{
 				_activeChar.sendPacket(sm);
 			}

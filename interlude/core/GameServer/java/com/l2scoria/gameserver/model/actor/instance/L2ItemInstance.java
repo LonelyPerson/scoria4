@@ -1340,7 +1340,7 @@ public final class L2ItemInstance extends L2Object
 			ItemsOnGroundManager.getInstance().save(this);
 		}
 		
-		if(dropper instanceof L2PcInstance && ((L2PcInstance)dropper).isGM())
+		if(dropper.isPlayer && ((L2PcInstance)dropper).isGM())
 		{
 			LogRecord record = new LogRecord(Level.INFO, "Drop item: " + getItemName() + "(" + getCount() + ")");
 			record.setLoggerName("gmaudit");

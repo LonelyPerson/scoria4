@@ -97,7 +97,7 @@ public class L2BossZone extends L2ZoneDefault
 	{
 		super.onEnter(character);
 
-		if(character instanceof L2PcInstance)
+		if(character.isPlayer)
 		{
 			L2PcInstance player = (L2PcInstance) character;
 
@@ -212,7 +212,7 @@ public class L2BossZone extends L2ZoneDefault
 
 		if(_enabled)
 		{
-			if(character instanceof L2PcInstance)
+			if(character.isPlayer)
 			{
 				L2PcInstance player = (L2PcInstance) character;
 
@@ -310,7 +310,7 @@ public class L2BossZone extends L2ZoneDefault
 				continue;
 			}
 
-			if(character instanceof L2PcInstance)
+			if(character.isPlayer)
 			{
 				L2PcInstance player = (L2PcInstance) character;
 

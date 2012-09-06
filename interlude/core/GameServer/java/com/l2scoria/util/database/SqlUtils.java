@@ -17,10 +17,11 @@
  */
 package com.l2scoria.util.database;
 
+import org.apache.log4j.Logger;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.logging.Logger;
 
 public class SqlUtils
 {
@@ -69,7 +70,7 @@ public class SqlUtils
 		}
 		catch(Exception e)
 		{
-			_log.warning("Error in query '" + query + "':" + e);
+			_log.warn("Error in query '" + query + "':" + e);
 			e.printStackTrace();
 		}
 		finally
@@ -131,7 +132,7 @@ public class SqlUtils
 		}
 		catch(Exception e)
 		{
-			_log.warning("mSGI: Error in query '" + query + "':" + e);
+			_log.warn("mSGI: Error in query '" + query + "':" + e);
 			e.printStackTrace();
 		}
 		finally
@@ -195,7 +196,7 @@ public class SqlUtils
 		}
 		catch(Exception e)
 		{
-			_log.warning("Error in query '" + query + "':" + e);
+			_log.warn("Error in query '" + query + "':" + e);
 			e.printStackTrace();
 		}
 		finally
@@ -214,7 +215,7 @@ public class SqlUtils
 			}
 		}
 
-		_log.fine("Get all rows in query '" + query + "' in " + (System.currentTimeMillis() - start) + "ms");
+		_log.debug("Get all rows in query '" + query + "' in " + (System.currentTimeMillis() - start) + "ms");
 
 		return res;
 	}

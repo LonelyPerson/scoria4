@@ -93,7 +93,7 @@ public class L2CastleTeleportZone extends L2ZoneDefault
 
 		for(L2Character character : _characterList.values())
 		{
-			if(character != null && character instanceof L2PcInstance)
+			if(character != null && character.isPlayer)
 			{
 				L2PcInstance player = (L2PcInstance) character;
 

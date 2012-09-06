@@ -49,7 +49,7 @@ public class AttackableKnownList extends NpcKnownList
 			return false;
 
 		// Remove the L2Object from the _aggrolist of the L2Attackable
-		if(object != null && object instanceof L2Character)
+		if(object != null && object.isCharacter)
 		{
 			getActiveChar().getAggroList().remove(object);
 		}
@@ -92,10 +92,10 @@ public class AttackableKnownList extends NpcKnownList
 	@Override
 	public int getDistanceToWatchObject(L2Object object)
 	{
-		if(object instanceof L2FolkInstance || !(object instanceof L2Character))
+		if(object instanceof L2FolkInstance || !(object.isCharacter))
 			return 0;
 
-		if(object instanceof L2PlayableInstance)
+		if(object.isPlayable)
 			return 1500;
 
 		if(getActiveChar().getAggroRange() > getActiveChar().getFactionRange())

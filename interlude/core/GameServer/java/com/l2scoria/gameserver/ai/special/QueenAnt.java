@@ -175,7 +175,7 @@ public class QueenAnt extends Quest
 			{
 				for(L2Object obj : npc.getKnownList().getKnownCharactersInRadius(1500))
 				{
-					if(obj != null && obj instanceof L2PcInstance
+					if(obj != null && obj.isPlayer
 						&& ((L2PcInstance) obj).getLevel() > 49 && !((L2PcInstance) obj).isGM())
 					{
 						if (Rnd.get(100) < 33)
@@ -254,7 +254,7 @@ public class QueenAnt extends Quest
 			}
 			else if(callerId == QUEEN)
 			{
-				if(npc.getTarget() != null && npc.getTarget() instanceof L2NpcInstance)
+				if(npc.getTarget() != null && npc.getTarget().isNpc)
 				{
 					if(((L2NpcInstance) npc.getTarget()).getNpcId() == LARVA)
 						return null;

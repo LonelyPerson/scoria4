@@ -83,7 +83,7 @@ public final class AttackRequest extends L2GameClientPacket
 				switch(_attackId)
 				{
 					case 0:
-						if(target instanceof L2Character && ((L2Character) target).isAlikeDead())
+						if(target.isCharacter && ((L2Character) target).isAlikeDead())
 						{
 							target.onAction(activeChar);
 						}
@@ -93,7 +93,7 @@ public final class AttackRequest extends L2GameClientPacket
 						}
 						break;
 					case 1:
-						if(target instanceof L2Character && ((L2Character) target).isAlikeDead())
+						if(target.isCharacter && ((L2Character) target).isAlikeDead())
 						{
 							target.onAction(activeChar);
 						}

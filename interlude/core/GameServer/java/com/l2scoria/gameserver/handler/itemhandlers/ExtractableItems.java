@@ -44,7 +44,7 @@ public class ExtractableItems implements IItemHandler
 
 	public void doExtract(L2PlayableInstance playable, L2ItemInstance item, int count)
 	{
-		if(!(playable instanceof L2PcInstance))
+		if(!(playable.isPlayer))
 			return;
 		L2PcInstance activeChar = (L2PcInstance) playable;
 		int itemID = item.getItemId();
@@ -127,7 +127,7 @@ public class ExtractableItems implements IItemHandler
 	// by Azagthtot РџРѕРґРґРµСЂР¶РєР° РјРЅРѕР¶РµСЃС‚РІРµРЅРЅРѕР№ СЂР°СЃРїР°РєРѕРІРєРё 
 	public void useItem(L2PlayableInstance playable, L2ItemInstance item)
 	{
-		if(!(playable instanceof L2PcInstance))
+		if(!(playable.isPlayer))
 			return;
 		if(item.getCount() > 1)
 		{

@@ -213,7 +213,7 @@ class L2OlympiadGame extends Olympiad
 					L2Summon summon = player.getPet();
 					summon.stopAllEffects();
 
-					if(summon instanceof L2PetInstance)
+					if(summon.isPet)
 					{
 						summon.unSummon(player);
 					}

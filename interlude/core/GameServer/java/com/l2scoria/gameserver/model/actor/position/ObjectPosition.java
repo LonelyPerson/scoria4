@@ -78,11 +78,11 @@ public class ObjectPosition
 		{
 			_log.warn("Object Id at bad coords: (x: " + getX() + ", y: " + getY() + ", z: " + getZ() + ").");
 
-			if(getActiveObject() instanceof L2Character)
+			if(getActiveObject().isCharacter)
 			{
 				getActiveObject().decayMe();
 			}
-			else if(getActiveObject() instanceof L2PcInstance)
+			else if(getActiveObject().isPlayer)
 			{
 				((L2PcInstance) getActiveObject()).teleToLocation(0, 0, 0, false);
 				((L2PcInstance) getActiveObject()).sendMessage("Error with your coords, Please ask a GM for help!");
@@ -237,7 +237,7 @@ public class ObjectPosition
 
 	public final void setWorldRegion(L2WorldRegion value)
 	{
-		if(_worldRegion != null && getActiveObject() instanceof L2Character)
+		if(_worldRegion != null && getActiveObject().isCharacter)
 		{
 			if (value != null)
 				_worldRegion.revalidateZones((L2Character)getActiveObject());

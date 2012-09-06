@@ -54,7 +54,7 @@ public class L2OlympiadStadiumZone extends L2ZoneDefault
 	@Override
 	protected void onEnter(L2Character character)
 	{
-		if (character instanceof L2PcInstance)
+		if (character.isPlayer)
 		{
 			if (!((L2PcInstance) character).isGM() && (character.isFlying() || ((L2PcInstance) character).getOlympiadGameId() == -1))
 			{
@@ -75,7 +75,7 @@ public class L2OlympiadStadiumZone extends L2ZoneDefault
 	@Override
 	protected void onExit(L2Character character)
 	{
-		if (character instanceof L2PcInstance)
+		if (character.isPlayer)
 		{
 			if (((L2PcInstance) character).isInOlympiadMode() && ((L2PcInstance) character).isOlympiadStart())
 			{
@@ -111,7 +111,7 @@ public class L2OlympiadStadiumZone extends L2ZoneDefault
 				continue;
 			}
 
-			if (character instanceof L2PcInstance)
+			if (character.isPlayer)
 			{
 				L2PcInstance player = (L2PcInstance) character;
 

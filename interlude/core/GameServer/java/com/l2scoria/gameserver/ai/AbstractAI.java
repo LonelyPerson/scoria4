@@ -484,7 +484,7 @@ abstract class AbstractAI implements Ctrl
 	 */
 	protected void clientActionFailed()
 	{
-		if(_actor instanceof L2PcInstance)
+		if(_actor.isPlayer)
 		{
 			_actor.sendPacket(ActionFailed.STATIC_PACKET);
 		}
@@ -547,7 +547,7 @@ abstract class AbstractAI implements Ctrl
 			}
 
 			// Send a Server->Client packet MoveToPawn/CharMoveToLocation to the actor and all L2PcInstance in its _knownPlayers
-			if(pawn instanceof L2Character)
+			if(pawn.isCharacter)
 			{
 				if(_actor.isOnGeodataPath())
 				{
@@ -712,7 +712,7 @@ abstract class AbstractAI implements Ctrl
 	 */
 	public void clientStopAutoAttack()
 	{
-		if(_actor instanceof L2PcInstance)
+		if(_actor.isPlayer)
 		{
 			if(!AttackStanceTaskManager.getInstance().getAttackStanceTask(_actor) && isAutoAttacking())
 			{

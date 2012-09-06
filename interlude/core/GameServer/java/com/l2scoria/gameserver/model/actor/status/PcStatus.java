@@ -70,7 +70,7 @@ public class PcStatus extends PlayableStatus
 					return;
 
 				// cancel duel if player got hit by another player, that is not part of the duel
-				if(!(attacker instanceof L2PlayableInstance) || (attacker instanceof L2PcInstance && ((L2PcInstance) attacker).getDuelId() != getActiveChar().getDuelId()))
+				if(!(attacker.isPlayable) || (attacker.isPlayer && ((L2PcInstance) attacker).getDuelId() != getActiveChar().getDuelId()))
 				{
 					getActiveChar().setDuelState(Duel.DUELSTATE_INTERRUPTED);
 				}
@@ -83,7 +83,7 @@ public class PcStatus extends PlayableStatus
 
 			// Check and calculate transfered damage
 			L2Summon summon = getActiveChar().getPet();
-			if(summon != null && summon instanceof L2SummonInstance && Util.checkIfInRange(1000, getActiveChar(), summon, true))
+			if(summon != null && summon.isSummonInstance && Util.checkIfInRange(1000, getActiveChar(), summon, true))
 			{
 				int tDmg = (int) value * (int) getActiveChar().getStat().calcStat(Stats.TRANSFER_DAMAGE_PERCENT, 0, null, null) / 100;
 
@@ -101,7 +101,7 @@ public class PcStatus extends PlayableStatus
 				}
 			}
 
-			if(attacker instanceof L2PlayableInstance || attacker instanceof L2SiegeGuardInstance)
+			if(attacker.isPlayable || attacker.isSiegeGuard)
 			{
 				if(getCurrentCp() >= value)
 				{
@@ -153,7 +153,7 @@ public class PcStatus extends PlayableStatus
 				_log.info("Attacker:" + attacker.getName());
 			}
 
-			if(attacker instanceof L2NpcInstance)
+			if(attacker.isNpc)
 			{
 				int mobId = ((L2NpcInstance) attacker).getTemplate().idTemplate;
 
@@ -164,7 +164,7 @@ public class PcStatus extends PlayableStatus
 
 				smsg.addNpcName(mobId);
 			}
-			else if(attacker instanceof L2Summon)
+			else if(attacker.isSummon)
 			{
 				int mobId = ((L2Summon) attacker).getTemplate().idTemplate;
 
@@ -189,7 +189,7 @@ public class PcStatus extends PlayableStatus
 				{
 					getActiveChar().disableAllSkills();
 					stopHpMpRegeneration();
-					if (attacker instanceof L2PcInstance)
+					if (attacker.isPlayer)
 					{
 						attacker.getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE);
 						attacker.sendPacket(ActionFailed.STATIC_PACKET);

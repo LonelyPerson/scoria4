@@ -132,7 +132,7 @@ public class Kill extends Admin
 			{
 				L2Object obj = activeChar.getTarget();
 
-				if(obj == null || obj instanceof L2ControllableMobInstance || !(obj instanceof L2Character))
+				if(obj == null || obj instanceof L2ControllableMobInstance || !(obj.isCharacter))
 				{
 					activeChar.sendPacket(new SystemMessage(SystemMessageId.INCORRECT_TARGET));
 				}
@@ -152,10 +152,10 @@ public class Kill extends Admin
 
 	private void kill(L2PcInstance activeChar, L2Character target)
 	{
-		if(target instanceof L2PcInstance)
+		if(target.isPlayer)
 		{
 			// e.g. invincibility effect
-			if(!((L2PcInstance) target).isGM())
+			if(!target.getPlayer().isGM())
 			{
 				target.stopAllEffects();
 			}

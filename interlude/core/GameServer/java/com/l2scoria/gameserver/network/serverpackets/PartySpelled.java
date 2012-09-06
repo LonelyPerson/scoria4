@@ -23,8 +23,6 @@ import java.util.List;
 import javolution.util.FastList;
 
 import com.l2scoria.gameserver.model.L2Character;
-import com.l2scoria.gameserver.model.actor.instance.L2PetInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2SummonInstance;
 
 /**
  * This class ...
@@ -63,7 +61,7 @@ public class PartySpelled extends L2GameServerPacket
 		if(_activeChar == null)
 			return;
 		writeC(0xee);
-		writeD(_activeChar instanceof L2SummonInstance ? 2 : _activeChar instanceof L2PetInstance ? 1 : 0);
+		writeD(_activeChar.isSummonInstance ? 2 : _activeChar.isPet ? 1 : 0);
 		writeD(_activeChar.getObjectId());
 		writeD(_effects.size());
 		for(Effect temp : _effects)

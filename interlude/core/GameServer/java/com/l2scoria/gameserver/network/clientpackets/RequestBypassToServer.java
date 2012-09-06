@@ -149,7 +149,7 @@ public final class RequestBypassToServer extends L2GameClientPacket
 					L2Object object = L2World.getInstance().findObject(Integer.parseInt(id));
 
 					if((Config.ALLOW_CLASS_MASTERS && Config.ALLOW_REMOTE_CLASS_MASTERS && object instanceof L2ClassMasterInstance)
-						|| (object instanceof L2NpcInstance && endOfId > 0 && activeChar.isInsideRadius(object, L2NpcInstance.INTERACTION_DISTANCE, false, false)))
+						|| (object.isNpc && endOfId > 0 && activeChar.isInsideRadius(object, L2NpcInstance.INTERACTION_DISTANCE, false, false)))
 					{
 						((L2NpcInstance) object).onBypassFeedback(activeChar, _command.substring(endOfId + 1));
 					}
@@ -165,7 +165,7 @@ public final class RequestBypassToServer extends L2GameClientPacket
 			else if(_command.equals("Draw"))
 			{
 				L2Object object = activeChar.getTarget();
-				if(object instanceof L2NpcInstance)
+				if(object.isNpc)
 				{
 					((L2SymbolMakerInstance) object).onBypassFeedback(activeChar, _command);
 				}
@@ -173,7 +173,7 @@ public final class RequestBypassToServer extends L2GameClientPacket
 			else if(_command.equals("RemoveList"))
 			{
 				L2Object object = activeChar.getTarget();
-				if(object instanceof L2NpcInstance)
+				if(object.isNpc)
 				{
 					((L2SymbolMakerInstance) object).onBypassFeedback(activeChar, _command);
 				}
@@ -182,7 +182,7 @@ public final class RequestBypassToServer extends L2GameClientPacket
 			{
 				L2Object object = activeChar.getTarget();
 
-				if(object instanceof L2NpcInstance)
+				if(object.isNpc)
 				{
 					((L2SymbolMakerInstance) object).onBypassFeedback(activeChar, _command);
 				}
@@ -191,7 +191,7 @@ public final class RequestBypassToServer extends L2GameClientPacket
 			else if(_command.startsWith("manor_menu_select?"))
 			{
 				L2Object object = activeChar.getTarget();
-				if(object instanceof L2NpcInstance)
+				if(object.isNpc)
 				{
 					((L2NpcInstance) object).onBypassFeedback(activeChar, _command);
 				}
@@ -254,7 +254,7 @@ public final class RequestBypassToServer extends L2GameClientPacket
 		if(obj == null)
 			return;
 
-		if(obj instanceof L2NpcInstance)
+		if(obj.isNpc)
 		{
 			L2NpcInstance temp = (L2NpcInstance) obj;
 			temp.setTarget(activeChar);

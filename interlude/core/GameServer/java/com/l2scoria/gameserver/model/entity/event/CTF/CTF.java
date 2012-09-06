@@ -274,7 +274,7 @@ public class CTF extends GameEvent
 	{
 		if (_state == GameEvent.STATE_RUNNING)
 		{
-			L2PcInstance pv = victim.getActingPlayer();
+			L2PcInstance pv = victim.getPlayer();
 
 			if (hasFlag(pv))
 			{
@@ -286,7 +286,7 @@ public class CTF extends GameEvent
 				return;
 			}
 
-			L2PcInstance pk = killer.getActingPlayer();
+			L2PcInstance pk = killer.getPlayer();
 
 			if (victim._event == this)
 			{
@@ -513,7 +513,7 @@ public class CTF extends GameEvent
 		boolean result = true;
 		if (_state == GameEvent.STATE_RUNNING)
 		{
-			if (item.isEquipable() && hasFlag(actor.getActingPlayer()))
+			if (item.isEquipable() && hasFlag(actor.getPlayer()))
 			{
 				result = false;
 			}
@@ -532,7 +532,7 @@ public class CTF extends GameEvent
 				result = !((itemId == 3936 || itemId == 3959 || itemId == 737 || itemId == 9157 || itemId == 10150 || itemId == 13259));
 			}
 		}
-		L2PcInstance ap = actor.getActingPlayer();
+		L2PcInstance ap = actor.getPlayer();
 		if (!result)
 		{
 			ap.sendMessage("Вы не можете использовать этот предемет на эвенте.");
@@ -563,7 +563,7 @@ public class CTF extends GameEvent
 				result = CTF_ALLOW_TEAM_CASTING;
 			}
 		}
-		L2PcInstance cp = caster.getActingPlayer();
+		L2PcInstance cp = caster.getPlayer();
 		if (!result)
 		{
 			cp.sendMessage("Это умение запрещено на эвенте.");

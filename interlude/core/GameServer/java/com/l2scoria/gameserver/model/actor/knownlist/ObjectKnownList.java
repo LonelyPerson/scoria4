@@ -110,7 +110,7 @@ public class ObjectKnownList
 	public final synchronized void updateKnownObjects()
 	{
 		// Only bother updating knownobjects for L2Character; don't for L2Object
-		if(getActiveObject() instanceof L2Character)
+		if(getActiveObject().isCharacter)
 		{
 			findCloseObjects();
 			forgetObjects();
@@ -121,7 +121,7 @@ public class ObjectKnownList
 	// Method - Private
 	public final void findCloseObjects()
 	{
-		if(getActiveObject() instanceof L2PlayableInstance)
+		if(getActiveObject().isPlayable)
 		{
 			Collection<L2Object> objects = L2World.getInstance().getVisibleObjects(getActiveObject());
 
@@ -142,7 +142,7 @@ public class ObjectKnownList
 
 				// Try to add active object to object's known objects
 				// Only if object is a L2Character and active object is a L2PlayableInstance
-				if(object instanceof L2Character)
+				if(object.isCharacter)
 				{
 					object.getKnownList().addKnownObject(getActiveObject());
 				}
@@ -150,7 +150,7 @@ public class ObjectKnownList
 
 			objects = null;
 		}
-		else if(getActiveObject() instanceof L2Character)
+		else if(getActiveObject().isCharacter)
 		{
 			Collection<L2PlayableInstance> playables = L2World.getInstance().getVisiblePlayable(getActiveObject());
 
@@ -194,7 +194,7 @@ public class ObjectKnownList
 			// Remove all invisible object
 			// Remove all too far object
 			if(!object.isVisible() || !Util.checkIfInRange(getDistanceToForgetObject(object), getActiveObject(), object, true))
-				if(object instanceof L2BoatInstance && getActiveObject() instanceof L2PcInstance)
+				if(object.isBoat && getActiveObject().isPlayer)
 				{
 					if(((L2BoatInstance) object).getVehicleDeparture() == null)
 					{

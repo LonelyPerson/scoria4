@@ -162,7 +162,7 @@ public class Skill extends Admin
 
 		else if(command.equals("admin_remove_all_skills"))
 		{
-			if(activeChar.getTarget() instanceof L2PcInstance)
+			if(activeChar.getTarget().isPlayer)
 			{
 				L2PcInstance player = (L2PcInstance) activeChar.getTarget();
 
@@ -208,7 +208,7 @@ public class Skill extends Admin
 		L2Object target = activeChar.getTarget();
 		L2PcInstance player = null;
 
-		if(target instanceof L2PcInstance)
+		if(target.isPlayer)
 		{
 			player = (L2PcInstance) target;
 		}
@@ -270,7 +270,7 @@ public class Skill extends Admin
 		L2Object target = activeChar.getTarget();
 		L2PcInstance player = null;
 
-		if(target instanceof L2PcInstance)
+		if(target.isPlayer)
 		{
 			player = (L2PcInstance) target;
 		}
@@ -359,7 +359,7 @@ public class Skill extends Admin
 		L2Object target = activeChar.getTarget();
 		L2PcInstance player = null;
 
-		if(target instanceof L2PcInstance)
+		if(target.isPlayer)
 		{
 			player = (L2PcInstance) target;
 		}
@@ -386,7 +386,7 @@ public class Skill extends Admin
 		L2Object target = activeChar.getTarget();
 		L2PcInstance player = null;
 
-		if(target instanceof L2PcInstance)
+		if(target.isPlayer)
 		{
 			player = (L2PcInstance) target;
 		}
@@ -432,7 +432,7 @@ public class Skill extends Admin
 		L2Object target = activeChar.getTarget();
 		L2PcInstance player = null;
 
-		if(target instanceof L2PcInstance)
+		if(target.isPlayer)
 		{
 			player = (L2PcInstance) target;
 		}
@@ -489,7 +489,7 @@ public class Skill extends Admin
 		L2Object target = activeChar.getTarget();
 		L2PcInstance player = null;
 
-		if(target instanceof L2PcInstance)
+		if(target.isPlayer)
 		{
 			player = (L2PcInstance) target;
 		}
@@ -565,7 +565,7 @@ public class Skill extends Admin
 		L2Object target = activeChar.getTarget();
 		L2PcInstance player = null;
 
-		if(target instanceof L2PcInstance)
+		if(target.isPlayer)
 		{
 			player = (L2PcInstance) target;
 		}
@@ -610,7 +610,7 @@ public class Skill extends Admin
 		L2Object target = activeChar.getTarget();
 		L2PcInstance player = null;
 
-		if(target instanceof L2PcInstance)
+		if(target.isPlayer)
 		{
 			player = (L2PcInstance) target;
 		}
