@@ -64,6 +64,7 @@ import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.gameserver.thread.daemons.DeadlockDetector;
 import com.l2scoria.gameserver.thread.daemons.PcPoint;
 import com.l2scoria.gameserver.thread.daemons.ServerOnline;
+import com.l2scoria.gameserver.thread.daemons.DelayItems;
 import com.l2scoria.gameserver.thread.webdaemon.SWebDaemon;
 import com.l2scoria.gameserver.util.DynamicExtension;
 import com.l2scoria.gameserver.util.FloodProtector;
@@ -76,13 +77,17 @@ import com.l2scoria.util.database.LoginRemoteDbFactory;
 import com.lameguard.LameGuard;
 import mmo.SelectorServerConfig;
 import mmo.SelectorThread;
-import org.apache.log4j.Logger;
+
+import java.util.logging.Logger;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.Calendar;
+import java.util.logging.LogManager;
 
 /**
  * 
@@ -91,19 +96,31 @@ import java.util.Calendar;
 
 public class GameServer
 {
-	private static Logger _log = Logger.getLogger(GameServer.class);
+	private static Logger _log = Logger.getLogger("Loader");
 	private static SelectorThread<L2GameClient> _selectorThread;
 	private static LoginServerThread _loginThread;
 
 	public static final Calendar dateTimeServerStarted = Calendar.getInstance();
 
 	@SuppressWarnings("ResultOfMethodCallIgnored")
-	public static void main(String[] args) throws Throwable
+	public static void main(String[] args) throws Exception, Throwable
 	{
-		ServerType.serverMode = ServerType.MODE_GAMESERVER;
+                ServerType.serverMode = ServerType.MODE_GAMESERVER;
+                //Local Constants
+                final String LOG_FOLDER = "log"; // Name of folder for log file
+                final String LOG_NAME = "./log.cfg"; // Name of log file
 
-		// Create log folder
-		new File(Config.DATAPACK_ROOT, "log").mkdir();
+                /*** Main ***/
+                // Create log folder
+                File logFolder = new File(Config.DATAPACK_ROOT, LOG_FOLDER);
+                logFolder.mkdir();
+
+                // Create input stream for log file -- or store file data into memory
+                InputStream is = new FileInputStream(new File(LOG_NAME));
+                LogManager.getLogManager().readConfiguration(is);
+                is.close();
+                is = null;
+                logFolder = null;
 
 		long serverLoadStart = System.currentTimeMillis();
 
@@ -361,6 +378,8 @@ public class GameServer
 			{
 				ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(ServerOnline.getInstance(), Config.PCB_LIKE_WINDOW_ONLINE_RATE * 1000, Config.PCB_LIKE_WINDOW_ONLINE_RATE * 1000);
 			}
+                        Util.printSection("Delayed Items loading");
+                        ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(DelayItems.getInstance(), 60 * 1000, 60 * 1000);
 
 			Util.printSection("Access Levels");
 			AccessLevels.getInstance();
@@ -520,7 +539,7 @@ public class GameServer
 		}
 		catch (IOException e)
 		{
-			_log.error("FATAL: Failed to open server socket. Reason: " + e.getMessage());
+			_log.severe("FATAL: Failed to open server socket. Reason: " + e.getMessage());
 			System.exit(1);
 		}
 		_selectorThread.start();
