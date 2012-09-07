@@ -875,7 +875,7 @@ public abstract class L2Character extends L2Object
 		if(isAttackingDisabled())
 			return;
 
-		if(_event!=null  && target._event == _event && _event.isRunning() && _event.canAttack(this, target))
+		if(_event != null && !_event.canAttack(this, target))
 		{
 			sendPacket(ActionFailed.STATIC_PACKET);
 			return;
@@ -2483,29 +2483,15 @@ public abstract class L2Character extends L2Object
 		_template = template;
 	}
 
-	private String _eventTitle;
 	/** Return the Title of the L2Character. */
 	public final String getTitle()
 	{
-		if(_event!=null && _event.isRunning()) {
-			if(_eventTitle == null)
-				_eventTitle = _title;
-			return _eventTitle;
-		}
 		return _title;
 	}
 
 	/** Set the Title of the L2Character. */
 	public final void setTitle(String value)
 	{
-		if (_event!=null && _event.isRunning())
-		{
-			_eventTitle = value;
-			if(_eventTitle == null)
-				_eventTitle = "";
-			return;
-		}
-
 		if (value == null)
 		{
 			_title = "";

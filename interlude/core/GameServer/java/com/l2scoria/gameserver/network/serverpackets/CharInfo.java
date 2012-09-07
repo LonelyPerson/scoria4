@@ -182,7 +182,7 @@ public class CharInfo extends L2GameServerPacket
 
 				writeD(0);
 				writeD(0);
-				writeD(0000); // hmm karma ??
+				writeD(0); // hmm karma ??
 
 				if(gmSeeInvis)
 				{

@@ -256,14 +256,13 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		{
 			if(isInsidePeaceZone(L2PcInstance.this, target))
 			{
-				//getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE);
 				sendPacket(ActionFailed.STATIC_PACKET);
 				return;
 			}
 
 			_inWorld = true;
-			super.doAttack(target);
 
+			super.doAttack(target);
 			// cancel the recent fake-death protection instantly if the player attacks or casts spells
 			getPlayer().setRecentFakeDeath(false);
 
@@ -315,11 +314,12 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 					if(mainTarget == null || !(mainTarget.isCharacter))
 						return;
 					for(L2CubicInstance cubic : getCubics().values())
+					{
 						if(cubic.getId() != L2CubicInstance.LIFE_CUBIC)
 						{
 							cubic.doAction((L2Character) mainTarget);
 						}
-					mainTarget = null;
+					}
 				}
 					break;
 			}
@@ -565,7 +565,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 	private boolean _chatBanned = false; // Chat Banned
 	private boolean _silenceMode = false; // silence mode
 	private boolean _dietMode = false; // ignore weight penalty
-	private boolean _exchangeRefusal = false; // Exchange refusal
+	//private boolean _exchangeRefusal = false; // Exchange refusal
 
 	private L2Party _party;
 
@@ -617,7 +617,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 
 	private int _team = 0;
 
-	public int TvTKills = 0;
+	//public int TvTKills = 0;
 
 	/**
 	 * lvl of alliance with ketra orcs or varka silenos, used in quests and aggro checks [-5,-1] varka, 0 neutral, [1,5]
@@ -1158,9 +1158,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 	 */
 	public boolean hasRecipeList(int recipeId)
 	{
-		if(_dwarvenRecipeBook.containsKey(recipeId))
-			return true;
-		else return _commonRecipeBook.containsKey(recipeId);
+		return _dwarvenRecipeBook.containsKey(recipeId) || _commonRecipeBook.containsKey(recipeId);
 	}
 
 	/**
@@ -1195,7 +1193,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			}
 		}
 
-		allShortCuts = null;
+		//allShortCuts = null;
 	}
 
 	/**
@@ -1391,7 +1389,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 					}
 				}
 			}
-			quests = null;
+			//quests = null;
 		}
 
 		// Return a table containing all QuestState to modify
@@ -1741,7 +1739,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			_lastCompassZone = ExSetCompassZoneCode.GENERALZONE;
 			ExSetCompassZoneCode cz = new ExSetCompassZoneCode(ExSetCompassZoneCode.GENERALZONE);
 			sendPacket(cz);
-			cz = null;
+			//cz = null;
 		}
 	}
 
@@ -2197,8 +2195,6 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 					currenteffect.exit();
 				}
 			}
-
-			continue;
 		}
 	}
 
@@ -2352,63 +2348,63 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			//human fighter fists
 			L2Item temp = ItemTable.getInstance().getTemplate(246);
 			weaponItem = (L2Weapon) temp;
-			temp = null;
+			//temp = null;
 		}
 		else if(classId >= 0x0a && classId <= 0x11)
 		{
 			//human mage fists
 			L2Item temp = ItemTable.getInstance().getTemplate(251);
 			weaponItem = (L2Weapon) temp;
-			temp = null;
+			//temp = null;
 		}
 		else if(classId >= 0x12 && classId <= 0x18)
 		{
 			//elven fighter fists
 			L2Item temp = ItemTable.getInstance().getTemplate(244);
 			weaponItem = (L2Weapon) temp;
-			temp = null;
+			//temp = null;
 		}
 		else if(classId >= 0x19 && classId <= 0x1e)
 		{
 			//elven mage fists
 			L2Item temp = ItemTable.getInstance().getTemplate(249);
 			weaponItem = (L2Weapon) temp;
-			temp = null;
+			//temp = null;
 		}
 		else if(classId >= 0x1f && classId <= 0x25)
 		{
 			//dark elven fighter fists
 			L2Item temp = ItemTable.getInstance().getTemplate(245);
 			weaponItem = (L2Weapon) temp;
-			temp = null;
+			//temp = null;
 		}
 		else if(classId >= 0x26 && classId <= 0x2b)
 		{
 			//dark elven mage fists
 			L2Item temp = ItemTable.getInstance().getTemplate(250);
 			weaponItem = (L2Weapon) temp;
-			temp = null;
+			//temp = null;
 		}
 		else if(classId >= 0x2c && classId <= 0x30)
 		{
 			//orc fighter fists
 			L2Item temp = ItemTable.getInstance().getTemplate(248);
 			weaponItem = (L2Weapon) temp;
-			temp = null;
+			//temp = null;
 		}
 		else if(classId >= 0x31 && classId <= 0x34)
 		{
 			//orc mage fists
 			L2Item temp = ItemTable.getInstance().getTemplate(252);
 			weaponItem = (L2Weapon) temp;
-			temp = null;
+			//temp = null;
 		}
 		else if(classId >= 0x35 && classId <= 0x39)
 		{
 			//dwarven fists
 			L2Item temp = ItemTable.getInstance().getTemplate(247);
 			weaponItem = (L2Weapon) temp;
-			temp = null;
+			//temp = null;
 		}
 
 		return weaponItem;
@@ -2481,7 +2477,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		{
 			L2Skill skill = SkillTable.getInstance().getInfo(1321, 1);
 			addSkill(skill, true);
-			skill = null;
+			//skill = null;
 		}
 
 		//Active skill common craft
@@ -2545,7 +2541,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 					addSkill(sk, false);
 				}
 			}
-			skills = null;
+			//skills = null;
 		}
 
 		if(getClan() != null && getClan().getLeaderId() == getObjectId())
@@ -2665,7 +2661,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			}
 			castle = null;
 		}
-		clan = null;
+		//clan = null;
 		return false;
 	}
 
@@ -2961,7 +2957,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			SystemMessage sm = new SystemMessage(SystemMessageId.EARNED_ADENA);
 			sm.addNumber(count);
 			sendPacket(sm);
-			sm = null;
+			//sm = null;
 		}
 
 		if(count > 0)
@@ -2974,7 +2970,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 				InventoryUpdate iu = new InventoryUpdate();
 				iu.addItem(_inventory.getAdenaInstance());
 				sendPacket(iu);
-				iu = null;
+				//iu = null;
 			}
 			else
 			{
@@ -3122,7 +3118,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 				sm.addNumber(count);
 				sm.addItemName(PcInventory.ANCIENT_ADENA_ID);
 				sendPacket(sm);
-				sm = null;
+				//sm = null;
 			}
 			ancientAdenaItem = null;
 		}
@@ -3202,7 +3198,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			{
 				CursedWeaponsManager.getInstance().activate(this, newitem);
 			}
-			newitem = null;
+			//newitem = null;
 		}
 	}
 
@@ -3380,7 +3376,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			InventoryUpdate playerIU = new InventoryUpdate();
 			playerIU.addItem(item);
 			sendPacket(playerIU);
-			playerIU = null;
+			//playerIU = null;
 		}
 		else
 		{
@@ -3638,7 +3634,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 				SystemMessage sm = new SystemMessage(SystemMessageId.S1_DISARMED);
 				sm.addItemName(item.getItemId());
 				sendPacket(sm);
-				sm = null;
+				//sm = null;
 			}
 		}
 
@@ -3696,7 +3692,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			}
 
 			sendPacket(playerIU);
-			playerIU = null;
+			//playerIU = null;
 		}
 		else
 		{
@@ -3707,7 +3703,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		StatusUpdate playerSU = new StatusUpdate(getObjectId());
 		playerSU.addAttribute(StatusUpdate.CUR_LOAD, getCurrentLoad());
 		sendPacket(playerSU);
-		playerSU = null;
+		//playerSU = null;
 
 		// Send target update packet
 		if(target instanceof PcInventory)
@@ -3738,8 +3734,8 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			playerSU = new StatusUpdate(targetPlayer.getObjectId());
 			playerSU.addAttribute(StatusUpdate.CUR_LOAD, targetPlayer.getCurrentLoad());
 			targetPlayer.sendPacket(playerSU);
-			targetPlayer = null;
-			playerSU = null;
+			//targetPlayer = null;
+			//playerSU = null;
 		}
 		else if(target instanceof PetInventory)
 		{
@@ -3755,9 +3751,9 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			}
 
 			((PetInventory) target).getOwner().getOwner().sendPacket(petIU);
-			petIU = null;
+			//petIU = null;
 		}
-		oldItem = null;
+		//oldItem = null;
 
 		return newItem;
 	}
@@ -3933,7 +3929,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 	{
 		int randDropLim = 70;
 
-		L2ItemInstance ditem = null;
+		L2ItemInstance ditem;
 
 		for(int i = 0; i < itemCount; i++)
 		{
@@ -4505,7 +4501,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		su.addAttribute(StatusUpdate.CUR_CP, (int) getCurrentCp());
 		su.addAttribute(StatusUpdate.MAX_CP, getMaxCp());
 		sendPacket(su);
-		su = null;
+		//su = null;
 
 		// Check if a party is in progress and party window update is usefull
 		if(isInParty() && (needCpUpdate(352) || super.needHpUpdate(352) || needMpUpdate(352)))
@@ -4990,7 +4986,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 				msg.addString(getName());
 				msg.addItemName(target.getItemId());
 				broadcastPacket(msg, 1400);
-				msg = null;
+				//msg = null;
 			}
 
 			// Check if a Party is in progress
@@ -5293,7 +5289,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 					ptarget.sendMessage("Request to Engage has been >DENIED<!");
 				}
 
-				ptarget = null;
+				//ptarget = null;
 			}
 		}
 	}
@@ -5624,7 +5620,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 
 		if(targetPlayer == this)
 		{
-			targetPlayer = null;
+			//targetPlayer = null;
 			return; // Target player is self
 		}
 
@@ -5750,7 +5746,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 						InventoryUpdate iu = new InventoryUpdate();
 						iu.addItem(_inventory.getItemByItemId(Config.PVP_REWORD_ID));
 						sendPacket(iu);
-						iu = null;
+						//iu = null;
 					}
 				}
 				else
@@ -6044,7 +6040,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		long expGained = Math.abs(exp);
 		expGained /= Config.KARMA_XP_DIVIDER;
 
-		int karmaLost = 0;
+		int karmaLost;
 		if(expGained > Integer.MAX_VALUE)
 		{
 			karmaLost = Integer.MAX_VALUE;
@@ -6694,7 +6690,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 				iu.addModifiedItem(element);
 			}
 			sendPacket(iu);
-			iu = null;
+			//iu = null;
 
 			abortAttack();
 			broadcastUserInfo();
@@ -7071,7 +7067,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		StatusUpdate su = new StatusUpdate(getObjectId());
 		su.addAttribute(StatusUpdate.KARMA, getKarma());
 		sendPacket(su);
-		su = null;
+		//su = null;
 
 		if(getPet() != null)
 		{
@@ -7132,7 +7128,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			statement.setInt(3, getObjectId());
 			statement.execute();
 			statement.close();
-			statement = null;
+			//statement = null;
 		}
 		catch(Exception e)
 		{
@@ -7141,7 +7137,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		finally
 		{
 			try { con.close(); } catch(Exception e) { }
-			con = null;
+			//con = null;
 		}
 	}
 
@@ -7158,7 +7154,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			statement.setInt(3, getObjectId());
 			statement.execute();
 			statement.close();
-			statement = null;
+			//statement = null;
 		}
 		catch(Exception e)
 		{
@@ -7167,7 +7163,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		finally
 		{
 			try { con.close(); } catch(Exception e) { }
-			con = null;
+			//con = null;
 		}
 	}
 
@@ -7246,7 +7242,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 
 			statement.executeUpdate();
 			statement.close();
-			statement = null;
+			//statement = null;
 		}
 		catch(Exception e)
 		{
@@ -7256,7 +7252,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		finally
 		{
 			try { con.close(); } catch(Exception e) { }
-			con = null;
+			//con = null;
 		}
 		_log.info("Created new character : " + getName() + " for account: " + _accountName);
 		return true;
@@ -7582,8 +7578,8 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 
 			statement.close();
 			rset.close();
-			rset = null;
-			statement = null;
+			//rset = null;
+			//statement = null;
 		}
 		catch(Exception e)
 		{
@@ -7593,7 +7589,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		finally
 		{
 			try { con.close(); } catch(Exception e) { }
-			con = null;
+			//con = null;
 		}
 
 		return true;
@@ -7958,7 +7954,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 					statement.setInt(9, buff_index);
 					statement.execute();
 					statement.close();
-					statement = null;
+					//statement = null;
 				}
 			}
 
@@ -8512,8 +8508,8 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 
 			rset.close();
 			statement.close();
-			rset = null;
-			statement = null;
+			//rset = null;
+			//statement = null;
 		}
 		catch(Exception e)
 		{
@@ -8522,7 +8518,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		finally
 		{
 			try { con.close(); } catch(Exception e) { }
-			con = null;
+			//con = null;
 		}
 	}
 
@@ -8559,7 +8555,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 
 				int symbol_id = rset.getInt("symbol_id");
 
-				L2HennaInstance sym = null;
+				L2HennaInstance sym;
 
 				if(symbol_id != 0)
 				{
@@ -8569,16 +8565,16 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 					{
 						sym = new L2HennaInstance(tpl);
 						_henna[slot - 1] = sym;
-						tpl = null;
-						sym = null;
+						//tpl = null;
+						//sym = null;
 					}
 				}
 			}
 
 			rset.close();
 			statement.close();
-			rset = null;
-			statement = null;
+			//rset = null;
+			//statement = null;
 		}
 		catch(Exception e)
 		{
@@ -8707,8 +8703,8 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		sm.addItemName(henna.getItemIdDye());
 		sm.addNumber(henna.getAmountDyeRequire() / 2);
 		sendPacket(sm);
-		sm = null;
-		henna = null;
+		//sm = null;
+		//henna = null;
 
 		return true;
 	}
@@ -8748,7 +8744,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 					statement.setInt(4, getClassIndex());
 					statement.execute();
 					statement.close();
-					statement = null;
+					//statement = null;
 				}
 				catch(Exception e)
 				{
@@ -8757,7 +8753,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 				finally
 				{
 					try { con.close(); } catch(Exception e) { }
-					con = null;
+					//con = null;
 				}
 
 				// Send Server->Client HennaInfo packet to this L2PcInstance
@@ -8948,8 +8944,10 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 				return false;
 			}
 
-			if(attacker._event!=null && attacker._event.canAttack(attacker, this))
+			if(attacker._event != null && attacker._event.canAttack(attacker, this))
+			{
 				return true;
+			}
 		}
 
 		// Check if the attacker is not in the same clan
@@ -8966,15 +8964,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		// Check if the attacker is a L2PcInstance
 		if(attacker.isPlayable)
 		{
-			L2PcInstance cha = null;
-			if(attacker.isSummon)
-			{
-				cha = ((L2Summon) attacker).getOwner();
-			}
-			else
-			{
-				cha = (L2PcInstance) attacker;
-			}
+			L2PcInstance cha = attacker.getPlayer();
 			
 			if(cha == null)
 				return false;
@@ -8996,14 +8986,14 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 					// Check if a siege is in progress and if attacker and the L2PcInstance aren't in the Defender clan
 					if(siege.checkIsDefender(cha.getClan()) && siege.checkIsDefender(getClan()))
 					{
-						siege = null;
+						//siege = null;
 						return false;
 					}
 
 					// Check if a siege is in progress and if attacker and the L2PcInstance aren't in the Attacker clan
 					if(siege.checkIsAttacker(cha.getClan()) && siege.checkIsAttacker(getClan()))
 					{
-						siege = null;
+						//siege = null;
 						return false;
 					}
 				}
@@ -9012,14 +9002,14 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 					// Check if a siege is in progress and if attacker and the L2PcInstance aren't in the Defender clan
 					if(fortsiege.checkIsDefender(cha.getClan()) && fortsiege.checkIsDefender(getClan()))
 					{
-						fortsiege = null;
+						//fortsiege = null;
 						return false;
 					}
 
 					// Check if a siege is in progress and if attacker and the L2PcInstance aren't in the Attacker clan
 					if(fortsiege.checkIsAttacker(cha.getClan()) && fortsiege.checkIsAttacker(getClan()))
 					{
-						fortsiege = null;
+						//fortsiege = null;
 						return false;
 					}
 				}
@@ -9181,7 +9171,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 
 		//************************************* Check Target *******************************************
 		// Create and set a L2Object containing the target of the skill
-		L2Object target = null;
+		L2Object target;
 		SkillTargetType sklTargetType = skill.getTargetType();
 		SkillType sklType = skill.getSkillType();
 		Point3D worldPosition = getCurrentSkillWorldPosition();
@@ -9625,7 +9615,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		if(isInParty() && looter != null)
 			return getParty().getPartyMembers().contains(looter);
 
-		looter = null;
+		//looter = null;
 
 		return false;
 	}
@@ -9770,7 +9760,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		// Send a Server->Client packet InventoryUpdate to the L2PcInstance in order to update speed
 		UserInfo ui = new UserInfo(this);
 		sendPacket(ui);
-		ui = null;
+		//ui = null;
 		return true;
 	}
 
@@ -9848,7 +9838,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 	{
 		L2CubicInstance cubic = new L2CubicInstance(this, id, level);
 		_cubics.put(id, cubic);
-		cubic = null;
+		//cubic = null;
 	}
 
 	/**
@@ -10025,8 +10015,8 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 				removeAutoSoulShot(itemId);
 			}
 		}
-		item = null;
-		handler = null;
+		//item = null;
+		//handler = null;
 	}
 
 	private ScheduledFuture<?> _taskWarnUserTakeBreak;
@@ -10086,7 +10076,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 						{
 							text = text.replace("%Word%", output);
 						}
-						temp = null;
+						//temp = null;
 					}
 
 					L2PcInstance.this.sendPacket(new TutorialShowHtml(text));
@@ -10175,7 +10165,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			SystemMessage sm = new SystemMessage(SystemMessageId.DROWN_DAMAGE_S1);
 			sm.addNumber((int) reduceHp);
 			sendPacket(sm);
-			sm = null;
+			//sm = null;
 		}
 	}
 
@@ -10623,8 +10613,8 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 
 			rset.close();
 			statement.close();
-			statement = null;
-			rset = null;
+			//statement = null;
+			//rset = null;
 		}
 		catch(Exception e)
 		{
@@ -10633,7 +10623,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		finally
 		{
 			try { con.close(); } catch(Exception e) { }
-			con = null;
+			//con = null;
 		}
 
 		if(_count != 0)
@@ -11027,7 +11017,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 				statement.setInt(6, newClass.getClassIndex()); // <-- Added
 				statement.execute();
 				statement.close();
-				statement = null;
+				//statement = null;
 			}
 			catch(Exception e)
 			{
@@ -11037,7 +11027,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			finally
 			{
 				try { con.close(); } catch(Exception e) { }
-				con = null;
+				//con = null;
 			}
 
 			// Commit after database INSERT incase exception is thrown.
@@ -11050,7 +11040,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 
 			ClassId subTemplate = ClassId.values()[classId];
 			Collection<L2SkillLearn> skillTree = SkillTreeTable.getInstance().getAllowedSkills(subTemplate);
-			subTemplate = null;
+			//subTemplate = null;
 
 			if(skillTree == null)
 				return true;
@@ -11154,7 +11144,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 				statement.setInt(2, classIndex);
 				statement.execute();
 				statement.close();
-				statement = null;
+				//statement = null;
 			}
 			catch(Exception e)
 			{
@@ -11167,7 +11157,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			finally
 			{
 				try { con.close(); } catch(Exception e) { }
-				con = null;
+				//con = null;
 			}
 
 			getSubClasses().remove(classIndex);
@@ -11228,7 +11218,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 
 		// Set the template of the L2PcInstance
 		setTemplate(t);
-		t = null;
+		//t = null;
 	}
 
 	/**
@@ -11261,9 +11251,9 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 				}
 
 				sendPacket(iu);
-				rhand = null;
-				iu = null;
-				unequipped = null;
+				//rhand = null;
+				//iu = null;
+				//unequipped = null;
 			}
 
 			L2ItemInstance lhand = getInventory().getPaperdollItem(Inventory.PAPERDOLL_LHAND);
@@ -11279,9 +11269,9 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 				}
 
 				sendPacket(iu);
-				lhand = null;
-				iu = null;
-				unequipped = null;
+				//lhand = null;
+				//iu = null;
+				//unequipped = null;
 			}
                         if(Config.ANTI_HEAVY_SYSTEM) {
                             L2ItemInstance chest = getInventory().getPaperdollItem(Inventory.PAPERDOLL_CHEST);
@@ -11294,9 +11284,9 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
                                             iu.addModifiedItem(element);
 
                                     sendPacket(iu);
-                                    lhand = null;
-                                    iu = null;
-                                    unequipped = null;
+                                    //lhand = null;
+                                    //iu = null;
+                                    //unequipped = null;
                             }
                         }
 
@@ -11414,7 +11404,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			if(st != null)
 			{
 				st.exitQuest(true);
-				st = null;
+				//st = null;
 			}
 
 			for(int i = 0; i < 3; i++)
@@ -11528,7 +11518,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 				Ride dismount = new Ride(getObjectId(), Ride.ACTION_DISMOUNT, 0);
 				sendPacket(dismount);
 				broadcastPacket(dismount);
-				dismount = null;
+				//dismount = null;
 				_taskRentPet = null;
 			}
 		}
@@ -11695,7 +11685,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 				statement.setInt(1, getObjectId());
 				statement.execute();
 				statement.close();
-				statement = null;
+				//statement = null;
 
 				_recomChars.clear();
 			}
@@ -11706,7 +11696,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			finally
 			{
 				try { con.close(); } catch(Exception e) { }
-				con = null;
+				//con = null;
 			}
 		}
 
@@ -11814,7 +11804,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			ConfirmDlg dlg = new ConfirmDlg(SystemMessageId.RESSURECTION_REQUEST.getId());
 			dlg.addString(Reviver.getName());
 			sendPacket(dlg);
-			dlg = null;
+			//dlg = null;
 		}
 	}
 
@@ -11823,9 +11813,9 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		if(_reviveRequested != 1 || !isDead() && !_revivePet || _revivePet && getPet() != null && !getPet().isDead())
 			return;
 		//If character refuse a PhoenixBlessed autoress, cancel all buffs he had
-		if(answer == 0 && ((L2PlayableInstance) this).isPhoenixBlessed())
+		if(answer == 0 && isPhoenixBlessed())
 		{
-			((L2PlayableInstance) this).stopPhoenixBlessing(null);
+			stopPhoenixBlessing(null);
 			stopAllEffects();
 		}
 		if(answer == 1)
@@ -12136,6 +12126,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		//_log.warn("[BypassAdd]"+getName()+" '"+bypass+"'");
 	}
 
+	@SuppressWarnings("SynchronizeOnNonFinalField")
 	public boolean validateBypass(String cmd)
 	{
 		if(!Config.BYPASS_VALIDATION)
@@ -12228,12 +12219,14 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		return (_event!=null && _event.isRunning());
 	}
 
+	@SuppressWarnings("SynchronizeOnNonFinalField")
 	public void clearBypass()
 	{
 		synchronized (_validBypass)
 		{
 			_validBypass.clear();
 		}
+
 		synchronized (_validBypass2)
 		{
 			_validBypass2.clear();
@@ -12317,7 +12310,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			setXYZ(_obsX, _obsY, _obsZ);
 		}
 
-		Castle castle = null;
+		Castle castle;
 		if(getClan() != null)
 		{
 			castle = CastleManager.getInstance().getCastleByOwner(getClan());
@@ -12683,9 +12676,9 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		// Use a copy constructor else the fish data may be over-written below
 		_fish = new FishData(fishs.get(check));
 		fishs.clear();
-		fishs = null;
+		//fishs = null;
 		sendPacket(new SystemMessage(SystemMessageId.CAST_LINE_AND_START_FISHING));
-		ExFishingStart efs = null;
+		ExFishingStart efs;
 
 		if(!GameTimeController.getInstance().isNowNight() && _lure.isNightLure())
 		{
@@ -12695,7 +12688,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		//sendMessage("Hook x,y: " + _x + "," + _y + " - Water Z, Player Z:" + _z + ", " + getZ()); //debug line, uncoment to show coordinates used in fishing.
 		efs = new ExFishingStart(this, _fish.getType(), _x, _y, _z, _lure.isNightLure());
 		broadcastPacket(efs);
-		efs = null;
+		//efs = null;
 		StartLookingForFishTask();
 	}
 
@@ -13614,7 +13607,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			SystemMessage sm = new SystemMessage(SystemMessageId.DEATH_PENALTY_LEVEL_S1_ADDED);
 			sm.addNumber(getDeathPenaltyBuffLevel());
 			sendPacket(sm);
-			sm = null;
+			//sm = null;
 		}
 		sendPacket(new EtcStatusUpdate(this));
 	}
@@ -14365,8 +14358,8 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 	public void restoreProfileBuffs()
 	{
 		Connection con = null;
-		PreparedStatement statement = null;
-		ResultSet rset = null;
+		PreparedStatement statement;
+		ResultSet rset;
 		try
 		{
 			con = L2DatabaseFactory.getInstance().getConnection();
@@ -14398,8 +14391,8 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			}
 			rset.close();
 			statement.close();
-			statement = null;
-			rset = null;
+			//statement = null;
+			//rset = null;
 		}
 		catch (SQLException e)
 		{
@@ -14414,7 +14407,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			catch(Exception e)
 			{
 			}
-			con = null;
+			//con = null;
 		}
 	}
 
@@ -14425,6 +14418,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			sendMessage("Buffer is not available at this time: being prepared for reuse");
 			return;
 		}
+
 		if (name.length() > 16)
 		{
 			sendMessage("Profile name is to long");
@@ -14458,7 +14452,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		_profiles.remove(name);
 
 		Connection con = null;
-		PreparedStatement statement = null;
+		PreparedStatement statement;
 		try
 		{
 			con = L2DatabaseFactory.getInstance().getConnection();
@@ -14469,7 +14463,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			statement.execute();
 
 			statement.close();
-			statement = null;
+			//statement = null;
 		}
 		catch (SQLException h)
 		{
@@ -14484,7 +14478,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			catch(Exception e)
 			{
 			}
-			con = null;
+			//con = null;
 		}
 	}
 	
@@ -14508,7 +14502,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			statement.execute();
 
 			statement.close();
-			statement = null;
+			//statement = null;
 		}
 		catch (SQLException h)
 		{
@@ -14523,7 +14517,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			catch(Exception e)
 			{
 			}
-			con = null;
+			//con = null;
 		}
 	}
 
@@ -14538,9 +14532,9 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 
 		// Equip or unEquip
 		int bodyPart = item.getItem().getBodyPart();
-		L2ItemInstance[] items = null;
+		L2ItemInstance[] items;
 		boolean isEquiped = item.isEquipped();
-		SystemMessage sm = null;
+		SystemMessage sm;
 	
 		if(bodyPart == L2Item.SLOT_LR_HAND || bodyPart == L2Item.SLOT_R_HAND)
 		{
@@ -14672,7 +14666,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			}
 		}
 
-		sm = null;
+		//sm = null;
 
 		refreshExpertisePenalty();
 

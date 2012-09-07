@@ -25,8 +25,10 @@ import com.l2scoria.gameserver.templates.L2EtcItemType;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.util.lang.ArrayUtils;
 import com.l2scoria.util.random.Rnd;
-import javolution.util.FastList;
-import javolution.util.FastMap;
+import gnu.trove.TIntArrayList;
+import gnu.trove.TIntObjectHashMap;
+
+import java.util.HashMap;
 
 /**
  * @author m095
@@ -35,10 +37,10 @@ import javolution.util.FastMap;
 
 public class DeathMatch extends GameEvent
 {
-	private FastList<Integer> _players = new FastList<Integer>();
-	private FastMap<Integer, Location> _playerLoc = new FastMap<Integer, Location>();
+	private TIntArrayList _players = new TIntArrayList();
+	private TIntObjectHashMap<Location> _playerLoc = new TIntObjectHashMap<Location>();
 
-	private FastMap<L2PcInstance, DeathMatchPlayer> _playersKills = new FastMap<L2PcInstance, DeathMatchPlayer>();
+	private HashMap<L2PcInstance, DeathMatchPlayer> _playersKills = new HashMap<L2PcInstance, DeathMatchPlayer>();
 
 	class DeathMatchPlayer
 	{
@@ -57,7 +59,7 @@ public class DeathMatch extends GameEvent
 
 	private int _state = GameEvent.STATE_INACTIVE;
 	private static DeathMatch _instance = null;
-	public long _eventDate = 0;
+	//public long _eventDate = 0;
 	private int _minLvl = 0;
 	private int _maxLvl = 0;
 	private int _maxPlayers = 60;
@@ -82,7 +84,7 @@ public class DeathMatch extends GameEvent
 	private boolean DM_RETURNORIGINAL;
 
 
-	public static final DeathMatch getInstance()
+	public static DeathMatch getInstance()
 	{
 		if (_instance == null)
 		{
@@ -113,7 +115,7 @@ public class DeathMatch extends GameEvent
 		_eventTask.cancel();
 		_registrationTask.cancel();
 		L2PcInstance player;
-		for (Integer playerId : _players)
+		for (Integer playerId : _players.toNativeArray())
 		{
 			player = L2World.getInstance().getPlayer(playerId);
 			if (player != null)
@@ -154,6 +156,7 @@ public class DeathMatch extends GameEvent
 		return _players.contains(player.getObjectId());
 	}
 
+	@SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
 	@Override
 	public boolean load()
 	{
@@ -285,6 +288,8 @@ public class DeathMatch extends GameEvent
 	{
 		if (isParticipant(player))
 		{
+			_players.remove(player.getObjectId());
+
 			if (_state == GameEvent.STATE_RUNNING)
 			{
 				if (player.isDead())
@@ -304,8 +309,8 @@ public class DeathMatch extends GameEvent
 					player.teleToLocation(_playerLoc.get(player.getObjectId()), false);
 				}
 			}
+
 			player._event = null;
-			_players.remove(player.getObjectId());
 		}
 	}
 
@@ -326,8 +331,8 @@ public class DeathMatch extends GameEvent
 
 		if (!Config.Allow_Same_HWID_On_Events && player.getClient().getHWId() != null && player.getClient().getHWId().length() != 0)
 		{
-			L2PcInstance pc = null;
-			for (int charId : _players)
+			L2PcInstance pc;
+			for (int charId : _players.toNativeArray())
 			{
 				pc = L2World.getInstance().getPlayer(charId);
 				if (pc != null && player.getClient().getHWId().equals(pc.getClient().getHWId()))
@@ -340,8 +345,8 @@ public class DeathMatch extends GameEvent
 
 		if (!Config.Allow_Same_IP_On_Events)
 		{
-			L2PcInstance pc = null;
-			for (int charId : _players)
+			L2PcInstance pc;
+			for (int charId : _players.toNativeArray())
 			{
 				pc = L2World.getInstance().getPlayer(charId);
 				if (pc != null && pc.getClient() != null && player.getClient().getHostAddress().equals(pc.getClient().getHostAddress()))
@@ -486,7 +491,7 @@ public class DeathMatch extends GameEvent
 			L2PcInstance player;
 			if (_players != null && !_players.isEmpty())
 			{
-				for (Integer playerid : _players)
+				for (Integer playerid : _players.toNativeArray())
 				{
 					player = L2World.getInstance().getPlayer(playerid);
 					if (player != null && player.isOnline() != 0)
@@ -535,7 +540,7 @@ public class DeathMatch extends GameEvent
 			int[] par = {-1, 1};
 			int Radius = 500;
 
-			for (Integer playerId : _players)
+			for (Integer playerId : _players.toNativeArray())
 			{
 				player = L2World.getInstance().getPlayer(playerId);
 				if (player != null)
@@ -584,7 +589,7 @@ public class DeathMatch extends GameEvent
 				public void run()
 				{
 					L2PcInstance player;
-					for (Integer playerId : _players)
+					for (Integer playerId : _players.toNativeArray())
 					{
 						player = L2World.getInstance().getPlayer(playerId);
 						if (player != null)
@@ -641,11 +646,11 @@ public class DeathMatch extends GameEvent
 
 	private void rewardPlayers()
 	{
-		L2PcInstance player = null;
+		L2PcInstance player;
 		L2PcInstance winner = null;
 		int top_score = 0;
 
-		for (Integer playerId : _players)
+		for (Integer playerId : _players.toNativeArray())
 		{
 			player = L2World.getInstance().getPlayer(playerId);
 			if (player != null)
@@ -690,9 +695,6 @@ public class DeathMatch extends GameEvent
 				finish();
 			}
 		}, 10000);
-
-		player = null;
-		winner = null;
 	}
 
 	private void run()
@@ -700,7 +702,7 @@ public class DeathMatch extends GameEvent
 		int realPlayers = 0;
 		_playerLoc.clear();
 		L2PcInstance player;
-		for (Integer playerId : _players)
+		for (Integer playerId : _players.toNativeArray())
 		{
 			player = L2World.getInstance().getPlayer(playerId);
 			if (player != null && player.getLevel() >= _minLvl && player.getLevel() <= _maxLvl && player.getInstanceId() == 0)

@@ -24,11 +24,11 @@ import com.l2scoria.gameserver.templates.L2EtcItemType;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.util.lang.ArrayUtils;
 import com.l2scoria.util.random.Rnd;
-import javolution.util.FastList;
-import javolution.util.FastMap;
+import gnu.trove.TIntIntHashMap;
+import gnu.trove.TIntObjectHashMap;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 
 public class TvT extends GameEvent
@@ -38,15 +38,15 @@ public class TvT extends GameEvent
 		public String name;
 		public int color;
 		public Location loc;
-		public Map<Integer, Integer> players = new FastMap<Integer, Integer>();
+		public TIntIntHashMap players = new TIntIntHashMap();
 		public int kills = 0;
 		public int index;
 	}
 
-	private Map<Integer, Team> _participants = new FastMap<Integer, Team>();
-	private Map<Integer, Location> _playerLocations = new FastMap<Integer, Location>();
-	private Map<Integer, Integer> _kills;
-	private List<Team> _teams = new FastList<Team>();
+	private TIntObjectHashMap<Team> _participants = new TIntObjectHashMap<Team>();
+	private TIntObjectHashMap<Location> _playerLocations = new TIntObjectHashMap<Location>();
+	private TIntIntHashMap _kills;
+	private List<Team> _teams = new ArrayList<Team>();
 	private int _state = GameEvent.STATE_INACTIVE;
 
 	/* -------- ПАРАМЕТРЫ ЭВЕНТА -------- */
@@ -114,7 +114,7 @@ public class TvT extends GameEvent
 		_eventTask.cancel();
 
 		L2PcInstance player;
-		for (Integer playerId : _participants.keySet())
+		for (Integer playerId : _participants.keys())
 		{
 			player = L2World.getInstance().getPlayer(playerId);
 			if (player != null)
@@ -259,6 +259,8 @@ public class TvT extends GameEvent
 	{
 		if (isParticipant(player))
 		{
+			_participants.remove(player.getObjectId());
+
 			if (_state == GameEvent.STATE_RUNNING)
 			{
 				if (getPlayerTeam(player) != null)
@@ -282,7 +284,7 @@ public class TvT extends GameEvent
 				player._event = null;
 				player.broadcastUserInfo();
 			}
-			_participants.remove(player.getObjectId());
+
 			player._event = null;
 		}
 
@@ -298,7 +300,7 @@ public class TvT extends GameEvent
 
 		_participants.clear();
 		_teams.clear();
-		_kills = new FastMap<Integer, Integer>();
+		_kills = new TIntIntHashMap();
 		readConfig();
 
 		_elapsed = (_regTime * 60000) / 2;
@@ -482,8 +484,8 @@ public class TvT extends GameEvent
 		}
 		if (!Config.Allow_Same_HWID_On_Events && player.getClient().getHWId() != null && player.getClient().getHWId().length() != 0)
 		{
-			L2PcInstance pc = null;
-			for (int charId : _participants.keySet())
+			L2PcInstance pc;
+			for (int charId : _participants.keys())
 			{
 				pc = L2World.getInstance().getPlayer(charId);
 				if (pc != null && player.getClient().getHWId().equals(pc.getClient().getHWId()))
@@ -495,8 +497,8 @@ public class TvT extends GameEvent
 		}
 		if (!Config.Allow_Same_IP_On_Events)
 		{
-			L2PcInstance pc = null;
-			for (int charId : _participants.keySet())
+			L2PcInstance pc;
+			for (int charId : _participants.keys())
 			{
 				pc = L2World.getInstance().getPlayer(charId);
 				if (pc != null && pc.getClient() != null && player.getClient().getHostAddress().equals(pc.getClient().getHostAddress()))
@@ -593,6 +595,7 @@ public class TvT extends GameEvent
 			_instanceId = InstanceManager.getInstance().createDynamicInstance(null);
 			_instanceObj = InstanceManager.getInstance().getInstance(_instanceId);
 			_instanceObj.setReturnTeleport(81260, 148607, -3471);
+
 			if (TVT_CLOSE_COLISEUM_DOORS)
 			{
 				_instanceObj.addDoor(24190001, false);
@@ -604,7 +607,7 @@ public class TvT extends GameEvent
 
 		_playerLocations.clear();
 		L2PcInstance player;
-		for (int charId : _participants.keySet())
+		for (int charId : _participants.keys())
 		{
 			player = L2World.getInstance().getPlayer(charId);
 			if (player != null)
@@ -630,17 +633,19 @@ public class TvT extends GameEvent
 				_participants.remove(charId);
 			}
 		}
+
 		if (_participants.size() < _minPlayers)
 		{
 			AnnounceToPlayers(true, getName() + ": Недостаточно игроков");
 			finish();
 			return;
 		}
+
 		int delta = _participants.size() % 2 == 0 ? 0 : 1;
 		for (; ; )
 		{
 			boolean allShuffled = true;
-			for (Integer playerId : _participants.keySet())
+			for (Integer playerId : _participants.keys())
 			{
 				if (_participants.get(playerId) == null)
 				{
@@ -658,6 +663,7 @@ public class TvT extends GameEvent
 					allShuffled = false;
 				}
 			}
+
 			if (allShuffled)
 			{
 				break;
@@ -672,6 +678,7 @@ public class TvT extends GameEvent
 			DoorTable.getInstance().getDoor(24190003).closeMe();
 			DoorTable.getInstance().getDoor(24190004).closeMe();
 		}
+
 		if (_eventScript != null)
 		{
 			_eventScript.onStart(_instanceId);
@@ -687,7 +694,7 @@ public class TvT extends GameEvent
 			_canStand = false;
 			for (Team team : _teams)
 			{
-				for (Integer playerId : team.players.keySet())
+				for (Integer playerId : team.players.keys())
 				{
 					player = L2World.getInstance().getPlayer(playerId);
 					if (player != null)
@@ -730,7 +737,7 @@ public class TvT extends GameEvent
 					L2PcInstance player;
 					for (Team team : _teams)
 					{
-						for (Integer playerId : team.players.keySet())
+						for (Integer playerId : team.players.keys())
 						{
 							player = L2World.getInstance().getPlayer(playerId);
 							if (player != null)
@@ -757,7 +764,7 @@ public class TvT extends GameEvent
 		{
 			L2PcInstance player;
 			CreatureSay cs = new CreatureSay(0, CreatureSay.SystemChatChannelId.Chat_Critical_Announce, "", announce);
-			for (Integer charId : _participants.keySet())
+			for (Integer charId : _participants.keys())
 			{
 				player = L2World.getInstance().getPlayer(charId);
 				if (player != null)
@@ -771,7 +778,7 @@ public class TvT extends GameEvent
 	private void doReward()
 	{
 		L2PcInstance player;
-		for (Integer playerId : _participants.keySet())
+		for (Integer playerId : _participants.keys())
 		{
 			player = L2World.getInstance().getPlayer(playerId);
 			if (player != null)
@@ -804,7 +811,7 @@ public class TvT extends GameEvent
 		{
 			AnnounceToPlayers(true, getName() + ": Победитель - команда " + winner.name);
 
-			for (Integer playerId : _participants.keySet())
+			for (Integer playerId : _participants.keys())
 			{
 				player = L2World.getInstance().getPlayer(playerId);
 				if (player != null)
@@ -930,6 +937,7 @@ public class TvT extends GameEvent
 		player.teleToLocation(_locX, _locY, _locZ, false);
 	}
 
+	@SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
 	private void readConfig()
 	{
 		try
@@ -997,7 +1005,8 @@ public class TvT extends GameEvent
 			teamRed.loc = new Location(Integer.parseInt(teamLocRed[0]), Integer.parseInt(teamLocRed[1]), Integer.parseInt(teamLocRed[2]));
 			teamRed.color = 255;
 			_teams.add(teamRed);
-		} catch (Exception e)
+		}
+		catch (Exception e)
 		{
 			_log.warn("TvT: Error reading config ", e);
 			_instance = null;
@@ -1028,8 +1037,8 @@ public class TvT extends GameEvent
 		{
 			kills = _kills.get(cha.getObjectId());
 		}
-		return "Kills : " + kills;
 
+		return "Kills : " + kills;
 	}
 
 	public String getName(L2PcInstance cha, L2PcInstance other)
