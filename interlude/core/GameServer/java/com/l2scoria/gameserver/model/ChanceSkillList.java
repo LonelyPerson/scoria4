@@ -16,7 +16,7 @@ package com.l2scoria.gameserver.model;
 
 import javolution.util.FastMap;
 
-import com.l2scoria.gameserver.handler.ISkillHandler;
+import com.l2scoria.gameserver.handler.skills.ISkillHandler;
 import com.l2scoria.gameserver.handler.SkillHandler;
 import com.l2scoria.gameserver.network.serverpackets.MagicSkillLaunched;
 import com.l2scoria.gameserver.network.serverpackets.MagicSkillUser;

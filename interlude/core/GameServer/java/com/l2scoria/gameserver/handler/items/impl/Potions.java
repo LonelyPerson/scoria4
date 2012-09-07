@@ -20,7 +20,7 @@ package com.l2scoria.gameserver.handler.items.impl;
 
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.SkillTable;
-import com.l2scoria.gameserver.handler.ISkillHandler;
+import com.l2scoria.gameserver.handler.skills.ISkillHandler;
 import com.l2scoria.gameserver.handler.SkillHandler;
 import com.l2scoria.gameserver.model.L2Effect;
 import com.l2scoria.gameserver.model.L2Effect.EffectType;

@@ -19,7 +19,7 @@
 package com.l2scoria.gameserver.model.actor.instance;
 
 import com.l2scoria.gameserver.datatables.SkillTable;
-import com.l2scoria.gameserver.handler.ISkillHandler;
+import com.l2scoria.gameserver.handler.skills.ISkillHandler;
 import com.l2scoria.gameserver.handler.SkillHandler;
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.L2Party;
@@ -235,13 +235,8 @@ public class L2CubicInstance
 									skill.useSkill(_owner, targets);
 								}
 
-								MagicSkillUser msu = new MagicSkillUser(_owner, _target, skill.getId(), _level, 0, 0);
-								_owner.broadcastPacket(msu);
-								msu = null;
+								_owner.broadcastPacket(new MagicSkillUser(_owner, _target, skill.getId(), _level, 0, 0));
 							}
-							skill = null;
-							targets = null;
-							handler = null;
 						}
 					}
 				} catch (Exception e)
@@ -360,16 +355,10 @@ public class L2CubicInstance
 						{
 							skill.useSkill(_owner, targets);
 						}
+
 						MagicSkillUser msu = new MagicSkillUser(_owner, target, skill.getId(), _level, 0, 0);
 						_owner.broadcastPacket(msu);
-
-						msu = null;
-						targets = null;
-						handler = null;
 					}
-					skill = null;
-					target = null;
-					caster = null;
 				}
 			} catch (Exception e)
 			{

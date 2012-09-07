@@ -3210,6 +3210,9 @@ public final class Config
 
 	public static boolean ALLOW_KEYBOARD_MOVE;
 
+	public static boolean GEO_AR;
+	public static boolean GEO_AR_PRELOAD_NEIBOURS;
+
 	public static int PATHFIND_BOOST;
 	public static boolean PATHFIND_DIAGONAL;
 	public static boolean PATH_CLEAN;
@@ -3254,6 +3257,9 @@ public final class Config
 			WEIGHT0 					= Double.parseDouble(geodataSetting.getProperty("Weight0", "0.5"));
 			WEIGHT1 					= Double.parseDouble(geodataSetting.getProperty("Weight1", "2.0"));
 			WEIGHT2 					= Double.parseDouble(geodataSetting.getProperty("Weight2", "1.0"));
+
+			GEO_AR 						= Boolean.parseBoolean(geodataSetting.getProperty("GeoAR", "false"));
+			GEO_AR_PRELOAD_NEIBOURS		= Boolean.parseBoolean(geodataSetting.getProperty("GeoARPreloadNeibours", "true"));
 
 			PATHFIND_MAX_TIME 			= Long.parseLong(geodataSetting.getProperty("PathFindMaxTime", "10000000"));
 			PATHFIND_BUFFERS 			= geodataSetting.getProperty("PathFindBuffers", "8x96;8x128;8x160;8x192;4x224;4x256;4x288;2x320;2x384;2x352;1x512");

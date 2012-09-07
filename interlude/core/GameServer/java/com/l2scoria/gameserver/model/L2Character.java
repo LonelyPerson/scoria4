@@ -26,7 +26,7 @@ import com.l2scoria.gameserver.datatables.csv.MapRegionTable;
 import com.l2scoria.gameserver.datatables.csv.MapRegionTable.TeleportWhereType;
 import com.l2scoria.gameserver.geodata.GeoEngine;
 import com.l2scoria.gameserver.geodata.GeoMove;
-import com.l2scoria.gameserver.handler.ISkillHandler;
+import com.l2scoria.gameserver.handler.skills.ISkillHandler;
 import com.l2scoria.gameserver.handler.SkillHandler;
 import com.l2scoria.gameserver.managers.DimensionalRiftManager;
 import com.l2scoria.gameserver.managers.TownManager;
@@ -8422,12 +8422,7 @@ public abstract class L2Character extends L2Object
 	 */
 	public boolean reflectSkill(L2Skill skill)
 	{
-		double reflect = calcStat(skill.isMagic() ? Stats.REFLECT_SKILL_MAGIC : Stats.REFLECT_SKILL_PHYSIC, 0, null, null);
-
-		if(Rnd.get(100) < reflect)
-			return true;
-
-		return false;
+		return Rnd.get(100) < calcStat(skill.isMagic() ? Stats.REFLECT_SKILL_MAGIC : Stats.REFLECT_SKILL_PHYSIC, 0, null, null);
 	}
 
 	public boolean vengeanceSkill(L2Skill skill)

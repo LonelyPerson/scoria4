@@ -18,13 +18,8 @@
  */
 package com.l2scoria.gameserver.templates;
 
-import java.io.IOException;
-import java.util.List;
-
-import javolution.util.FastList;
-
 import com.l2scoria.gameserver.datatables.SkillTable;
-import com.l2scoria.gameserver.handler.ISkillHandler;
+import com.l2scoria.gameserver.handler.skills.ISkillHandler;
 import com.l2scoria.gameserver.handler.SkillHandler;
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.L2Effect;
@@ -38,6 +33,9 @@ import com.l2scoria.gameserver.skills.Env;
 import com.l2scoria.gameserver.skills.conditions.ConditionGameChance;
 import com.l2scoria.gameserver.skills.funcs.Func;
 import com.l2scoria.gameserver.skills.funcs.FuncTemplate;
+import javolution.util.FastList;
+
+import java.util.List;
 
 /**
  * This class is dedicated to the management of weapons.
@@ -416,38 +414,33 @@ public final class L2Weapon extends L2Item
 				continue; // Skill condition not met
 			}
 
-			try
+			// Get the skill handler corresponding to the skill type
+			ISkillHandler handler = SkillHandler.getInstance().getSkillHandler(skill.getSkillType());
+
+			L2Character[] targets = new L2Character[1];
+			targets[0] = target;
+
+			// Launch the magic skill and calculate its effects
+			if(handler != null)
 			{
-				// Get the skill handler corresponding to the skill type
-				ISkillHandler handler = SkillHandler.getInstance().getSkillHandler(skill.getSkillType());
+				handler.useSkill(caster, skill, targets);
+			}
+			else
+			{
+				skill.useSkill(caster, targets);
+			}
 
-				L2Character[] targets = new L2Character[1];
-				targets[0] = target;
-
-				// Launch the magic skill and calculate its effects
-				if(handler != null)
+			if(caster.isPlayer && target.isNpc)
+			{
+				Quest[] quests = ((L2NpcInstance) target).getTemplate().getEventQuests(Quest.QuestEventType.ON_SKILL_USE);
+				if(quests != null)
 				{
-					handler.useSkill(caster, skill, targets);
-				}
-				else
-				{
-					skill.useSkill(caster, targets);
-				}
-
-				if(caster.isPlayer && target.isNpc)
-				{
-					Quest[] quests = ((L2NpcInstance) target).getTemplate().getEventQuests(Quest.QuestEventType.ON_SKILL_USE);
-					if(quests != null)
+					for(Quest quest : quests)
 					{
-						for(Quest quest : quests)
-						{
-							quest.notifySkillUse((L2NpcInstance) target, (L2PcInstance) caster, skill);
-						}
+						quest.notifySkillUse((L2NpcInstance) target, (L2PcInstance) caster, skill);
 					}
 				}
 			}
-			catch(IOException e)
-			{}
 		}
 		if(effects.size() == 0)
 			return _emptyEffectSet;

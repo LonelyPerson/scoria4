@@ -19,7 +19,7 @@
 package com.l2scoria.gameserver.handler;
 
 import com.l2scoria.gameserver.GameServer;
-import com.l2scoria.gameserver.handler.skillhandlers.*;
+import com.l2scoria.gameserver.handler.skills.impl.*;
 import com.l2scoria.gameserver.model.L2Skill;
 import com.l2scoria.gameserver.model.L2Skill.SkillType;
 import org.apache.log4j.Logger;
@@ -38,7 +38,7 @@ public class SkillHandler
 
 	private static SkillHandler _instance;
 
-	private Map<L2Skill.SkillType, ISkillHandler> _datatable;
+	private Map<L2Skill.SkillType, SkillAbst> _datatable;
 
 	public static SkillHandler getInstance()
 	{
@@ -52,57 +52,61 @@ public class SkillHandler
 
 	private SkillHandler()
 	{
-		_datatable = new TreeMap<SkillType, ISkillHandler>();
-		registerSkillHandler(new Blow());
-		registerSkillHandler(new Pdam());
-		registerSkillHandler(new Mdam());
-		registerSkillHandler(new CpDam());
-		registerSkillHandler(new Manadam());
-		registerSkillHandler(new Heal());
-		registerSkillHandler(new CombatPointHeal());
-		registerSkillHandler(new ManaHeal());
-		registerSkillHandler(new BalanceLife());
-		registerSkillHandler(new Charge());
-		registerSkillHandler(new ClanGate());
-		registerSkillHandler(new Continuous());
-		registerSkillHandler(new Resurrect());
-		registerSkillHandler(new Spoil());
-		registerSkillHandler(new Sweep());
-		registerSkillHandler(new StrSiegeAssault());
-		registerSkillHandler(new SummonFriend());
-		registerSkillHandler(new SummonTreasureKey());
-		registerSkillHandler(new Disablers());
-		registerSkillHandler(new Recall());
-		registerSkillHandler(new SiegeFlag());
-		registerSkillHandler(new TakeCastle());
-		registerSkillHandler(new Unlock());
-		registerSkillHandler(new DrainSoul());
-		registerSkillHandler(new Craft());
-		registerSkillHandler(new Fishing());
-		registerSkillHandler(new FishingSkill());
-		registerSkillHandler(new BeastFeed());
-		registerSkillHandler(new DeluxeKey());
-		registerSkillHandler(new Sow());
-		registerSkillHandler(new Harvest());
-		registerSkillHandler(new GetPlayer());
-		registerSkillHandler(new ZakenPlayer());
-		registerSkillHandler(new ZakenSelf());
+		_datatable = new TreeMap<SkillType, SkillAbst>();
+		register(new Blow());
+		register(new Pdam());
+		register(new Mdam());
+		register(new CpDam());
+		register(new Manadam());
+		register(new Heal());
+		register(new CombatPointHeal());
+		register(new ManaHeal());
+		register(new BalanceLife());
+		register(new Charge());
+		register(new ClanGate());
+		register(new Continuous());
+		register(new Resurrect());
+		register(new Spoil());
+		register(new Sweep());
+		register(new StrSiegeAssault());
+		register(new SummonFriend());
+		register(new SummonTreasureKey());
+		register(new Disablers());
+		register(new Recall());
+		register(new SiegeFlag());
+		register(new TakeCastle());
+		register(new Unlock());
+		register(new DrainSoul());
+		register(new Craft());
+		register(new Fishing());
+		register(new FishingSkill());
+		register(new BeastFeed());
+		register(new DeluxeKey());
+		register(new Sow());
+		register(new Harvest());
+		register(new GetPlayer());
+		register(new ZakenPlayer());
+		register(new ZakenSelf());
 		_log.info("SkillHandler: Loaded " + _datatable.size() + " handlers.");
 
 	}
 
-	public void registerSkillHandler(ISkillHandler handler)
+	public void register(SkillAbst handler)
 	{
 		SkillType[] types = handler.getSkillIds();
+
+		if(types == null || types.length < 1)
+		{
+			return;
+		}
 
 		for(SkillType t : types)
 		{
 			_datatable.put(t, handler);
 		}
-		types = null;
 	}
 
-	public ISkillHandler getSkillHandler(SkillType skillType)
+	public SkillAbst getSkillHandler(SkillType skillType)
 	{
 		return _datatable.get(skillType);
 	}

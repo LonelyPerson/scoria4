@@ -123,7 +123,5 @@ public abstract class AbstractGeoLoader implements GeoLoader
 
 	protected abstract byte[][] parse(byte[] data);
 
-	public abstract Pattern getPattern();
-
 	public abstract byte[] convert(byte[] data);
 }

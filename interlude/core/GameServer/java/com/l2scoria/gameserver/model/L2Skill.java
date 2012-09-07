@@ -40,6 +40,7 @@ import com.l2scoria.gameserver.skills.funcs.FuncTemplate;
 import com.l2scoria.gameserver.skills.l2skills.*;
 import com.l2scoria.gameserver.templates.StatsSet;
 import com.l2scoria.gameserver.util.Util;
+import com.l2scoria.util.GArray;
 import javolution.util.FastList;
 import org.apache.log4j.Logger;
 
@@ -53,6 +54,7 @@ import java.util.StringTokenizer;
  * @version $Revision: 1.3.3 $ $Date: 2009/04/29 00:08 $
  * @authors ProGramMoS, eX1steam, l2scoria dev&sword dev
  */
+@SuppressWarnings("UnusedDeclaration")
 public abstract class L2Skill
 {
 	protected static final Logger _log = Logger.getLogger(L2Skill.class.getName());
@@ -267,6 +269,23 @@ public abstract class L2Skill
 		}
 	}
 
+	public enum NegateStats
+	{
+		BUFF,
+		DEBUFF,
+		WEAKNESS,
+		STUN,
+		SLEEP,
+		CONFUSION,
+		MUTE,
+		FEAR,
+		POISON,
+		BLEED,
+		PARALYZE,
+		ROOT,
+		HEAL
+	}
+
 	protected ChanceCondition _chanceCondition = null;
 	//elements
 	public final static int ELEMENT_WIND = 1;
@@ -426,7 +445,7 @@ public abstract class L2Skill
 	private final double _power;
 	private final int _effectPoints;
 	private final int _magicLevel;
-	private final String[] _negateStats;
+	private GArray<NegateStats> _negateStats;
 	private final float _negatePower;
 	private final int _negateId;
 	private final int _levelDepend;
@@ -538,7 +557,30 @@ public abstract class L2Skill
 		_targetType = set.getEnum("target", SkillTargetType.class);
 		_power = set.getFloat("power", 0.f);
 		_effectPoints = set.getInteger("effectPoints", 0);
-		_negateStats = set.getString("negateStats", "").split(" ");
+
+		String[] negateStats = set.getString("negateStats", "").split(" ");
+		if(negateStats.length > 0)
+		{
+			_negateStats = new GArray<NegateStats>();
+			for(String stat : negateStats)
+			{
+				try
+				{
+					NegateStats ns = NegateStats.valueOf(stat.toUpperCase());
+					if(ns != null)
+					{
+						_negateStats.add(ns);
+					}
+				}
+				catch (Exception e)
+				{
+					_log.fatal(e.getMessage(), e);
+				}
+			}
+		}
+
+
+
 		_negatePower = set.getFloat("negatePower", 0.f);
 		_negateId = set.getInteger("negateId", 0);
 		_magicLevel = set.getInteger("magicLvl", SkillTreeTable.getInstance().getMinSkillLevel(_id, _level));
@@ -618,13 +660,8 @@ public abstract class L2Skill
 				{
 					_log.fatal("Bad class " + cls + " to learn skill", t);
 				}
-				cls = null;
 			}
-
-			st = null;
 		}
-
-		canLearn = null;
 
 		String teachers = set.getString("teachers", null);
 		if (teachers == null)
@@ -645,14 +682,8 @@ public abstract class L2Skill
 				{
 					_log.fatal("Bad teacher id " + npcid + " to teach skill", t);
 				}
-
-				npcid = null;
 			}
-
-			st = null;
 		}
-
-		teachers = null;
 	}
 
 	public abstract void useSkill(L2Character caster, L2Object[] targets);
@@ -746,7 +777,7 @@ public abstract class L2Skill
 		return _effectPoints;
 	}
 
-	public final String[] getNegateStats()
+	public final GArray<NegateStats> getNegateStats()
 	{
 		return _negateStats;
 	}
@@ -1215,11 +1246,7 @@ public abstract class L2Skill
 
 	public final boolean isLifeStoneSkill()
 	{
-		if (this.getId() >= 3080 && this.getId() <= 3259)
-		{
-			return true;
-		}
-		return false;
+		return this.getId() >= 3080 && this.getId() <= 3259;
 	}
 
 	public final int getNumCharges()
@@ -1389,16 +1416,10 @@ public abstract class L2Skill
 				SystemMessage sm = new SystemMessage(SystemMessageId.S1_S2);
 				sm.addString(msg);
 				activeChar.sendPacket(sm);
-				sm = null;
 			}
-
-			msg = null;
 
 			return false;
 		}
-
-		env = null;
-		preCondition = null;
 
 		return true;
 	}
@@ -1748,11 +1769,7 @@ public abstract class L2Skill
 							}
 						}
 					}
-
-					partyList = null;
 				}
-
-				player = null;
 
 				return targetList.toArray(new L2Character[targetList.size()]);
 			}
@@ -1853,7 +1870,6 @@ public abstract class L2Skill
 							{
 								targetList.add(pet);
 							}
-							pet = null;
 
 							if (targetType == SkillTargetType.TARGET_CORPSE_ALLY)
 							{
@@ -1890,9 +1906,6 @@ public abstract class L2Skill
 
 						}
 					}
-
-					player = null;
-					clan = null;
 				}
 				return targetList.toArray(new L2Character[targetList.size()]);
 			}
@@ -1951,8 +1964,6 @@ public abstract class L2Skill
 								targetList.add(pet);
 							}
 
-							pet = null;
-
 							if (targetType == SkillTargetType.TARGET_CORPSE_CLAN)
 							{
 								if (!newTarget.isDead())
@@ -1968,8 +1979,6 @@ public abstract class L2Skill
 									{
 										continue;
 									}
-
-									siege = null;
 								}
 							}
 
@@ -1992,13 +2001,8 @@ public abstract class L2Skill
 							{
 								return new L2Character[]{newTarget};
 							}
-
-							newTarget = null;
 						}
 					}
-
-					player = null;
-					clan = null;
 				}
 				else if (activeChar.isNpc)
 				{
@@ -2109,10 +2113,6 @@ public abstract class L2Skill
 
 						}
 					}
-
-					player = null;
-					targetPlayer = null;
-					targetPet = null;
 				}
 				activeChar.sendPacket(new SystemMessage(SystemMessageId.TARGET_IS_INCORRECT));
 
@@ -2162,7 +2162,7 @@ public abstract class L2Skill
 					src = (L2PcInstance) activeChar;
 				}
 
-				L2PcInstance trg = null;
+				L2PcInstance trg;
 
 				int radius = getSkillRadius();
 
@@ -2270,9 +2270,6 @@ public abstract class L2Skill
 					return null;
 				}
 
-				trg = null;
-				src = null;
-
 				return targetList.toArray(new L2Character[targetList.size()]);
 			}
 			case TARGET_UNLOCKABLE:
@@ -2299,7 +2296,6 @@ public abstract class L2Skill
 				SystemMessage sm = new SystemMessage(SystemMessageId.S1_S2);
 				sm.addString("Target type of skill is not currently handled");
 				activeChar.sendPacket(sm);
-				sm = null;
 				return null;
 			}
 			case TARGET_UNDEAD:
@@ -2410,8 +2406,6 @@ public abstract class L2Skill
 					return null;
 				}
 
-				cha = null;
-
 				return targetList.toArray(new L2Character[targetList.size()]);
 			}
 			case TARGET_ENEMY_SUMMON:
@@ -2423,8 +2417,6 @@ public abstract class L2Skill
 					{
 						return new L2Character[]{targetSummon};
 					}
-
-					targetSummon = null;
 				}
 				return null;
 			}
@@ -2457,7 +2449,6 @@ public abstract class L2Skill
 				SystemMessage sm = new SystemMessage(SystemMessageId.S1_S2);
 				sm.addString("Target type of skill is not currently handled");
 				activeChar.sendPacket(sm);
-				sm = null;
 				return null;
 			}
 		}//end switch
@@ -2577,7 +2568,6 @@ public abstract class L2Skill
 			{
 				effects.add(e);
 			}
-			e = null;
 		}
 
 		if (effects.size() == 0)
@@ -2629,7 +2619,6 @@ public abstract class L2Skill
 								SystemMessage sm = new SystemMessage(SystemMessageId.FORCE_INCREASED_TO_S1);
 								sm.addNumber(effectcharge);
 								env.target.sendPacket(sm);
-								sm = null;
 							}
 						}
 					}
@@ -2643,8 +2632,6 @@ public abstract class L2Skill
 					effects.add(e);
 				}
 			}
-
-			e = null;
 		}
 		if (effects.size() == 0)
 		{
@@ -2667,7 +2654,6 @@ public abstract class L2Skill
 			System.arraycopy(_funcTemplates, 0, tmp, 0, len);
 			tmp[len] = f;
 			_funcTemplates = tmp;
-			tmp = null;
 		}
 	}
 
@@ -2684,7 +2670,6 @@ public abstract class L2Skill
 			System.arraycopy(_effectTemplates, 0, tmp, 0, len);
 			tmp[len] = effect;
 			_effectTemplates = tmp;
-			tmp = null;
 		}
 	}
 
@@ -2701,7 +2686,6 @@ public abstract class L2Skill
 			System.arraycopy(_effectTemplatesSelf, 0, tmp, 0, len);
 			tmp[len] = effect;
 			_effectTemplatesSelf = tmp;
-			tmp = null;
 		}
 	}
 
@@ -2745,9 +2729,6 @@ public abstract class L2Skill
 			{
 				return true;
 			}
-
-			targetChar = null;
-			activeCh = null;
 		}
 		return false;
 	}
