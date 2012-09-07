@@ -84,6 +84,21 @@ public final class ArrayUtils
 		return false;
 	}
 
+	public static boolean contains(int[] array, int value)
+	{
+		if(array == null)
+			return false;
+
+		for (int anArray : array)
+		{
+			if (value == anArray)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
 	/**
 	 * Check if value is one of the elements of array, from starting index, and returns it position in array
 	 *

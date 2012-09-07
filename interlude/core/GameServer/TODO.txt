@@ -1,0 +1,3 @@
+1717	1	Siege War Zone \n- A siege is currently in progress in this area.  \n If a character dies in this zone, their resurrection ability may be restricted.	0	79	9B	B0	FF		1717	0	0	0	0	0		none
+1719	1	Seven Signs Zone \n- Although a character's level may increase while in this area, HP and MP \n will not be regenerated.	0	79	9B	B0	FF			0	0	0	0	0		none
+1116	1	One cannot leave one's clan during combat.	0	79	9B	B0	FF	ItemSound3.sys_impossible		0	0	0	0	0		none

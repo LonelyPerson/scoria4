@@ -19,7 +19,7 @@
 package com.l2scoria.gameserver.handler;
 
 import com.l2scoria.gameserver.GameServer;
-import com.l2scoria.gameserver.handler.itemhandlers.*;
+import com.l2scoria.gameserver.handler.items.impl.*;
 import org.apache.log4j.Logger;
 
 import java.util.Map;
@@ -36,7 +36,7 @@ public class ItemHandler
 
 	private static ItemHandler _instance;
 
-	private Map<Integer, IItemHandler> _datatable;
+	private Map<Integer, ItemAbst> _datatable;
 
 	/**
 	 * Create ItemHandler if doesn't exist and returns ItemHandler
@@ -68,49 +68,49 @@ public class ItemHandler
 	 */
 	private ItemHandler()
 	{
-		_datatable = new TreeMap<Integer, IItemHandler>();
-		registerItemHandler(new ScrollOfEscape());
-		registerItemHandler(new ScrollOfResurrection());
-		registerItemHandler(new SoulShots());
-		registerItemHandler(new SpiritShot());
-		registerItemHandler(new BlessedSpiritShot());
-		registerItemHandler(new BeastSoulShot());
-		registerItemHandler(new BeastSpiritShot());
-		registerItemHandler(new ChestKey());
-		registerItemHandler(new CustomPotions());
-		registerItemHandler(new PaganKeys());
-		registerItemHandler(new Maps());
-		registerItemHandler(new MapForestOfTheDead());
-		registerItemHandler(new Potions());
-		registerItemHandler(new Recipes());
-		registerItemHandler(new RollingDice());
-		registerItemHandler(new MysteryPotion());
-		registerItemHandler(new EnchantScrolls());
-		registerItemHandler(new EnergyStone());
-		registerItemHandler(new Book());
-		registerItemHandler(new Remedy());
-		registerItemHandler(new Scrolls());
-		registerItemHandler(new CrystalCarol());
-		registerItemHandler(new SoulCrystals());
-		registerItemHandler(new SevenSignsRecord());
-		registerItemHandler(new CharChangePotions());
-		registerItemHandler(new Firework());
-		registerItemHandler(new Seed());
-		registerItemHandler(new Harvester());
-		registerItemHandler(new MercTicket());
-		registerItemHandler(new Nectar());
-		registerItemHandler(new FishShots());
-		registerItemHandler(new ExtractableItems());
-		registerItemHandler(new SpecialXMas());
-		registerItemHandler(new SummonItems());
-		registerItemHandler(new BeastSpice());
-		registerItemHandler(new JackpotSeed());
-		registerItemHandler(new NobleCustomItem());
-		registerItemHandler(new HeroCustomItem());
-		registerItemHandler(new MOSKey());
-		registerItemHandler(new BreakingArrow());
-		registerItemHandler(new ChristmasTree());
-		registerItemHandler(new Crystals());
+		_datatable = new TreeMap<Integer, ItemAbst>();
+		register(new ScrollOfEscape());
+		register(new ScrollOfResurrection());
+		register(new SoulShots());
+		register(new SpiritShot());
+		register(new BlessedSpiritShot());
+		register(new BeastSoulShot());
+		register(new BeastSpiritShot());
+		register(new ChestKey());
+		register(new CustomPotions());
+		register(new PaganKeys());
+		register(new Maps());
+		register(new MapForestOfTheDead());
+		register(new Potions());
+		register(new Recipes());
+		register(new RollingDice());
+		register(new MysteryPotion());
+		register(new EnchantScrolls());
+		register(new EnergyStone());
+		register(new Book());
+		register(new Remedy());
+		register(new Scrolls());
+		register(new CrystalCarol());
+		register(new SoulCrystals());
+		register(new SevenSignsRecord());
+		register(new CharChangePotions());
+		register(new Firework());
+		register(new Seed());
+		register(new Harvester());
+		register(new MercTicket());
+		register(new Nectar());
+		register(new FishShots());
+		register(new ExtractableItems());
+		register(new SpecialXMas());
+		register(new SummonItems());
+		register(new BeastSpice());
+		register(new JackpotSeed());
+		register(new NobleCustomItem());
+		register(new HeroCustomItem());
+		register(new MOSKey());
+		register(new BreakingArrow());
+		register(new ChristmasTree());
+		register(new Crystals());
 		_log.info("ItemHandler: Loaded " + _datatable.size() + " handlers.");
 	}
 
@@ -123,15 +123,20 @@ public class ItemHandler
 	 * 
 	 * @param handler (IItemHandler)
 	 */
-	public void registerItemHandler(IItemHandler handler)
+	public void register(ItemAbst handler)
 	{
 		// Get all ID corresponding to the item type of the handler
 		int[] ids = handler.getItemIds();
 
+		if(ids == null)
+		{
+			return;
+		}
+
 		// Add handler for each ID found
 		for(int id : ids)
 		{
-			_datatable.put(new Integer(id), handler);
+			_datatable.put(id, handler);
 		}
 	}
 
@@ -141,8 +146,8 @@ public class ItemHandler
 	 * @param itemId : int designating the itemID
 	 * @return IItemHandler
 	 */
-	public IItemHandler getItemHandler(int itemId)
+	public ItemAbst getItemHandler(int itemId)
 	{
-		return _datatable.get(new Integer(itemId));
+		return _datatable.get(itemId);
 	}
 }

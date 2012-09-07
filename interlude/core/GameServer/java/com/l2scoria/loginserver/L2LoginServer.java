@@ -27,11 +27,10 @@ import com.l2scoria.util.database.SqlUtils;
 import mmo.SelectorServerConfig;
 import mmo.SelectorThread;
 import org.apache.log4j.Logger;
+import org.apache.log4j.xml.DOMConfigurator;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.security.GeneralSecurityException;
@@ -40,7 +39,6 @@ import java.util.Iterator;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.LogManager;
 
 public class L2LoginServer
 {
@@ -65,43 +63,15 @@ public class L2LoginServer
 	public L2LoginServer()
 	{
 		ServerType.serverMode = ServerType.MODE_LOGINSERVER;
+
 		//      Local Constants
 		final String LOG_FOLDER = "log"; // Name of folder for log file
-		final String LOG_NAME = "./log.cfg"; // Name of log file
 
 		/*** Main ***/
 		// Create log folder
+		DOMConfigurator.configure("./config/log4j_login.xml");
 		File logFolder = new File(Config.DATAPACK_ROOT, LOG_FOLDER);
 		logFolder.mkdir();
-
-		// Create input stream for log file -- or store file data into memory
-		InputStream is = null;
-		try
-		{
-			is = new FileInputStream(new File(LOG_NAME));
-			LogManager.getLogManager().readConfiguration(is);
-			is.close();
-		}
-		catch(IOException e)
-		{
-			e.printStackTrace();
-		}
-		finally
-		{
-			try
-			{
-				if(is != null)
-				{
-					is.close();
-				}
-
-				is = null;
-			}
-			catch(IOException e)
-			{
-				e.printStackTrace();
-			}
-		}
 
 		//view info
 		L2Scoria.infoLS();

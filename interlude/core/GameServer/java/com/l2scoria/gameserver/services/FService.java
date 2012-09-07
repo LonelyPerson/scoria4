@@ -76,12 +76,11 @@ public class FService
 	public static final String BANK_FILE = "./config/fun/bank.properties";
 	public static final String EVENT_CHAMPION_FILE = "./config/fun/champion.properties";
 	public static final String EVENT_REBIRTH_FILE = "./config/fun/rebirth.properties";
-	public static final String EVENT_TVT_FILE = "./config/fun/tvt.properties";
 	public static final String EVENT_WEDDING_FILE = "./config/fun/wedding.properties";
 	public static final String EVENT_PC_BANG_POINT_FILE = "./config/fun/pcBang.properties";
 	public static final String OFFLINE_FILE = "./config/fun/offline.properties";
-	public static final String EVENT_FILE = "./config/fun/event.properties";
-	public static final String FUN_EVENT = "./config/fun/fun_events.properties";
+
+	public static final String EVENTS = "./config/events/events.properties";
 
 	//network
 	public static final String CONFIGURATION_FILE = "./config/network/gameserver.properties";

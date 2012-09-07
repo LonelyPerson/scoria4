@@ -17,9 +17,6 @@
  */
 package com.l2scoria.gameserver.model.actor.instance;
 
-import java.util.concurrent.ScheduledFuture;
-import java.util.Map.Entry;
-
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.ItemsAutoDestroy;
 import com.l2scoria.gameserver.datatables.SkillTable;
@@ -27,11 +24,12 @@ import com.l2scoria.gameserver.datatables.sql.ItemTable;
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.L2Object;
 import com.l2scoria.gameserver.model.L2Skill;
-import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
 import com.l2scoria.gameserver.templates.L2EtcItemType;
 import com.l2scoria.gameserver.templates.L2NpcTemplate;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.util.random.Rnd;
+
+import java.util.concurrent.ScheduledFuture;
 
 /**
  * @author Drunkard Zabb0x Lets drink2code!
@@ -76,12 +74,15 @@ public class L2XmassTreeInstance extends L2NpcInstance
 					_presentTick = 0;
 					try
 					{
-						for(Entry <Integer, Integer> entry : Config.CHRISTMAS_PRESENTS_LIST.entrySet())
+						synchronized (Config.CHRISTMAS_PRESENTS_LIST)
 						{
-							if (Rnd.get(Config.CHRISTMAS_PRESENTS_LIST.size()) == 0)
+							for(int key : Config.CHRISTMAS_PRESENTS_LIST.keys())
 							{
-								DropItem(entry.getKey(), entry.getValue());
-								return;
+								if (Rnd.get(Config.CHRISTMAS_PRESENTS_LIST.size()) == 0)
+								{
+									DropItem(key, Config.CHRISTMAS_PRESENTS_LIST.get(key));
+									return;
+								}
 							}
 						}
 					}

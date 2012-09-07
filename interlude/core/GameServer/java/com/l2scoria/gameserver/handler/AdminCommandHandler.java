@@ -19,7 +19,69 @@
 package com.l2scoria.gameserver.handler;
 
 import com.l2scoria.Config;
-import com.l2scoria.gameserver.handler.admincommandhandlers.*;
+import com.l2scoria.gameserver.handler.admin.impl.AdminAbst;
+import com.l2scoria.gameserver.handler.admin.impl.AIndex;
+import com.l2scoria.gameserver.handler.admin.impl.Announce;
+import com.l2scoria.gameserver.handler.admin.impl.BBS;
+import com.l2scoria.gameserver.handler.admin.impl.Ban;
+import com.l2scoria.gameserver.handler.admin.impl.BanChat;
+import com.l2scoria.gameserver.handler.admin.impl.Boat;
+import com.l2scoria.gameserver.handler.admin.impl.Buffs;
+import com.l2scoria.gameserver.handler.admin.impl.Cache;
+import com.l2scoria.gameserver.handler.admin.impl.ChangeAccessLevel;
+import com.l2scoria.gameserver.handler.admin.impl.CreateItem;
+import com.l2scoria.gameserver.handler.admin.impl.CursedWeapons;
+import com.l2scoria.gameserver.handler.admin.impl.Delete;
+import com.l2scoria.gameserver.handler.admin.impl.Donator;
+import com.l2scoria.gameserver.handler.admin.impl.DoorControl;
+import com.l2scoria.gameserver.handler.admin.impl.EditChar;
+import com.l2scoria.gameserver.handler.admin.impl.EditNpc;
+import com.l2scoria.gameserver.handler.admin.impl.Effects;
+import com.l2scoria.gameserver.handler.admin.impl.Enchant;
+import com.l2scoria.gameserver.handler.admin.impl.ExpSp;
+import com.l2scoria.gameserver.handler.admin.impl.FightCalculator;
+import com.l2scoria.gameserver.handler.admin.impl.FortSiege;
+import com.l2scoria.gameserver.handler.admin.impl.Geodata;
+import com.l2scoria.gameserver.handler.admin.impl.Gm;
+import com.l2scoria.gameserver.handler.admin.impl.GmChat;
+import com.l2scoria.gameserver.handler.admin.impl.Heal;
+import com.l2scoria.gameserver.handler.admin.impl.HelpPage;
+import com.l2scoria.gameserver.handler.admin.impl.Hero;
+import com.l2scoria.gameserver.handler.admin.impl.InstanceControl;
+import com.l2scoria.gameserver.handler.admin.impl.Invul;
+import com.l2scoria.gameserver.handler.admin.impl.Kick;
+import com.l2scoria.gameserver.handler.admin.impl.Kill;
+import com.l2scoria.gameserver.handler.admin.impl.Level;
+import com.l2scoria.gameserver.handler.admin.impl.Login;
+import com.l2scoria.gameserver.handler.admin.impl.MRace;
+import com.l2scoria.gameserver.handler.admin.impl.Mammon;
+import com.l2scoria.gameserver.handler.admin.impl.Manor;
+import com.l2scoria.gameserver.handler.admin.impl.MassControl;
+import com.l2scoria.gameserver.handler.admin.impl.MassRecall;
+import com.l2scoria.gameserver.handler.admin.impl.Menu;
+import com.l2scoria.gameserver.handler.admin.impl.MonsterGroup;
+import com.l2scoria.gameserver.handler.admin.impl.Noble;
+import com.l2scoria.gameserver.handler.admin.impl.PacketForge;
+import com.l2scoria.gameserver.handler.admin.impl.Petition;
+import com.l2scoria.gameserver.handler.admin.impl.Pledge;
+import com.l2scoria.gameserver.handler.admin.impl.Polymorph;
+import com.l2scoria.gameserver.handler.admin.impl.Quest;
+import com.l2scoria.gameserver.handler.admin.impl.Reload;
+import com.l2scoria.gameserver.handler.admin.impl.RepairChar;
+import com.l2scoria.gameserver.handler.admin.impl.Res;
+import com.l2scoria.gameserver.handler.admin.impl.RideWyvern;
+import com.l2scoria.gameserver.handler.admin.impl.Script;
+import com.l2scoria.gameserver.handler.admin.impl.ServerShutdown;
+import com.l2scoria.gameserver.handler.admin.impl.Shop;
+import com.l2scoria.gameserver.handler.admin.impl.Siege;
+import com.l2scoria.gameserver.handler.admin.impl.Skill;
+import com.l2scoria.gameserver.handler.admin.impl.Spawn;
+import com.l2scoria.gameserver.handler.admin.impl.Target;
+import com.l2scoria.gameserver.handler.admin.impl.Teleport;
+import com.l2scoria.gameserver.handler.admin.impl.Test;
+import com.l2scoria.gameserver.handler.admin.impl.UnblockIp;
+import com.l2scoria.gameserver.handler.admin.impl.Walker;
+import com.l2scoria.gameserver.handler.admin.impl.Zone;
 import org.apache.log4j.Logger;
 
 import java.util.HashMap;
@@ -36,7 +98,7 @@ public class AdminCommandHandler
 
 	private static AdminCommandHandler _instance;
 
-	private Map<String, Admin> _datatable;
+	private Map<String, AdminAbst> _datatable;
 
 	public static AdminCommandHandler getInstance()
 	{
@@ -49,7 +111,7 @@ public class AdminCommandHandler
 
 	private AdminCommandHandler()
 	{
-		_datatable = new HashMap<String, Admin>();
+		_datatable = new HashMap<String, AdminAbst>();
 		register(new AIndex());
 		register(new Invul());
 		register(new Boat());
@@ -72,7 +134,7 @@ public class AdminCommandHandler
 		register(new Teleport());
 		register(new RepairChar());
 		register(new ChangeAccessLevel());
-		register(new Christmas());
+		register(new com.l2scoria.gameserver.handler.admin.impl.Christmas());
 		register(new Ban());
 		register(new Polymorph());
 		register(new BanChat());
@@ -116,9 +178,15 @@ public class AdminCommandHandler
 		_log.info("AdminCommandHandler: Loaded " + _datatable.size() + " handlers.");
 	}
 
-	public void register(Admin handler)
+	public void register(AdminAbst handler)
 	{
 		String[] ids = handler.getAdminCommandList();
+
+		if(ids == null)
+		{
+			return;
+		}
+
 		for(String element : ids)
 		{
 			if(Config.DEBUG)
@@ -135,10 +203,9 @@ public class AdminCommandHandler
 				_datatable.put(element, handler);
 			}
 		}
-		ids = null;
 	}
 
-	public Admin getAdminCommandHandler(String adminCommand)
+	public AdminAbst getAdminCommandHandler(String adminCommand)
 	{
 		String command = adminCommand;
 

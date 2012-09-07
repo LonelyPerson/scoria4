@@ -23,7 +23,7 @@ public final class L2GourdInstance extends L2MonsterInstance
 {
 	//private static Logger _log = Logger.getLogger(L2GourdInstance.class.getName());
 
-	private String _name;
+	private L2PcInstance _name;
 	private byte _nectar = 0;
 	private byte _good = 0;
 
@@ -33,12 +33,12 @@ public final class L2GourdInstance extends L2MonsterInstance
 		DecayTaskManager.getInstance().addDecayTask(this, 180000);
 	}
 
-	public void setOwner(String name)
+	public void setOwner(L2PcInstance name)
 	{
 		_name = name;
 	}
 
-	public String getOwner()
+	public L2PcInstance getOwner()
 	{
 		return _name;
 	}
@@ -66,19 +66,22 @@ public final class L2GourdInstance extends L2MonsterInstance
 	@Override
 	public void reduceCurrentHp(double damage, L2Character attacker, boolean awake)
 	{
-		if(attacker.getName() != getOwner())
+		if (attacker != getOwner())
 		{
 			damage = 0;
 		}
-		if(getTemplate().npcId == 12778 || getTemplate().npcId == 12779)
-			if(attacker.getActiveWeaponInstance() != null && (attacker.getActiveWeaponInstance().getItemId() == 4202 || attacker.getActiveWeaponInstance().getItemId() == 5133 || attacker.getActiveWeaponInstance().getItemId() == 5817 || attacker.getActiveWeaponInstance().getItemId() == 7058))
+
+		if (getTemplate().npcId == 12778 || getTemplate().npcId == 12779)
+		{
+			if (attacker.getActiveWeaponInstance() != null && (attacker.getActiveWeaponInstance().getItemId() == 4202 || attacker.getActiveWeaponInstance().getItemId() == 5133 || attacker.getActiveWeaponInstance().getItemId() == 5817 || attacker.getActiveWeaponInstance().getItemId() == 7058))
 			{
 				super.reduceCurrentHp(damage, attacker, awake);
 			}
-			else if(damage > 0)
+			else if (damage > 0)
 			{
 				damage = 0;
 			}
+		}
 		super.reduceCurrentHp(damage, attacker, awake);
 	}
 }

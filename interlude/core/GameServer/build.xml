@@ -35,11 +35,11 @@
         	<include name="xmlrpc-common-3.1.2.jar"/>
         	<include name="xmlrpc-server-3.1.2.jar"/>
         	<include name="ws-commons-util-1.0.2.jar"/>
-                <include name="log4j-1.2.17.jar"/>
+            <include name="log4j-1.2.17.jar"/>
         	<include name="lameguard-1.9.5.jar"/>
-                <include name="ExtAPI.jar"/>
+            <include name="ExtAPI.jar"/>
         	<include name="akumu.geoengine.1.2.0.7.jar"/>
-                <include name="trove-2.1.0.jar"/>
+            <include name="trove-2.1.0.jar"/>
         </fileset>
     </path>   
     
@@ -166,6 +166,7 @@
 	        	<include name="xmlrpc-common-3.1.2.jar"/>
 	        	<include name="xmlrpc-server-3.1.2.jar"/>
 	        	<include name="ws-commons-util-1.0.2.jar"/>
+                <include name="log4j-1.2.17.jar"/>
 			</fileset>
 		</copy>
         
@@ -300,8 +301,9 @@
 			<fileset dir="config_en">
 				<include name="*.properties"/>
 				<include name="*.info"/>
+                <include name="log4j.xml"/>
 				<include name="chatfilter.txt"/>
-                                <include name="tradefilter.txt"/>
+                <include name="tradefilter.txt"/>
 				<include name="Custom.txt"/>
 				<include name="questionwords.txt"/>
 				<include name="key.cfg"/>
@@ -408,6 +410,7 @@
     	<copy todir="${build.dist.login}/config">
 			<fileset dir="config">
 				<include name="telnet.properties"/>
+                <include name="log4j_login.xml"/>
 			</fileset>
 	</copy>
         <copy todir="${build.dist.login}/config_en">

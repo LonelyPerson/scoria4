@@ -36,9 +36,9 @@ import com.l2scoria.gameserver.datatables.csv.MapRegionTable;
 import com.l2scoria.gameserver.datatables.csv.RecipeTable;
 import com.l2scoria.gameserver.datatables.sql.*;
 import com.l2scoria.gameserver.geodata.GeoEngine;
-import com.l2scoria.gameserver.handler.IItemHandler;
+import com.l2scoria.gameserver.handler.items.IItemHandler;
 import com.l2scoria.gameserver.handler.ItemHandler;
-import com.l2scoria.gameserver.handler.admincommandhandlers.EditChar;
+import com.l2scoria.gameserver.handler.admin.impl.EditChar;
 import com.l2scoria.gameserver.handler.skillhandlers.SiegeFlag;
 import com.l2scoria.gameserver.handler.skillhandlers.StrSiegeAssault;
 import com.l2scoria.gameserver.handler.skillhandlers.SummonFriend;
@@ -9443,7 +9443,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 					if(!isInsideRadius(getCurrentSkillWorldPosition().getX(), getCurrentSkillWorldPosition().getY(), getCurrentSkillWorldPosition().getZ(), skill.getCastRange() + getTemplate().getCollisionRadius(), false, false))
 					{
 						// Send a System Message to the caster
-						sendPacket(SystemMessageId.TARGET_TOO_FAR);
+						sendPacket(new SystemMessage(SystemMessageId.TARGET_TOO_FAR));
 
 						// Send a Server->Client packet ActionFailed to the L2PcInstance
 						sendPacket(ActionFailed.STATIC_PACKET);
@@ -11532,14 +11532,6 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 				_taskRentPet = null;
 			}
 		}
-	}
-
-	/**
-	 * @param hacking_tool
-	 */
-	public void sendPacket(SystemMessageId hacking_tool)
-	{
-		sendMessage("Please try again after closing unnecessary programs!.");
 	}
 
 	public void startRentPet(int seconds)

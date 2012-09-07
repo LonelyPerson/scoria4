@@ -375,10 +375,4 @@ public class L2SummonInstance extends L2Summon
 			sm = null;
 		}
 	}
-
-	@Override
-	public final L2PcInstance getPlayer()
-	{
-		return getOwner();
-	}
 }

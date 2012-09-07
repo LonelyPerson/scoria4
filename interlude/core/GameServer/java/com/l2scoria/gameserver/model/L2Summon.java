@@ -804,4 +804,10 @@ public abstract class L2Summon extends L2PlayableInstance
 
 		skillToCast = null;
 	}
+
+	@Override
+	public final L2PcInstance getPlayer()
+	{
+		return getOwner();
+	}
 }

@@ -1948,6 +1948,15 @@ public enum SystemMessageId
 	YOU_MAY_NOT_SUMMON_FROM_YOUR_CURRENT_LOCATION(650),
 
 	/**
+	 * ID: 653<br>
+	 * Message: You do not have the authority to position mercenaries.
+	 */
+	YOU_DO_NOT_HAVE_THE_AUTHORITY_TO_POSITION_MERCENARIES(653),
+
+	YOU_DO_NOT_HAVE_THE_AUTHORITY_TO_CANCEL_MERCENARY_POSITIONING(654),
+
+	MERCENARIES_CANNOT_BE_POSITIONED_HERE(655),
+	/**
 	 * ID: 656<br>
 	 * Message: This mercenary cannot be positioned anymore.
 	 */
@@ -1957,7 +1966,7 @@ public enum SystemMessageId
 	 * ID: 657<br>
 	 * Message: Positioning cannot be done here because the distance between mercenaries is too short.
 	 */
-	POSITIONING_CANNOT_BE_DONE_BECAUSE_DISTANCE_BETWEEN_MERCENARIES_TOO_SHORT(657),
+	POSITIONING_CANNOT_BE_DONE_HERE_BECAUSE_THE_DISTANCE_BETWEEN_MERCENARIES_IS_TOO_SHORT(657),
 
 	/**
 	 * ID: 661<br>
@@ -1988,6 +1997,8 @@ public enum SystemMessageId
 	 * Message: There are no priority rights on a sweeper.
 	 */
 	SWEEP_NOT_ALLOWED(683),
+
+	YOU_CANNOT_POSITION_MERCENARIES_DURING_A_SIEGE(684),
 
 	/**
 	 * ID: 688<br>

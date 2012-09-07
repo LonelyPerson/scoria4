@@ -23,7 +23,7 @@ import com.l2scoria.gameserver.ai.CtrlIntention;
 import com.l2scoria.gameserver.communitybbs.CommunityBoard;
 import com.l2scoria.gameserver.datatables.sql.AdminCommandAccessRights;
 import com.l2scoria.gameserver.handler.AdminCommandHandler;
-import com.l2scoria.gameserver.handler.admincommandhandlers.Admin;
+import com.l2scoria.gameserver.handler.admin.impl.AdminAbst;
 import com.l2scoria.gameserver.handler.custom.CustomBypassHandler;
 import com.l2scoria.gameserver.model.L2Object;
 import com.l2scoria.gameserver.model.L2World;
@@ -94,7 +94,7 @@ public final class RequestBypassToServer extends L2GameClientPacket
 					command = _command;
 				}
 
-				Admin ach = AdminCommandHandler.getInstance().getAdminCommandHandler(command);
+				AdminAbst ach = AdminCommandHandler.getInstance().getAdminCommandHandler(command);
 
 				if(ach == null)
 				{

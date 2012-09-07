@@ -72,6 +72,8 @@ public class L2DoorInstance extends L2Character implements GeoCollision
 	private boolean _unlockable;
 	private boolean _isHPVisible;
 
+	public long _lastOpen;
+
 	public boolean _geoOpen;
 	public boolean _open = true;
 	private boolean _geodata = true;
@@ -690,6 +692,7 @@ public class L2DoorInstance extends L2Character implements GeoCollision
 			}
 
 			setOpen(true);
+			_lastOpen = System.currentTimeMillis();
 		}
 
 		setGeoOpen(true);

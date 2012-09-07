@@ -27,6 +27,8 @@ import com.l2scoria.gameserver.model.entity.sevensigns.SevenSigns;
  */
 public class ShowMiniMap extends L2GameServerPacket
 {
+	public static ShowMiniMap STATIC_PACKET = new ShowMiniMap(1665);
+
 	private static final String _S__B6_SHOWMINIMAP = "[S] 9d ShowMiniMap";
 	private int _mapId;
 

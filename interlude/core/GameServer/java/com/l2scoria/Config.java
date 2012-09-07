@@ -20,6 +20,7 @@ package com.l2scoria;
 
 import com.l2scoria.gameserver.services.FService;
 import com.l2scoria.gameserver.services.Instruments;
+import gnu.trove.TIntIntHashMap;
 import javolution.util.FastList;
 import javolution.util.FastMap;
 import org.apache.log4j.Logger;
@@ -306,7 +307,7 @@ public final class Config
 
 	public static void loadFunEvents()
 	{
-		final String FUNEVENT_FILE = FService.FUN_EVENT;
+		final String FUNEVENT_FILE = FService.EVENTS;
 		_log.info("Loading: " + FUNEVENT_FILE + ".");
 		try
 		{
@@ -585,8 +586,8 @@ public final class Config
 	public static boolean ANNOUNCE_MAMMON_SPAWN;
 	public static boolean ENABLE_MODIFY_SKILL_DURATION;
         public static boolean ENABLE_POTION_SKILL_ATTACH;
-	public static FastMap<Integer, Integer> SKILL_DURATION_LIST;
-        public static FastMap<Integer, Integer> POTION_SKILL_ATTACH;
+	public static TIntIntHashMap SKILL_DURATION_LIST;
+        public static TIntIntHashMap POTION_SKILL_ATTACH;
 	/** Chat Filter **/
 	public static int CHAT_FILTER_PUNISHMENT_PARAM1;
 	public static int CHAT_FILTER_PUNISHMENT_PARAM2;
@@ -616,7 +617,7 @@ public final class Config
         public static boolean ANTI_HEAVY_SYSTEM;
         public static boolean MOUNT_PROHIBIT;
 	public static int CHRISTMAS_TREE_PRESENTS_TIME;
-	public static FastMap<Integer, Integer> CHRISTMAS_PRESENTS_LIST;
+	public static TIntIntHashMap CHRISTMAS_PRESENTS_LIST;
 
 	//============================================================
 	public static void loadOtherConfig()
@@ -719,7 +720,7 @@ public final class Config
 			ENABLE_MODIFY_SKILL_DURATION = Boolean.parseBoolean(otherSettings.getProperty("EnableModifySkillDuration", "false"));
 			if(ENABLE_MODIFY_SKILL_DURATION)
 			{
-				SKILL_DURATION_LIST = new FastMap<Integer, Integer>();
+				SKILL_DURATION_LIST = new TIntIntHashMap();
 
 				String[] propertySplit;
 				propertySplit = otherSettings.getProperty("SkillDurationList", "").split(";");
@@ -750,7 +751,7 @@ public final class Config
 
                         ENABLE_POTION_SKILL_ATTACH = Boolean.parseBoolean(otherSettings.getProperty("EnablePotionSkillAttach", "false"));
                         if(ENABLE_POTION_SKILL_ATTACH) {
-                            POTION_SKILL_ATTACH = new FastMap<Integer, Integer>();
+                            POTION_SKILL_ATTACH = new TIntIntHashMap();
                             String[] spliter;
                             spliter = otherSettings.getProperty("PotionSkillAttach", "").split(";");
 
@@ -820,7 +821,7 @@ public final class Config
                         MOUNT_PROHIBIT = Boolean.parseBoolean(otherSettings.getProperty("AllowUseItemOnMount", "false"));
 			if(CHRISTMAS_TREE_PRESENTS)
 			{
-				CHRISTMAS_PRESENTS_LIST = new FastMap<Integer, Integer>();
+				CHRISTMAS_PRESENTS_LIST = new TIntIntHashMap();
 
 				String[] propertySplit;
 				propertySplit = otherSettings.getProperty("ChristmassPresents", "").split(";");
@@ -1533,251 +1534,6 @@ public final class Config
 		{
 			e.printStackTrace();
 			throw new Error("Failed to Load " + EVENT_WEDDING + " File.");
-		}
-	}
-
-	//============================================================
-	public static boolean TVT_EVENT_ENABLED;
-	public static boolean TVT_EVENT_BUFF;
-	public static String[] TVT_EVENT_INTERVAL;
-	public static int TVT_EVENT_PARTICIPATION_TIME;
-	public static int TVT_EVENT_RUNNING_TIME;
-	public static int TVT_EVENT_PARTICIPATION_NPC_ID;
-	public static int[] TVT_EVENT_PARTICIPATION_NPC_COORDINATES = new int[3];
-	public static int TVT_EVENT_MIN_PLAYERS_IN_TEAMS;
-	public static int TVT_EVENT_MAX_PLAYERS_IN_TEAMS;
-	public static int TVT_EVENT_START_LEAVE_TELEPORT_DELAY;
-	public static String TVT_EVENT_TEAM_1_NAME;
-	public static int[] TVT_EVENT_TEAM_1_COORDINATES = new int[3];
-	public static String TVT_EVENT_TEAM_2_NAME;
-	public static int[] TVT_EVENT_TEAM_2_COORDINATES = new int[3];
-	public static FastList<int[]> TVT_EVENT_REWARDS = new FastList<int[]>();
-	public static FastList<int[]> TVT_BUFF_MAGE = new FastList<int[]>();
-	public static FastList<int[]> TVT_BUFF_WAR = new FastList<int[]>();
-	public static boolean TVT_EVENT_TARGET_TEAM_MEMBERS_ALLOWED;
-	public static boolean TVT_EVENT_SCROLL_ALLOWED;
-	public static boolean TVT_EVENT_POTIONS_ALLOWED;
-	public static boolean TVT_EVENT_SUMMON_BY_ITEM_ALLOWED;
-	public static FastList<Integer> TVT_DOORS_IDS_TO_OPEN = new FastList<Integer>();
-	public static FastList<Integer> TVT_DOORS_IDS_TO_CLOSE = new FastList<Integer>();
-	public static boolean TVT_REWARD_TEAM_TIE;
-	public static byte TVT_EVENT_MIN_LVL;
-	public static byte TVT_EVENT_MAX_LVL;
-	public static boolean TVT_EVENT_OUST_FROM_COLISEUM;
-	public static boolean TVT_REWARD_WITH_NO_KILL;
-
-	//============================================================
-	public static void loadTVTConfig()
-	{
-		final String EVENT_TVT = FService.EVENT_TVT_FILE;
-
-		_log.info("Loading: " + EVENT_TVT + ".");
-		try
-		{
-			Properties TVTSettings = new Properties();
-			InputStream is = new FileInputStream(new File(EVENT_TVT));
-			TVTSettings.load(is);
-			is.close();
-
-			TVT_EVENT_ENABLED = Boolean.parseBoolean(TVTSettings.getProperty("TvTEventEnabled", "false"));
-			TVT_EVENT_INTERVAL = TVTSettings.getProperty("TvTEventInterval", "20:00").split(",");
-			TVT_EVENT_PARTICIPATION_TIME = Integer.parseInt(TVTSettings.getProperty("TvTEventParticipationTime", "3600"));
-			TVT_EVENT_RUNNING_TIME = Integer.parseInt(TVTSettings.getProperty("TvTEventRunningTime", "1800"));
-			TVT_EVENT_PARTICIPATION_NPC_ID = Integer.parseInt(TVTSettings.getProperty("TvTEventParticipationNpcId", "70010"));
-			TVT_EVENT_OUST_FROM_COLISEUM = Boolean.parseBoolean(TVTSettings.getProperty("TvTOustFromColiseum", "false"));
-			TVT_REWARD_WITH_NO_KILL = Boolean.parseBoolean(TVTSettings.getProperty("TvTNoKillReward", "false"));
-			TVT_EVENT_BUFF = Boolean.parseBoolean(TVTSettings.getProperty("TvTEventBuff", "false"));
-			TVT_EVENT_TARGET_TEAM_MEMBERS_ALLOWED = Boolean.parseBoolean(TVTSettings.getProperty("TvTEventTargetTeamMembersAllowed", "true"));
-			TVT_EVENT_SCROLL_ALLOWED = Boolean.parseBoolean(TVTSettings.getProperty("TvTEventScrollsAllowed", "false"));
-			TVT_EVENT_POTIONS_ALLOWED = Boolean.parseBoolean(TVTSettings.getProperty("TvTEventPotionsAllowed", "false"));
-			TVT_EVENT_SUMMON_BY_ITEM_ALLOWED = Boolean.parseBoolean(TVTSettings.getProperty("TvTEventSummonByItemAllowed", "false"));
-
-			if(TVT_EVENT_PARTICIPATION_NPC_ID == 0)
-			{
-				TVT_EVENT_ENABLED = false;
-				_log.error("TvTEventEngine[Config.load()]: invalid config property -> TvTEventParticipationNpcId");
-			}
-			else
-			{
-				String[] propertySplit = TVTSettings.getProperty("TvTEventParticipationNpcCoordinates", "83425,148585,-3406").split(",");
-
-				if(propertySplit.length < 3)
-				{
-					TVT_EVENT_ENABLED = false;
-					_log.error("TvTEventEngine[Config.load()]: invalid config property -> TvTEventParticipationNpcCoordinates");
-				}
-				else
-				{
-					TVT_EVENT_PARTICIPATION_NPC_COORDINATES[0] = Integer.parseInt(propertySplit[0]);
-					TVT_EVENT_PARTICIPATION_NPC_COORDINATES[1] = Integer.parseInt(propertySplit[1]);
-					TVT_EVENT_PARTICIPATION_NPC_COORDINATES[2] = Integer.parseInt(propertySplit[2]);
-
-					TVT_EVENT_MIN_PLAYERS_IN_TEAMS = Integer.parseInt(TVTSettings.getProperty("TvTEventMinPlayersInTeams", "1"));
-					TVT_EVENT_MAX_PLAYERS_IN_TEAMS = Integer.parseInt(TVTSettings.getProperty("TvTEventMaxPlayersInTeams", "20"));
-					TVT_EVENT_MIN_LVL = (byte) Integer.parseInt(TVTSettings.getProperty("TvTEventMinPlayerLevel", "1"));
-					TVT_EVENT_MAX_LVL = (byte) Integer.parseInt(TVTSettings.getProperty("TvTEventMaxPlayerLevel", "80"));
-					TVT_EVENT_START_LEAVE_TELEPORT_DELAY = Integer.parseInt(TVTSettings.getProperty("TvTEventStartLeaveTeleportDelay", "20"));
-
-					TVT_EVENT_TEAM_1_NAME = TVTSettings.getProperty("TvTEventTeam1Name", "Team1");
-					propertySplit = TVTSettings.getProperty("TvTEventTeam1Coordinates", "148695,46725,-3414").split(",");
-
-					if(propertySplit.length < 3)
-					{
-						TVT_EVENT_ENABLED = false;
-						_log.error("TvTEventEngine[Config.load()]: invalid config property -> TvTEventTeam1Coordinates");
-					}
-					else
-					{
-						TVT_EVENT_TEAM_1_COORDINATES[0] = Integer.parseInt(propertySplit[0]);
-						TVT_EVENT_TEAM_1_COORDINATES[1] = Integer.parseInt(propertySplit[1]);
-						TVT_EVENT_TEAM_1_COORDINATES[2] = Integer.parseInt(propertySplit[2]);
-
-						TVT_EVENT_TEAM_2_NAME = TVTSettings.getProperty("TvTEventTeam2Name", "Team2");
-						propertySplit = TVTSettings.getProperty("TvTEventTeam2Coordinates", "149999,46728,-3414").split(",");
-
-						if(propertySplit.length < 3)
-						{
-							TVT_EVENT_ENABLED = false;
-							_log.error("TvTEventEngine[Config.load()]: invalid config property -> TvTEventTeam2Coordinates");
-						}
-						else
-						{
-							TVT_EVENT_TEAM_2_COORDINATES[0] = Integer.parseInt(propertySplit[0]);
-							TVT_EVENT_TEAM_2_COORDINATES[1] = Integer.parseInt(propertySplit[1]);
-							TVT_EVENT_TEAM_2_COORDINATES[2] = Integer.parseInt(propertySplit[2]);
-							propertySplit = TVTSettings.getProperty("TvTEventReward", "57,100000").split(";");
-							TVT_EVENT_REWARDS.clear();
-							for(String reward : propertySplit)
-							{
-								String[] rewardSplit = reward.split(",");
-								
-								if(rewardSplit.length != 2)
-								{
-									_log.error("TvTEventEngine[Config.load()]: invalid config property -> TvTEventReward \"" + reward + "\"");
-								}
-								else
-								{
-									try
-									{
-										TVT_EVENT_REWARDS.add(new int[]
-										{
-												Integer.parseInt(rewardSplit[0]), Integer.parseInt(rewardSplit[1])
-										});
-									}
-									catch(NumberFormatException nfe)
-									{
-										if(!reward.equals(""))
-										{
-											_log.error("TvTEventEngine[Config.load()]: invalid config property -> TvTEventReward \"" + reward + "\"");
-										}
-									}
-								}
-							}
-							if (Config.TVT_EVENT_BUFF) {
-								propertySplit = TVTSettings.getProperty("TvTBuffMage", "1204, 2").split(";");
-								TVT_BUFF_MAGE.clear();
-							     for(String BuffM : propertySplit)
-							    {
-								String[] BuffMSplit = BuffM.split(",");
-								
-								if(BuffMSplit.length != 2)
-								{
-									_log.error("TvTEventEngine[Config.load()]: invalid config property -> TvTEventBuff \"" + BuffM + "\"");
-								}
-								else
-								{
-									try
-									{
-										TVT_BUFF_MAGE.add(new int[]
-										{
-												Integer.parseInt(BuffMSplit[0]), Integer.parseInt(BuffMSplit[1])
-										});
-									}
-									catch(NumberFormatException nfe)
-									{
-										if(!BuffM.equals(""))
-										{
-											_log.error("TvTEventEngine[Config.load()]: invalid config property -> TvTEventBuff \"" + BuffM + "\"");
-										}
-									}
-								}
-							   }
-							}
-							if (Config.TVT_EVENT_BUFF) {
-								propertySplit = TVTSettings.getProperty("TvTBuffWar", "1204, 2").split(";");
-								TVT_BUFF_WAR.clear();
-							     for(String BuffW : propertySplit)
-							    {
-								String[] BuffWsplit = BuffW.split(",");
-								
-								if(BuffWsplit.length != 2)
-								{
-									_log.error("TvTEventEngine[Config.load()]: invalid config property -> TvTEventBuff \"" + BuffW + "\"");
-								}
-								else
-								{
-									try
-									{
-										TVT_BUFF_WAR.add(new int[]
-										{
-												Integer.parseInt(BuffWsplit[0]), Integer.parseInt(BuffWsplit[1])
-										});
-									}
-									catch(NumberFormatException nfe)
-									{
-										if(!BuffW.equals(""))
-										{
-											_log.error("TvTEventEngine[Config.load()]: invalid config property -> TvTEventBuff \"" + BuffW + "\"");
-										}
-									}
-								}
-							   }
-							}
-							TVT_REWARD_TEAM_TIE = Boolean.parseBoolean(TVTSettings.getProperty("TvTRewardTeamTie", "false"));
-							propertySplit = TVTSettings.getProperty("TvTDoorsToOpen", "").split(";");
-
-							for(String door : propertySplit)
-							{
-								try
-								{
-									TVT_DOORS_IDS_TO_OPEN.add(Integer.parseInt(door));
-								}
-								catch(NumberFormatException nfe)
-								{
-									if(!door.equals(""))
-									{
-										_log.error("TvTEventEngine[Config.load()]: invalid config property -> TvTDoorsToOpen \"" + door + "\"");
-									}
-								}
-							}
-
-							propertySplit = TVTSettings.getProperty("TvTDoorsToClose", "").split(";");
-
-							for(String door : propertySplit)
-							{
-								try
-								{
-									TVT_DOORS_IDS_TO_CLOSE.add(Integer.parseInt(door));
-								}
-								catch(NumberFormatException nfe)
-								{
-									if(!door.equals(""))
-									{
-										_log.error("TvTEventEngine[Config.load()]: invalid config property -> TvTDoorsToClose \"" + door + "\"");
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-
-
-		catch(Exception e)
-		{
-			e.printStackTrace();
-			throw new Error("Failed to Load " + EVENT_TVT + " File.");
 		}
 	}
 
@@ -2870,17 +2626,17 @@ public final class Config
 
 	//============================================================
 	//enchant map
-	public static FastMap<Integer, Integer> NORMAL_WEAPON_ENCHANT_LEVEL = new FastMap<Integer, Integer>();
-	public static FastMap<Integer, Integer> BLESS_WEAPON_ENCHANT_LEVEL = new FastMap<Integer, Integer>();
-	public static FastMap<Integer, Integer> CRYTAL_WEAPON_ENCHANT_LEVEL = new FastMap<Integer, Integer>();
+	public static TIntIntHashMap NORMAL_WEAPON_ENCHANT_LEVEL = new TIntIntHashMap();
+	public static TIntIntHashMap BLESS_WEAPON_ENCHANT_LEVEL = new TIntIntHashMap();
+	public static TIntIntHashMap CRYTAL_WEAPON_ENCHANT_LEVEL = new TIntIntHashMap();
 
-	public static FastMap<Integer, Integer> NORMAL_ARMOR_ENCHANT_LEVEL = new FastMap<Integer, Integer>();
-	public static FastMap<Integer, Integer> BLESS_ARMOR_ENCHANT_LEVEL = new FastMap<Integer, Integer>();
-	public static FastMap<Integer, Integer> CRYSTAL_ARMOR_ENCHANT_LEVEL = new FastMap<Integer, Integer>();
+	public static TIntIntHashMap NORMAL_ARMOR_ENCHANT_LEVEL = new TIntIntHashMap();
+	public static TIntIntHashMap BLESS_ARMOR_ENCHANT_LEVEL = new TIntIntHashMap();
+	public static TIntIntHashMap CRYSTAL_ARMOR_ENCHANT_LEVEL = new TIntIntHashMap();
 
-	public static FastMap<Integer, Integer> NORMAL_JEWELRY_ENCHANT_LEVEL = new FastMap<Integer, Integer>();
-	public static FastMap<Integer, Integer> BLESS_JEWELRY_ENCHANT_LEVEL = new FastMap<Integer, Integer>();
-	public static FastMap<Integer, Integer> CRYSTAL_JEWELRY_ENCHANT_LEVEL = new FastMap<Integer, Integer>();
+	public static TIntIntHashMap NORMAL_JEWELRY_ENCHANT_LEVEL = new TIntIntHashMap();
+	public static TIntIntHashMap BLESS_JEWELRY_ENCHANT_LEVEL = new TIntIntHashMap();
+	public static TIntIntHashMap CRYSTAL_JEWELRY_ENCHANT_LEVEL = new TIntIntHashMap();
 
 	public static int ENCHANT_SAFE_MAX;
 	public static int ENCHANT_SAFE_MAX_FULL;
@@ -4291,7 +4047,6 @@ public final class Config
 			//fun
 			loadChampionConfig();
 			loadWeddingConfig();
-			loadTVTConfig();
 			loadREBIRTHConfig();
 			loadAWAYConfig();
 			loadBankingConfig();

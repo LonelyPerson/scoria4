@@ -103,14 +103,13 @@ public class GameServer
 	@SuppressWarnings("ResultOfMethodCallIgnored")
 	public static void main(String[] args) throws Throwable
 	{
-                ServerType.serverMode = ServerType.MODE_GAMESERVER;
-                //Local Constants
-                new File(Config.DATAPACK_ROOT, "log").mkdir();
-                DOMConfigurator.configure("./config/log4j.xml");
+		ServerType.serverMode = ServerType.MODE_GAMESERVER;
+
+		//Local Constants
+		new File(Config.DATAPACK_ROOT, "log").mkdir();
+		DOMConfigurator.configure("./config/log4j.xml");
 
 		long serverLoadStart = System.currentTimeMillis();
-
-		DOMConfigurator.configure("./config/log4j.xml");
 
 		Util.printSection("Configs");
 		Config.load();

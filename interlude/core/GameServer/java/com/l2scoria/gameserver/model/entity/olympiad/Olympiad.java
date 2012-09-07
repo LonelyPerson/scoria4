@@ -999,7 +999,7 @@ public class Olympiad
 
 		if (getInstance().isRegisteredInComp(spectator))
 		{
-			spectator.sendPacket(SystemMessageId.WHILE_YOU_ARE_ON_THE_WAITING_LIST_YOU_ARE_NOT_ALLOWED_TO_WATCH_THE_GAME);
+			spectator.sendPacket(new SystemMessage(SystemMessageId.WHILE_YOU_ARE_ON_THE_WAITING_LIST_YOU_ARE_NOT_ALLOWED_TO_WATCH_THE_GAME));
 			return;
 		}
 

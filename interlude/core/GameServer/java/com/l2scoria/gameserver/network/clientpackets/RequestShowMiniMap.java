@@ -43,7 +43,7 @@ public final class RequestShowMiniMap extends L2GameClientPacket
 		if(activeChar == null)
 			return;
 
-		activeChar.sendPacket(new ShowMiniMap(1665));
+		activeChar.sendPacket(ShowMiniMap.STATIC_PACKET);
 	}
 
 	/* (non-Javadoc)

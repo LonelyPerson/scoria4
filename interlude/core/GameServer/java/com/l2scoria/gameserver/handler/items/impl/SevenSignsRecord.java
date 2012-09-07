@@ -16,36 +16,37 @@
  *
  * http://www.gnu.org/copyleft/gpl.html
  */
-package com.l2scoria.gameserver.handler;
+package com.l2scoria.gameserver.handler.items.impl;
 
 import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
+import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PlayableInstance;
+import com.l2scoria.gameserver.network.serverpackets.SSQStatus;
 
 /**
- * Mother class of all itemHandlers.<BR>
- * <BR>
- * an IItemHandler implementation has to be stateless
+ * Item Handler for Seven Signs Record
  * 
- * @version $Revision: 1.1.4.3 $ $Date: 2005/03/27 15:30:09 $
+ * @author Tempy
  */
-
-public interface IItemHandler
+public class SevenSignsRecord extends ItemAbst
 {
-	/**
-	 * Launch task associated to the item.
-	 * 
-	 * @param activeChar : L2PlayableInstance designating the player
-	 * @param item : L2ItemInstance designating the item to use
-	 */
-	public void useItem(L2PlayableInstance playable, L2ItemInstance item);
+	public SevenSignsRecord()
+	{
+		_items = new int[]{5707};
 
-	/**
-	 * Returns the list of item IDs corresponding to the type of item.<BR>
-	 * <BR>
-	 * <B><I>Use :</I></U><BR>
-	 * This method is called at initialization to register all the item IDs automatically
-	 * 
-	 * @return int[] designating all itemIds for a type of item.
-	 */
-	public int[] getItemIds();
+		_requiresActingPlayer = true;
+	}
+
+	@Override
+	public boolean useItem(L2PlayableInstance playable, L2ItemInstance item)
+	{
+		if(!super.useItem(playable, item))
+		{
+			return false;
+		}
+
+		L2PcInstance player = playable.getPlayer();
+		player.sendPacket(new SSQStatus(player, 1));
+		return true;
+	}
 }

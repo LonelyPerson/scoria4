@@ -26,6 +26,7 @@ import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
 import com.l2scoria.gameserver.network.serverpackets.PartyMemberPosition;
 import com.l2scoria.gameserver.network.serverpackets.StopMove;
+import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
 import com.l2scoria.gameserver.templates.L2WeaponType;
 import com.l2scoria.gameserver.thread.TaskPriority;
 import com.l2scoria.gameserver.util.IllegalPlayerAction;
@@ -84,7 +85,7 @@ public class MoveBackwardToLocation extends L2GameClientPacket
 			if(Config.L2WALKER_PROTEC)
 			{
 				L2PcInstance activeChar = getClient().getActiveChar();
-				activeChar.sendPacket(SystemMessageId.HACKING_TOOL);
+				activeChar.sendPacket(new SystemMessage(SystemMessageId.HACKING_TOOL));
 				Util.handleIllegalPlayerAction(activeChar, "Player " + activeChar.getName() + " trying to use l2walker!", IllegalPlayerAction.PUNISH_KICK);
 			}
 		}

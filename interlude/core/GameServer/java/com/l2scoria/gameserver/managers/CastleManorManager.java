@@ -446,7 +446,7 @@ public class CastleManorManager
 					}
 					if(clanLeader != null)
 					{
-						clanLeader.sendPacket(SystemMessageId.THE_AMOUNT_IS_NOT_SUFFICIENT_AND_SO_THE_MANOR_IS_NOT_IN_OPERATION);
+						clanLeader.sendPacket(new SystemMessage(SystemMessageId.THE_AMOUNT_IS_NOT_SUFFICIENT_AND_SO_THE_MANOR_IS_NOT_IN_OPERATION));
 					}
 				}
 				else

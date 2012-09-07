@@ -20,7 +20,7 @@ package com.l2scoria.gameserver.network.clientpackets;
 
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.GameTimeController;
-import com.l2scoria.gameserver.handler.IItemHandler;
+import com.l2scoria.gameserver.handler.items.IItemHandler;
 import com.l2scoria.gameserver.handler.ItemHandler;
 import com.l2scoria.gameserver.managers.CastleManager;
 import com.l2scoria.gameserver.model.Inventory;

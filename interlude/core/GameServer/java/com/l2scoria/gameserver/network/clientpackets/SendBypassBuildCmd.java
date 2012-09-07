@@ -21,7 +21,7 @@ package com.l2scoria.gameserver.network.clientpackets;
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.sql.AdminCommandAccessRights;
 import com.l2scoria.gameserver.handler.AdminCommandHandler;
-import com.l2scoria.gameserver.handler.IAdminCommandHandler;
+import com.l2scoria.gameserver.handler.admin.IAdminCommandHandler;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import org.apache.log4j.Logger;
 

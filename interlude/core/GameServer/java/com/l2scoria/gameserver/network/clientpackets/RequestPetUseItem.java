@@ -19,7 +19,7 @@ package com.l2scoria.gameserver.network.clientpackets;
 
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.sql.L2PetDataTable;
-import com.l2scoria.gameserver.handler.IItemHandler;
+import com.l2scoria.gameserver.handler.items.IItemHandler;
 import com.l2scoria.gameserver.handler.ItemHandler;
 import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;

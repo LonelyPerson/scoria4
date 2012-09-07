@@ -104,7 +104,7 @@ public class PartyMatchRoom
 		{
 			member.sendPacket(new ExManagePartyRoomMember(newLeader, this, 1));
 			member.sendPacket(new ExManagePartyRoomMember(oldLeader, this, 1));
-			member.sendPacket(SystemMessageId.PARTY_ROOM_LEADER_CHANGED);
+			member.sendPacket(new SystemMessage(SystemMessageId.PARTY_ROOM_LEADER_CHANGED));
 		}
 	}
 	

@@ -12,6 +12,7 @@ SET CLASSPATH=%CLASSPATH%;./lib/c3p0-0.9.1.2.jar
 
 REM Commons
 SET CLASSPATH=%CLASSPATH%;./lib/commons-logging-1.1.jar
+SET CLASSPATH=%CLASSPATH%;./lib/log4j-1.2.17.jar
 
 REM Javolution
 SET CLASSPATH=%CLASSPATH%;./lib/javolution.jar

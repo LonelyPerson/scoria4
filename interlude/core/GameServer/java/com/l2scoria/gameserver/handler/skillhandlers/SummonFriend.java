@@ -29,7 +29,6 @@ import com.l2scoria.gameserver.model.L2Skill.SkillType;
 import com.l2scoria.gameserver.model.L2World;
 import com.l2scoria.gameserver.model.actor.instance.L2GrandBossInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2RaidBossInstance;
 import com.l2scoria.gameserver.model.entity.Instance;
 import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.ConfirmDlg;
@@ -100,7 +99,7 @@ public class SummonFriend implements ISkillHandler
 			Instance summonerInstance = InstanceManager.getInstance().getInstance(summonerChar.getInstanceId());
 			if (summonerInstance != null && (!summonerInstance.isSummonAllowed()))
 			{
-				summonerChar.sendPacket(SystemMessageId.YOU_MAY_NOT_SUMMON_FROM_YOUR_CURRENT_LOCATION);
+				summonerChar.sendPacket(new SystemMessage(SystemMessageId.YOU_MAY_NOT_SUMMON_FROM_YOUR_CURRENT_LOCATION));
 				return false;
 			}
 		}
@@ -151,13 +150,13 @@ public class SummonFriend implements ISkillHandler
 
 		if (targetChar.inObserverMode())
 		{
-			summonerChar.sendPacket(SystemMessageId.YOUR_TARGET_IS_IN_AN_AREA_WHICH_BLOCKS_SUMMONING);
+			summonerChar.sendPacket(new SystemMessage(SystemMessageId.YOUR_TARGET_IS_IN_AN_AREA_WHICH_BLOCKS_SUMMONING));
 			return false;
 		}
 
 		if (targetChar.isFestivalParticipant())
 		{
-			summonerChar.sendPacket(SystemMessageId.YOUR_TARGET_IS_IN_AN_AREA_WHICH_BLOCKS_SUMMONING);
+			summonerChar.sendPacket(new SystemMessage(SystemMessageId.YOUR_TARGET_IS_IN_AN_AREA_WHICH_BLOCKS_SUMMONING));
 			return false;
 		}
 
@@ -169,7 +168,7 @@ public class SummonFriend implements ISkillHandler
 
 		if ((summonerChar._event != null && summonerChar._event.isRunning()) || (targetChar._event != null && targetChar._event.isRunning()))
 		{
-			summonerChar.sendPacket(SystemMessageId.YOUR_TARGET_IS_IN_AN_AREA_WHICH_BLOCKS_SUMMONING);
+			summonerChar.sendPacket(new SystemMessage(SystemMessageId.YOUR_TARGET_IS_IN_AN_AREA_WHICH_BLOCKS_SUMMONING));
 			return false;
 		}
 
