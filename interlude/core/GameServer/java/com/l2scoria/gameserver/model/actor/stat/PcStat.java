@@ -114,7 +114,7 @@ public class PcStat extends PlayableStat
 
 		// if this player has a pet that takes from the owner's Exp, give the pet Exp now
 
-		if(activeChar.getPet().isPet)
+		if(activeChar.getPet() != null && activeChar.getPet().isPet)
 		{
 			L2PetInstance pet = (L2PetInstance) activeChar.getPet();
 			ratioTakenByPet = pet.getPetData().getOwnerExpTaken();
@@ -134,8 +134,6 @@ public class PcStat extends PlayableStat
 
 			addToExp = (long) (addToExp * (1 - ratioTakenByPet));
 			addToSp = (int) (addToSp * (1 - ratioTakenByPet));
-
-			pet = null;
 		}
 
 		if(!super.addExpAndSp(addToExp, addToSp))
@@ -146,7 +144,6 @@ public class PcStat extends PlayableStat
 		sm.addNumber((int) addToExp);
 		sm.addNumber(addToSp);
 		getActiveChar().sendPacket(sm);
-		sm = null;
 
 		activeChar = null;
 
