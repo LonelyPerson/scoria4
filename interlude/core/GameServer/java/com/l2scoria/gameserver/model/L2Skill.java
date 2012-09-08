@@ -558,10 +558,12 @@ public abstract class L2Skill
 		_power = set.getFloat("power", 0.f);
 		_effectPoints = set.getInteger("effectPoints", 0);
 
-		String[] negateStats = set.getString("negateStats", "").split(" ");
-		if(negateStats.length > 0)
+		String nStats = set.getString("negateStats", "");
+		if(nStats.length() > 0)
 		{
+			String[] negateStats = nStats.split(" ");
 			_negateStats = new GArray<NegateStats>();
+
 			for(String stat : negateStats)
 			{
 				try
@@ -579,8 +581,6 @@ public abstract class L2Skill
 				}
 			}
 		}
-
-
 
 		_negatePower = set.getFloat("negatePower", 0.f);
 		_negateId = set.getInteger("negateId", 0);
@@ -1433,7 +1433,7 @@ public abstract class L2Skill
 		// Get the L2Objcet targeted by the user of the skill at this moment
 		L2Object objTarget = activeChar.getTarget();
 		// If the L2Object targeted is a L2Character, it becomes the L2Character target
-		if (objTarget.isCharacter)
+		if (objTarget != null && objTarget.isCharacter)
 		{
 			target = (L2Character) objTarget;
 		}
