@@ -22,6 +22,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -2399,7 +2400,12 @@ public class GeoEngine
 			}
 		}
 
-		blocks = geo;
+		//TODO: NEED TEST!
+		int i = 0;
+		for(byte[] a : geo)
+		{
+			blocks[i++] = Arrays.copyOf(a, a.length);
+		}
 
 		// устанавливаем двери в стандартное положение
 		for (L2DoorInstance door : DoorTable.getInstance().getDoorsInGeoRegion(rx, ry))
