@@ -12,8 +12,8 @@ import com.l2scoria.gameserver.model.L2World;
 import com.l2scoria.gameserver.model.Location;
 import com.l2scoria.gameserver.model.actor.instance.L2DoorInstance;
 import com.l2scoria.util.random.Rnd;
-import gnu.trove.TLongArrayList;
-import gnu.trove.TLongByteHashMap;
+import gnu.trove.list.array.TLongArrayList;
+import gnu.trove.map.hash.TLongByteHashMap;
 import org.apache.log4j.Logger;
 
 import java.io.File;
@@ -2066,7 +2066,7 @@ public class GeoEngine
 				}
 			}
 
-			for(long geoXY : around_blocks.toNativeArray())
+			for(long geoXY : around_blocks.toArray())
 			{
 				int geoX = (int) geoXY;
 				int geoY = (int) (geoXY >> 32);

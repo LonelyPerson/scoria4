@@ -20,7 +20,7 @@ package com.l2scoria;
 
 import com.l2scoria.gameserver.services.FService;
 import com.l2scoria.gameserver.services.Instruments;
-import gnu.trove.TIntIntHashMap;
+import gnu.trove.map.hash.TIntIntHashMap;
 import javolution.util.FastList;
 import javolution.util.FastMap;
 import org.apache.log4j.Logger;

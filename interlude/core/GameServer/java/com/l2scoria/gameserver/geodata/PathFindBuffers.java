@@ -4,9 +4,9 @@ import com.l2scoria.Config;
 import com.l2scoria.gameserver.model.Location;
 import com.l2scoria.util.StrTable;
 import com.l2scoria.util.lang.ArrayUtils;
-import gnu.trove.TIntIntHashMap;
-import gnu.trove.TIntIntIterator;
-import gnu.trove.TIntObjectHashMap;
+import gnu.trove.iterator.TIntIntIterator;
+import gnu.trove.map.hash.TIntIntHashMap;
+import gnu.trove.map.hash.TIntObjectHashMap;
 
 import java.util.Arrays;
 import java.util.PriorityQueue;

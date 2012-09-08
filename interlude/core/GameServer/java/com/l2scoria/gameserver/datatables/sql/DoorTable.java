@@ -29,7 +29,7 @@ import com.l2scoria.gameserver.templates.StatsSet;
 import com.l2scoria.gameserver.util.Util;
 import com.l2scoria.util.database.DatabaseUtils;
 import com.l2scoria.util.database.L2DatabaseFactory;
-import gnu.trove.TIntArrayList;
+import gnu.trove.list.array.TIntArrayList;
 import javolution.util.FastMap;
 import org.apache.log4j.Logger;
 

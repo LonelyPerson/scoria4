@@ -25,8 +25,11 @@ import com.l2scoria.gameserver.templates.L2EtcItemType;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.util.lang.ArrayUtils;
 import com.l2scoria.util.random.Rnd;
-import gnu.trove.TIntArrayList;
-import gnu.trove.TIntObjectHashMap;
+
+import gnu.trove.map.hash.TIntIntHashMap;
+import gnu.trove.map.hash.TIntObjectHashMap;
+import gnu.trove.list.array.TIntArrayList;
+import gnu.trove.stack.TShortStack;
 
 import java.util.HashMap;
 
@@ -115,7 +118,7 @@ public class DeathMatch extends GameEvent
 		_eventTask.cancel();
 		_registrationTask.cancel();
 		L2PcInstance player;
-		for (Integer playerId : _players.toNativeArray())
+		for (Integer playerId : _players.toArray())
 		{
 			player = L2World.getInstance().getPlayer(playerId);
 			if (player != null)
@@ -332,7 +335,7 @@ public class DeathMatch extends GameEvent
 		if (!Config.Allow_Same_HWID_On_Events && player.getClient().getHWId() != null && player.getClient().getHWId().length() != 0)
 		{
 			L2PcInstance pc;
-			for (int charId : _players.toNativeArray())
+			for (int charId : _players.toArray())
 			{
 				pc = L2World.getInstance().getPlayer(charId);
 				if (pc != null && player.getClient().getHWId().equals(pc.getClient().getHWId()))
@@ -346,7 +349,7 @@ public class DeathMatch extends GameEvent
 		if (!Config.Allow_Same_IP_On_Events)
 		{
 			L2PcInstance pc;
-			for (int charId : _players.toNativeArray())
+			for (int charId : _players.toArray())
 			{
 				pc = L2World.getInstance().getPlayer(charId);
 				if (pc != null && pc.getClient() != null && player.getClient().getHostAddress().equals(pc.getClient().getHostAddress()))
@@ -491,7 +494,7 @@ public class DeathMatch extends GameEvent
 			L2PcInstance player;
 			if (_players != null && !_players.isEmpty())
 			{
-				for (Integer playerid : _players.toNativeArray())
+				for (Integer playerid : _players.toArray())
 				{
 					player = L2World.getInstance().getPlayer(playerid);
 					if (player != null && player.isOnline() != 0)
@@ -540,7 +543,7 @@ public class DeathMatch extends GameEvent
 			int[] par = {-1, 1};
 			int Radius = 500;
 
-			for (Integer playerId : _players.toNativeArray())
+			for (Integer playerId : _players.toArray())
 			{
 				player = L2World.getInstance().getPlayer(playerId);
 				if (player != null)
@@ -589,7 +592,7 @@ public class DeathMatch extends GameEvent
 				public void run()
 				{
 					L2PcInstance player;
-					for (Integer playerId : _players.toNativeArray())
+					for (Integer playerId : _players.toArray())
 					{
 						player = L2World.getInstance().getPlayer(playerId);
 						if (player != null)
@@ -650,7 +653,7 @@ public class DeathMatch extends GameEvent
 		L2PcInstance winner = null;
 		int top_score = 0;
 
-		for (Integer playerId : _players.toNativeArray())
+		for (Integer playerId : _players.toArray())
 		{
 			player = L2World.getInstance().getPlayer(playerId);
 			if (player != null)
@@ -702,7 +705,7 @@ public class DeathMatch extends GameEvent
 		int realPlayers = 0;
 		_playerLoc.clear();
 		L2PcInstance player;
-		for (Integer playerId : _players.toNativeArray())
+		for (Integer playerId : _players.toArray())
 		{
 			player = L2World.getInstance().getPlayer(playerId);
 			if (player != null && player.getLevel() >= _minLvl && player.getLevel() <= _maxLvl && player.getInstanceId() == 0)

@@ -39,7 +39,7 @@ import com.l2scoria.gameserver.network.serverpackets.*;
 import com.l2scoria.gameserver.templates.L2CharTemplate;
 import com.l2scoria.gameserver.templates.L2Weapon;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
-import gnu.trove.TLongByteHashMap;
+import gnu.trove.map.hash.TLongByteHashMap;
 import javolution.text.TextBuilder;
 import javolution.util.FastList;
 import org.apache.log4j.Logger;

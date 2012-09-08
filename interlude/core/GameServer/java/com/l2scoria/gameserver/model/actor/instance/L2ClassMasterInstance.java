@@ -22,6 +22,7 @@ import javolution.text.TextBuilder;
 
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.ai.CtrlIntention;
+import com.l2scoria.gameserver.cache.HtmCache;
 import com.l2scoria.gameserver.datatables.sql.CharTemplateTable;
 import com.l2scoria.gameserver.datatables.sql.ItemTable;
 import com.l2scoria.gameserver.datatables.sql.NpcTable;
@@ -131,35 +132,53 @@ public final class L2ClassMasterInstance extends L2FolkInstance
 				{
 					NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());
 					TextBuilder sb = new TextBuilder();
-					sb.append("<html><title>Class Change</title><body><center><img src=L2Font-e.replay_logo-e width=258 height=60><br><br><br><img src=L2UI_CH3.herotower_deco width=256 height=32><br><br>");
+					sb.append(HtmCache.getInstance().getHtm("data/html/classmaster/cm_change_header.htm"));
 
 					if(level >= 20 && jobLevel == 1 || level >= 40 && jobLevel == 2 || level >= 76 && jobLevel == 3)
 					{
-						sb.append("<font color=AAAAAA>Please choose from the list of classes below...</font><br><br>");
+						sb.append(HtmCache.getInstance().getHtm("data/html/classmaster/cm_change_title.htm"));
 
 						for(ClassId child : ClassId.values())
 							if(child.childOf(classId) && child.level() == jobLevel)
 							{
-								sb.append("<br><a action=\"bypass -h npc_" + getObjectId() + "_change_class " + child.getId() + "\"> " + CharTemplateTable.getClassNameById(child.getId()) + "</a>");
+                                                                String link = HtmCache.getInstance().getHtm("data/html/classmaster/cm_change_body.htm");
+                                                                String text_object_id = String.valueOf(getObjectId());
+                                                                String class_text_id = String.valueOf(child.getId());
+                                                                link = link.replace("{$npc_id}", text_object_id);
+                                                                link = link.replace("{$classid}", class_text_id);
+                                                                link = link.replace("{$classname}", CharTemplateTable.getClassNameById(child.getId()));
+								sb.append(link);
+                                                                link = null;
+                                                                text_object_id = null;
+                                                                class_text_id = null;
 							}
 
 						if(Config.CLASS_MASTER_SETTINGS.getRequireItems(jobLevel) != null && Config.CLASS_MASTER_SETTINGS.getRequireItems(jobLevel).size() > 0)
 						{
-							sb.append("<br><br>Item(s) required for class change:");
-							sb.append("<table width=220>");
+                                                        String itemFile = HtmCache.getInstance().getHtm("data/html/classmaster/cm_change_items.htm");
+                                                        String itemEntery = "";
 							for(Integer _itemId : Config.CLASS_MASTER_SETTINGS.getRequireItems(jobLevel).keySet())
 							{
 								int _count = Config.CLASS_MASTER_SETTINGS.getRequireItems(jobLevel).get(_itemId);
-								sb.append("<tr><td><font color=\"LEVEL\">" + _count + "</font></td><td>" + ItemTable.getInstance().getTemplate(_itemId).getName() + "</td></tr>");
+                                                                String result = HtmCache.getInstance().getHtm("data/html/classmaster/cm_change_items_entery.htm");
+                                                                result = result.replace("{$count}", String.valueOf(_count));
+                                                                result = result.replace("{$itemname}", ItemTable.getInstance().getTemplate(_itemId).getName());
+                                                                
+								itemEntery += result;
+                                                                result = null;
 							}
-							sb.append("</table>");
+                                                        itemFile = itemFile.replace("{$items_entery}", itemEntery);
+                                                        
+							sb.append(itemFile);
 						}
 					}
 					if(Config.CLASS_MASTER_STRIDER_UPDATE)
 					{
-						sb.append("<br><br><a action=\"bypass -h npc_" + getObjectId() + "_upgrade_hatchling\">Upgrade Hatchling to Strider</a><br>");
+                                                String htm_hatch = HtmCache.getInstance().getHtm("data/html/classmaster/cm_change_strider.htm");
+                                                htm_hatch = htm_hatch.replace("{$object_id}", String.valueOf(getObjectId()));
+						sb.append(htm_hatch);
 					}
-					sb.append("<br><img src=L2UI_CH3.herotower_deco width=256 height=32><br></center></body></html>");
+					sb.append(HtmCache.getInstance().getHtm("data/html/classmaster/cm_change_footer.htm"));
 					html.setHtml(sb.toString());
 					player.sendPacket(html);
 				}

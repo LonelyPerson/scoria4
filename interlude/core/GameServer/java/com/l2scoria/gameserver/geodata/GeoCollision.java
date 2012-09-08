@@ -1,7 +1,7 @@
 package com.l2scoria.gameserver.geodata;
 
 import com.l2scoria.gameserver.model.L2Territory;
-import gnu.trove.TLongByteHashMap;
+import gnu.trove.map.hash.TLongByteHashMap;
 
 public interface GeoCollision
 {
