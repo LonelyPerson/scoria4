@@ -574,6 +574,7 @@ public abstract class L2Skill
 				}
 				catch (Exception e)
 				{
+					_log.fatal("Negate stat: " + stat.toUpperCase() + " not found.");
 					_log.fatal(e.getMessage(), e);
 				}
 			}
