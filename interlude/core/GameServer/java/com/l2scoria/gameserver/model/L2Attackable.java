@@ -720,19 +720,19 @@ public class L2Attackable extends L2NpcInstance
 					// If the attacker is a Pet, get the party of the owner
 					if(attacker.isPet)
 					{
-						attackerParty = ((L2PetInstance) attacker).getParty();
+						attackerParty = attacker.getParty();
 					}
 					else if(attacker.isPlayer)
 					{
-						attackerParty = ((L2PcInstance) attacker).getParty();
+						attackerParty = attacker.getParty();
 					}
 					else
 						return;
 
 					// If this attacker is a L2PcInstance with a summoned L2SummonInstance, get Exp Penalty applied for the current summoned L2SummonInstance
-					if(attacker.isPlayer && ((L2PcInstance) attacker).getPet().isSummonInstance)
+					if(attacker != null && attacker.isPlayer && attacker.getPet().isSummonInstance)
 					{
-						penalty = ((L2SummonInstance) ((L2PcInstance) attacker).getPet()).getExpPenalty();
+						penalty = ((L2SummonInstance) attacker.getPet()).getExpPenalty();
 					}
 
 					// We must avoid "over damage", if any
