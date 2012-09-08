@@ -1,0 +1,10 @@
+All htm`s in this folder is not fully.
+Change profession contains:
+- cm_change_header.htm
+- cm_change_body.htm
+- <cm_change_items>.htm
+-- cm_change_items_entery.htm
+- </cm_change_items>.htm
+- cm_change_strider.htm
+- cm_change_footer.htm
+All this files contains 1 npc dialog. Be careful if change it and don`t ruins the html syntax
