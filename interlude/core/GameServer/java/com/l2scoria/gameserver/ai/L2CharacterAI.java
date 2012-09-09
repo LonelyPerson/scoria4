@@ -266,6 +266,12 @@ public class L2CharacterAI extends AbstractAI
 	@Override
 	protected void onIntentionCast(L2Skill skill, L2Object target)
 	{
+                if(target == null || _actor == null)
+                {
+                    clientActionFailed();
+                    return;
+                }
+                
 		if(getIntention() == AI_INTENTION_REST && skill.isMagic())
 		{
 			clientActionFailed();

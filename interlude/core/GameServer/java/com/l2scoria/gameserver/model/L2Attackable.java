@@ -730,7 +730,7 @@ public class L2Attackable extends L2NpcInstance
 						return;
 
 					// If this attacker is a L2PcInstance with a summoned L2SummonInstance, get Exp Penalty applied for the current summoned L2SummonInstance
-					if(attacker != null && attacker.isPlayer && attacker.getPet().isSummonInstance)
+					if(attacker != null && attacker.isPlayer && attacker.getPet() != null && attacker.getPet().isSummonInstance)
 					{
 						penalty = ((L2SummonInstance) attacker.getPet()).getExpPenalty();
 					}
