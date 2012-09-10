@@ -17,6 +17,7 @@ import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.entity.Announcements;
 import com.l2scoria.gameserver.model.entity.Instance;
 import com.l2scoria.gameserver.model.entity.event.GameEvent;
+import com.l2scoria.gameserver.model.entity.event.Language;
 import com.l2scoria.gameserver.network.serverpackets.CreatureSay;
 import com.l2scoria.gameserver.taskmanager.ExclusiveTask;
 import com.l2scoria.gameserver.taskmanager.TaskManager;
@@ -81,7 +82,7 @@ public class TvT extends GameEvent
 	private boolean TVT_AURA;
 	private boolean TVT_ININSTANCE;
 	private boolean TVT_ORIGINALRETURN;
-
+        
 	public TvT()
 	{
 		_instance = this;
@@ -104,7 +105,7 @@ public class TvT extends GameEvent
 			free = 0;
 		}
 
-		return free + " из " + _maxPlayers;
+		return free + Language.LANG_STATUS + _maxPlayers;
 	}
 
 	@Override
@@ -214,11 +215,11 @@ public class TvT extends GameEvent
 				killerTeam.players.put(pk.getObjectId(), kills);
 				_kills.put(pk.getObjectId(), kills);
 				pk.broadcastUserInfo();
-				pv.sendMessage("Вы убиты, дождитесь воскрешения.");
+				pv.sendMessage(Language.LANG_KILLED_MSG);
 			}
 			else
 			{
-				pk.sendMessage("Вы убили члена своей команды.");
+				pk.sendMessage(Language.LANG_TEAM_KILL_MSG);
 				if (pk.getDeathPenaltyBuffLevel() < 10)
 				{
 					pk.setDeathPenaltyBuffLevel(pk.getDeathPenaltyBuffLevel() + 4);
@@ -231,7 +232,7 @@ public class TvT extends GameEvent
 		{
 			if (pk.getDeathPenaltyBuffLevel() < 10)
 			{
-				pk.sendMessage("Вы убили простого игрока.");
+				pk.sendMessage(Language.LANG_PENALTY_KILL_MSG);
 				pk.setDeathPenaltyBuffLevel(pk.getDeathPenaltyBuffLevel() + 5);
 			}
 		}
@@ -305,16 +306,16 @@ public class TvT extends GameEvent
 
 		_elapsed = (_regTime * 60000) / 2;
 
-		AnnounceToPlayers(true, getName() + ": Открыта регистрация.");
-		AnnounceToPlayers(true, getName() + ": Разница уровней " + _minlvl + "-" + _maxlvl + ".");
-		AnnounceToPlayers(true, getName() + ": Награды:");
+		AnnounceToPlayers(true, getName() + ": " + Language.LANG_ANNOUNCE_1);
+		AnnounceToPlayers(true, getName() + ": " + Language.LANG_ANNOUNCE_2 + " " + _minlvl + "-" + _maxlvl + ".");
+		AnnounceToPlayers(true, getName() + ": " + Language.LANG_ANNOUNCE_3);
 
 		for (int i = 0; i < _rewardId.length; i++)
 		{
 			AnnounceToPlayers(true, " - " + _rewardAmount[i] + " " + ItemTable.getInstance().getTemplate(_rewardId[i]).getName());
 		}
 
-		AnnounceToPlayers(true, getName() + ": Начало через " + _regTime + " минут.");
+		AnnounceToPlayers(true, getName() + ": " + Language.LANG_ANNOUNCE_4.replace("{$time}", String.valueOf(_regTime)));
 
 		_startEventTask.schedule(_elapsed);
 		_state = GameEvent.STATE_ACTIVE;
@@ -371,7 +372,7 @@ public class TvT extends GameEvent
 
 		if (!result)
 		{
-			actor.getPlayer().sendMessage("Вы не можете использовать этот предемет на эвенте.");
+			actor.getPlayer().sendMessage(Language.LANG_PROHIBIT_ITEM);
 		}
 
 		return result;
@@ -402,7 +403,7 @@ public class TvT extends GameEvent
 		}
 		if (!result)
 		{
-			caster.getPlayer().sendMessage("Это умение запрещено на эвенте.");
+			caster.getPlayer().sendMessage(Language.LANG_PROHIBIT_SKILL);
 		}
 		return result;
 	}
@@ -470,12 +471,12 @@ public class TvT extends GameEvent
 	{
 		if (getState() != STATE_ACTIVE)
 		{
-			player.sendMessage("Извините, эвент не доступен.");
+			player.sendMessage(Language.LANG_EVEN_UNAVAILABLE);
 			return false;
 		}
 		if (isParticipant(player))
 		{
-			player.sendMessage("Вы уже зарегистрированы на эвент.");
+			player.sendMessage(Language.LANG_ALWAYS_REGISTER);
 			return false;
 		}
 		if (_participants == null)
@@ -490,7 +491,7 @@ public class TvT extends GameEvent
 				pc = L2World.getInstance().getPlayer(charId);
 				if (pc != null && player.getClient().getHWId().equals(pc.getClient().getHWId()))
 				{
-					player.sendMessage("Игрок с вашего компьютера уже зарегистрирован.");
+					player.sendMessage(Language.LANG_DUPLICATE_HWID);
 					return false;
 				}
 			}
@@ -503,7 +504,7 @@ public class TvT extends GameEvent
 				pc = L2World.getInstance().getPlayer(charId);
 				if (pc != null && pc.getClient() != null && player.getClient().getHostAddress().equals(pc.getClient().getHostAddress()))
 				{
-					player.sendMessage("Игрок с вашего компьютера уже зарегистрирован.");
+					player.sendMessage(Language.LANG_DUPLICATE_IP);
 					return false;
 				}
 			}
@@ -511,17 +512,17 @@ public class TvT extends GameEvent
 
 		if (_participants.size() >= _maxPlayers)
 		{
-			player.sendMessage("Все места на эвент заняты.");
+			player.sendMessage(Language.LANG_MAX_PLAYERS);
 			return false;
 		}
 		if (player.isCursedWeaponEquiped() && !TVT_JOIN_CURSED)
 		{
-			player.sendMessage("Запрещено с проклятым оружием.");
+			player.sendMessage(Language.LANG_CURSED_WEAPON);
 			return false;
 		}
 		if (player.getLevel() > _maxlvl || player.getLevel() < _minlvl)
 		{
-			player.sendMessage("Ваш уровень не подходит для участия.");
+			player.sendMessage(Language.LANG_NON_ENOUGH_LEVEL);
 			return false;
 		}
 		return player.canRegisterToEvents();
@@ -539,11 +540,11 @@ public class TvT extends GameEvent
 		{
 			if (register(actor))
 			{
-				actor.sendMessage("Вы зарегистрированы на эвенте TvT.");
+				actor.sendMessage(Language.LANG_PLAYER_REGISTER);
 			}
 			else
 			{
-				actor.sendMessage("Ваше участие на эвенте невозможно");
+				actor.sendMessage(Language.LANG_REGISTER_ERROR);
 			}
 		}
 		else if (command.equals("leave"))
@@ -551,11 +552,11 @@ public class TvT extends GameEvent
 			if (isParticipant(actor) && _state == GameEvent.STATE_ACTIVE)
 			{
 				remove(actor);
-				actor.sendMessage("Ваше участие на эвенте TvT отменено.");
+				actor.sendMessage(Language.LANG_REGISTER_CANCEL);
 			}
 			else
 			{
-				actor.sendMessage("Вы не участник эвента.");
+				actor.sendMessage(Language.LANG_REGISTER_CANCEL_ERROR);
 			}
 		}
 	}
@@ -614,7 +615,7 @@ public class TvT extends GameEvent
 			{
 				if (player.getInstanceId() != 0 || player.getLevel() < _minlvl || player.getLevel() > _maxlvl || player.isInStoreMode() || player.isDead())
 				{
-					player.sendMessage("Ваше участие на эвенте невозможно");
+					player.sendMessage(Language.LANG_SECOND_CHECK);
 					player._event = null;
 					_participants.remove(charId);
 				}
@@ -636,7 +637,7 @@ public class TvT extends GameEvent
 
 		if (_participants.size() < _minPlayers)
 		{
-			AnnounceToPlayers(true, getName() + ": Недостаточно игроков");
+			AnnounceToPlayers(true, getName() + ": " + Language.LANG_EVENT_ABORT);
 			finish();
 			return;
 		}
@@ -747,7 +748,7 @@ public class TvT extends GameEvent
 						}
 					}
 					_elapsed = (_eventTime * 60000) / 2;
-					AnnounceToPlayers(false, getName() + ": Игра началась!");
+					AnnounceToPlayers(false, getName() + ": " + Language.LANG_EVENT_START);
 					_eventTask.schedule(_elapsed);
 				}
 			}, 10000);
@@ -809,7 +810,7 @@ public class TvT extends GameEvent
 
 		if (winner != null && winner.kills > 0)
 		{
-			AnnounceToPlayers(true, getName() + ": Победитель - команда " + winner.name);
+			AnnounceToPlayers(true, getName() + ": " + Language.LANG_WINNER + " " + winner.name);
 
 			for (Integer playerId : _participants.keys())
 			{
@@ -828,7 +829,7 @@ public class TvT extends GameEvent
 		}
 		else
 		{
-			AnnounceToPlayers(true, getName() + ": Победитель не определен");
+			AnnounceToPlayers(true, getName() + ": " + Language.LANG_NO_WINNER);
 		}
 	}
 
@@ -874,13 +875,13 @@ public class TvT extends GameEvent
 				{
 					if (announces == 0)
 					{
-						AnnounceToPlayers(true, getName() + ": До конца регистрации " + _elapsed / 60000 + " минут");
+						AnnounceToPlayers(true, getName() + ": " + Language.LANG_ANNOUNCE_5 + " " + _elapsed / 60000 + " min");
 						announces++;
 					}
 				}
 				else if (announces == 1 && _elapsed <= 30000 && !showed)
 				{
-					AnnounceToPlayers(true, getName() + ": До конца регистрации меньше минуты");
+					AnnounceToPlayers(true, getName() + ": " + Language.LANG_ANNOUNCE_6);
 					showed = true;
 					announces++;
 				}

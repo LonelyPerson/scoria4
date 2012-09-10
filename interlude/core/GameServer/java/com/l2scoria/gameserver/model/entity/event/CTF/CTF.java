@@ -16,6 +16,7 @@ import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.entity.Announcements;
 import com.l2scoria.gameserver.model.entity.Instance;
 import com.l2scoria.gameserver.model.entity.event.GameEvent;
+import com.l2scoria.gameserver.model.entity.event.Language;
 import com.l2scoria.gameserver.network.clientpackets.RequestActionUse;
 import com.l2scoria.gameserver.network.serverpackets.CreatureSay;
 import com.l2scoria.gameserver.network.serverpackets.ExShowScreenMessage;
@@ -95,7 +96,7 @@ public class CTF extends GameEvent
 				player.addItem("Take flag", 6718, 1, null, false);
 				L2ItemInstance fl = player.getInventory().getItemByItemId(6718);
 				player.getInventory().equipItem(fl);
-				player.sendMessage("Отнесите флаг на свою базу.");
+				player.sendMessage(Language.LANG_TAKE_FLAG);
 				player.broadcastPacket(new SocialAction(player.getObjectId(), 16));
 				player.sendPacket(new RadarControl(0, 2, team.flagloc.getX(), team.flagloc.getY(), team.flagloc.getZ()));
 				_flagowners.put(player, new Object[]{this, wep});
@@ -148,7 +149,7 @@ public class CTF extends GameEvent
 			free = 0;
 		}
 
-		return free + " из " + _maxPlayers;
+		return free + Language.LANG_STATUS + _maxPlayers;
 	}
 
 	public static CTF getInstance()
@@ -247,11 +248,11 @@ public class CTF extends GameEvent
 			{
 				if (register(actor))
 				{
-					actor.sendMessage("Вы зарегистрированы на эвенте CTF");
+					actor.sendMessage(Language.LANG_PLAYER_REGISTER);
 				}
 				else
 				{
-					actor.sendMessage("Ваше участие на эвенте невозможно");
+					actor.sendMessage(Language.LANG_REGISTER_ERROR);
 				}
 			}
 			else if (command.equals("leave"))
@@ -259,11 +260,11 @@ public class CTF extends GameEvent
 				if (isParticipant(actor))
 				{
 					remove(actor);
-					actor.sendMessage("Ваше участие на эвенте CTF отменено.");
+					actor.sendMessage(Language.LANG_REGISTER_CANCEL);
 				}
 				else
 				{
-					actor.sendMessage("Вы не участник эвента.");
+					actor.sendMessage(Language.LANG_REGISTER_CANCEL_ERROR);
 				}
 			}
 		}
@@ -290,12 +291,12 @@ public class CTF extends GameEvent
 
 			if (victim._event == this)
 			{
-				pv.sendMessage("Вы убиты, дождитесь воскрешения.");
+				pv.sendMessage(Language.LANG_KILLED_MSG);
 				ThreadPoolManager.getInstance().scheduleGeneral(new ReviveTask(victim), CTF_REVIVE_DELAY * 1000);
 			}
 			if (getPlayerTeam(victim) == getPlayerTeam(killer))
 			{
-				pk.sendMessage("Вы убили члена своей команды.");
+				pk.sendMessage(Language.LANG_TEAM_KILL_MSG);
 				if (pk.getDeathPenaltyBuffLevel() < 10)
 				{
 					pk.setDeathPenaltyBuffLevel(pk.getDeathPenaltyBuffLevel() + 5);
@@ -303,7 +304,7 @@ public class CTF extends GameEvent
 			}
 			if (killer._event != this || victim._event != this)
 			{
-				pk.sendMessage("Вы убили простого игрока.");
+				pk.sendMessage(Language.LANG_PENALTY_KILL_MSG);
 				if (pk.getDeathPenaltyBuffLevel() < 10)
 				{
 					pk.setDeathPenaltyBuffLevel(pk.getDeathPenaltyBuffLevel() + 5);
@@ -331,7 +332,7 @@ public class CTF extends GameEvent
 					player = L2World.getInstance().getPlayer(playerId);
 					if (player != null)
 					{
-						player.sendPacket(new ExShowScreenMessage("Игрок " + talkerName + " приносит 1 очко вашей команде", 5000));
+						player.sendPacket(new ExShowScreenMessage(talkerName + " " + Language.LANG_POINT_ADD, 5000));
 					}
 				}
 			}
@@ -353,7 +354,7 @@ public class CTF extends GameEvent
 							player = L2World.getInstance().getPlayer(playerId);
 							if (player != null)
 							{
-								player.sendPacket(new ExShowScreenMessage("Игрок " + talkerName + " захватил флаг вашей команды", 5000));
+								player.sendPacket(new ExShowScreenMessage(talkerName + " " + Language.LANG_FLAG_GRABE, 5000));
 							}
 						}
 					}
@@ -422,16 +423,16 @@ public class CTF extends GameEvent
 
 
 		_remain = _joinTime * 60000 / 2;
-		AnnounceToPlayers(true, getName() + ": Открыта регистрация.");
-		AnnounceToPlayers(true, getName() + ": Разница уровней " + _minlvl + "-" + _maxlvl + ".");
-		AnnounceToPlayers(true, getName() + ": Награды:");
+		AnnounceToPlayers(true, getName() + ": " + Language.LANG_ANNOUNCE_1);
+		AnnounceToPlayers(true, getName() + ": " + Language.LANG_ANNOUNCE_2 + _minlvl + "-" + _maxlvl + ".");
+		AnnounceToPlayers(true, getName() + ": " + Language.LANG_ANNOUNCE_3);
 
 		for (int i = 0; i < _rewardId.length; i++)
 		{
 			AnnounceToPlayers(true, " - " + _rewardAmount[i] + " " + ItemTable.getInstance().getTemplate(_rewardId[i]).getName());
 		}
 
-		AnnounceToPlayers(true, getName() + ": Начало через " + _joinTime + " минут.");
+		AnnounceToPlayers(true, getName() + ": " + Language.LANG_ANNOUNCE_4.replace("{$time}", String.valueOf(_joinTime)));
 
 		_registrationTask.schedule(_remain);
 		_state = GameEvent.STATE_ACTIVE;
@@ -535,7 +536,7 @@ public class CTF extends GameEvent
 		L2PcInstance ap = actor.getPlayer();
 		if (!result)
 		{
-			ap.sendMessage("Вы не можете использовать этот предемет на эвенте.");
+			ap.sendMessage(Language.LANG_PROHIBIT_ITEM);
 		}
 		return result;
 	}
@@ -566,7 +567,7 @@ public class CTF extends GameEvent
 		L2PcInstance cp = caster.getPlayer();
 		if (!result)
 		{
-			cp.sendMessage("Это умение запрещено на эвенте.");
+			cp.sendMessage(Language.LANG_PROHIBIT_SKILL);
 		}
 
 		return result;
@@ -588,13 +589,13 @@ public class CTF extends GameEvent
 	{
 		if (getState() != STATE_ACTIVE)
 		{
-			player.sendMessage("Извините, эвент не доступен.");
+			player.sendMessage(Language.LANG_EVEN_UNAVAILABLE);
 			return false;
 		}
 
 		if (isParticipant(player))
 		{
-			player.sendMessage("Вы уже зарегистрированы на эвент.");
+			player.sendMessage(Language.LANG_ALWAYS_REGISTER);
 			return false;
 		}
 
@@ -606,7 +607,7 @@ public class CTF extends GameEvent
 				pc = L2World.getInstance().getPlayer(charId);
 				if (pc != null && player.getClient().getHWId().equals(pc.getClient().getHWId()))
 				{
-					player.sendMessage("Игрок с вашего компьютера уже зарегистрирован.");
+					player.sendMessage(Language.LANG_DUPLICATE_HWID);
 					return false;
 				}
 			}
@@ -620,7 +621,7 @@ public class CTF extends GameEvent
 				pc = L2World.getInstance().getPlayer(charId);
 				if (pc != null && pc.getClient() != null && player.getClient().getHostAddress().equals(pc.getClient().getHostAddress()))
 				{
-					player.sendMessage("Игрок с вашего компьютера уже зарегистрирован.");
+					player.sendMessage(Language.LANG_DUPLICATE_IP);
 					return false;
 				}
 			}
@@ -628,19 +629,19 @@ public class CTF extends GameEvent
 
 		if (_participicants.size() >= _maxPlayers)
 		{
-			player.sendMessage("Все места на эвент заняты.");
+			player.sendMessage(Language.LANG_MAX_PLAYERS);
 			return false;
 		}
 
 		if (player.isCursedWeaponEquiped() && !CTF_JOIN_CURSED)
 		{
-			player.sendMessage("Запрещено с проклятым оружием.");
+			player.sendMessage(Language.LANG_CURSED_WEAPON);
 			return false;
 		}
 
 		if (player.getLevel() > _maxlvl || player.getLevel() < _minlvl)
 		{
-			player.sendMessage("Ваш уровень не подходит для участия.");
+			player.sendMessage(Language.LANG_NON_ENOUGH_LEVEL);
 			return false;
 		}
 
@@ -684,7 +685,7 @@ public class CTF extends GameEvent
 				{
 					if (announces == 0)
 					{
-						AnnounceToPlayers(true, getName() + ": До конца регистрации " + _remain / 60000 + " минут");
+						AnnounceToPlayers(true, getName() + ": " + Language.LANG_ANNOUNCE_5 + _remain / 60000 + " min");
 						announces++;
 					}
 				}
@@ -692,7 +693,7 @@ public class CTF extends GameEvent
 				{
 					if (!showed && announces == 1 && _remain <= 30000)
 					{
-						AnnounceToPlayers(true, getName() + ": До конца регистрации меньше минуты");
+						AnnounceToPlayers(true, getName() + ": " + Language.LANG_ANNOUNCE_6);
 						showed = true;
 						announces++;
 					}
@@ -766,7 +767,7 @@ public class CTF extends GameEvent
 
 		if (winner != null && winner.flags > 0)
 		{
-			AnnounceToPlayers(true, getName() + ": Победитель - команда " + winner.name);
+			AnnounceToPlayers(true, getName() + ": " + Language.LANG_WINNER + winner.name);
 
 			for (Integer playerId : winner.members)
 			{
@@ -782,7 +783,7 @@ public class CTF extends GameEvent
 		}
 		else
 		{
-			AnnounceToPlayers(true, getName() + ": Победитель не определен");
+			AnnounceToPlayers(true, getName() + ": " + Language.LANG_NO_WINNER);
 		}
 	}
 
@@ -798,7 +799,7 @@ public class CTF extends GameEvent
 			{
 				if (player.getInstanceId() != 0 || player.getLevel() < _minlvl || player.getLevel() > _maxlvl || player.isInStoreMode() || player.isDead())
 				{
-					player.sendMessage("Ваше участие на эвенте невозможно");
+					player.sendMessage(Language.LANG_SECOND_CHECK);
 					player._event = null;
 					_participicants.remove(playerId);
 				}
@@ -818,7 +819,7 @@ public class CTF extends GameEvent
 		}
 		if (_participicants.size() < _minPlayers)
 		{
-			AnnounceToPlayers(true, getName() + ": Недостаточно игроков");
+			AnnounceToPlayers(true, getName() + ": " + Language.LANG_EVENT_ABORT);
 			finish();
 			return;
 		}
@@ -917,7 +918,7 @@ public class CTF extends GameEvent
 						player.standUp();
 					}
 				}
-				AnnounceToPlayers(false, getName() + ": Игра началась!");
+				AnnounceToPlayers(false, getName() + ": " + Language.LANG_EVENT_START);
 				_remain = _eventTime * 60000 / 2;
 				_eventTask.schedule(_remain);
 			}

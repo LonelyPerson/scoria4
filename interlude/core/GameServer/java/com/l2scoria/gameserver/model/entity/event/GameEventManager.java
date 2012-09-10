@@ -50,6 +50,7 @@ public class GameEventManager
 			GameEvent evt = (GameEvent) iterator.next();
 			registerEvent(evt);
 		}
+                Language.load();
 		registerEvent(TvT.getInstance());
 		registerEvent(LastHero.getInstance());
 		registerEvent(CTF.getInstance());

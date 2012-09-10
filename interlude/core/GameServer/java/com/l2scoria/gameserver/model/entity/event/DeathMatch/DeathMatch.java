@@ -17,6 +17,7 @@ import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.entity.Announcements;
 import com.l2scoria.gameserver.model.entity.Instance;
 import com.l2scoria.gameserver.model.entity.event.GameEvent;
+import com.l2scoria.gameserver.model.entity.event.Language;
 import com.l2scoria.gameserver.network.serverpackets.CreatureSay;
 import com.l2scoria.gameserver.network.serverpackets.ExShowScreenMessage;
 import com.l2scoria.gameserver.taskmanager.ExclusiveTask;
@@ -104,7 +105,7 @@ public class DeathMatch extends GameEvent
 			free = 0;
 		}
 
-		return free + " из " + _maxPlayers;
+		return free + Language.LANG_STATUS + _maxPlayers;
 	}
 
 	public DeathMatch()
@@ -226,8 +227,12 @@ public class DeathMatch extends GameEvent
 			{
 				if (!register(actor))
 				{
-					actor.sendMessage("Ваше участие на эвенте невозможно");
+					actor.sendMessage(Language.LANG_REGISTER_ERROR);
 				}
+                                else 
+                                {
+                                    actor.sendMessage(Language.LANG_PLAYER_REGISTER);
+                                }
 			}
 			else if (command.equals("leave"))
 			{
@@ -259,8 +264,8 @@ public class DeathMatch extends GameEvent
 				DeathMatchPlayer dmp = _playersKills.get(plk);
 				dmp.addKill();
 
-				plk.setTitle("Убийств " + dmp.getKills());
-				pld.sendMessage("Вы убиты, дождитесь воскрешения.");
+				plk.setTitle("Kills: " + dmp.getKills());
+				pld.sendMessage(Language.LANG_KILLED_MSG);
 				ThreadPoolManager.getInstance().scheduleGeneral(new revivePlayer(victim), _reviveDelay * 1000);
 			}
 		}
@@ -322,13 +327,13 @@ public class DeathMatch extends GameEvent
 	{
 		if (getState() != STATE_ACTIVE)
 		{
-			player.sendMessage("Извините, эвент не доступен.");
+			player.sendMessage(Language.LANG_EVEN_UNAVAILABLE);
 			return false;
 		}
 
 		if (isParticipant(player))
 		{
-			player.sendMessage("Вы уже зарегистрированы на эвент.");
+			player.sendMessage(Language.ALWAYS_REGISTER);
 			return false;
 		}
 
@@ -340,7 +345,7 @@ public class DeathMatch extends GameEvent
 				pc = L2World.getInstance().getPlayer(charId);
 				if (pc != null && player.getClient().getHWId().equals(pc.getClient().getHWId()))
 				{
-					player.sendMessage("Игрок с вашего компьютера уже зарегистрирован.");
+					player.sendMessage(Language.LANG_DUPLICATE_HWID);
 					return false;
 				}
 			}
@@ -354,7 +359,7 @@ public class DeathMatch extends GameEvent
 				pc = L2World.getInstance().getPlayer(charId);
 				if (pc != null && pc.getClient() != null && player.getClient().getHostAddress().equals(pc.getClient().getHostAddress()))
 				{
-					player.sendMessage("Игрок с вашего компьютера уже зарегистрирован.");
+					player.sendMessage(Language.LANG_DUPLICATE_IP);
 					return false;
 				}
 			}
@@ -362,19 +367,19 @@ public class DeathMatch extends GameEvent
 
 		if (_players.size() >= _maxPlayers)
 		{
-			player.sendMessage("Все места на эвент заняты.");
+			player.sendMessage(Language.LANG_MAX_PLAYERS);
 			return false;
 		}
 
 		if (player.isCursedWeaponEquiped() && !JOIN_CURSED)
 		{
-			player.sendMessage("Запрещено с проклятым оружием.");
+			player.sendMessage(Language.LANG_CURSED_WEAPON);
 			return false;
 		}
 
 		if (player.getLevel() > _maxLvl || player.getLevel() < _minLvl)
 		{
-			player.sendMessage("Ваш уровень не подходит для участия.");
+			player.sendMessage(Language.LANG_NON_ENOUGH_LEVEL);
 			return false;
 		}
 
@@ -386,16 +391,16 @@ public class DeathMatch extends GameEvent
 	{
 		_players.clear();
 
-		AnnounceToPlayers(true, getName() + ": Открыта регистрация.");
-		AnnounceToPlayers(true, getName() + ": Разница уровней " + _minLvl + "-" + _maxLvl + ".");
-		AnnounceToPlayers(true, getName() + ": Награды:");
+		AnnounceToPlayers(true, getName() + ": " + Language.LANG_ANNOUNCE_1);
+		AnnounceToPlayers(true, getName() + ": " + Language.LANG_ANNOUNCE_2 + _minLvl + "-" + _maxLvl + ".");
+		AnnounceToPlayers(true, getName() + ": " + Language.LANG_ANNOUNCE_3);
 
 		for (int i = 0; i < _rewardId.length; i++)
 		{
 			AnnounceToPlayers(true, " - " + _rewardAmount[i] + " " + ItemTable.getInstance().getTemplate(_rewardId[i]).getName());
 		}
 
-		AnnounceToPlayers(true, getName() + ": Начало через " + _regTime + " минут.");
+		AnnounceToPlayers(true, getName() + ": " + Language.LANG_ANNOUNCE_4.replace("{$time}", String.valueOf(_regTime)));
 
 		_state = GameEvent.STATE_ACTIVE;
 		_remaining = (_regTime * 60000) / 2;
@@ -521,11 +526,11 @@ public class DeathMatch extends GameEvent
 			{
 				if (_remaining >= 60000)
 				{
-					AnnounceToPlayers(true, getName() + ": До конца регистрации " + _remaining / 60000 + " минут");
+					AnnounceToPlayers(true, getName() + ": " + Language.LANG_ANNOUNCE_5 + _remaining / 60000 + " min");
 				}
 				else if (!showed)
 				{
-					AnnounceToPlayers(true, getName() + ": До конца регистрации меньше минуты");
+					AnnounceToPlayers(true, getName() + ": " + Language.LANG_ANNOUNCE_6);
 					showed = true;
 				}
 				_remaining /= 2;
@@ -581,7 +586,7 @@ public class DeathMatch extends GameEvent
 
 					player.teleToLocation(EVENT_LOCATION.getX() + (par[Rnd.get(2)] * Rnd.get(Radius)), EVENT_LOCATION.getY() + (par[Rnd.get(2)] * Rnd.get(Radius)), EVENT_LOCATION.getZ());
 					_playersKills.put(player, new DeathMatchPlayer());
-					player.setTitle("Убийств 0");
+					player.setTitle("Kills: 0");
 					SkillTable.getInstance().getInfo(4515, 1).getEffects(player, player);
 					player.sendPacket(new ExShowScreenMessage("1 minutes until event start, wait", 10000));
 				}
@@ -600,7 +605,7 @@ public class DeathMatch extends GameEvent
 							player.stopAllEffects();
 						}
 					}
-					AnnounceToPlayers(false, "DeathMatch: Игра началась!");
+					AnnounceToPlayers(false, "DeathMatch: " + Language.LANG_EVENT_START);
 					_remaining = _eventTime * 60000;
 					_eventTask.schedule(10000);
 				}
@@ -679,7 +684,7 @@ public class DeathMatch extends GameEvent
 
 		if (winner != null && _playersKills.get(winner).getKills() > 0)
 		{
-			AnnounceToPlayers(true, getName() + ": Победитель - игрок " + winner.getName());
+			AnnounceToPlayers(true, getName() + ": " + Language.LANG_WINNER + winner.getName());
 
 			for (int i = 0; i < _rewardId.length; i++)
 			{
@@ -688,7 +693,7 @@ public class DeathMatch extends GameEvent
 		}
 		else
 		{
-			AnnounceToPlayers(true, getName() + ": Победитель не определен");
+			AnnounceToPlayers(true, getName() + ": " + Language.LANG_NO_WINNER);
 		}
 
 		ThreadPoolManager.getInstance().scheduleGeneral(new Runnable()
@@ -731,7 +736,7 @@ public class DeathMatch extends GameEvent
 		}
 		if (realPlayers < _minPlayers)
 		{
-			AnnounceToPlayers(true, getName() + ": Недостаточно игроков");
+			AnnounceToPlayers(true, getName() + ": " + Language.LANG_EVENT_ABORT);
 			finish();
 			return;
 		}

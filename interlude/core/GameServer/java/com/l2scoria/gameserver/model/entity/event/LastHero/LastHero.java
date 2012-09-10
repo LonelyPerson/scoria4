@@ -16,6 +16,7 @@ import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.entity.Announcements;
 import com.l2scoria.gameserver.model.entity.Instance;
 import com.l2scoria.gameserver.model.entity.event.GameEvent;
+import com.l2scoria.gameserver.model.entity.event.Language;
 import com.l2scoria.gameserver.network.serverpackets.CreatureSay;
 import com.l2scoria.gameserver.network.serverpackets.ExShowScreenMessage;
 import com.l2scoria.gameserver.network.serverpackets.SocialAction;
@@ -83,7 +84,7 @@ public class LastHero extends GameEvent
 			free = 0;
 		}
 
-		return free + " из " + _maxPlayers;
+		return free + Language.LANG_STATUS + _maxPlayers;
 	}
 
 	public LastHero()
@@ -208,7 +209,7 @@ public class LastHero extends GameEvent
 			{
 				if (!register(actor))
 				{
-					actor.sendMessage("Ваше участие на эвенте невозможно");
+					actor.sendMessage(Language.LANG_REGISTER_ERROR);
 				}
 			}
 			else if (command.equals("leave"))
@@ -228,7 +229,7 @@ public class LastHero extends GameEvent
 				if (LH_REWARD_KILLS && killer.isPlayer)
 				{
 					((L2PcInstance) killer).addItem("LastHero Kill", _rewardId, _rewardAmount, null, true);
-					((L2PcInstance) killer).sendMessage("Вы получили награду за убийство.");
+					((L2PcInstance) killer).sendMessage(Language.LANG_KILL_BONUS);
 				}
 
 				if (!_winners.contains(killer.getObjectId()))
@@ -289,13 +290,13 @@ public class LastHero extends GameEvent
 	{
 		if (getState() != STATE_ACTIVE)
 		{
-			player.sendMessage("Извините, эвент не доступен.");
+			player.sendMessage(Language.LANG_EVEN_UNAVAILABLE);
 			return false;
 		}
 
 		if (isParticipant(player))
 		{
-			player.sendMessage("Вы уже зарегистрированы на эвент.");
+			player.sendMessage(Language.LANG_ALWAYS_REGISTER);
 			return false;
 		}
 
@@ -307,7 +308,7 @@ public class LastHero extends GameEvent
 				pc = L2World.getInstance().getPlayer(charId);
 				if (pc != null && player.getClient().getHWId().equals(pc.getClient().getHWId()))
 				{
-					player.sendMessage("Игрок с вашего компьютера уже зарегистрирован.");
+					player.sendMessage(Language.LANG_DUPLICATE_HWID);
 					return false;
 				}
 			}
@@ -320,7 +321,7 @@ public class LastHero extends GameEvent
 				pc = L2World.getInstance().getPlayer(charId);
 				if (pc != null && pc.getClient() != null && player.getClient().getHostAddress().equals(pc.getClient().getHostAddress()))
 				{
-					player.sendMessage("Игрок с вашего компьютера уже зарегистрирован.");
+					player.sendMessage(Language.LANG_DUPLICATE_IP);
 					return false;
 				}
 			}
@@ -328,19 +329,19 @@ public class LastHero extends GameEvent
 
 		if (_players.size() >= _maxPlayers)
 		{
-			player.sendMessage("Все места на эвент заняты.");
+			player.sendMessage(Language.LANG_MAX_PLAYERS);
 			return false;
 		}
 
 		if (player.isCursedWeaponEquiped() && !LH_JOIN_CURSED)
 		{
-			player.sendMessage("Запрещено с проклятым оружием.");
+			player.sendMessage(Language.LANG_CURSED_WEAPON);
 			return false;
 		}
 
 		if (player.getLevel() > _maxLvl || player.getLevel() < _minLvl)
 		{
-			player.sendMessage("Ваш уровень не подходит для участия.");
+			player.sendMessage(Language.LANG_NON_ENOUGH_LEVEL);
 			return false;
 		}
 
@@ -352,10 +353,10 @@ public class LastHero extends GameEvent
 	{
 		_players.clear();
 
-		AnnounceToPlayers(true, "LastHero: Открыта регистрация.");
-		AnnounceToPlayers(true, "LastHero: Разница уровней " + _minLvl + "-" + _maxLvl + ".");
+		AnnounceToPlayers(true, "LastHero: " + Language.LANG_ANNOUNCE_1);
+		AnnounceToPlayers(true, "LastHero: " + Language.LANG_ANNOUNCE_2 + _minLvl + "-" + _maxLvl + ".");
 		AnnounceToPlayers(true, " - " + _superPrizeCount + " " + ItemTable.getInstance().getTemplate(_superPrizeId).getName());
-		AnnounceToPlayers(true, "LastHero: Начало через " + _regTime + " минут");
+		AnnounceToPlayers(true, "LastHero: " +Language.LANG_ANNOUNCE_3.replace("{$time}", String.valueOf(_regTime)));
 
 		_state = GameEvent.STATE_ACTIVE;
 		_remaining = (_regTime * 60000) / 2;
@@ -489,13 +490,13 @@ public class LastHero extends GameEvent
 				{
 					if (announces == 0)
 					{
-						AnnounceToPlayers(true, "LastHero: До конца регистрации " + _remaining / 60000 + " мин.");
+						AnnounceToPlayers(true, "LastHero: " + Language.LANG_ANNOUNCE_5 + _remaining / 60000 + " min");
 						announces++;
 					}
 				}
 				else if (announces == 1 && _remaining <= 30000 && !showed)
 				{
-					AnnounceToPlayers(true, "LastHero: До конца регистрации " + _remaining / 1000 + " сек.");
+					AnnounceToPlayers(true, "LastHero: " + Language.LANG_ANNOUNCE_6);
 					showed = true;
 					announces++;
 				}
@@ -526,7 +527,7 @@ public class LastHero extends GameEvent
 				player = L2World.getInstance().getPlayer(playerId);
 				if (player != null && !player.isAlikeDead())
 				{
-					AnnounceToPlayers(true, "LastHero: Победитель матча " + player.getName());
+					AnnounceToPlayers(true, "LastHero: " + Language.LANG_WINNER + player.getName());
 					player.broadcastPacket(new SocialAction(playerId, 16));
 					if (LH_GIVE_HERO)
 					{
@@ -545,7 +546,7 @@ public class LastHero extends GameEvent
 		}
 		else
 		{
-			AnnounceToPlayers(true, "LastHero: Победителей нет");
+			AnnounceToPlayers(true, "LastHero: " + Language.LANG_NO_WINNER);
 		}
 
 		ThreadPoolManager.getInstance().scheduleGeneral(new Runnable()
@@ -635,7 +636,7 @@ public class LastHero extends GameEvent
 					player.teleToLocation(LH_LOC.getX() + (par[Rnd.get(2)] * Rnd.get(Radius)), LH_LOC.getY() + (par[Rnd.get(2)] * Rnd.get(Radius)), LH_LOC.getZ()); // отправляем чара на арену
 					// Кидаем рейд курс
 					SkillTable.getInstance().getInfo(4515, 1).getEffects(player, player);
-					player.sendPacket(new ExShowScreenMessage("Бой начнется через 1 минуту. Ожидайте старта!", 10000));
+					player.sendPacket(new ExShowScreenMessage(Language.LANG_FIGHT_1_MIN, 10000));
 				}
 			}
 			// Стартовая подготовка
@@ -652,8 +653,8 @@ public class LastHero extends GameEvent
 							player.stopAllEffects();
 						}
 					}
-					AnnounceToPlayers(false, "LastHero: Матч начался.");
-					AnnounceToPlayers(false, "LastHero: Матч продлится " + _eventTime + " минут(ы).");
+					AnnounceToPlayers(false, "LastHero: " + Language.LANG_EVENT_START);
+					//AnnounceToPlayers(false, "LastHero: Матч продлится " + _eventTime + " минут(ы).");
 					_remaining = _eventTime * 60000;
 					_eventTask.schedule(10000);
 				}
@@ -680,8 +681,7 @@ public class LastHero extends GameEvent
 		}
 		if (realPlayers < _minPlayers)
 		{
-			AnnounceToPlayers(true, "LastHero: Недостаточно игроков.");
-			AnnounceToPlayers(true, "LastHero: Эвент остановлен.");
+			AnnounceToPlayers(true, "LastHero: " + Language.LANG_EVENT_ABORT);
 			finish();
 			return;
 		}
