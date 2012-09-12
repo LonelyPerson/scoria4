@@ -268,7 +268,7 @@ public class L2MonsterInstance extends L2Attackable
 	@Override
 	public void addDamageHate(L2Character attacker, int damage, int aggro)
 	{
-		if(!(attacker.isMonster))
+		if(!(attacker != null && attacker.isMonster))
 		{
 			super.addDamageHate(attacker, damage, aggro);
 		}

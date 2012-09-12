@@ -15,66 +15,37 @@
  *
  * http://www.gnu.org/copyleft/gpl.html
  */
-package com.l2scoria.gameserver.handler.usercommandhandlers;
+package com.l2scoria.gameserver.handler.commands.impl;
 
 import com.l2scoria.gameserver.GameTimeController;
-import com.l2scoria.gameserver.handler.IUserCommandHandler;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
 
-/**
- *
- *
- */
-public class Time implements IUserCommandHandler
+public class Time extends CommandAbst
 {
-	private static final int[] COMMAND_IDS =
+	public Time()
 	{
-		77
-	};
-
-	/* (non-Javadoc)
-	 *
-	 */
-	public boolean useUserCommand(int id, L2PcInstance activeChar)
-	{
-		if(COMMAND_IDS[0] != id)
-			return false;
-
-		int t = GameTimeController.getInstance().getGameTime();
-		String h = "" + t / 60 % 24;
-		String m;
-		if(t % 60 < 10)
-		{
-			m = "0" + t % 60;
-		}
-		else
-		{
-			m = "" + t % 60;
-		}
-
-		SystemMessage sm;
-		if(GameTimeController.getInstance().isNowNight())
-		{
-			sm = new SystemMessage(SystemMessageId.TIME_S1_S2_IN_THE_NIGHT);
-			sm.addString(h);
-			sm.addString(m);
-		}
-		else
-		{
-			sm = new SystemMessage(SystemMessageId.TIME_S1_S2_IN_THE_DAY);
-			sm.addString(h);
-			sm.addString(m);
-		}
-		activeChar.sendPacket(sm);
-
-		sm = null;
-		return true;
+		_commands = new int[]{77};
 	}
 
-	public int[] getUserCommandList()
+	@Override
+	public boolean useUserCommand(int id, L2PcInstance activeChar)
 	{
-		return COMMAND_IDS;
+		if(!super.useUserCommand(id, activeChar))
+		{
+			return false;
+		}
+
+		int t = GameTimeController.getInstance().getGameTime();
+		int h = t / 60 % 24;
+		int m = t % 60;
+
+		SystemMessage sm;
+		sm = new SystemMessage(GameTimeController.getInstance().isNowNight() ? SystemMessageId.TIME_S1_S2_IN_THE_NIGHT : SystemMessageId.TIME_S1_S2_IN_THE_DAY);
+		sm.addString(String.valueOf(h));
+		sm.addString(String.valueOf(m < 10 ? "0" + m : m));
+		activeChar.sendPacket(sm);
+		return true;
 	}
 }

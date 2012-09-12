@@ -16,9 +16,8 @@
  *
  * http://www.gnu.org/copyleft/gpl.html
  */
-package com.l2scoria.gameserver.handler.usercommandhandlers;
+package com.l2scoria.gameserver.handler.commands.impl;
 
-import com.l2scoria.gameserver.handler.IUserCommandHandler;
 import com.l2scoria.gameserver.model.L2Party;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.SystemMessageId;
@@ -27,40 +26,27 @@ import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
 /**
  * Support for /partyinfo command Added by Tempy - 28 Jul 05
  */
-public class PartyInfo implements IUserCommandHandler
+public class PartyInfo extends CommandAbst
 {
-	private static final int[] COMMAND_IDS =
+	public PartyInfo()
 	{
-		81
-	};
+		_commands = new int[]{81};
+		_isInParty = true;
+	}
 
-	/* (non-Javadoc)
-	 * @see com.l2scoria.gameserver.handler.IUserCommandHandler#useUserCommand(int, com.l2scoria.gameserver.model.L2PcInstance)
-	 */
+	@Override
 	public boolean useUserCommand(int id, L2PcInstance activeChar)
 	{
-		if(id != COMMAND_IDS[0])
-			return false;
-
-		if(!activeChar.isInParty())
+		if (!super.useUserCommand(id, activeChar))
 		{
-			SystemMessage sm = SystemMessage.sendString("You are not in a party.");
-			activeChar.sendPacket(sm);
-			sm = null;
-
 			return false;
 		}
 
 		L2Party playerParty = activeChar.getParty();
-		int memberCount = playerParty.getMemberCount();
-		int lootDistribution = playerParty.getLootDistribution();
-		String partyLeader = playerParty.getPartyMembers().get(0).getName();
-
-		playerParty = null;
 
 		activeChar.sendPacket(new SystemMessage(SystemMessageId.PARTY_INFORMATION));
 
-		switch(lootDistribution)
+		switch (playerParty.getLootDistribution())
 		{
 			case L2Party.ITEM_LOOTER:
 				activeChar.sendPacket(new SystemMessage(SystemMessageId.LOOTING_FINDERS_KEEPERS));
@@ -79,24 +65,9 @@ public class PartyInfo implements IUserCommandHandler
 				break;
 		}
 
-		SystemMessage sm = new SystemMessage(SystemMessageId.PARTY_LEADER_S1);
-		sm.addString(partyLeader);
-		activeChar.sendPacket(sm);
-		partyLeader = null;
-
-		sm = new SystemMessage(SystemMessageId.S1_S2);
-		sm.addString("Members: " + memberCount + "/9");
-		sm = null;
-
+		activeChar.sendPacket(new SystemMessage(SystemMessageId.PARTY_LEADER_S1).addString(playerParty.getPartyMembers().get(0).getName()));
+		activeChar.sendMessage("Members: " + playerParty.getMemberCount() + "/9");
 		activeChar.sendPacket(new SystemMessage(SystemMessageId.WAR_LIST));
 		return true;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.l2scoria.gameserver.handler.IUserCommandHandler#getUserCommandList()
-	 */
-	public int[] getUserCommandList()
-	{
-		return COMMAND_IDS;
 	}
 }

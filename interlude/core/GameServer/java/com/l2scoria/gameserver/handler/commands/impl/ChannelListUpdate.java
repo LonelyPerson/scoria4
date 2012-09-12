@@ -15,45 +15,35 @@
  *
  * http://www.gnu.org/copyleft/gpl.html
  */
-package com.l2scoria.gameserver.handler.usercommandhandlers;
+package com.l2scoria.gameserver.handler.commands.impl;
 
-import com.l2scoria.gameserver.handler.IUserCommandHandler;
-import com.l2scoria.gameserver.model.L2CommandChannel;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.serverpackets.ExMPCCPartyInfoUpdate;
 
 /**
  * @author chris_00 when User press the "List Update" button in CCInfo window
  */
-public class ChannelListUpdate implements IUserCommandHandler
+public class ChannelListUpdate extends CommandAbst
 {
-	private static final int[] COMMAND_IDS =
+	public ChannelListUpdate()
 	{
-		97
-	};
-
-	/* (non-Javadoc)
-	 * @see com.l2scoria.gameserver.handler.IUserCommandHandler#useUserCommand(int, com.l2scoria.gameserver.model.L2PcInstance)
-	 */
-	public boolean useUserCommand(int id, L2PcInstance activeChar)
-	{
-		if(id != COMMAND_IDS[0])
-			return false;
-
-		if(activeChar.isInParty() && activeChar.getParty().isInCommandChannel())
-		{
-			L2CommandChannel channel = activeChar.getParty().getCommandChannel();
-
-			activeChar.sendPacket(new ExMPCCPartyInfoUpdate(channel, 0));
-		}
-		return false;
+		_commands = new int[]{97};
+		_isInParty = true;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.l2scoria.gameserver.handler.IUserCommandHandler#getUserCommandList()
-	 */
-	public int[] getUserCommandList()
+	@Override
+	public boolean useUserCommand(int id, L2PcInstance activeChar)
 	{
-		return COMMAND_IDS;
+		if(!super.useUserCommand(id, activeChar))
+		{
+			return false;
+		}
+
+		if(activeChar.getParty().isInCommandChannel())
+		{
+			activeChar.sendPacket(new ExMPCCPartyInfoUpdate(activeChar.getParty().getCommandChannel(), 0));
+		}
+
+		return false;
 	}
 }

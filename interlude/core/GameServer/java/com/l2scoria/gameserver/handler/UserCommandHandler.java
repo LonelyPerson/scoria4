@@ -20,7 +20,7 @@ package com.l2scoria.gameserver.handler;
 
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.GameServer;
-import com.l2scoria.gameserver.handler.usercommandhandlers.*;
+import com.l2scoria.gameserver.handler.commands.impl.*;
 import javolution.util.FastMap;
 import org.apache.log4j.Logger;
 
@@ -37,7 +37,7 @@ public class UserCommandHandler
 
 	private static UserCommandHandler _instance;
 
-	private Map<Integer, IUserCommandHandler> _datatable;
+	private Map<Integer, com.l2scoria.gameserver.handler.commands.IUserCommandHandler> _datatable;
 
 	public static UserCommandHandler getInstance()
 	{
@@ -51,7 +51,7 @@ public class UserCommandHandler
 
 	private UserCommandHandler()
 	{
-		_datatable = new FastMap<Integer, IUserCommandHandler>();
+		_datatable = new FastMap<Integer, com.l2scoria.gameserver.handler.commands.IUserCommandHandler>();
 		registerUserCommandHandler(new Time());
 		registerUserCommandHandler(new OlympiadStat());
 		registerUserCommandHandler(new ChannelLeave());
@@ -67,7 +67,7 @@ public class UserCommandHandler
 		_log.info("UserCommandHandler: Loaded " + _datatable.size() + " handlers.");
 	}
 
-	public void registerUserCommandHandler(IUserCommandHandler handler)
+	public void registerUserCommandHandler(com.l2scoria.gameserver.handler.commands.IUserCommandHandler handler)
 	{
 		int[] ids = handler.getUserCommandList();
 
@@ -82,7 +82,7 @@ public class UserCommandHandler
 		ids = null;
 	}
 
-	public IUserCommandHandler getUserCommandHandler(int userCommand)
+	public com.l2scoria.gameserver.handler.commands.IUserCommandHandler getUserCommandHandler(int userCommand)
 	{
 		if(Config.DEBUG)
 		{

@@ -16,13 +16,12 @@
  *
  * http://www.gnu.org/copyleft/gpl.html
  */
-package com.l2scoria.gameserver.handler.usercommandhandlers;
+package com.l2scoria.gameserver.handler.commands.impl;
 
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.GameTimeController;
 import com.l2scoria.gameserver.ai.CtrlIntention;
 import com.l2scoria.gameserver.datatables.csv.MapRegionTable;
-import com.l2scoria.gameserver.handler.IUserCommandHandler;
 import com.l2scoria.gameserver.model.L2Effect;
 import com.l2scoria.gameserver.model.L2Skill;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
@@ -37,75 +36,74 @@ import com.l2scoria.gameserver.util.Broadcast;
  *
  *
  */
-public class Escape implements IUserCommandHandler
+public class Escape extends CommandAbst
 {
-	private static final int[] COMMAND_IDS =
+	public Escape()
 	{
-		52
-	};
+		_commands = new int[]{52};
+	}
 
-	/* (non-Javadoc)
-	 * @see com.l2scoria.gameserver.handler.IUserCommandHandler#useUserCommand(int, com.l2scoria.gameserver.model.L2PcInstance)
-	 */
+	@Override
 	public boolean useUserCommand(int id, L2PcInstance activeChar)
 	{
-
-		if(activeChar.isCastingNow() || activeChar.isMovementDisabled() || activeChar.isMuted() || activeChar.isAlikeDead() || activeChar.isInOlympiadMode())
+		if (!super.useUserCommand(id, activeChar))
+		{
 			return false;
+		}
+
+		if (activeChar.isCastingNow() || activeChar.isMovementDisabled() || activeChar.isMuted() || activeChar.isAlikeDead() || activeChar.isInOlympiadMode())
+		{
+			return false;
+		}
 
 		int unstuckTimer = activeChar.getAccessLevel().isGm() ? 1000 : Config.UNSTUCK_INTERVAL * 1000;
 
 		// Check to see if the player is in a festival.
-		if(activeChar.isFestivalParticipant())
+		if (activeChar.isFestivalParticipant())
 		{
 			activeChar.sendMessage("You may not use an escape command in a festival.");
 			return false;
 		}
 
-		/*if(GrandBossManager.getInstance().getZone(activeChar) != null && !activeChar.isGM())
-		{
-			activeChar.sendMessage("You may not use an escape command in Grand boss zone.");
-			return false;
-		}*/
-
 		// Check to see if player is in jail
-		if(activeChar.isInJail())
+		if (activeChar.isInJail())
 		{
 			activeChar.sendMessage("You can not escape from jail.");
 			return false;
 		}
 
-		if(activeChar.inObserverMode())
+		if (activeChar.inObserverMode())
 		{
 			return false;
 		}
-                
-                if(activeChar.isSitting()) 
-                {
-                        activeChar.sendMessage("You can not escape when you sitting.");
-			return false;
-                }
-                
-                for(L2Effect currenteffect : activeChar.getAllEffects())
-		{
-                    L2Skill effectSkill = currenteffect.getSkill();
-                    if(effectSkill.getSkillType() == L2Skill.SkillType.FEAR) {
-                        activeChar.sendMessage("You can not escape on Fear effect");
-                        return false;
-                    }
-                }
 
-		if(activeChar.getAccessLevel().isGm())
+		if (activeChar.isSitting())
+		{
+			activeChar.sendMessage("You can not escape when you sitting.");
+			return false;
+		}
+
+		for (L2Effect currenteffect : activeChar.getAllEffects())
+		{
+			L2Skill effectSkill = currenteffect.getSkill();
+			if (effectSkill.getSkillType() == L2Skill.SkillType.FEAR)
+			{
+				activeChar.sendMessage("You can not escape on Fear effect");
+				return false;
+			}
+		}
+
+		if (activeChar.getAccessLevel().isGm())
 		{
 			activeChar.sendMessage("You use Fast Escape: 1 second.");
 		}
-		else if(Config.UNSTUCK_INTERVAL > 120)
+		else if (Config.UNSTUCK_INTERVAL > 120)
 		{
-			activeChar.sendMessage("You use Escape: " + unstuckTimer/60000 + " minutes.");
+			activeChar.sendMessage("You use Escape: " + unstuckTimer / 60000 + " minutes.");
 		}
 		else
 		{
-			activeChar.sendMessage("You use Escape: " + unstuckTimer/1000 + " seconds.");
+			activeChar.sendMessage("You use Escape: " + unstuckTimer / 1000 + " seconds.");
 		}
 
 		activeChar.getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE);
@@ -117,15 +115,10 @@ public class Escape implements IUserCommandHandler
 		Broadcast.toSelfAndKnownPlayersInRadius(activeChar, msk, 810000/*900*/);
 		SetupGauge sg = new SetupGauge(0, unstuckTimer);
 		activeChar.sendPacket(sg);
-		msk = null;
-		sg = null;
-		//End SoE Animation section
-		EscapeFinalizer ef = new EscapeFinalizer(activeChar);
-		// continue execution later
-		activeChar.setSkillCast(ThreadPoolManager.getInstance().scheduleGeneral(ef, unstuckTimer));
-		activeChar.setSkillCastEndTime(10 + GameTimeController.getGameTicks() + unstuckTimer / GameTimeController.MILLIS_IN_TICK);
 
-		ef = null;
+		// continue execution later
+		activeChar.setSkillCast(ThreadPoolManager.getInstance().scheduleGeneral(new EscapeFinalizer(activeChar), unstuckTimer));
+		activeChar.setSkillCastEndTime(10 + GameTimeController.getGameTicks() + unstuckTimer / GameTimeController.MILLIS_IN_TICK);
 
 		return true;
 	}
@@ -141,8 +134,10 @@ public class Escape implements IUserCommandHandler
 
 		public void run()
 		{
-			if(_activeChar.isDead())
+			if (_activeChar.isDead())
+			{
 				return;
+			}
 
 			_activeChar.setIsIn7sDungeon(false);
 			_activeChar.enableAllSkills();
@@ -151,21 +146,13 @@ public class Escape implements IUserCommandHandler
 			{
 				_activeChar.teleToLocation(MapRegionTable.TeleportWhereType.Town);
 			}
-			catch(Throwable e)
+			catch (Throwable e)
 			{
-				if(Config.DEBUG)
+				if (Config.DEBUG)
 				{
 					e.printStackTrace();
 				}
 			}
 		}
-	}
-
-	/* (non-Javadoc)
-	 * @see com.l2scoria.gameserver.handler.IUserCommandHandler#getUserCommandList()
-	 */
-	public int[] getUserCommandList()
-	{
-		return COMMAND_IDS;
 	}
 }

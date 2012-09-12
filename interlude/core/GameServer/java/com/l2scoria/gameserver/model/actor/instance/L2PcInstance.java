@@ -9758,8 +9758,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		_mountType = mountType;
 
 		// Send a Server->Client packet InventoryUpdate to the L2PcInstance in order to update speed
-		UserInfo ui = new UserInfo(this);
-		sendPacket(ui);
+		sendPacket(new UserInfo(this));
 		//ui = null;
 		return true;
 	}

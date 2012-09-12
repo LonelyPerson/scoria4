@@ -17,39 +17,37 @@
  * http://www.gnu.org/copyleft/gpl.html
  */
 
-package com.l2scoria.gameserver.handler.usercommandhandlers;
+package com.l2scoria.gameserver.handler.commands.impl;
 
-import java.text.SimpleDateFormat;
-
-import javolution.text.TextBuilder;
-
-import com.l2scoria.gameserver.handler.IUserCommandHandler;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.serverpackets.NpcHtmlMessage;
+import javolution.text.TextBuilder;
+
+import java.text.SimpleDateFormat;
 
 /**
  * Support for clan penalty user command.
  * 
  * @author Tempy
  */
-public class ClanPenalty implements IUserCommandHandler
+public class ClanPenalty extends CommandAbst
 {
-	private static final int[] COMMAND_IDS =
+	public ClanPenalty()
 	{
-		100
-	};
+		_commands = new int[]{100};
+	}
 
-	/* (non-Javadoc)
-	 * @see com.l2scoria.gameserver.handler.IUserCommandHandler#useUserCommand(int, com.l2scoria.gameserver.model.L2PcInstance)
-	 */
+	@Override
 	public boolean useUserCommand(int id, L2PcInstance activeChar)
 	{
-		if(id != COMMAND_IDS[0])
+		if(!super.useUserCommand(id, activeChar))
+		{
 			return false;
+		}
 
 		boolean penalty = false;
 
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
 		TextBuilder htmlContent = new TextBuilder("<html><body>");
 
 		htmlContent.append("<center><table width=270 border=0 bgcolor=111111>");
@@ -60,23 +58,26 @@ public class ClanPenalty implements IUserCommandHandler
 		if(activeChar.getClanJoinExpiryTime() > System.currentTimeMillis())
 		{
 			htmlContent.append("<td width=170>Unable to join a clan.</td>");
-			htmlContent.append("<td width=100 align=center>" + format.format(activeChar.getClanJoinExpiryTime()) + "</td>");
+			htmlContent.append("<td width=100 align=center>").append(FormatHolder.format.format(activeChar.getClanJoinExpiryTime())).append("</td>");
 			penalty = true;
 		}
+
 		if(activeChar.getClanCreateExpiryTime() > System.currentTimeMillis())
 		{
 			htmlContent.append("<td width=170>Unable to create a clan.</td>");
-			htmlContent.append("<td width=100 align=center>" + format.format(activeChar.getClanCreateExpiryTime()) + "</td>");
+			htmlContent.append("<td width=100 align=center>").append(FormatHolder.format.format(activeChar.getClanCreateExpiryTime())).append("</td>");
 			penalty = true;
 		}
+
 		if(activeChar.getClan() != null && activeChar.getClan().getCharPenaltyExpiryTime() > System.currentTimeMillis())
 		{
 			htmlContent.append("<td width=170>Unable to invite a clan member.</td>");
 			htmlContent.append("<td width=100 align=center>");
-			htmlContent.append(format.format(activeChar.getClan().getCharPenaltyExpiryTime()));
+			htmlContent.append(FormatHolder.format.format(activeChar.getClan().getCharPenaltyExpiryTime()));
 			htmlContent.append("</td>");
 			penalty = true;
 		}
+
 		if(!penalty)
 		{
 			htmlContent.append("<td width=170>No current penalties in effect.</td>");
@@ -89,17 +90,11 @@ public class ClanPenalty implements IUserCommandHandler
 		NpcHtmlMessage penaltyHtml = new NpcHtmlMessage(0);
 		penaltyHtml.setHtml(htmlContent.toString());
 		activeChar.sendPacket(penaltyHtml);
-
-		penaltyHtml = null;
-		htmlContent = null;
 		return true;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.l2scoria.gameserver.handler.IUserCommandHandler#getUserCommandList()
-	 */
-	public int[] getUserCommandList()
+	private static class FormatHolder
 	{
-		return COMMAND_IDS;
+		protected static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 	}
 }

@@ -731,7 +731,7 @@ public class L2Party
 					expReward = (long)(xpReward * ((L2PcInstance) member).getXpRate());
 
 				// The L2SummonInstance penalty
-				if(member.getPet().isSummonInstance)
+				if(member.getPet() != null && member.getPet().isSummonInstance)
 				{
 					summon = (L2SummonInstance) member.getPet();
 					penalty = summon.getExpPenalty();
@@ -769,9 +769,6 @@ public class L2Party
 				}
 			}
 		}
-
-		summon = null;
-		validMembers = null;
 	}
 
 	/**

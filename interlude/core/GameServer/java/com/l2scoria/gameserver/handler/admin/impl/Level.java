@@ -35,13 +35,11 @@ public class Level extends AdminAbst
 			val = st.nextToken();
 		}
 
-		st = null;
-
 		if(actualCommand.equalsIgnoreCase("admin_add_level"))
 		{
 			try
 			{
-				if(targetChar.isPlayable)
+				if(targetChar != null && targetChar.isPlayable)
 				{
 					((L2PlayableInstance) targetChar).getStat().addLevel(Byte.parseByte(val));
 				}

@@ -4,7 +4,6 @@ import com.l2scoria.Config;
 import com.l2scoria.gameserver.geodata.PathFindBuffers.GeoNode;
 import com.l2scoria.gameserver.model.L2Object;
 import com.l2scoria.gameserver.model.Location;
-import com.l2scoria.gameserver.model.actor.instance.L2PlayableInstance;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +60,7 @@ public class PathFind
 
 			//статистика
 			buff.totalUses++;
-			if(obj.isPlayable)
+			if(obj != null && obj.isPlayable)
 				buff.playableUses++;
 
 			findPath();

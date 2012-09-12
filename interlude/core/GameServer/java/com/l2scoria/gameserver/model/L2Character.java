@@ -7307,7 +7307,7 @@ public abstract class L2Character extends L2Object
 			}
 		}
 
-		if(skill.isOffensive() && !(skill.getSkillType() == SkillType.UNLOCK) && !(skill.getSkillType() == SkillType.DELUXE_KEY_UNLOCK))
+		if(skill != null && skill.isOffensive() && !(skill.getSkillType() == SkillType.UNLOCK) && !(skill.getSkillType() == SkillType.DELUXE_KEY_UNLOCK))
 		{
 			getAI().clientStartAutoAttack();
 		}
@@ -7347,6 +7347,11 @@ public abstract class L2Character extends L2Object
 	// Quest event ON_SPELL_FNISHED
 	private void notifyQuestEventSkillFinished(L2Skill skill, L2Object target)
 	{
+		if(target == null)
+		{
+			return;
+		}
+
 		if(this.isNpc)
 		{
 			try

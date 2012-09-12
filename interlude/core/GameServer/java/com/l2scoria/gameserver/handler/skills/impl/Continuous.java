@@ -85,7 +85,7 @@ public class Continuous extends SkillAbst
 		{
 			target = (L2Character) target2;
 
-			if (target.isPlayer && activeChar.isPlayable && skill.isOffensive())
+			if (target != null && target.isPlayer && activeChar != null && activeChar.isPlayable && skill.isOffensive())
 			{
 				L2PcInstance _char = (activeChar.isPlayer) ? (L2PcInstance) activeChar : ((L2Summon) activeChar).getOwner();
 				L2PcInstance _attacked = (L2PcInstance) target;

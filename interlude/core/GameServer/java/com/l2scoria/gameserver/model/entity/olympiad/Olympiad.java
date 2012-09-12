@@ -244,8 +244,6 @@ public class Olympiad
 			}
 			rset.close();
 			statement.close();
-			rset = null;
-			statement = null;
 		}
 		catch(Exception e)
 		{
@@ -253,7 +251,6 @@ public class Olympiad
 		}
 		finally {
 			try { con.close(); } catch(Exception e) { }
-			con = null;
 		}
 
 		synchronized (this)
@@ -954,8 +951,7 @@ public class Olympiad
 	{
 		if(OlympiadManager.getInstance().getOlympiadInstance(Id) == null)
 			return null;
-		L2PcInstance[] players = OlympiadManager.getInstance().getOlympiadInstance(Id).getPlayers();
-		return players;
+		return OlympiadManager.getInstance().getOlympiadInstance(Id).getPlayers();
 	}
 
 	public int getCurrentCycle()
@@ -1128,7 +1124,6 @@ public class Olympiad
 				{
 					StatsSet nobleInfo = _nobles.get(nobleId);
 
-					int charId = nobleId;
 					int classId = nobleInfo.getInteger(CLASS_ID);
 					String charName = nobleInfo.getString(CHAR_NAME);
 					int points = nobleInfo.getInteger(POINTS);
@@ -1139,7 +1134,7 @@ public class Olympiad
 					if(toSave)
 					{
 						statement = con.prepareStatement(OLYMPIAD_SAVE_NOBLES);
-						statement.setInt(1, charId);
+						statement.setInt(1, nobleId);
 						statement.setInt(2, classId);
 						statement.setString(3, charName);
 						statement.setInt(4, points);
@@ -1160,7 +1155,7 @@ public class Olympiad
 						statement.setInt(1, points);
 						statement.setInt(2, compDone);
 						statement.setInt(3, compWon);
-						statement.setInt(4, charId);
+						statement.setInt(4, nobleId);
 						statement.execute();
 						statement.close();
 					}
@@ -1178,7 +1173,6 @@ public class Olympiad
 		finally
 		{
 			try { con.close(); } catch(Exception e) { }
-			con = null;
 		}
 	}
 
@@ -1225,7 +1219,6 @@ public class Olympiad
 		finally
 		{
 			try { con.close(); } catch(Exception e) { }
-			con = null;
 		}
 
 	}
@@ -1264,7 +1257,6 @@ public class Olympiad
 		finally
 		{
 			try { con.close(); } catch(Exception e) { }
-			con = null;
 		}
 
 		return names;
@@ -1355,9 +1347,8 @@ public class Olympiad
 		StatsSet noble = _nobles.get(objId);
 		if(noble == null)
 			return 0;
-		int points = noble.getInteger(POINTS);
 
-		return points;
+		return noble.getInteger(POINTS);
 	}
 
 	public int getCompetitionDone(int objId)
@@ -1368,9 +1359,8 @@ public class Olympiad
 		StatsSet noble = _nobles.get(objId);
 		if(noble == null)
 			return 0;
-		int points = noble.getInteger(COMP_DONE);
 
-		return points;
+		return noble.getInteger(COMP_DONE);
 	}
 
 	public int getCompetitionWon(int objId)
@@ -1381,9 +1371,13 @@ public class Olympiad
 		StatsSet noble = _nobles.get(objId);
 		if (noble == null)
 			return 0;
-		int points = noble.getInteger(COMP_WON);
 
-		return points;
+		return noble.getInteger(COMP_WON);
+	}
+
+	public int getCompetitionLost(int objId)
+	{
+		return getCompetitionDone(objId) - getCompetitionWon(objId);
 	}
 
 	protected void deleteNobles()
@@ -1404,7 +1398,6 @@ public class Olympiad
 		finally
 		{
 			try { con.close(); } catch(Exception e) { }
-			con = null;
 		}
 
 		_nobles.clear();
@@ -1429,7 +1422,7 @@ public class Olympiad
 
 	public void logoutPlayer(L2PcInstance player)
 	{
-		_classBasedRegisters.remove(Integer.valueOf(player.getClassId().getId()));
+		_classBasedRegisters.remove(player.getClassId().getId());
 		_nonClassBasedRegisters.remove(player);
 	}
 
@@ -1446,11 +1439,11 @@ public class Olympiad
 			if (matches != null && matches.containsKey(i))
 			{
 				String[] elem = matches.get(i).split(" ");
-				replyMSG.append("<tr><td fixwidth=30><a action=\"bypass -h OlympiadArenaChange " + i + "\">" + i + "</a></td><td fixwidth=60>" + elem[0] + "</td><td>" + elem[1] + "&nbsp;" + elem[2] + "</td></tr>");
+				replyMSG.append("<tr><td fixwidth=30><a action=\"bypass -h OlympiadArenaChange ").append(i).append("\">").append(i).append("</a></td><td fixwidth=60>").append(elem[0]).append("</td><td>").append(elem[1]).append("&nbsp;").append(elem[2]).append("</td></tr>");
 			}
 			else
 			{
-				replyMSG.append("<tr><td fixwidth=30><a action=\"bypass -h OlympiadArenaChange " + i + "\">" + i + "</a></td><td fixwidth=60>&$906;</td><td>&nbsp;</td></tr>");
+				replyMSG.append("<tr><td fixwidth=30><a action=\"bypass -h OlympiadArenaChange ").append(i).append("\">").append(i).append("</a></td><td fixwidth=60>&$906;</td><td>&nbsp;</td></tr>");
 			}
 		}
 

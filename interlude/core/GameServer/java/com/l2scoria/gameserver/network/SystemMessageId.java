@@ -4062,9 +4062,10 @@ public enum SystemMessageId
 
 	/**
 	 * ID: 1673<br>
-	 * TODO: Correct this message Message: A manor cannot be set up between 6 a.m. and 8 p.m.
+	 * Message: Your current record for this Grand Olympiad is $s1 match(es), $s2 win(s) and $s3 defeat(s). You have earned $s4 Olympiad Point(s).
 	 */
-	THE_PRESENT_RECORD_DURING_THE_CURRENT_OLYMPIAD_SESSION_IS_S1_WINS_S2_DEFEATS_YOU_HAVE_EARNED_S3_OLYMPIAD_POINTS(1673),
+	THE_PRESENT_RECORD_DURING_THE_CURRENT_OLYMPIAD_SESSION_IS_S1_MATCHES_PLAYED_S2_WINS_S3_DEFEATS_YOU_HAVE_EARNED_S4_OLYMPIAD_POINTS(1673),
+	THIS_COMMAND_CAN_ONLY_BE_USED_BY_A_NOBLESSE(1674),
 
 	/**
 	 * ID: 1675<br>

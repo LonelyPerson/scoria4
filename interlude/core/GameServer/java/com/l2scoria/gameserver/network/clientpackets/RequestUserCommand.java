@@ -18,7 +18,7 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import com.l2scoria.gameserver.handler.IUserCommandHandler;
+import com.l2scoria.gameserver.handler.commands.IUserCommandHandler;
 import com.l2scoria.gameserver.handler.UserCommandHandler;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.SystemMessageId;
@@ -57,7 +57,6 @@ public class RequestUserCommand extends L2GameClientPacket
 			SystemMessage sm = new SystemMessage(SystemMessageId.S1_S2);
 			sm.addString("user commandID " + _command + " not implemented yet");
 			player.sendPacket(sm);
-			sm = null;
 		}
 		else
 		{

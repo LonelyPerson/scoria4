@@ -17,10 +17,9 @@
  * http://www.gnu.org/copyleft/gpl.html
  */
 
-package com.l2scoria.gameserver.handler.usercommandhandlers;
+package com.l2scoria.gameserver.handler.commands.impl;
 
 import com.l2scoria.gameserver.datatables.SkillTable;
-import com.l2scoria.gameserver.handler.IUserCommandHandler;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.serverpackets.Ride;
 import com.l2scoria.gameserver.util.Broadcast;
@@ -30,20 +29,20 @@ import com.l2scoria.gameserver.util.Broadcast;
  * 
  * @author Micht
  */
-public class DisMount implements IUserCommandHandler
+public class DisMount extends CommandAbst
 {
-	private static final int[] COMMAND_IDS =
+	public DisMount()
 	{
-		62
-	};
+		_commands = new int[]{62};
+	}
 
-	/* (non-Javadoc)
-	 * @see com.l2scoria.gameserver.handler.IUserCommandHandler#useUserCommand(int, com.l2scoria.gameserver.model.L2PcInstance)
-	 */
+	@Override
 	public synchronized boolean useUserCommand(int id, L2PcInstance activeChar)
 	{
-		if(id != COMMAND_IDS[0])
+		if(!super.useUserCommand(id, activeChar))
+		{
 			return false;
+		}
 
 		if(activeChar.isRentedPet())
 		{
@@ -58,22 +57,11 @@ public class DisMount implements IUserCommandHandler
 					activeChar.removeSkill(SkillTable.getInstance().getInfo(4289, 1));
 				}
 
-				Ride dismount = new Ride(activeChar.getObjectId(), Ride.ACTION_DISMOUNT, 0);
-				Broadcast.toSelfAndKnownPlayersInRadius(activeChar, dismount, 810000/*900*/);
+				Broadcast.toSelfAndKnownPlayersInRadius(activeChar, new Ride(activeChar.getObjectId(), Ride.ACTION_DISMOUNT, 0), 810000/*900*/);
 				activeChar.setMountObjectID(0);
-
-				dismount = null;
 			}
 		}
 
 		return true;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.l2scoria.gameserver.handler.IUserCommandHandler#getUserCommandList()
-	 */
-	public int[] getUserCommandList()
-	{
-		return COMMAND_IDS;
 	}
 }

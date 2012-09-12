@@ -16,10 +16,9 @@
  *
  * http://www.gnu.org/copyleft/gpl.html
  */
-package com.l2scoria.gameserver.handler.usercommandhandlers;
+package com.l2scoria.gameserver.handler.commands.impl;
 
 import com.l2scoria.gameserver.datatables.csv.MapRegionTable;
-import com.l2scoria.gameserver.handler.IUserCommandHandler;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
@@ -28,22 +27,24 @@ import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
  *
  *
  */
-public class Loc implements IUserCommandHandler
+public class Loc extends CommandAbst
 {
-	private static final int[] COMMAND_IDS =
+	public Loc()
 	{
-		0
-	};
+		_commands = new int[]{0};
+	}
 
-	/* (non-Javadoc)
-	 * @see com.l2scoria.gameserver.handler.IUserCommandHandler#useUserCommand(int, com.l2scoria.gameserver.model.L2PcInstance)
-	 */
+	@Override
 	public boolean useUserCommand(int id, L2PcInstance activeChar)
 	{
-		int _nearestTown = MapRegionTable.getInstance().getClosestTownNumber(activeChar);
+		if(!super.useUserCommand(id, activeChar))
+		{
+			return false;
+		}
+
 		SystemMessageId msg;
 
-		switch(_nearestTown)
+		switch(MapRegionTable.getInstance().getClosestTownNumber(activeChar))
 		{
 			case 0:
 				msg = SystemMessageId.LOC_TI_S1_S2_S3;
@@ -107,21 +108,11 @@ public class Loc implements IUserCommandHandler
 		}
 
 		SystemMessage sm = new SystemMessage(msg);
-		msg = null;
 		sm.addNumber(activeChar.getX());
 		sm.addNumber(activeChar.getY());
 		sm.addNumber(activeChar.getZ());
 		activeChar.sendPacket(sm);
-		sm = null;
 
 		return true;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.l2scoria.gameserver.handler.IUserCommandHandler#getUserCommandList()
-	 */
-	public int[] getUserCommandList()
-	{
-		return COMMAND_IDS;
 	}
 }

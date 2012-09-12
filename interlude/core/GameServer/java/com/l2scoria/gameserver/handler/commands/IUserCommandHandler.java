@@ -16,7 +16,7 @@
  *
  * http://www.gnu.org/copyleft/gpl.html
  */
-package com.l2scoria.gameserver.handler;
+package com.l2scoria.gameserver.handler.commands;
 
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 
