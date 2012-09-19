@@ -685,6 +685,9 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 	private boolean _isTradeOff = false;
 
 	private long _offlineShopStart = 0; 
+        
+        /** last teleport time. Fix dupe extract items on teleporting spam packets **/
+        public long _lastbyppasteleportexcute = 0;
 
 	/** Herbs Task Time **/
 	private int _herbstask = 0;
@@ -835,6 +838,16 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 	{
 		return _accountName;
 	}
+        
+        public long getLastTpTimer() 
+        {
+            return _lastbyppasteleportexcute;
+        }
+        
+        public void setCurrentTpTimer()
+        {
+            _lastbyppasteleportexcute = System.currentTimeMillis();
+        }
 
 	public Map<Integer, String> getAccountChars()
 	{
@@ -1979,6 +1992,10 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 
 		return _hwid;
 	}
+        
+        public String getHWid() {
+            return this.getClient().getHWId();
+        }
 
 	/**
 	 * Return the Karma of the L2PcInstance.<BR>
@@ -13070,6 +13087,14 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 	{
 		return _lure;
 	}
+        
+        public boolean InventoryMoreLimit()
+        {
+            if(this.getInventory().getSize() > this.GetInventoryLimit() * 0.8)
+                return true;
+            else
+                return false;
+        }
 
 	public int GetInventoryLimit()
 	{

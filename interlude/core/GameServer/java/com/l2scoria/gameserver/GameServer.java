@@ -86,6 +86,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.Calendar;
+import ru.catssoftware.protection.CatsGuard;
 
 /**
  * 
@@ -158,7 +159,8 @@ public class GameServer
 			HtmCache.getInstance();
 			CrestCache.getInstance();
 			L2ScriptEngineManager.getInstance();
-			nProtect.getInstance();
+			//nProtect.getInstance();
+                        CatsGuard.getInstance();
 
 			Util.printSection("World");
 			L2World.getInstance();
@@ -479,6 +481,8 @@ public class GameServer
 			{
 				_log.info("DynamicExtension could not be loaded and initialized" + ex);
 			}
+                        
+                        
 
 			if(Config.LAME)
 			{

@@ -3,6 +3,7 @@ package com.l2scoria.gameserver.model.entity.event.TvT;
 import com.l2scoria.gameserver.handler.IVoicedCommandHandler;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.entity.event.GameEvent;
+import com.l2scoria.gameserver.model.entity.event.Language;
 
 public class VoiceTVTEngine implements IVoicedCommandHandler
 {
@@ -24,7 +25,7 @@ public class VoiceTVTEngine implements IVoicedCommandHandler
 		{
 			if (TvT.getInstance().register(activeChar))
 			{
-				activeChar.sendMessage("Вы зарегистрированы на эвенте TvT.");
+				activeChar.sendMessage(Language.LANG_PLAYER_REGISTER);
 			}
 			return true;
 		}

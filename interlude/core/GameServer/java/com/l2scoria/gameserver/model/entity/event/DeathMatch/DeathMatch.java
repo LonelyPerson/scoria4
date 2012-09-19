@@ -333,7 +333,7 @@ public class DeathMatch extends GameEvent
 
 		if (isParticipant(player))
 		{
-			player.sendMessage(Language.ALWAYS_REGISTER);
+			player.sendMessage(Language.LANG_ALWAYS_REGISTER);
 			return false;
 		}
 
@@ -392,7 +392,7 @@ public class DeathMatch extends GameEvent
 		_players.clear();
 
 		AnnounceToPlayers(true, getName() + ": " + Language.LANG_ANNOUNCE_1);
-		AnnounceToPlayers(true, getName() + ": " + Language.LANG_ANNOUNCE_2 + _minLvl + "-" + _maxLvl + ".");
+		AnnounceToPlayers(true, getName() + ": " + Language.LANG_ANNOUNCE_2 + ": " + _minLvl + "-" + _maxLvl + ".");
 		AnnounceToPlayers(true, getName() + ": " + Language.LANG_ANNOUNCE_3);
 
 		for (int i = 0; i < _rewardId.length; i++)
@@ -526,7 +526,7 @@ public class DeathMatch extends GameEvent
 			{
 				if (_remaining >= 60000)
 				{
-					AnnounceToPlayers(true, getName() + ": " + Language.LANG_ANNOUNCE_5 + _remaining / 60000 + " min");
+					AnnounceToPlayers(true, getName() + ": " + Language.LANG_ANNOUNCE_5 + " " + _remaining / 60000 + " min");
 				}
 				else if (!showed)
 				{

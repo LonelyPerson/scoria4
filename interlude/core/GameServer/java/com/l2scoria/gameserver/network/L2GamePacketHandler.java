@@ -49,8 +49,11 @@ public final class L2GamePacketHandler implements IPacketHandler<L2GameClient>, 
 	// implementation
 	public ReceivablePacket<L2GameClient> handlePacket(ByteBuffer buf, L2GameClient client)
 	{
-		int opcode = buf.get() & 0xFF;
-		opcode = OpcodeReader.readOpcode(client, buf, opcode);
+		int opcode = 0;
+		if(client._reader!=null)
+			opcode = client._reader.read(buf);
+		else
+			opcode = buf.get() & 0xff;
 		ReceivablePacket<L2GameClient> msg = null;
 		GameClientState state = client.getState();
 
@@ -65,6 +68,10 @@ public final class L2GamePacketHandler implements IPacketHandler<L2GameClient>, 
 				{
 					msg = new AuthLogin();
 				}
+                                else if(opcode == 0xCA)
+                                {
+					msg = new GameGuardReply();
+                                }
 				else
 				{
 					printDebug(opcode, buf, state, client);
@@ -93,6 +100,9 @@ public final class L2GamePacketHandler implements IPacketHandler<L2GameClient>, 
 						break;
 					case 0x68:
 						msg = new RequestPledgeCrest();
+						break;
+                                        case 0xCA:
+						msg = new GameGuardReply();
 						break;
 
 					// single packet

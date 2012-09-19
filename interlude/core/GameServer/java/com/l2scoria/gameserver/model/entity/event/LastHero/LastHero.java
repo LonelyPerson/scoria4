@@ -354,7 +354,7 @@ public class LastHero extends GameEvent
 		_players.clear();
 
 		AnnounceToPlayers(true, "LastHero: " + Language.LANG_ANNOUNCE_1);
-		AnnounceToPlayers(true, "LastHero: " + Language.LANG_ANNOUNCE_2 + _minLvl + "-" + _maxLvl + ".");
+		AnnounceToPlayers(true, "LastHero: " + Language.LANG_ANNOUNCE_2 + ": " + _minLvl + "-" + _maxLvl + ".");
 		AnnounceToPlayers(true, " - " + _superPrizeCount + " " + ItemTable.getInstance().getTemplate(_superPrizeId).getName());
 		AnnounceToPlayers(true, "LastHero: " +Language.LANG_ANNOUNCE_3.replace("{$time}", String.valueOf(_regTime)));
 
@@ -490,7 +490,7 @@ public class LastHero extends GameEvent
 				{
 					if (announces == 0)
 					{
-						AnnounceToPlayers(true, "LastHero: " + Language.LANG_ANNOUNCE_5 + _remaining / 60000 + " min");
+						AnnounceToPlayers(true, "LastHero: " + Language.LANG_ANNOUNCE_5 + " " + _remaining / 60000 + " min");
 						announces++;
 					}
 				}

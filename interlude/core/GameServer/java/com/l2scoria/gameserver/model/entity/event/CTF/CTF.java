@@ -424,7 +424,7 @@ public class CTF extends GameEvent
 
 		_remain = _joinTime * 60000 / 2;
 		AnnounceToPlayers(true, getName() + ": " + Language.LANG_ANNOUNCE_1);
-		AnnounceToPlayers(true, getName() + ": " + Language.LANG_ANNOUNCE_2 + _minlvl + "-" + _maxlvl + ".");
+		AnnounceToPlayers(true, getName() + ": " + Language.LANG_ANNOUNCE_2 + ": " + _minlvl + "-" + _maxlvl + ".");
 		AnnounceToPlayers(true, getName() + ": " + Language.LANG_ANNOUNCE_3);
 
 		for (int i = 0; i < _rewardId.length; i++)
@@ -685,7 +685,7 @@ public class CTF extends GameEvent
 				{
 					if (announces == 0)
 					{
-						AnnounceToPlayers(true, getName() + ": " + Language.LANG_ANNOUNCE_5 + _remain / 60000 + " min");
+						AnnounceToPlayers(true, getName() + ": " + Language.LANG_ANNOUNCE_5 + " " + _remain / 60000 + " min");
 						announces++;
 					}
 				}

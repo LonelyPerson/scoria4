@@ -74,6 +74,11 @@ public final class RequestGiveItemToPet extends L2GameClientPacket
 			Util.handleIllegalPlayerAction(player, "Player " + player.getName() + " Tried To Use Enchant Exploit! Ban This Player", Config.DEFAULT_PUNISH);
 			return;
 		}
+                
+                if(player.InventoryMoreLimit())
+                {
+                    return;
+                }
 
 		// Exploit Fix for Hero weapons Uses pet Inventory to buy New One. 
 		// [L2Scoria] 

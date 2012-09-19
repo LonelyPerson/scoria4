@@ -307,7 +307,7 @@ public class TvT extends GameEvent
 		_elapsed = (_regTime * 60000) / 2;
 
 		AnnounceToPlayers(true, getName() + ": " + Language.LANG_ANNOUNCE_1);
-		AnnounceToPlayers(true, getName() + ": " + Language.LANG_ANNOUNCE_2 + " " + _minlvl + "-" + _maxlvl + ".");
+		AnnounceToPlayers(true, getName() + ": " + Language.LANG_ANNOUNCE_2 + ": " + _minlvl + "-" + _maxlvl + ".");
 		AnnounceToPlayers(true, getName() + ": " + Language.LANG_ANNOUNCE_3);
 
 		for (int i = 0; i < _rewardId.length; i++)

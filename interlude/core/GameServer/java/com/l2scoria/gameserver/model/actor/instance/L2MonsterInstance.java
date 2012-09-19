@@ -228,7 +228,7 @@ public class L2MonsterInstance extends L2Attackable
 			_returnHomeTask.cancel(true);
 		}
 
-		if(Config.ALT_MINION_REMOVE || this.isRaid)
+		if(Config.ALT_MINION_REMOVE && this.isRaid)
 		{
 			deleteSpawnedMinions(false);
 		}

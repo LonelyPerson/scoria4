@@ -72,6 +72,7 @@ public final class L2TeleporterInstance extends L2FolkInstance
 
 		if(actualCommand.equalsIgnoreCase("goto"))
 		{
+                        player.setCurrentTpTimer();
 			int npcId = getTemplate().npcId;
 
 			switch(npcId)

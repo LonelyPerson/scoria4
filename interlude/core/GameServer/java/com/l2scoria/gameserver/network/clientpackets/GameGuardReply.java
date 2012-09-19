@@ -17,40 +17,40 @@
  */
 package com.l2scoria.gameserver.network.clientpackets;
 
-import com.l2scoria.crypt.nProtect;
-import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
+import ru.catssoftware.protection.CatsGuard;
 
 /**
  * @author zabbix Lets drink to code! Unknown Packet:ca 0000: 45 00 01 00 1e 37 a2 f5 00 00 00 00 00 00 00 00
  *         E....7..........
  */
 
-// By Azagthtot РќР°С‡РЅРµРј СЂРµР°Р»РёР·Р°С†РёСЋ РєР»РёРµРЅС‚СЃРєРѕР№ Р·Р°С‰РёС‚С‹.... С…РµС…
-
 public class GameGuardReply extends L2GameClientPacket
 {
-	private static final String _C__CA_GAMEGUARDREPLY = "[C] CA GameGuardReply";
-	//private static final Logger _log = Logger.getLogger(GameGuardReply.class.getName());
-	private int[] _reply = new int[4];
+	private static final String	_C__CA_GAMEGUARDREPLY	= "[C] CA GameGuardReply";
+
+
+	private int[]				_reply					= new int[4];
 
 	@Override
 	protected void readImpl()
 	{
-		_reply[0] = readD(); // 32 Р±РёС‚Р° РґР»СЏ РєР»СЋС‡Р° СѓРЅРёРєР°Р»СЊРЅРѕСЃС‚Рё СЃРµСЂРІРµСЂР° РЅР°Рј С…РІР°С‚РёС‚
-		_reply[1] = readD(); // РЎРѕР»РµРЅРёРµ... Р·Р°Р±РёРІР°РµРј СЌС‚РѕС‚ int С‡РµРј СѓРіРѕРґРЅРѕ, СЃРєСЂС‹РІР°РµРј РїР°РєРµС‚С‹
-		_reply[2] = readD(); // РЈРќРёРєР°Р»СЊРЅС‹Р№ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РєР»РёРµРЅС‚Р° 
-		_reply[3] = readD(); // РџРѕСЃРѕР»РµРЅРѕРµ РїРѕР»Рµ, РЅРѕ 4-С‹Р№ Р±РёС‚ РІ 1 РѕР·РЅР°С‡РµС‚ С‡С‚Рѕ Р·Р°РїСѓС‰РµРЅ РЅРµС…РѕСЂРѕС€РёРє Рё РєР»РёРµРЅС‚Р° РЅР°РґРѕ РєР°Р·РЅРёС‚СЊ
+		if(CatsGuard.getInstance().isEnabled() && getClient().getHWId()==null) {
+			_reply[0] = readD();
+			_reply[1] = readD();
+			_reply[2] = readD();
+			_reply[3] = readD();
+		} else {
+			byte [] b = new byte[getByteBuffer().remaining()];
+			readB(b);
+		}
+			
 	}
 
 	@Override
 	protected void runImpl()
 	{
-		L2PcInstance activeChar = getClient().getActiveChar();
-		if(activeChar == null)
-			return;
-		if(!nProtect.getInstance().checkGameGuardRepy(getClient(), _reply))
-			return;
-		getClient().setGameGuardOk(true);
+		if(CatsGuard.getInstance().isEnabled()) 
+			CatsGuard.getInstance().initSession(getClient(), _reply);
 	}
 
 	@Override
@@ -58,5 +58,4 @@ public class GameGuardReply extends L2GameClientPacket
 	{
 		return _C__CA_GAMEGUARDREPLY;
 	}
-
 }

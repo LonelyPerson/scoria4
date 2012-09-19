@@ -18,34 +18,30 @@
  */
 package com.l2scoria.gameserver.network.serverpackets;
 
-import com.l2scoria.crypt.nProtect;
+import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
+import com.l2scoria.gameserver.network.L2GameClient;
 
 /**
  * @author zabbix Lets drink to code!
  */
 public class GameGuardQuery extends L2GameServerPacket
 {
-	private static final String _S__F9_GAMEGUARDQUERY = "[S] F9 GameGuardQuery";
+	private static final String			_S__F9_GAMEGUARDQUERY	= "[S] F9 GameGuardQuery";
 
-	public GameGuardQuery()
+	public static final GameGuardQuery	STATIC_PACKET			= new GameGuardQuery();
+
+	private GameGuardQuery()
 	{
-
 	}
 
 	@Override
 	public void runImpl()
-	{
-		// Lets make user as gg-unauthorized
-		// We will set him as ggOK after reply fromclient
-		// or kick
-		getClient().setGameGuardOk(false);
-	}
+	{}
 
 	@Override
 	public void writeImpl()
 	{
-		writeC(0xf9);
-		nProtect.getInstance().sendGameGuardQuery(this);
+		writeC(0xF9);
 	}
 
 	@Override

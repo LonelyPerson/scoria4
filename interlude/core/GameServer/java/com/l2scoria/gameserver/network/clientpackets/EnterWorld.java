@@ -93,8 +93,6 @@ public class EnterWorld extends L2GameClientPacket
 	@Override
 	protected void runImpl()
 	{
-		//FIXME: What the fuck comment?
-
 		L2PcInstance activeChar = getClient().getActiveChar();
 
 		if (activeChar == null)
@@ -128,8 +126,6 @@ public class EnterWorld extends L2GameClientPacket
 		}
 
 		EnterGM(activeChar);
-
-		ColorSystem(activeChar);
 
 		Quest.playerEnter(activeChar);
 		activeChar.sendPacket(new QuestList());
@@ -199,6 +195,9 @@ public class EnterWorld extends L2GameClientPacket
                 
                 // restore some data from login data, like donator status account or hwid
                 activeChar.restoreLoginCustomData();
+                
+                // color system after restore data
+                ColorSystem(activeChar);
 
 		//Expand Skill
 		ExStorageMaxCount esmc = new ExStorageMaxCount(activeChar);

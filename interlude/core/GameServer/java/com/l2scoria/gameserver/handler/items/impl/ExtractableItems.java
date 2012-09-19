@@ -52,6 +52,13 @@ public class ExtractableItems extends ItemAbst
 		{
 			return false;
 		}
+                long currMicroTime = System.currentTimeMillis();
+                L2PcInstance character = (L2PcInstance)playable;
+                if(character != null && character.getLastTpTimer() > 0 && (currMicroTime - character.getLastTpTimer()) < 5000)
+                {
+                    character.sendMessage("You can`t use exstractable item 5 second after teleporting");
+                    return false;
+                }
 
 		if (item.getCount() > 1)
 		{
