@@ -127,8 +127,9 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable
 	 */
 	private boolean autoAttackCondition(L2Character target)
 	{
-		if (target == null || !(_actor.isAttackable))
-		{
+		//if (target == null || !(_actor.isAttackable))
+		if(target == null)
+                {
 			return false;
 		}
 
@@ -154,13 +155,11 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable
 		{
 			return false;
 		}
-
 		// Check if the target isn't dead, is in the Aggro range and is at the same height
 		if (target.isAlikeDead() || !me.isInsideRadius(target, me.getAggroRange(), false, false) || Math.abs(_actor.getZ() - target.getZ()) > 300)
 		{
 			return false;
 		}
-
 		// Check if the target is a L2PcInstance
 		if (target.isPlayer)
 		{
@@ -169,7 +168,6 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable
 			{
 				return false;
 			}
-
 			// Check if the AI isn't a Raid Boss and the target isn't in silent move mode
 			if (!(me.isRaid) && target.getPlayer().isSilentMoving())
 			{
@@ -190,7 +188,6 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable
 					return false;
 				}
 			}
-
 			// check if the target is within the grace period for JUST getting up from fake death
 			if (target.getPlayer().isRecentFakeDeath())
 			{
@@ -202,7 +199,6 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable
 			{
 				return false;
 			}
-
 			if (target.isInParty() && target.getParty().isInDimensionalRift())
 			{
 				byte riftType = target.getParty().getDimensionalRift().getType();
@@ -214,7 +210,6 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable
 				}
 			}
 		}
-
 		// Check if the actor is a L2GuardInstance
 		if (_actor.isGuard)
 		{
@@ -246,7 +241,6 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable
 		else
 		{
 			//The actor is a L2MonsterInstance
-
 			// Check if the target isn't another L2NpcInstance
 			if (target.isNpc)
 			{
@@ -407,7 +401,6 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable
 	private void thinkActive()
 	{
 		L2Attackable npc = (L2Attackable) _actor;
-
 		// Update every 1s the _globalAggro counter to come close to 0
 		if (_globalAggro != 0)
 		{
@@ -497,7 +490,6 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable
 			{
 				hated = npc.getMostHated();
 			}
-
 			// Order to the L2Attackable to attack the target
 			if (hated != null)
 			{

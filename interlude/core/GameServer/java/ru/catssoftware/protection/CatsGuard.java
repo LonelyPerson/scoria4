@@ -24,7 +24,6 @@ import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.L2GameClient;
 import com.l2scoria.gameserver.model.entity.Announcements;
 import com.l2scoria.gameserver.network.serverpackets.GameGuardQuery;
-import com.l2scoria.gameserver.network.Disconnection;
 
 import org.apache.log4j.Logger;
 
@@ -82,12 +81,18 @@ public class CatsGuard {
 		@Override
 		public void checkChar(L2PcInstance cha) {
 			if(!_checkChar || cha == null)
+                        {
 				return;
+                        }
 			if(ALLOW_GM_FROM_BANNED_HWID && cha.isGM())
+                        {
 				return;
+                        }
 			if(LOG_OPTION.contains("BANNED"))
+                        {
 				_log.info("CatsGuard: Client "+cha.getClient()+" try to log with banned hwid");
-			new Disconnection(cha);
+                                cha.logout();
+                        }
 		}
 		
 	}
@@ -197,7 +202,7 @@ public class CatsGuard {
 		else if(ON_HACK_ATTEMP.equals("ban") && cl.getActiveChar()!=null)
 			playerobject.setAccountAccesslevel(-100);
 		_log.info("CatsGuard: Client "+cl+" use illegal software and will "+ON_HACK_ATTEMP+"ed. Reason: "+reason);
-		new Disconnection(playerobject);
+		playerobject.logout();
 	}
         
 	public void unban(String hwid) {
@@ -226,7 +231,6 @@ public class CatsGuard {
 	}
 	
 	public void doneSession(L2GameClient cl) {
-            _log.info("Done session for client");
 		if(!ENABLED)
 			return;
 		if(cl.getHWId()!=null) {
@@ -248,14 +252,14 @@ public class CatsGuard {
 		if(data[0]!=_SERVER_KEY) {
 			if(LOG_OPTION.contains("NOPROTECT")) 
 				_log.info("CatsGuard: Client "+cl+" try to log with no CatsGuard. CryptKeyInt " +String.valueOf(data[0]));
-			new Disconnection(cl.getActiveChar());
+			cl.getActiveChar().logout();
 			return;
 		}
 		String hwid = String.format("%x", data[3]);
 		if(cl._reader==null) {
 			if(LOG_OPTION.contains("HACK")) 
 				_log.info("CatsGuard: Client "+cl+" has no pre-authed state");
-			new Disconnection(cl.getActiveChar());
+			cl.getActiveChar().logout();
 			return;
 		}
 		if(_bannedhwid.contains(hwid)) {
@@ -270,7 +274,7 @@ public class CatsGuard {
 		if(max > 0 && ++nwindow>max) {
 			if(LOG_OPTION.contains("SESSIONS"))
 				_log.info("CatsGuard: To many sessions from hwid "+hwid);
-			new Disconnection(cl.getActiveChar());
+			cl.getActiveChar().logout();
 			return;
 		}
 		_connections.put(hwid, nwindow);

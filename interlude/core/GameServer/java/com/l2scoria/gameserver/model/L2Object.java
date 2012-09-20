@@ -92,6 +92,7 @@ public abstract class L2Object
 		{
 			isCharacter = true;
 		}
+                // wtf? who code this part? idiot? good job
 		if (this.isAttackable)
 		{
 			isAttackable = true;

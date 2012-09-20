@@ -575,7 +575,15 @@ public class ItemTable
 			item.type = L2EtcItemType.OTHER;
 			item.set.set("bodypart", L2Item.SLOT_L_HAND);
 		}
+                else if(itemType.equals("material"))
+                {
+                    item.type = L2EtcItemType.MATERIAL;
+                }
                 // why not MATERIAL, DYE here? add or no?
+                else if(itemType.equals("dye"))
+                {
+                    item.type = L2EtcItemType.OTHER;
+                }
 		else
 		{
 			_log.info("unknown etcitem type:" + itemType);
