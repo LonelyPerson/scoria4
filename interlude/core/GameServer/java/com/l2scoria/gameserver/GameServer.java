@@ -506,14 +506,6 @@ public class GameServer
 			System.exit(0);
 			Thread.dumpStack();
 		}
-		/* ****************************
-		 * ****************************
-		 * ****************************/
-
-		// maxMemory is the upper limit the jvm can use, totalMemory the size of the current allocation pool,
-		// freeMemory the unused memory in the allocation pool
-		_log.info("GameServer Started, free memory " + Memory.getFreeMemory() + " Mb of " + Memory.getTotalMemory() + " Mb");
-		_log.info("Used memory:" + Memory.getUsedMemory() + " MB");
 
 		_loginThread = LoginServerThread.getInstance();
 		_loginThread.start();
@@ -536,9 +528,8 @@ public class GameServer
 		_selectorThread.start();
 		_log.info("Maximum Numbers of Connected Players: " + Config.MAXIMUM_ONLINE_USERS);
 
-		Util.printSection("L2Scoria Version");
-		_log.info("Operating System: " + Util.getOSName() + " " + Util.getOSVersion() + " " + Util.getOSArch());
-		_log.info("Available CPUs: " + Util.getAvailableProcessors());
+		Util.printSection("SCORIA RUNTIME INFORMATION");
+		Util.printGeneralSystemInfo();
 		//Print general infos related to GS
 		_log.info("Core Revision: " + Config.SERVER_REVISION);
 		// print general infos related to DP
