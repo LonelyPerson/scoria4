@@ -14,7 +14,7 @@ SET CLASSPATH=%CLASSPATH%;./lib/jython-engine.jar
 SET CLASSPATH=%CLASSPATH%;./lib/java-engine-1.0.2.jar
 SET CLASSPATH=%CLASSPATH%;./lib/core-3.3.0.jar
 SET CLASSPATH=%CLASSPATH%;./lib/akumu.geoengine.1.2.0.7.jar
-SET CLASSPATH=%CLASSPATH%;./lib/trove-2.1.0.jar
+SET CLASSPATH=%CLASSPATH%;./lib/trove-3.0.3.jar
 SET CLASSPATH=%CLASSPATH%;./lib/ExtAPI.jar
 SET CLASSPATH=%CLASSPATH%;./lib/lameguard-1.9.5.jar
 
