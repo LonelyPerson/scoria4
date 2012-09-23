@@ -202,7 +202,11 @@ public class CatsGuard {
 		else if(ON_HACK_ATTEMP.equals("ban") && cl.getActiveChar()!=null)
 			playerobject.setAccountAccesslevel(-100);
 		_log.info("CatsGuard: Client "+cl+" use illegal software and will "+ON_HACK_ATTEMP+"ed. Reason: "+reason);
-		playerobject.logout();
+                if(playerobject != null) {
+                    try {
+                    playerobject.logout();
+                    } catch(Exception s) {}
+                }
 	}
         
 	public void unban(String hwid) {
