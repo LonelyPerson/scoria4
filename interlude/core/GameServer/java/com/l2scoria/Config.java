@@ -1975,6 +1975,7 @@ public final class Config
 	public static boolean HERO_CUSTOM_ITEMS;
 	public static boolean ALLOW_CREATE_LVL;
 	public static int CHAR_CREATE_LVL;
+        public static boolean ALLOW_PARTY_RECAL_IN_FIGHT;
 	public static String ABORT_RR;
 	public static boolean SPAWN_CHAR;
 	/** X Coordinate of the SPAWN_CHAR setting. */
@@ -2059,6 +2060,7 @@ public final class Config
 			PROTECTOR_SKILLTIME = Integer.parseInt(L2ScoriaSettings.getProperty("ProtectorSkillTime", "800"));
 			PROTECTOR_MESSAGE = L2ScoriaSettings.getProperty("ProtectorMessage", "Protector, not spawnkilling here, go read the rules !!!");
 
+                        ALLOW_PARTY_RECAL_IN_FIGHT = Boolean.parseBoolean(L2ScoriaSettings.getProperty("AllowPartyRecallInFight", "false"));
 			/** Donator color name **/
 			DONATOR_NAME_COLOR_ENABLED = Boolean.parseBoolean(L2ScoriaSettings.getProperty("DonatorNameColorEnabled", "False"));
                         DONATOR_PARTY_REWARD = Boolean.parseBoolean(L2ScoriaSettings.getProperty("DonatorPartyRewards", "False"));

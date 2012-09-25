@@ -18,6 +18,7 @@
  */
 package com.l2scoria.gameserver.handler.skills.impl;
 
+import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.csv.MapRegionTable;
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.L2Object;
@@ -114,7 +115,7 @@ public class Recall extends SkillAbst
 					continue;
 				}
 
-				if (targetChar.isRooted() || targetChar.isInCombat())
+				if (Config.ALLOW_PARTY_RECAL_IN_FIGHT && (targetChar.isRooted() || targetChar.isInCombat()))
 				{
 					SystemMessage sm = new SystemMessage(SystemMessageId.S1_IS_ENGAGED_IN_COMBAT_AND_CANNOT_BE_SUMMONED);
 					sm.addString(targetChar.getName());

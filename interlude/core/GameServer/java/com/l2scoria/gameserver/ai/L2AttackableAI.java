@@ -323,7 +323,12 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable
 				// Stop AI task and detach AI from NPC
 				if (_aiTask != null)
 				{
-					_aiTask.cancel(true);
+                                        try {
+                                            _aiTask.cancel(true);
+                                        } catch(Exception e) {
+                                            _log.error(e);
+                                        }
+                                        
 					_aiTask = null;
 				}
 

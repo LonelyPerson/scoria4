@@ -261,8 +261,8 @@ public class QueenAnt extends Quest
 				}
 				int percentage = caller.getMaxHp() * 2 / 3;
 				if(caller.getCurrentHp() < percentage) {
-				npc.setTarget(caller);
-				npc.doCast(SkillTable.getInstance().getInfo(4020, 1));
+                                    npc.setTarget(caller);
+                                    npc.doCast(SkillTable.getInstance().getInfo(4020, 1));
 				}
 				return null;
 			}
@@ -279,12 +279,14 @@ public class QueenAnt extends Quest
 			damage = 0;
 			L2Skill skill = SkillTable.getInstance().getInfo(4515, 1);
 			skill.getEffects(npc, attacker);
+                        npc.abortAttack();
+                        npc.abortCast();
 			return null;
 		}
 		if(npcId == NURSE)
 		{
 			npc.getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE, null, null);
-			//return null;
+			return null;
 		}
 		return super.onAttack(npc, attacker, damage, isPet);
 	}

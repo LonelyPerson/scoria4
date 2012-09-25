@@ -238,19 +238,7 @@ public final class L2TeleporterInstance extends L2FolkInstance
 				filename = null;
 				return;
 			}
-			else if(player.isAlikeDead())
-			{
-				return;
-			}
-			else if(!list.getIsForNoble() && (Config.ALT_GAME_FREE_TELEPORT || player.reduceAdena("Teleport", list.getPrice(), this, true)))
-			{
-				if(Config.DEBUG)
-				{
-					_log.info("Teleporting player " + player.getName() + " to new location: " + list.getLocX() + ":" + list.getLocY() + ":" + list.getLocZ());
-				}
-				player.teleToLocation(list.getLocX(), list.getLocY(), list.getLocZ(), true);
-			}
-			else if((getNpcId() == 30483 || val == 9982 || val == 9983 || val == 9984) && player.getLevel() >= Config.CRUMA_TOWER_LEVEL_RESTRICT && !player.isGM())
+                        else if((getNpcId() == 30483 || val == 9982 || val == 9983 || val == 9984) && player.getLevel() >= Config.CRUMA_TOWER_LEVEL_RESTRICT && !player.isGM())
 			{
 				// Chars level XX can't enter in Cruma Tower. Retail: level 56 and above
 				int maxlvl = Config.CRUMA_TOWER_LEVEL_RESTRICT;
@@ -263,6 +251,18 @@ public final class L2TeleporterInstance extends L2FolkInstance
 				filename = null;
 				html = null;
 				return;
+			}
+			else if(player.isAlikeDead())
+			{
+				return;
+			}
+			else if(!list.getIsForNoble() && (Config.ALT_GAME_FREE_TELEPORT || player.reduceAdena("Teleport", list.getPrice(), this, true)))
+			{
+				if(Config.DEBUG)
+				{
+					_log.info("Teleporting player " + player.getName() + " to new location: " + list.getLocX() + ":" + list.getLocY() + ":" + list.getLocZ());
+				}
+				player.teleToLocation(list.getLocX(), list.getLocY(), list.getLocZ(), true);
 			}
 			else if(list.getIsForNoble() && (Config.ALT_GAME_FREE_TELEPORT || player.destroyItemByItemId("Noble Teleport", 6651, list.getPrice(), this, true)))
 			{
