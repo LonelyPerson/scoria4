@@ -390,7 +390,12 @@ public class CTF extends GameEvent
 				Team playerTeam = _participicants.get(player.getObjectId());
 				if (playerTeam != null)
 				{
-					playerTeam.members.remove(player.getObjectId());
+                                    try {
+                                        playerTeam.members.remove(player.getObjectId());
+                                    } catch(Exception f) {
+                                        //_log.error(f);
+                                    }
+					//playerTeam.members.remove(player.getObjectId());
 				}
 				player.setInstanceId(0);
 				if (!CTF_RETURNORIGINAL)
@@ -406,6 +411,7 @@ public class CTF extends GameEvent
 				{
 					player.doRevive();
 				}
+                                player.broadcastUserInfo();
 			}
 			_participicants.remove(player.getObjectId());
 			player._event = null;

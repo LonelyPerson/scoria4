@@ -67,7 +67,7 @@ public class RequestAuthLogin extends L2LoginClientPacket
 			Integer nTry = _invalidTryes.get(cl.getIp());
 			if(nTry==null)
 				nTry = 0;
-			if(nTry>=Config.LOGIN_TRY_BEFORE_BAN) {
+			if(Config.LOGIN_TRY_BEFORE_BAN > 0 && nTry>=Config.LOGIN_TRY_BEFORE_BAN) {
 				_invalidTryes.remove(cl.getIp());
 				BanManager.getInstance().addBanForAddress(cl.getInetAddress(),Config.LOGIN_BLOCK_AFTER_BAN * 1000 );
 				return false;
