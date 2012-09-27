@@ -29,6 +29,7 @@ import gnu.trove.map.hash.TIntIntHashMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -46,6 +47,7 @@ public class TvT extends GameEvent
 
 	private TIntObjectHashMap<Team> _participants = new TIntObjectHashMap<Team>();
 	private TIntObjectHashMap<Location> _playerLocations = new TIntObjectHashMap<Location>();
+        public HashMap<L2PcInstance, String> _playerTitled = new HashMap<L2PcInstance, String>();
 	private TIntIntHashMap _kills;
 	private List<Team> _teams = new ArrayList<Team>();
 	private int _state = GameEvent.STATE_INACTIVE;
@@ -268,6 +270,15 @@ public class TvT extends GameEvent
 				{
 					getPlayerTeam(player).players.remove(player.getObjectId());
 				}
+                                String title = _playerTitled.get(player);
+                                if(title != null)
+                                {
+                                    player.setTitle(title);
+                                }
+                                else
+                                {
+                                    player.setTitle(null);
+                                }
 				player.setInstanceId(0);
 				if (!TVT_ORIGINALRETURN)
 				{
@@ -627,7 +638,7 @@ public class TvT extends GameEvent
 				{
 					_playerLocations.put(player.getObjectId(), player.getLoc());
 				}
-
+                               
 			}
 			else
 			{
@@ -703,6 +714,7 @@ public class TvT extends GameEvent
 						player.abortAttack();
 						player.abortCast();
 						player.setTarget(null);
+                                                _playerTitled.put(player, player.getTitle());
 						if (player.getPet() != null)
 						{
 							player.getPet().abortAttack();

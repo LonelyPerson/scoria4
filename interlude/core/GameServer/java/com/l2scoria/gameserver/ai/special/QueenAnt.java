@@ -279,8 +279,6 @@ public class QueenAnt extends Quest
 			damage = 0;
 			L2Skill skill = SkillTable.getInstance().getInfo(4515, 1);
 			skill.getEffects(npc, attacker);
-                        npc.abortAttack();
-                        npc.abortCast();
 			return null;
 		}
 		if(npcId == NURSE)

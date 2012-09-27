@@ -43,6 +43,8 @@ public class DeathMatch extends GameEvent
 {
 	private TIntArrayList _players = new TIntArrayList();
 	private TIntObjectHashMap<Location> _playerLoc = new TIntObjectHashMap<Location>();
+        
+        private HashMap<L2PcInstance, String> _playerTitled = new HashMap<L2PcInstance, String>();
 
 	private HashMap<L2PcInstance, DeathMatchPlayer> _playersKills = new HashMap<L2PcInstance, DeathMatchPlayer>();
 
@@ -304,6 +306,15 @@ public class DeathMatch extends GameEvent
 				{
 					player.doRevive();
 				}
+                                String title = _playerTitled.get(player);
+                                if(title != null)
+                                {
+                                    player.setTitle(title);
+                                }
+                                else
+                                {
+                                    player.setTitle(null);
+                                }
 
 				player.setInstanceId(0);
 				_playersKills.remove(player);
@@ -586,6 +597,7 @@ public class DeathMatch extends GameEvent
 
 					player.teleToLocation(EVENT_LOCATION.getX() + (par[Rnd.get(2)] * Rnd.get(Radius)), EVENT_LOCATION.getY() + (par[Rnd.get(2)] * Rnd.get(Radius)), EVENT_LOCATION.getZ());
 					_playersKills.put(player, new DeathMatchPlayer());
+                                        _playerTitled.put(player, player.getTitle());
 					player.setTitle("Kills: 0");
 					SkillTable.getInstance().getInfo(4515, 1).getEffects(player, player);
 					player.sendPacket(new ExShowScreenMessage("1 minutes until event start, wait", 10000));
