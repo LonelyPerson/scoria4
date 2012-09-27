@@ -1130,6 +1130,14 @@ public abstract class L2Skill
 	{
 		return _pvpMulti;
 	}
+        
+        public final boolean isForceSpell()
+        {
+            if(getSkillType() == SkillType.FORCE_BUFF)
+                return true;
+            else
+                return false;
+        }
 
 	public final boolean useSoulShot()
 	{

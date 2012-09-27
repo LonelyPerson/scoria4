@@ -7493,7 +7493,6 @@ public abstract class L2Character extends L2Object
 		{
 			_log.info("all skills disabled");
 		}
-
 		_allSkillsDisabled = true;
 	}
 

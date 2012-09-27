@@ -46,12 +46,14 @@ public class SpiritShot extends ItemAbst
 		_items = new int[]{5790, 2509, 2510, 2511, 2512, 2513, 2514};
 
 		_playerUseOnly = true;
-		_notWhenSkillsDisabled = true;
+                // didn`t work
+		//_notWhenSkillsDisabled = true;
 	}
 
 	@Override
 	public boolean useItem(L2PlayableInstance playable, L2ItemInstance item)
 	{
+
 		if (!super.useItem(playable, item))
 		{
 			return false;
@@ -97,15 +99,12 @@ public class SpiritShot extends ItemAbst
 				{
 					activeChar.removeAutoSoulShot(itemId);
 					activeChar.sendPacket(new ExAutoSoulShot(itemId, 0));
-
 					SystemMessage sm = new SystemMessage(SystemMessageId.AUTO_USE_OF_S1_CANCELLED);
 					sm.addString(item.getItem().getName());
 					activeChar.sendPacket(sm);
+                                        return false;
 				}
-				else
-				{
-					activeChar.sendPacket(new SystemMessage(SystemMessageId.NOT_ENOUGH_SPIRITSHOTS));
-				}
+				activeChar.sendPacket(new SystemMessage(SystemMessageId.NOT_ENOUGH_SPIRITSHOTS));
 				return false;
 			}
 		}

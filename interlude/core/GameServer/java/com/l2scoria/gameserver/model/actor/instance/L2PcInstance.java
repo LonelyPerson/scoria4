@@ -45,6 +45,7 @@ import com.l2scoria.gameserver.handler.skills.impl.SummonFriend;
 import com.l2scoria.gameserver.handler.skills.impl.TakeCastle;
 import com.l2scoria.gameserver.managers.*;
 import com.l2scoria.gameserver.model.*;
+import com.l2scoria.gameserver.model.L2Effect.EffectType;
 import com.l2scoria.gameserver.model.L2Skill.SkillTargetType;
 import com.l2scoria.gameserver.model.L2Skill.SkillType;
 import com.l2scoria.gameserver.model.actor.appearance.PcAppearance;
@@ -7937,7 +7938,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			// reuse delays for matching skills. 'restore_type'= 0.
 			for(L2Effect effect : getAllEffects())
 			{
-				if(effect != null && effect.getInUse() && !effect.getSkill().isToggle())
+				if(effect != null && effect.getInUse() && !effect.getSkill().isToggle() && !effect.getSkill().isForceSpell() && effect.getEffectType() != EffectType.BATTLE_FORCE && effect.getEffectType() != EffectType.SPELL_FORCE)
 				{
 					int skillId = effect.getSkill().getId();
 					buff_index++;
