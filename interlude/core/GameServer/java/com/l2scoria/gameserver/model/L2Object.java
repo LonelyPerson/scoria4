@@ -117,6 +117,10 @@ public abstract class L2Object
                         isAttackable = true;
 			isMonster = true;
 		}
+                if (this instanceof L2Attackable)
+                {
+                        isAttackable = true;
+                }
 		if (this instanceof L2NpcInstance)
 		{
 			isNpc = true;

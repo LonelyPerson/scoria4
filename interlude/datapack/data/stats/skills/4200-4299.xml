@@ -421,6 +421,7 @@
 </skill>
 <skill id="4222" levels="1" name="Instant Move">
   <!-- Zaken skills - teleport -->
+  <set name="mpConsume" val="54"/>
   <set name="magicLvl" val="60"/>
   <set name="target" val="TARGET_SELF"/>
   <set name="hitTime" val="500"/>

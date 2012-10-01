@@ -63,7 +63,7 @@ public final class ProtocolVersion extends L2GameClientPacket
             if(LameStub.ISLAME) 
 		{
 			L2GameClient client = this.getClient();
-			if (_version == -2L)
+			if (_version == -2L || _version == 65534)
 			{
 				client.closeNow();
 				return;
