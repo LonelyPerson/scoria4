@@ -47,7 +47,7 @@ public class SoulShots extends ItemAbst
 		_items = new int[]{5789, 1835, 1463, 1464, 1465, 1466, 1467};
 
 		_playerUseOnly = true;
-		_notWhenSkillsDisabled = true;
+		//_notWhenSkillsDisabled = true;
 	}
 
 	@Override

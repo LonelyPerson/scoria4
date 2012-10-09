@@ -939,16 +939,32 @@ public abstract class L2Character extends L2Object
 			sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
-
+                boolean canSeeObject = true;
 		// GeoData Los Check here (or dz > 1000)
-		if(!GeoEngine.canSeeTarget(this, target, isFlying()))
-		{
-			sendPacket(new SystemMessage(SystemMessageId.CANT_SEE_TARGET));
-			getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE);
-			sendPacket(ActionFailed.STATIC_PACKET);
-			return;
-		}
-
+                if(Config.GEODATA)
+                {
+                    if(!GeoEngine.canSeeTarget(this, target, isFlying()))
+                    {
+                        canSeeObject = false;
+                    }
+                }
+                else
+                {
+                    int tz = target.getZ();
+                    int sz = this.getZ();
+                    int dz = Math.abs(tz-sz);
+                    if(dz > 1000)
+                    {
+                        canSeeObject = false;
+                    }
+                }
+                if(!canSeeObject)
+                {
+                     sendPacket(new SystemMessage(SystemMessageId.CANT_SEE_TARGET));
+                     getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE);
+                     sendPacket(ActionFailed.STATIC_PACKET);
+                     return;
+                }
 		// Check for a bow
 		if(weaponItem != null && weaponItem.getItemType() == L2WeaponType.BOW)
 		{
@@ -2272,6 +2288,19 @@ public abstract class L2Character extends L2Object
 	{
 		_isOverloaded = value;
 	}
+        
+        public final boolean isUnderEffectRbParalise()
+        {
+            for(L2Effect effects : this.getAllEffects())
+            {
+                if(effects != null && effects.getSkill() != null)
+                {
+                       if(effects.getSkill().getId() == 4515)
+                           return true;
+                }
+            }
+            return false;
+        }
 
 	public final boolean isParalyzed()
 	{

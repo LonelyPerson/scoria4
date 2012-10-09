@@ -765,7 +765,7 @@ public class L2AttackableAI extends L2CharacterAI implements Runnable
 		L2Character originalAttackTarget = getAttackTarget();
 
 		// Check if target is dead or if timeout is expired to stop this attack
-		if (originalAttackTarget == null || originalAttackTarget.isAlikeDead() || _attackTimeout < GameTimeController.getGameTicks() || originalAttackTarget.isParalyzed())
+		if (originalAttackTarget == null || originalAttackTarget.isAlikeDead() || _attackTimeout < GameTimeController.getGameTicks() || originalAttackTarget.isUnderEffectRbParalise())
 		{
 			// Stop hating this target after the attack timeout or if target is dead
 			if (originalAttackTarget != null)
