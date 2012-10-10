@@ -438,7 +438,9 @@ public final class QuestState
 		}
 		catch(Exception e)
 		{
-			_log.info(getPlayer().getName() + ": variable " + var + " isn't an integer: " + varint + e);
+                        if(Config.DEBUG) {
+                            _log.info(getPlayer().getName() + ": variable " + var + " isn't an integer: " + varint + e);
+                        }
 			//TODO: comments
 			if(Config.AUTODELETE_INVALID_QUEST_DATA)
 			{

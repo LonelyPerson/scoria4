@@ -52,7 +52,7 @@ public final class RequestJoinPledge extends L2GameClientPacket
 		if(activeChar == null)
 			return;
 
-		if(!(L2World.getInstance().findObject(_target).isPlayer))
+		if(L2World.getInstance().findObject(_target) != null && !(L2World.getInstance().findObject(_target).isPlayer))
 		{
 			activeChar.sendPacket(new SystemMessage(SystemMessageId.YOU_HAVE_INVITED_THE_WRONG_TARGET));
 			return;

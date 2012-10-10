@@ -75,7 +75,7 @@ public abstract class GameEvent
 	 * @param player as L2PcInstance<br>
 	 * @return as boolean
 	 */
-	public boolean canRegister(L2PcInstance player)
+	public boolean canRegister(L2PcInstance player, boolean noMessage)
 	{
 		return getState() == STATE_ACTIVE && !isParticipant(player) && player._event == null;
 	}

@@ -33,6 +33,10 @@ import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2SymbolMakerInstance;
 import com.l2scoria.gameserver.model.actor.position.L2CharPosition;
 import com.l2scoria.gameserver.model.entity.olympiad.Olympiad;
+import com.l2scoria.gameserver.model.entity.event.TvT.TvT;
+import com.l2scoria.gameserver.model.entity.event.LastHero.LastHero;
+import com.l2scoria.gameserver.model.entity.event.CTF.CTF;
+import com.l2scoria.gameserver.model.entity.event.DeathMatch.DeathMatch;
 import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
 import com.l2scoria.gameserver.network.serverpackets.NpcHtmlMessage;
 import com.l2scoria.gameserver.util.FloodProtector;
@@ -225,6 +229,31 @@ public final class RequestBypassToServer extends L2GameClientPacket
 					player.processQuestEvent(p.substring(0, idx), p.substring(idx).trim());
 				}
 			}
+                        else if(_command.startsWith("Customevent "))
+                        {
+                            String evName = _command.substring(12);
+                            if(evName != null)
+                            {
+                                L2PcInstance player = getClient().getActiveChar();
+                                if(evName.equals("tvt"))
+                                {
+                                    TvT.getInstance().register(player);
+                                }
+                                else if(evName.equals("lh"))
+                                {
+                                    LastHero.getInstance().register(player);
+                                }
+                                else if(evName.equals("dm"))
+                                {
+                                    DeathMatch.getInstance().register(player);
+                                }
+                                else if(evName.equals("ctf"))
+                                {
+                                    CTF.getInstance().register(player);
+                                }
+                                return;
+                            }
+                        }
 			else if (_command.startsWith("OlympiadArenaChange"))
 				Olympiad.getInstance().bypassChangeArena(_command, activeChar);
 

@@ -283,7 +283,7 @@ public class DeathMatch extends GameEvent
 	@Override
 	public boolean register(L2PcInstance player)
 	{
-		if (!canRegister(player))
+		if (!canRegister(player, false))
 		{
 			return false;
 		}
@@ -334,17 +334,21 @@ public class DeathMatch extends GameEvent
 	}
 
 	@Override
-	public boolean canRegister(L2PcInstance player)
+	public boolean canRegister(L2PcInstance player, boolean noMessage)
 	{
 		if (getState() != STATE_ACTIVE)
 		{
-			player.sendMessage(Language.LANG_EVEN_UNAVAILABLE);
+                        if(!noMessage) {
+                            player.sendMessage(Language.LANG_EVEN_UNAVAILABLE);
+                        }
 			return false;
 		}
 
 		if (isParticipant(player))
 		{
-			player.sendMessage(Language.LANG_ALWAYS_REGISTER);
+                        if(!noMessage) {
+                            player.sendMessage(Language.LANG_ALWAYS_REGISTER);
+                        }
 			return false;
 		}
 
@@ -356,7 +360,9 @@ public class DeathMatch extends GameEvent
 				pc = L2World.getInstance().getPlayer(charId);
 				if (pc != null && player.getClient().getHWId().equals(pc.getClient().getHWId()))
 				{
-					player.sendMessage(Language.LANG_DUPLICATE_HWID);
+                                        if(!noMessage) {
+                                            player.sendMessage(Language.LANG_DUPLICATE_HWID);
+                                        }
 					return false;
 				}
 			}
@@ -370,7 +376,9 @@ public class DeathMatch extends GameEvent
 				pc = L2World.getInstance().getPlayer(charId);
 				if (pc != null && pc.getClient() != null && player.getClient().getHostAddress().equals(pc.getClient().getHostAddress()))
 				{
-					player.sendMessage(Language.LANG_DUPLICATE_IP);
+                                        if(!noMessage) {
+                                            player.sendMessage(Language.LANG_DUPLICATE_IP);
+                                        }
 					return false;
 				}
 			}
@@ -378,19 +386,25 @@ public class DeathMatch extends GameEvent
 
 		if (_players.size() >= _maxPlayers)
 		{
-			player.sendMessage(Language.LANG_MAX_PLAYERS);
+                        if(!noMessage) {
+                            player.sendMessage(Language.LANG_MAX_PLAYERS);
+                        }
 			return false;
 		}
 
 		if (player.isCursedWeaponEquiped() && !JOIN_CURSED)
 		{
-			player.sendMessage(Language.LANG_CURSED_WEAPON);
+                        if(!noMessage) {
+                            player.sendMessage(Language.LANG_CURSED_WEAPON);
+                        }
 			return false;
 		}
 
 		if (player.getLevel() > _maxLvl || player.getLevel() < _minLvl)
 		{
-			player.sendMessage(Language.LANG_NON_ENOUGH_LEVEL);
+                        if(!noMessage) {
+                            player.sendMessage(Language.LANG_NON_ENOUGH_LEVEL);
+                        }
 			return false;
 		}
 

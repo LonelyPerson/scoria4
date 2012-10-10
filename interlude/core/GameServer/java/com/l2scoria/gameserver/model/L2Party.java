@@ -944,6 +944,10 @@ public class L2Party
 
 	public L2PcInstance getLeader()
 	{
-		return getPartyMembers().get(0);
+                L2PcInstance result = null;
+                try {
+                    result = getPartyMembers().get(0);
+                } catch(Exception s) { }
+		return result;
 	}
 }

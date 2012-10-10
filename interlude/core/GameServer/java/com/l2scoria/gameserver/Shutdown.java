@@ -248,7 +248,6 @@ public class Shutdown extends Thread
 	@Override
 	public void run()
 	{
-		Thread.dumpStack();
 
 		// disallow new logins
 		try
