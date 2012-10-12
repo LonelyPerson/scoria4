@@ -797,7 +797,7 @@ class L2OlympiadGame extends Olympiad
 				L2Skill skill;
 				SystemMessage sm;
 
-				skill = SkillTable.getInstance().getInfo(1204, 2);
+				skill = SkillTable.getInstance().getInfo(1204, 1);
 				skill.getEffects(player, player);
 				sm = new SystemMessage(SystemMessageId.YOU_FEEL_S1_EFFECT);
 				sm.addSkillName(1204);

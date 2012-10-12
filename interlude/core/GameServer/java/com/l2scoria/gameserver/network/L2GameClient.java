@@ -81,7 +81,7 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>> i
 	public SessionKey sessionId;
 	public L2PcInstance activeChar;
 	private ReentrantLock _activeCharLock = new ReentrantLock();
-	private String _hostAddress = getConnection().getInetAddress().getHostAddress();
+	private String _hostAddress = null;
 
 	private boolean _isAuthedGG;
 	private long _connectionStartTime;
