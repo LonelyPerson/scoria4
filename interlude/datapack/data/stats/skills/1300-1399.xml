@@ -2102,7 +2102,7 @@
 <skill id="1395" levels="10" name="Erase" enchantLevels1="30" enchantLevels2="30">
   <table name="#mpConsume">52 54 55 58 60 62 64 65 67 69</table>
   <table name="#itemConsumeCount">3 3 3 3 4 4 4 5 5 5</table>
-  <table name="#power">10 15 20 25 30 30 35 35 40 40</table>
+  <table name="#power">25 30 35 40 45 50 55 60 65 70</table>
   <set name="mpConsume" val="#mpConsume"/>
   <set name="power" val="#power"/>
   <set name="itemConsumeId" val="3031"/>
