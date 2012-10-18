@@ -171,6 +171,9 @@ public class GeoEngine
 		{
 			return false;
 		}
+                
+                if(!Config.GEODATA)
+                    return canSeeTargetNoGeo(actor, target, air);
 
 		// Костыль конечно, но решает кучу проблем с дверьми
 		if (target instanceof GeoCollision || actor.equals(target))
@@ -180,6 +183,14 @@ public class GeoEngine
 
 		return canSeeCoord(actor, target.getX(), target.getY(), target.getZ() + (int) target.getColHeight() + 64/*, actor.isPlayer*/, air);
 	}
+        
+        public static boolean canSeeTargetNoGeo(L2Object actor, L2Object target, boolean air)
+        {
+            int tz = target.getZ();
+            int az = actor.getZ();
+            int dz = Math.abs(tz-az);
+            return dz > 1000 ? false : true;
+        }
 
 	public static boolean canSeeCoord(L2Object actor, int tx, int ty, int tz, boolean air)
 	{
