@@ -9600,7 +9600,6 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			abortCast();
 			return;
 		}
-                boolean canSeeObject = true;
 		// GeoData Los Check here
 		if (skill.getCastRange() > 0)
 		{
@@ -9610,28 +9609,11 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 					sendPacket(ActionFailed.STATIC_PACKET);
 					return;
 			}
-			else if (Config.GEODATA)
-			{
-                                if(!GeoEngine.canSeeTarget(this, target, false))
-                                {
-                                    canSeeObject = false;
-                                }
-			}
-                        else
+                        if(!GeoEngine.canSeeTarget(this, target, false))
                         {
-                            int tz = target.getZ();
-                            int sz = this.getZ();
-                            int dz = Math.abs(tz-sz);
-                            if(dz > 1000)
-                            {
-                                canSeeObject = false;
-                            }
-                        }
-                        if(!canSeeObject)
-                        {
-                            	sendPacket(new SystemMessage(SystemMessageId.CANT_SEE_TARGET));
-				sendPacket(ActionFailed.STATIC_PACKET);
-				return;
+                            sendPacket(new SystemMessage(SystemMessageId.CANT_SEE_TARGET));
+                            sendPacket(ActionFailed.STATIC_PACKET);
+                            return;
                         }
 		}
 
