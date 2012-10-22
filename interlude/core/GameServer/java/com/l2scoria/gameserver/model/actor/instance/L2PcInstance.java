@@ -681,7 +681,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 	private int _fastUse = 0;
 	private List<Integer> _fastUseItemID = new FastList<Integer>();
 
-	private boolean _isOffline = false;
+	private boolean _isOfflineTrade = false;
 
 	private boolean _isTradeOff = false;
 
@@ -7112,10 +7112,10 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		if(_isOnline != isOnline)
 		{
 			_isOnline = isOnline;
-		}
 
-		// Update the characters table of the database with online status and lastAccess (called when login and logout)
-		updateOnlineStatus();
+			// Update the characters table of the database with online status and lastAccess (called when login and logout)
+			updateOnlineStatus();
+		}
 	}
 
 	public void setIsIn7sDungeon(boolean isIn7sDungeon)
@@ -7821,7 +7821,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			statement.setLong(33, getDeleteTimer());
 			statement.setString(34, getTitle());
 			statement.setInt(35, getAccessLevel().getLevel());
-			statement.setInt(36, _isOffline ? 0 : isOnline()); //TODO
+			statement.setInt(36, isOnline());
 			statement.setInt(37, isIn7sDungeon() ? 1 : 0);
 			statement.setInt(38, getClanPrivileges());
 			statement.setInt(39, getWantsPeace());
@@ -14035,14 +14035,14 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		return color;
 	}
 	
-	public boolean isOffline()
+	public boolean isOfflineTrade()
 	{
-		return _isOffline;
+		return _isOfflineTrade;
 	}
 	
-	public void setOffline(boolean set)
+	public void setOfflineTrade(boolean set)
 	{
-		_isOffline = set;
+		_isOfflineTrade = set;
 	}
 	
 	public boolean isTradeDisabled()

@@ -118,17 +118,20 @@ public final class Logout extends L2GameClientPacket
 			{
 				try
 				{
-					player.setOffline(true);
+					player.setOfflineTrade(true);
 					player.leaveParty();
+
 					if (player.getPet() != null)
 					{
 						player.getPet().unSummon(player);
 					}
+
 					if(Config.OFFLINE_SET_NAME_COLOR)
 					{
 						player.getAppearance().setNameColor(Config.OFFLINE_NAME_COLOR,false);
 						player.broadcastUserInfo();
 					}
+
 					player.setOfflineStartTime(System.currentTimeMillis());
 					player.store();
 				}

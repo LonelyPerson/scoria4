@@ -692,7 +692,7 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>> i
 				L2PcInstance player = getActiveChar();
 				if (player != null) // this should only happen on connection loss
 				{
-					if (player.isOffline())
+					if (player.isOfflineTrade())
 					{
 						return;
 					}

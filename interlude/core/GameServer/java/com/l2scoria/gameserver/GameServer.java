@@ -21,7 +21,6 @@ package com.l2scoria.gameserver;
 import com.l2scoria.Config;
 import com.l2scoria.L2Scoria;
 import com.l2scoria.ServerType;
-import com.l2scoria.crypt.nProtect;
 import com.l2scoria.gameserver.ai.special.AILoader;
 import com.l2scoria.gameserver.cache.CrestCache;
 import com.l2scoria.gameserver.cache.HtmCache;
@@ -62,31 +61,30 @@ import com.l2scoria.gameserver.taskmanager.TaskManager;
 import com.l2scoria.gameserver.thread.LoginServerThread;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.gameserver.thread.daemons.DeadlockDetector;
+import com.l2scoria.gameserver.thread.daemons.DelayItems;
 import com.l2scoria.gameserver.thread.daemons.PcPoint;
 import com.l2scoria.gameserver.thread.daemons.ServerOnline;
-import com.l2scoria.gameserver.thread.daemons.DelayItems;
 import com.l2scoria.gameserver.thread.webdaemon.SWebDaemon;
 import com.l2scoria.gameserver.util.DynamicExtension;
 import com.l2scoria.gameserver.util.FloodProtector;
 import com.l2scoria.gameserver.util.sql.SQLQueue;
 import com.l2scoria.telnet.Status;
-import com.l2scoria.util.Memory;
 import com.l2scoria.util.Util;
 import com.l2scoria.util.database.L2DatabaseFactory;
 import com.l2scoria.util.database.LoginRemoteDbFactory;
 import com.lameguard.LameGuard;
 import mmo.SelectorServerConfig;
 import mmo.SelectorThread;
-
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
+import ru.catssoftware.protection.CatsGuard;
 
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.util.Arrays;
 import java.util.Calendar;
-import ru.catssoftware.protection.CatsGuard;
 
 /**
  * 
