@@ -86,7 +86,7 @@ public class L2MonsterInstance extends L2Attackable
 	@Override
 	public boolean isAutoAttackable(L2Character attacker)
 	{
-		if(attacker.isMonster)
+		if(attacker != null && attacker.isMonster)
 			return false;
 
 		return !isEventMob;
@@ -164,7 +164,6 @@ public class L2MonsterInstance extends L2Attackable
 					// Calculate a new random coord for the minion based on the master's coord
 					int minionX = masterX + Rnd.nextInt(401) - 200;
 					int minionY = masterY + Rnd.nextInt(401) - 200;
-					int minionZ = masterZ;
 					while(minionX != masterX + 30 && minionX != masterX - 30 || minionY != masterY + 30 && minionY != masterY - 30)
 					{
 						minionX = masterX + Rnd.nextInt(401) - 200;
@@ -174,7 +173,7 @@ public class L2MonsterInstance extends L2Attackable
 					// Move the minion to the new coords
 					if(!minion.isInCombat() && !minion.isDead() && !minion.isMovementDisabled())
 					{
-						minion.moveToLocation(minionX, minionY, minionZ, 0);
+						minion.moveToLocation(minionX, minionY, masterZ, 0);
 					}
 				}
 			}
@@ -206,8 +205,6 @@ public class L2MonsterInstance extends L2Attackable
 						}
 					}
 				}
-				spawnedMinions = null;
-				minion = null;
 			}
 		}
 	}
