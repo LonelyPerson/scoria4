@@ -617,6 +617,7 @@
   <set name="skillType" val="HEAL_PERCENT"/>
   <set name="operateType" val="OP_ACTIVE"/>
   <set name="hitTime" val="5000"/>
+  <set name="staticReuse" val="true"/>
   <set name="reuseDelay" val="3600000"/>
   <set name="isMagic" val="true"/>
   <set name="operateType" val="OP_ACTIVE"/>
@@ -635,6 +636,7 @@
   <set name="hitTime" val="2500"/>
   <set name="itemConsumeId" val="8876"/>
   <set name="itemConsumeCount" val="1"/>
+  <set name="staticReuse" val="true"/>
   <set name="reuseDelay" val="1800000"/>
   <set name="skillType" val="BUFF"/>
   <set name="isMagic" val="true"/>
@@ -660,6 +662,7 @@
   <set name="skillRadius" val="900"/>
   <set name="skillType" val="MANARECHARGE"/>
   <set name="hitTime" val="5000"/>
+  <set name="staticReuse" val="true"/>
   <set name="reuseDelay" val="3600000"/>
   <set name="isMagic" val="true"/>
   <set name="operateType" val="OP_ACTIVE"/>

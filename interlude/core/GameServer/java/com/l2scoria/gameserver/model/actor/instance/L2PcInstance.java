@@ -9603,7 +9603,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		// GeoData Los Check here
 		if (skill.getCastRange() > 0)
 		{
-			if (sklTargetType == SkillTargetType.TARGET_GROUND)
+			if (sklTargetType == SkillTargetType.TARGET_GROUND && sklType != SkillType.SIGNET)
 			{
 					sendPacket(new SystemMessage(SystemMessageId.CANT_SEE_TARGET));
 					sendPacket(ActionFailed.STATIC_PACKET);
