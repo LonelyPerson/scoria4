@@ -127,12 +127,10 @@ public abstract class L2Object
 		}
 		if (this instanceof L2RaidBossInstance)
 		{
-                        isAttackable = true;
 			isRaid = true;
 		}
 		if (this instanceof L2MinionInstance)
 		{
-                        isAttackable = true;
 			isMinion = true;
 		}
 		if (this instanceof L2GuardInstance)
@@ -141,7 +139,6 @@ public abstract class L2Object
 		}
 		if (this instanceof L2SiegeGuardInstance)
 		{
-                        isAttackable = true;
 			isSiegeGuard = true;
 		}
 		if (this instanceof L2DoorInstance)

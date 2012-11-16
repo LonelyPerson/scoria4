@@ -148,6 +148,10 @@ public class TakeCastle extends SkillAbst
 		{
 			sm.addString("You must be an attacker to use this skill");
 		}
+                else if(Util.HaveDiffZObject(player, player.getTarget(), 20))
+                {
+                        sm.addString("You are not in range of the artifact.");
+                }
 		else
 		{
 			if (!isCheckOnly)

@@ -202,6 +202,28 @@ public final class Util
 			return d <= range * range + 2 * range * rad + rad * rad;
 		}
 	}
+        
+        public static boolean HaveDiffZObject(L2Object obj1, L2Object obj2, int zdiff)
+        {
+            int abs1 = Math.abs(obj1.getZ());
+            int abs2 = Math.abs(obj2.getZ());
+            int df = abs1-abs2;
+            if(abs1 > abs2)
+            {
+                if((abs1 - abs2) > zdiff)
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                if((abs2 - abs1) > zdiff)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
 
 	public static double convertHeadingToDegree(int heading)
 	{

@@ -117,8 +117,8 @@ public final class Config
 	public static int COORD_SYNCHRONIZE;
 	public static int DELETE_DAYS;
 	public static int MAX_DRIFT_RANGE;
-    public static int MAX_FOLLOW_DRIFT_RANGE;
-    public static boolean ON_DRIFT_MAX_RANGE_TELEPORT;
+        public static int MAX_FOLLOW_DRIFT_RANGE;
+        public static boolean ON_DRIFT_MAX_RANGE_TELEPORT;
 	public static boolean ALLOWFISHING;
 	public static boolean ALLOW_MANOR;
 	public static int AUTODESTROY_ITEM_AFTER;

@@ -78,6 +78,8 @@ public class SiegeManager
 	private int _flagMaxCount = 1; // Changeable in siege.config
 	private int _siegeClanMinLevel = 4; // Changeable in siege.config
 	private int _siegeLength = 120; // Time in minute. Changeable in siege.config
+        private int _castZdiff = 50; // different z offensive
+        private int _castRaduisdiff = 200; // different radius ofensive
 
 	//private List<Siege> _sieges;
 
@@ -212,6 +214,8 @@ public class SiegeManager
 			_flagMaxCount = Integer.decode(siegeSettings.getProperty("MaxFlags", "1"));
 			_siegeClanMinLevel = Integer.decode(siegeSettings.getProperty("SiegeClanMinLevel", "4"));
 			_siegeLength = Integer.decode(siegeSettings.getProperty("SiegeLength", "120"));
+                        _castZdiff = Integer.decode(siegeSettings.getProperty("SiegeCastZdifferentMax", "40"));
+                        _castRaduisdiff = Integer.decode(siegeSettings.getProperty("SiegeCastRadiusDifferentMax", "200"));
 
 			// Siege spawns settings
 			_controlTowerSpawnList = new FastMap<Integer, FastList<SiegeSpawn>>();

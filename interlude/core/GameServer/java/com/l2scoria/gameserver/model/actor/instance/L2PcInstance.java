@@ -1701,11 +1701,13 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 				_zoneValidateCounter = 4;
 			}
 			else
+                        {
 				return;
+                        }
 		}
 
 		getWorldRegion().revalidateZones(this);
-
+                
 		if(isInsideZone(ZONE_SIEGE))
 		{
 			if(_lastCompassZone == ExSetCompassZoneCode.SIEGEWARZONE2)
