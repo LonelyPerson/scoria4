@@ -13550,6 +13550,8 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
                     if(donatorTime > 0 && donatorTime > System.currentTimeMillis()) 
                     {
                         this.setDonator(true);
+                        Date dateform = new Date(donatorTime);
+                        sendMessage("Premium end on: "+dateform);
                     }
                 }
                 try { con.close(); } catch(Exception i) {}
