@@ -25,7 +25,7 @@ public class VoiceTVTEngine implements IVoicedCommandHandler
 		{
 			if (TvT.getInstance().register(activeChar))
 			{
-				activeChar.sendMessage(Language.LANG_PLAYER_REGISTER);
+				activeChar.sendMessage(Language.LANG_MSG_SUCC_REG + " TvT");
 			}
 			return true;
 		}
@@ -34,11 +34,11 @@ public class VoiceTVTEngine implements IVoicedCommandHandler
 			if (TvT.getInstance().getState() == GameEvent.STATE_ACTIVE && TvT.getInstance().isParticipant(activeChar))
 			{
 				TvT.getInstance().remove(activeChar);
-				activeChar.sendMessage("Ваше участие на эвенте TvT отменено.");
+				activeChar.sendMessage(Language.LANG_MSG_CANC_REG + " TvT");
 			}
 			else
 			{
-				activeChar.sendMessage("Вы не участник эвента.");
+				activeChar.sendMessage(Language.LANG_MSG_NON_REG + " TvT");
 			}
 			return true;
 		}

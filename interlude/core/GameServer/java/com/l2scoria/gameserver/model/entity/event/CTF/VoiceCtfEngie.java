@@ -3,6 +3,7 @@ package com.l2scoria.gameserver.model.entity.event.CTF;
 import com.l2scoria.gameserver.handler.IVoicedCommandHandler;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.entity.event.GameEvent;
+import com.l2scoria.gameserver.model.entity.event.Language;
 
 public class VoiceCtfEngie implements IVoicedCommandHandler
 {
@@ -24,7 +25,7 @@ public class VoiceCtfEngie implements IVoicedCommandHandler
 		{
 			if (CTF.getInstance().register(activeChar))
 			{
-				activeChar.sendMessage("Вы зарегистрированы на эвенте CTF.");
+				activeChar.sendMessage(Language.LANG_MSG_SUCC_REG + " CTF");
 			}
 			return true;
 		}
@@ -33,11 +34,11 @@ public class VoiceCtfEngie implements IVoicedCommandHandler
 			if (CTF.getInstance().getState() == GameEvent.STATE_ACTIVE && CTF.getInstance().isParticipant(activeChar))
 			{
 				CTF.getInstance().remove(activeChar);
-				activeChar.sendMessage("Ваше участие на эвенте CTF отменено.");
+				activeChar.sendMessage(Language.LANG_MSG_CANC_REG + " CTF");
 			}
 			else
 			{
-				activeChar.sendMessage("Вы не участник эвента.");
+				activeChar.sendMessage(Language.LANG_MSG_NON_REG + " CTF");
 			}
 			return true;
 		}

@@ -3,6 +3,7 @@ package com.l2scoria.gameserver.model.entity.event.DeathMatch;
 import com.l2scoria.gameserver.handler.IVoicedCommandHandler;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.entity.event.GameEvent;
+import com.l2scoria.gameserver.model.entity.event.Language;
 
 /**
  * @author m095
@@ -29,7 +30,7 @@ public class VoiceDeathMatch implements IVoicedCommandHandler
 		{
 			if (DeathMatch.getInstance().register(activeChar))
 			{
-				activeChar.sendMessage("Вы зарегистрированы на эвенте DeathMatch.");
+				activeChar.sendMessage(Language.LANG_MSG_SUCC_REG + " DeathMatch");
 			}
 			return true;
 		}
@@ -38,11 +39,11 @@ public class VoiceDeathMatch implements IVoicedCommandHandler
 			if (DeathMatch.getInstance().getState() == GameEvent.STATE_ACTIVE && DeathMatch.getInstance().isParticipant(activeChar))
 			{
 				DeathMatch.getInstance().remove(activeChar);
-				activeChar.sendMessage("Ваше участие на эвенте DeathMatch отменено.");
+				activeChar.sendMessage(Language.LANG_MSG_CANC_REG + " DeathMatch");
 			}
 			else
 			{
-				activeChar.sendMessage("Вы не участник эвента.");
+				activeChar.sendMessage(Language.LANG_MSG_NON_REG + " DeathMatch");
 			}
 			return true;
 		}

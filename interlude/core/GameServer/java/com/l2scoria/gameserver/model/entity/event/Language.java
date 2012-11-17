@@ -43,6 +43,9 @@ public class Language {
         public static String LANG_FIGHT_1_MIN;
         public static String LANG_REG_EVENT_MSG;
         public static String LANG_REG_CANCEL_EVENT_MSG;
+        public static String LANG_MSG_SUCC_REG;
+        public static String LANG_MSG_CANC_REG;
+        public static String LANG_MSG_NON_REG;
         
         public static void load()
         {
@@ -84,6 +87,9 @@ public class Language {
                 LANG_FIGHT_1_MIN = Language.getProperty("LangFightStart1Min", "Fight start after 1 min");
                 LANG_REG_EVENT_MSG = Language.getProperty("LangVoiceRegister", "You are registered on event");
                 LANG_REG_CANCEL_EVENT_MSG = Language.getProperty("LangVoiceRegLeave", "You cancel registration on event");
+                LANG_MSG_SUCC_REG = Language.getProperty("LangVoiceRegister", "You are registered on event");
+                LANG_MSG_CANC_REG = Language.getProperty("LangVoiceRegLeave", "You cancel registration on event");
+                LANG_MSG_NON_REG = Language.getProperty("LangVoiceNonReg", "You are not registered to cancel partipication");
             }
             catch(Exception e)
             {

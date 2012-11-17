@@ -3,6 +3,7 @@ package com.l2scoria.gameserver.model.entity.event.LastHero;
 import com.l2scoria.gameserver.handler.IVoicedCommandHandler;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.entity.event.GameEvent;
+import com.l2scoria.gameserver.model.entity.event.Language;
 
 public class VoiceLastHero implements IVoicedCommandHandler
 {
@@ -24,7 +25,7 @@ public class VoiceLastHero implements IVoicedCommandHandler
 		{
 			if (LastHero.getInstance().register(activeChar))
 			{
-				activeChar.sendMessage("Вы зарегистрированы на эвенте Last Hero.");
+				activeChar.sendMessage(Language.LANG_MSG_SUCC_REG + " LastHero");
 			}
 
 			return true;
@@ -34,11 +35,11 @@ public class VoiceLastHero implements IVoicedCommandHandler
 			if (LastHero.getInstance().getState() == GameEvent.STATE_ACTIVE && LastHero.getInstance().isParticipant(activeChar))
 			{
 				LastHero.getInstance().remove(activeChar);
-				activeChar.sendMessage("Ваше участие на эвенте Last Hero отменено.");
+				activeChar.sendMessage(Language.LANG_MSG_CANC_REG + " LastHero");
 			}
 			else
 			{
-				activeChar.sendMessage("Вы не участник эвента.");
+				activeChar.sendMessage(Language.LANG_MSG_NON_REG + " LastHero");
 			}
 
 			return true;
