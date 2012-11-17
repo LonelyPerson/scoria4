@@ -55,6 +55,7 @@ import com.l2scoria.gameserver.model.actor.status.PcStatus;
 import com.l2scoria.gameserver.model.base.*;
 import com.l2scoria.gameserver.model.entity.Announcements;
 import com.l2scoria.gameserver.model.entity.Duel;
+import com.l2scoria.gameserver.model.entity.event.GameEvent;
 import com.l2scoria.gameserver.model.entity.olympiad.Olympiad;
 import com.l2scoria.gameserver.model.entity.sevensigns.SevenSigns;
 import com.l2scoria.gameserver.model.entity.sevensigns.SevenSignsFestival;
@@ -8951,7 +8952,6 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		// Check if the attacker is not in the same party
 		if(getParty() != null && getParty().getPartyMembers().contains(attacker))
 			return false;
-
 		// Check if the attacker is in olympia and olympia start
 		if(attacker.isPlayer)
 		{
@@ -8963,11 +8963,17 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			{
 				return false;
 			}
-
-			if(attacker._event != null && attacker._event.canAttack(attacker, this))
-			{
-				return true;
-			}
+                        if(attacker._event != null)
+                        {
+                            if(attacker._event.getState() != GameEvent.STATE_RUNNING)
+                            {
+                                return true;
+                            }
+                            else
+                            {
+                                return attacker._event.canAttack(attacker, this);
+                            }
+                        }
 		}
 
 		// Check if the attacker is not in the same clan

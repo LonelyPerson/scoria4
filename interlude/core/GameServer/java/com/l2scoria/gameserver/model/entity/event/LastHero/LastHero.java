@@ -29,6 +29,11 @@ import com.l2scoria.util.random.Rnd;
 import javolution.util.FastList;
 import org.apache.commons.lang.ArrayUtils;
 
+import gnu.trove.map.hash.TIntIntHashMap;
+import gnu.trove.map.hash.TIntObjectHashMap;
+import gnu.trove.list.array.TIntArrayList;
+import gnu.trove.stack.TShortStack;
+
 
 /**
  * @author vgy766
@@ -37,7 +42,7 @@ import org.apache.commons.lang.ArrayUtils;
 
 public class LastHero extends GameEvent
 {
-	private FastList<Integer> _players = new FastList<Integer>();
+	private TIntArrayList _players = new TIntArrayList();
 	private FastList<Integer> _winners = new FastList<Integer>();
 	private int _state = GameEvent.STATE_INACTIVE;
 	private static LastHero _instance = null;
@@ -98,7 +103,7 @@ public class LastHero extends GameEvent
 		_eventTask.cancel();
 		_registrationTask.cancel();
 		L2PcInstance player;
-		for (Integer playerId : _players)
+		for (Integer playerId : _players.toArray())
 		{
 			player = L2World.getInstance().getPlayer(playerId);
 			if (player != null)
@@ -211,6 +216,10 @@ public class LastHero extends GameEvent
 				{
 					actor.sendMessage(Language.LANG_REGISTER_ERROR);
 				}
+                                else
+                                {
+                                        actor.sendMessage(Language.LANG_PLAYER_REGISTER);
+                                }
 			}
 			else if (command.equals("leave"))
 			{
@@ -310,7 +319,7 @@ public class LastHero extends GameEvent
 		if (!Config.Allow_Same_HWID_On_Events && player.getClient().getHWId() != null && player.getClient().getHWId().length() != 0)
 		{
 			L2PcInstance pc = null;
-			for (int charId : _players)
+			for (int charId : _players.toArray())
 			{
 				pc = L2World.getInstance().getPlayer(charId);
 				if (pc != null && player.getClient().getHWId().equals(pc.getClient().getHWId()))
@@ -325,7 +334,7 @@ public class LastHero extends GameEvent
 		if (!Config.Allow_Same_IP_On_Events)
 		{
 			L2PcInstance pc = null;
-			for (int charId : _players)
+			for (int charId : _players.toArray())
 			{
 				pc = L2World.getInstance().getPlayer(charId);
 				if (pc != null && pc.getClient() != null && player.getClient().getHostAddress().equals(pc.getClient().getHostAddress()))
@@ -372,8 +381,8 @@ public class LastHero extends GameEvent
 
 		AnnounceToPlayers(true, "LastHero: " + Language.LANG_ANNOUNCE_1);
 		AnnounceToPlayers(true, "LastHero: " + Language.LANG_ANNOUNCE_2 + ": " + _minLvl + "-" + _maxLvl + ".");
+                AnnounceToPlayers(true, "LastHero: " +Language.LANG_ANNOUNCE_3.replace("{$time}", String.valueOf(_regTime)));
 		AnnounceToPlayers(true, " - " + _superPrizeCount + " " + ItemTable.getInstance().getTemplate(_superPrizeId).getName());
-		AnnounceToPlayers(true, "LastHero: " +Language.LANG_ANNOUNCE_3.replace("{$time}", String.valueOf(_regTime)));
 
 		_state = GameEvent.STATE_ACTIVE;
 		_remaining = (_regTime * 60000) / 2;
@@ -390,8 +399,11 @@ public class LastHero extends GameEvent
 	@Override
 	public boolean canAttack(L2Character attacker, L2Character target)
 	{
-		return _state == GameEvent.STATE_RUNNING && attacker._event == target._event && attacker._event == this;
-
+            if(_state == GameEvent.STATE_RUNNING)
+            {
+                return attacker._event == target._event && attacker._event == this;
+            }
+            return true;
 	}
 
 	@Override
@@ -475,7 +487,7 @@ public class LastHero extends GameEvent
 			L2PcInstance player;
 			if (_players != null && !_players.isEmpty())
 			{
-				for (Integer playerid : _players)
+				for (Integer playerid : _players.toArray())
 				{
 					player = L2World.getInstance().getPlayer(playerid);
 					if (player != null && player.isOnline() != 0)
@@ -526,7 +538,7 @@ public class LastHero extends GameEvent
 	private void rewardPlayers()
 	{
 		L2PcInstance player;
-		for (Integer playerId : _players)
+		for (Integer playerId : _players.toArray())
 		{
 			player = L2World.getInstance().getPlayer(playerId);
 			if (player != null)
@@ -544,7 +556,7 @@ public class LastHero extends GameEvent
 				player = L2World.getInstance().getPlayer(playerId);
 				if (player != null && !player.isAlikeDead())
 				{
-					AnnounceToPlayers(true, "LastHero: " + Language.LANG_WINNER + player.getName());
+					AnnounceToPlayers(true, "LastHero: " + Language.LANG_WINNER + " " + player.getName());
 					player.broadcastPacket(new SocialAction(playerId, 16));
 					if (LH_GIVE_HERO)
 					{
@@ -592,7 +604,7 @@ public class LastHero extends GameEvent
 
 			int alivePlayers = 0;
 			L2PcInstance player;
-			for (Integer playerId : _players)
+			for (Integer playerId : _players.toArray())
 			{
 				player = L2World.getInstance().getPlayer(playerId);
 
@@ -619,7 +631,7 @@ public class LastHero extends GameEvent
 			L2PcInstance player;
 			int[] par = {-1, 1};
 			int Radius = 500;
-			for (Integer playerId : _players)
+			for (Integer playerId : _players.toArray())
 			{
 				player = L2World.getInstance().getPlayer(playerId);
 				if (player != null)
@@ -662,7 +674,7 @@ public class LastHero extends GameEvent
 				public void run()
 				{
 					L2PcInstance player;
-					for (Integer playerId : _players)
+					for (Integer playerId : _players.toArray())
 					{
 						player = L2World.getInstance().getPlayer(playerId);
 						if (player != null)
@@ -684,7 +696,7 @@ public class LastHero extends GameEvent
 	{
 		int realPlayers = 0;
 		L2PcInstance player;
-		for (Integer playerId : _players)
+		for (Integer playerId : _players.toArray())
 		{
 			player = L2World.getInstance().getPlayer(playerId);
 			if (player != null && player.getLevel() >= _minLvl && player.getLevel() <= _maxLvl)
@@ -757,6 +769,7 @@ public class LastHero extends GameEvent
 		player.teleToLocation(_locX, _locY, _locZ, false);
 	}
 
+        @Override
 	public int getRegistredPlayersCount()
 	{
 		return _players.size();

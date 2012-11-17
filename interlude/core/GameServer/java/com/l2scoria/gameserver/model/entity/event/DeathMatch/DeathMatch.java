@@ -442,7 +442,11 @@ public class DeathMatch extends GameEvent
 	@Override
 	public boolean canAttack(L2Character attacker, L2Character target)
 	{
-		return _state == GameEvent.STATE_RUNNING && attacker._event == target._event && attacker._event == this;
+            if(_state == GameEvent.STATE_RUNNING)
+            {
+                return attacker._event == target._event && attacker._event == this;
+            }
+            return true;
 	}
 
 	@Override

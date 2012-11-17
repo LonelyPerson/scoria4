@@ -339,11 +339,14 @@ public class TvT extends GameEvent
 	{
 		return _state != GameEvent.STATE_RUNNING || (actor._event == target._event && actor._event == this) || TVT_ALLOW_INTERFERENCE;
 	}
-
 	@Override
 	public boolean canAttack(L2Character attacker, L2Character target)
 	{
-		return _state == GameEvent.STATE_RUNNING && attacker._event == target._event && attacker._event == this && ((getPlayerTeam(attacker) != getPlayerTeam(target)) || TVT_ALLOW_TEAM_ATTACKING);
+            if(_state == GameEvent.STATE_RUNNING)
+            {
+                return attacker._event == target._event && attacker._event == this && ((getPlayerTeam(attacker) != getPlayerTeam(target)) || TVT_ALLOW_TEAM_ATTACKING);
+            }
+            return true;
 	}
 
 	@Override

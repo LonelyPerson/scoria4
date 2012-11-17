@@ -151,9 +151,6 @@ public class LoginServerThread extends Thread
 				_blowfish = new NewCrypt("_;v.]05-31!|+-%xT!^[$\00");
 				while (true)
 				{
-					try
-					{
-
 						lengthLo = _in.read();
 						lengthHi = _in.read();
 						length = lengthHi * 256 + lengthLo;
@@ -382,11 +379,6 @@ public class LoginServerThread extends Thread
 								new LoginNotify(decrypt);
 								break;
 						}
-					} catch (Exception e)
-					{
-						_log.fatal("[LoginServerThread]: WARNING! CRITICAL ERROR! Text: " + e.getMessage());
-						e.printStackTrace();
-					}
 				}
 			} catch (UnknownHostException e)
 			{
