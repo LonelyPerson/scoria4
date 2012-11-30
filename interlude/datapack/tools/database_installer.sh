@@ -279,6 +279,7 @@ $MYG < ../sql/character_hennas.sql &> /dev/null
 $MYG < ../sql/character_macroses.sql &> /dev/null
 $MYG < ../sql/character_votes.sql &> /dev/null
 $MYG < ../sql/doors.sql &> /dev/null
+$MYG < ../sql/delay_item.sql &> /dev/null
 $MYG < ../sql/character_quests.sql &> /dev/null
 $MYG < ../sql/character_recipebook.sql &> /dev/null
 $MYG < ../sql/char_creation_items.sql &> /dev/null
