@@ -1,5 +1,6 @@
 package com.l2scoria.gameserver.model.actor.instance;
 
+import com.l2scoria.gameserver.ai.CtrlIntention;
 import com.l2scoria.gameserver.cache.HtmCache;
 import com.l2scoria.gameserver.datatables.sql.NpcTable;
 import com.l2scoria.gameserver.model.L2World;
@@ -10,6 +11,10 @@ import com.l2scoria.gameserver.model.entity.event.TvT.TvT;
 import com.l2scoria.gameserver.model.entity.event.LastHero.LastHero;
 import com.l2scoria.gameserver.model.entity.event.CTF.CTF;
 import com.l2scoria.gameserver.model.entity.event.DeathMatch.DeathMatch;
+import com.l2scoria.gameserver.network.serverpackets.MyTargetSelected;
+import com.l2scoria.gameserver.network.serverpackets.SocialAction;
+import com.l2scoria.gameserver.network.serverpackets.ValidateLocation;
+import com.l2scoria.util.random.Rnd;
 
 import javolution.text.TextBuilder;
 
@@ -37,12 +42,46 @@ public final class L2EventNpcInstance extends L2NpcInstance
         @Override
 	public void onAction(L2PcInstance player)
 	{
-            NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());
-            String textbody = HtmCache.getInstance().getHtm("data/html/event/entery.htm");
-            String eventButtons = getActiveEventsNow(player);
-            textbody = textbody.replace("{entery}", eventButtons);
-            html.setHtml(textbody);
-            player.sendPacket(html);
+            	if(!canTarget(player))
+                    return;
+
+		// Check if the L2PcInstance already target the L2NpcInstance
+		if(this != player.getTarget())
+		{
+			// Set the target of the L2PcInstance player
+			player.setTarget(this);
+
+			// Send a Server->Client packet MyTargetSelected to the L2PcInstance player
+			player.sendPacket(new MyTargetSelected(getObjectId(), 0));
+
+			// Send a Server->Client packet ValidateLocation to correct the L2NpcInstance position and heading on the client
+			player.sendPacket(new ValidateLocation(this));
+		}
+		else
+		{
+			player.sendPacket(new ValidateLocation(this));
+			// Calculate the distance between the L2PcInstance and the L2NpcInstance
+			if(!canInteract(player))
+			{
+				// Notify the L2PcInstance AI with AI_INTENTION_INTERACT
+				player.getAI().setIntention(CtrlIntention.AI_INTENTION_INTERACT, this);
+			}
+			else
+			{
+				// Send a Server->Client packet SocialAction to the all L2PcInstance on the _knownPlayer of the L2NpcInstance
+				// to display a social action of the L2NpcInstance on their client
+				SocialAction sa = new SocialAction(getObjectId(), Rnd.get(8));
+				broadcastPacket(sa);
+				sa = null;
+
+				NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());
+                                String textbody = HtmCache.getInstance().getHtm("data/html/event/entery.htm");
+                                String eventButtons = getActiveEventsNow(player);
+                                textbody = textbody.replace("{entery}", eventButtons);
+                                html.setHtml(textbody);
+                                player.sendPacket(html);
+			}
+		}
             player.sendPacket(ActionFailed.STATIC_PACKET);
         }
         

@@ -13,6 +13,7 @@ import sun.misc.Service;
 
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -48,7 +49,7 @@ public class GameEventManager
 		while (iterator.hasNext())
 		{
 			GameEvent evt = (GameEvent) iterator.next();
-			registerEvent(evt);
+			//registerEvent(evt);
 		}
                 Language.load();
 		registerEvent(TvT.getInstance());
@@ -82,52 +83,122 @@ public class GameEventManager
 
 			if (_events.get(_evt) != -1)
 			{
-				Calendar cal = Calendar.getInstance();
-				cal.add(Calendar.MINUTE, (int) (_events.get(_evt) / 60000));
-				_log.info("GameEventManager: Event " + _evt.getName() + " scheduled at " + String.format("%tT", cal));
-				ThreadPoolManager.getInstance().scheduleGeneral(this, _events.get(_evt));
+                            String conf = _eventStartup.getProperty(_evt.getName() + ".Runtime");
+                            Calendar starttime = null;
+                            long current = System.currentTimeMillis();
+
+                            boolean first = true;
+                            if (((conf != null ? 1 : 0) & (conf.length() > 0 ? 1 : 0)) != 0)
+                            {
+                              for (String tmp : conf.split(";"))
+                              {
+                                if (first)
+                                {
+                                  String[] hm = tmp.split(":");
+
+                                  int h = Integer.parseInt(hm[0]);
+                                  int m = Integer.parseInt(hm[1]);
+                                  starttime = Calendar.getInstance();
+                                  starttime.set(Calendar.HOUR_OF_DAY, h);
+                                  starttime.set(Calendar.MINUTE, m);
+                                  long restart = starttime.getTimeInMillis() - current;
+                                  if (restart > 0)
+                                  {
+                                    first = false;
+                                    Date readable = new Date(starttime.getTimeInMillis());
+                                    GameEventManager._log.info("GameEventManager[b]: Event " + _evt.getName() + " scheduled at " + readable);
+                                    ThreadPoolManager.getInstance().scheduleGeneral(this, restart);
+                                  }
+                                }
+                              }
+
+                              if (first)
+                              {
+                                String[] tmp = conf.split(";");
+                                String[] hm = tmp[0].split(":");
+
+                                int first_h = Integer.parseInt(hm[0]);
+                                int first_m = Integer.parseInt(hm[1]);
+                                starttime = Calendar.getInstance();
+                                starttime.set(Calendar.HOUR_OF_DAY, first_h);
+                                starttime.set(Calendar.MINUTE, first_m);
+                                starttime.add(5, 1);
+                                long restart = starttime.getTimeInMillis() - current;
+                                if (restart > 0)
+                                {
+                                  first = false;
+                                  Date readable = new Date(starttime.getTimeInMillis());
+                                  _log.info("GameEventManager[c]: Event " + _evt.getName() + " scheduled at " + readable);
+                                  ThreadPoolManager.getInstance().scheduleGeneral(this, restart);
+                                }
+                              }
+                            }
 			}
 		}
 	}
 
-	public void registerEvent(GameEvent evt)
-	{
-		if (evt.load())
-		{
+        public void registerEvent(GameEvent evt)
+        {
+          if (evt.load())
+          {
+            long restart = -1L;
+            long current = System.currentTimeMillis();
+            Calendar starttime = null;
+            boolean first = true;
+            if (_eventStartup.getProperty(evt.getName() + ".AutoStart") != null)
+            {
+              if (Boolean.parseBoolean(_eventStartup.getProperty(evt.getName() + ".AutoStart")))
+              {
+                String conf = _eventStartup.getProperty(evt.getName() + ".Runtime");
+                if ((conf != null) && (conf.length() != 0))
+                {
+                  for (String tmp : conf.split(";"))
+                  {
+                    if (first)
+                    {
+                      String[] hm = tmp.split(":");
 
-			long restart = -1;
+                      int h = Integer.parseInt(hm[0]);
+                      int m = Integer.parseInt(hm[1]);
+                      starttime = Calendar.getInstance();
+                      starttime.set(Calendar.HOUR_OF_DAY, h);
+                      starttime.set(Calendar.MINUTE, m);
+                      restart = starttime.getTimeInMillis() - current;
+                      if (restart > 0)
+                      {
+                        first = false;
+                        ThreadPoolManager.getInstance().scheduleGeneral(new EventStart(evt), restart);
+                        Date readableDate = new Date(starttime.getTimeInMillis());
+                        _log.info("GameEventManager[a]: Event " + evt.getName() + " scheduled at " + readableDate);
+                      }
+                    }
+                  }
+                  if (first)
+                  {
+                    String[] tmp = conf.split(";");
+                    String[] hm = tmp[0].split(":");
 
-			if (_eventStartup.getProperty(evt.getName() + ".AutoStart") != null)
-			{
-				if (Boolean.parseBoolean(_eventStartup.getProperty(evt.getName() + ".AutoStart")))
-				{
-					String s = _eventStartup.getProperty(evt.getName() + ".NextDelay");
-					if (s != null && s.length() != 0)
-					{
-						restart = Long.parseLong(s) * 60000;
-					}
-					s = _eventStartup.getProperty(evt.getName() + ".DelayOnBoot");
-
-					if (s != null && s.length() != 0)
-					{
-						long delay = Long.parseLong(s) * 60000;
-						ThreadPoolManager.getInstance().scheduleGeneral(new EventStart(evt), delay);
-						Calendar cal = Calendar.getInstance();
-						cal.add(Calendar.MINUTE, (int) delay / 60000);
-						_log.info("GameEventManager: Event " + evt.getName() + " scheduled at " + String.format("%tT", cal));
-					}
-					else if (restart != -1)
-					{
-						ThreadPoolManager.getInstance().scheduleGeneral(new EventStart(evt), restart);
-						Calendar cal = Calendar.getInstance();
-						cal.add(Calendar.MINUTE, (int) restart / 60000);
-						_log.info("GameEventManager: Event " + evt.getName() + " scheduled at " + String.format("%tT", cal));
-					}
-				}
-			}
-			_events.put(evt, restart);
-		}
-	}
+                    int first_h = Integer.parseInt(hm[0]);
+                    int first_m = Integer.parseInt(hm[1]);
+                    starttime = Calendar.getInstance();
+                    starttime.set(Calendar.HOUR_OF_DAY, first_h);
+                    starttime.set(Calendar.MINUTE, first_m);
+                    starttime.add(Calendar.DAY_OF_WEEK_IN_MONTH, 1);
+                    restart = starttime.getTimeInMillis() - current;
+                    if (restart > 0)
+                    {
+                      first = false;
+                      Date readable = new Date(starttime.getTimeInMillis());
+                      _log.info("GameEventManager[d]: Event " + evt.getName() + " scheduled at " + readable);
+                      ThreadPoolManager.getInstance().scheduleGeneral(new EventStart(evt), restart);
+                    }
+                  }
+                }
+              }
+            }
+            _events.put(evt, Long.valueOf(restart));
+          }
+        }
 
 	public GameEvent findEvent(String name)
 	{
