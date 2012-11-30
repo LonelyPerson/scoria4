@@ -50,15 +50,18 @@ public class CatsAdmin extends AdminAbst {
 	{
 		return false;
 	}
+        
+        if(activeChar.getHWid() == null)
+        {
+            return false;
+        }
         if(command.equals("admin_hwid"))
         {
-            String html = "<html><title>Scoria admin - catsguard</title><body><center><br>";
+            String html = "<html><title>Scoria admin - catsguard free</title><body><center><br>";
             html +="<edit var=\"char_name\" width=110 height=15><br>";
             html +="<table width=200><tr>";
             html +="<td><button action=\"bypass -h admin_hwidban $char_name\" value=\"Ban HWID\" width=74 height=21 back=\"L2UI_CH3.Btn1_normalOn\" fore=\"L2UI_CH3.Btn1_normal\"></td>";
             html +="<td><button action=\"bypass -h admin_hwidunban $char_name\" value=\"Unban\" width=74 height=21 back=\"L2UI_CH3.Btn1_normalOn\" fore=\"L2UI_CH3.Btn1_normal\"></td>";
-            html +="</tr><tr><td><button action=\"bypass -h admin_hwidbanned\" value=\"BanList\" width=74 height=21 back=\"L2UI_CH3.Btn1_normalOn\" fore=\"L2UI_CH3.Btn1_normal\"></td>";
-            html +="<td><button action=\"bypass -h admin_hwidlist\" value=\"Players\" width=74 height=21 back=\"L2UI_CH3.Btn1_normalOn\" fore=\"L2UI_CH3.Btn1_normal\"></td>";
             html +="</tr></table>";
             html +="Command help<br>";
             html +="//hwidban char_name - ban character hwid<br1>";
@@ -97,7 +100,7 @@ public class CatsAdmin extends AdminAbst {
                     {
                         if(pc.getHWid()!=null && pc.getHWid().equals(hwid))
                         {
-                            new Disconnection(pc);
+                            pc.logout();
                         }
                     }
                     activeChar.sendMessage("Hwid "+hwid+" was banned!");
@@ -107,35 +110,8 @@ public class CatsAdmin extends AdminAbst {
             }
             
         }
-        else if(command.startsWith("admin_hwidlist")) {
-            activeChar.sendMessage("Handler is Okay");
-	/*	int start =0;
-		int ncount = 0;
-		String table = "";
-		if(params.length==2)
-			start = Integer.parseInt(params[1]);
-		boolean endReached = true;
-		String html = "<html><title>Scoria admin: CatsGuard list</title><body><center>Игроки онлайн (всего "+L2World.getInstance().getAllPlayersCount()+")<br><table width=220>";
-		for(L2PcInstance pc : L2World.getInstance().getAllPlayers()) {
-			if(pc.isOfflineTrade()) continue;
-			if(++ncount<start) continue;
-			table+="<tr><td><font color=\"LEVEL\">"+pc.getHWid()+"</font></td><td>"+pc.getName()+"</td><td><a action=\"bypass -h admin_hwidban "+pc.getName()+"\">Бан</td></tr>";
-			if(table.length()>7000) {
-				endReached = false;
-				break;
-			}
-		}
-		html+=table;
-		html+="</table>";
-		if(!endReached)
-                    html+="<a action=\"bypass -h admin_hwidlist "+ncount+"\">Дальше</a><br>";
-		html+="<button action=\"bypass -h admin_hwid\" value=\"Назад\" width=74 height=21 back=\"L2UI_CH3.Btn1_normalOn\" fore=\"L2UI_CH3.Btn1_normal\">"; 
-		html+="</center></body></html>";
-		NpcHtmlMessage msg = new NpcHtmlMessage(0);
-		msg.setHtml(html);
-		admin.sendPacket(msg);
-                * 
-                */
+        else if(command.startsWith("admin_hwidunban")) {
+            
         }
        
       return true;

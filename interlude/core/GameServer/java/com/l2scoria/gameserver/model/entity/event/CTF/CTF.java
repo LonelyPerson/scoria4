@@ -3,6 +3,7 @@ package com.l2scoria.gameserver.model.entity.event.CTF;
 import com.l2scoria.Config;
 import com.l2scoria.L2Properties;
 import com.l2scoria.gameserver.ai.CtrlIntention;
+import com.l2scoria.gameserver.cache.HtmCache;
 import com.l2scoria.gameserver.datatables.sql.DoorTable;
 import com.l2scoria.gameserver.datatables.sql.ItemTable;
 import com.l2scoria.gameserver.datatables.sql.NpcTable;
@@ -16,10 +17,12 @@ import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.entity.Announcements;
 import com.l2scoria.gameserver.model.entity.Instance;
 import com.l2scoria.gameserver.model.entity.event.GameEvent;
+import com.l2scoria.gameserver.model.entity.event.GameEventManager;
 import com.l2scoria.gameserver.model.entity.event.Language;
 import com.l2scoria.gameserver.network.clientpackets.RequestActionUse;
 import com.l2scoria.gameserver.network.serverpackets.CreatureSay;
 import com.l2scoria.gameserver.network.serverpackets.ExShowScreenMessage;
+import com.l2scoria.gameserver.network.serverpackets.NpcHtmlMessage;
 import com.l2scoria.gameserver.network.serverpackets.RadarControl;
 import com.l2scoria.gameserver.network.serverpackets.SocialAction;
 import com.l2scoria.gameserver.taskmanager.ExclusiveTask;
@@ -1158,5 +1161,44 @@ public class CTF extends GameEvent
 	{
 		return getPlayerTeam(cha).name;
 	}
+        
+        public void doLeave(L2PcInstance player)
+        {
+            if(_state == GameEvent.STATE_ACTIVE && isParticipant(player))
+            {
+                remove(player);
+            }
+        }
+        
+        public void showNpcInfo(L2PcInstance player)
+        {
+            	NpcHtmlMessage html = new NpcHtmlMessage(0);
+                String textbody = HtmCache.getInstance().getHtm("data/html/event/infomore.htm");
+                String joinbutton = HtmCache.getInstance().getHtm("data/html/event/joinbutton.htm");
+                String eventName = getName();
+                String period = GameEventManager.getInstance().getEventConfigStart(eventName);
+                String longgo = String.valueOf(_eventTime);
+                String leveldep = _minlvl+"-"+_maxlvl;
+                String playerdep = _minPlayers+"-"+_maxPlayers;
+                String regcount = String.valueOf(getRegistredPlayersCount());
+                textbody = textbody.replace("{$eventname}", eventName);
+                textbody = textbody.replace("{$period}", period);
+                textbody = textbody.replace("{$longgo}", longgo);
+                textbody = textbody.replace("{$leveldep}", leveldep);
+                textbody = textbody.replace("{$playerdep}", playerdep);
+                textbody = textbody.replace("{$regcount}", regcount);
+                joinbutton = joinbutton.replace("{$eventname}", eventName);
+                joinbutton = joinbutton.replace("{$sysnameevent}", "ctfjoin");
+                if(canRegister(player, true))
+                {
+                    textbody = textbody.replace("{$joinbutton}", joinbutton);
+                }
+                else
+                {
+                    textbody = textbody.replace("{$joinbutton}", "");
+                }
+                html.setHtml(textbody);
+                player.sendPacket(html);
+        }
 
 }

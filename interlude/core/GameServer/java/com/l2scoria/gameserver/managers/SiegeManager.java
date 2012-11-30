@@ -80,6 +80,16 @@ public class SiegeManager
 	private int _siegeLength = 120; // Time in minute. Changeable in siege.config
         private int _castZdiff = 50; // different z offensive
         private int _castRaduisdiff = 200; // different radius ofensive
+        
+        public int _gludiomerc = 100;
+        public int _dionmerc = 150;
+        public int _giranmerc = 200;
+        public int _orenmerc = 300;
+        public int _adenmerc = 400;
+        public int _innadrilmerc = 400;
+        public int _goddardmerc = 400;
+        public int _runemerc = 400;
+        public int _schuttgartmerc = 400;
 
 	//private List<Siege> _sieges;
 
@@ -216,6 +226,16 @@ public class SiegeManager
 			_siegeLength = Integer.decode(siegeSettings.getProperty("SiegeLength", "120"));
                         _castZdiff = Integer.decode(siegeSettings.getProperty("SiegeCastZdifferentMax", "40"));
                         _castRaduisdiff = Integer.decode(siegeSettings.getProperty("SiegeCastRadiusDifferentMax", "200"));
+                        
+                        _gludiomerc = Integer.decode(siegeSettings.getProperty("GludioLimitMerc", "100"));
+                        _dionmerc = Integer.decode(siegeSettings.getProperty("DionLimitMerc", "150"));
+                        _giranmerc = Integer.decode(siegeSettings.getProperty("GiranLimitMerc", "200"));
+                        _orenmerc = Integer.decode(siegeSettings.getProperty("OrenLimitMerc", "300"));
+                        _adenmerc = Integer.decode(siegeSettings.getProperty("AdenLimitMerc", "400"));
+                        _innadrilmerc = Integer.decode(siegeSettings.getProperty("InnadrilLimitMerc", "400"));
+                        _goddardmerc = Integer.decode(siegeSettings.getProperty("GoddardLimitMerc", "400"));
+                        _runemerc = Integer.decode(siegeSettings.getProperty("RuneLimitMerc", "400"));
+                        _schuttgartmerc = Integer.decode(siegeSettings.getProperty("SchuttgartLimitMerc", "400"));
 
 			// Siege spawns settings
 			_controlTowerSpawnList = new FastMap<Integer, FastList<SiegeSpawn>>();

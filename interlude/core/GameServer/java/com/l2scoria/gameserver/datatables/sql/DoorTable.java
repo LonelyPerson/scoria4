@@ -162,7 +162,7 @@ public class DoorTable
 			npcDat.set("baseMDef", DoorData.getInt("mdef"));
 
 			L2CharTemplate template = new L2CharTemplate(npcDat);
-			L2DoorInstance door = new L2DoorInstance(IdFactory.getInstance().getNextId(), template, id, doorname, DoorData.getBoolean("unlockable"), DoorData.getBoolean("showHp"));
+			L2DoorInstance door = new L2DoorInstance(IdFactory.getInstance().getNextId(), template, id, doorname, DoorData.getBoolean("attackable"), DoorData.getBoolean("unlockable"), DoorData.getBoolean("showHp"));
 			_staticItems.put(id, door);
 
 			/*Polygon shape = new Polygon();

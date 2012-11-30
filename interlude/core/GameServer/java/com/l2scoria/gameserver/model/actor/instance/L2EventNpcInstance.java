@@ -76,38 +76,10 @@ public final class L2EventNpcInstance extends L2NpcInstance
 
 				NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());
                                 String textbody = HtmCache.getInstance().getHtm("data/html/event/entery.htm");
-                                String eventButtons = getActiveEventsNow(player);
-                                textbody = textbody.replace("{entery}", eventButtons);
                                 html.setHtml(textbody);
                                 player.sendPacket(html);
 			}
 		}
             player.sendPacket(ActionFailed.STATIC_PACKET);
-        }
-        
-        private String getActiveEventsNow(L2PcInstance player)
-        {
-            String resultButton = "";
-            if(TvT.getInstance().canRegister(player, true)) 
-            {
-                resultButton += "<button value=\"TvT\" action=\"bypass -h Customevent tvt\" width=\"95\" height=\"24\" back=\"L2UI_CH3.bigbutton_down\" fore=\"L2UI_CH3.bigbutton\">";
-            }
-            if(LastHero.getInstance().canRegister(player, true))
-            {
-                resultButton += "<button value=\"LastHero\" action=\"bypass -h Customevent lh\" width=\"95\" height=\"24\" back=\"L2UI_CH3.bigbutton_down\" fore=\"L2UI_CH3.bigbutton\">";
-            }
-            if(CTF.getInstance().canRegister(player, true))
-            {
-                resultButton += "<button value=\"CTF\" action=\"bypass -h Customevent ctf\" width=\"95\" height=\"24\" back=\"L2UI_CH3.bigbutton_down\" fore=\"L2UI_CH3.bigbutton\">";
-            }
-            if(DeathMatch.getInstance().canRegister(player, true))
-            {
-                resultButton += "<button value=\"DeathMatch\" action=\"bypass -h Customevent dm\" width=\"95\" height=\"24\" back=\"L2UI_CH3.bigbutton_down\" fore=\"L2UI_CH3.bigbutton\">";
-            }
-            if(resultButton.equals(""))
-            {
-                resultButton = "<br>Not allowed event now! Come latter.";
-            }
-            return resultButton;
         }
 }

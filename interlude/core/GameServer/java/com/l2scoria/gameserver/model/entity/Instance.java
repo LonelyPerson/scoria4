@@ -195,7 +195,7 @@ public class Instance
 		}
 
 		L2DoorInstance temp = DoorTable.getInstance().getDoor(doorId);
-		L2DoorInstance newdoor = new L2DoorInstance(IdFactory.getInstance().getNextId(), temp.getTemplate(), temp.getDoorId(), temp.getName(), temp.isUnlockable(), temp.isUnlockable());
+		L2DoorInstance newdoor = new L2DoorInstance(IdFactory.getInstance().getNextId(), temp.getTemplate(), temp.getDoorId(), temp.getName(), temp.isDefaultAttackable(), temp.isUnlockable(), temp.isUnlockable());
 		newdoor.setInstanceId(getId());
 		newdoor.getStatus().setCurrentHpMp(newdoor.getMaxHp(), newdoor.getMaxMp());
 		newdoor.setOpen(open);

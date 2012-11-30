@@ -69,6 +69,7 @@ public class L2DoorInstance extends L2Character implements GeoCollision
 
 	protected final int _doorId;
 	protected final String _name;
+        private boolean _attackable;
 	private boolean _unlockable;
 	private boolean _isHPVisible;
 
@@ -190,7 +191,7 @@ public class L2DoorInstance extends L2Character implements GeoCollision
 
 	/**
 	 */
-	public L2DoorInstance(int objectId, L2CharTemplate template, int doorId, String name, boolean unlockable, boolean showHp)
+	public L2DoorInstance(int objectId, L2CharTemplate template, int doorId, String name, boolean attackable, boolean unlockable, boolean showHp)
 	{
 		super(objectId, template);
 		getKnownList(); // init knownlist
@@ -198,6 +199,7 @@ public class L2DoorInstance extends L2Character implements GeoCollision
 		getStatus(); // init status
 		_doorId = doorId;
 		_name = name;
+                _attackable = attackable;
 		_unlockable = unlockable;
 		_isHPVisible = showHp;
 		_geoOpen = true;
@@ -235,6 +237,11 @@ public class L2DoorInstance extends L2Character implements GeoCollision
 
 		return (DoorStatus) super.getStatus();
 	}
+        
+        public final boolean isDefaultAttackable()
+        {
+            return _attackable;
+        }
 
 	public final boolean isUnlockable()
 	{
@@ -415,6 +422,13 @@ public class L2DoorInstance extends L2Character implements GeoCollision
 	@Override
 	public boolean isAutoAttackable(L2Character attacker)
 	{
+                // only "unlockable" params is not full support of dors
+                // many doors can be opened by keys but can`t be attacked on PTS
+                if(!isDefaultAttackable())
+                {
+                        return false;
+                }
+                
 		if (isUnlockable())
 		{
 			return true;

@@ -105,6 +105,16 @@ public class MercTicketManager
 	};
 	private static final int[] MERCS_MAX_PER_CASTLE =
 	{
+                        SiegeManager.getInstance()._gludiomerc,
+                        SiegeManager.getInstance()._dionmerc,
+                        SiegeManager.getInstance()._giranmerc,
+                        SiegeManager.getInstance()._orenmerc,
+                        SiegeManager.getInstance()._adenmerc,
+                        SiegeManager.getInstance()._innadrilmerc,
+                        SiegeManager.getInstance()._goddardmerc,
+                        SiegeManager.getInstance()._runemerc,
+                        SiegeManager.getInstance()._schuttgartmerc
+                        /*
 			100, // Gludio
 			150, // Dion
 			200, // Giran
@@ -114,6 +124,7 @@ public class MercTicketManager
 			400, // Goddard
 			400, // Rune
 			400  // Schuttgart
+                        * */
 	};
 
 	private static final int[] ITEM_IDS =

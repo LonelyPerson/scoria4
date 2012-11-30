@@ -548,4 +548,9 @@ INSERT IGNORE INTO `admin_command_access_rights` VALUES
 ('admin_listinstances','1'),
 ('admin_setinstance','1'),
 ('admin_ghoston','1'),
-('admin_ghostoff','1');
+('admin_ghostoff','1'),
+
+-- Section: HWID from guard
+('admin_hwid', '1'),
+('admin_hwidban', '1'),
+('admin_hwidunban', '1');

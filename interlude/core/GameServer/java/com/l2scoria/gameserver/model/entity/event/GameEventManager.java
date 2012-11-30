@@ -228,4 +228,14 @@ public class GameEventManager
 		}
 		return null;
 	}
+        
+        public String getEventConfigStart(String evo)
+        {
+            String result = _eventStartup.getProperty(evo + ".Runtime");
+            if(result == null || result.length() < 1)
+            {
+                result = "not defined";
+            }
+            return result;
+        }
 }

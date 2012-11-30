@@ -28,6 +28,7 @@ import com.l2scoria.gameserver.handler.custom.CustomBypassHandler;
 import com.l2scoria.gameserver.model.L2Object;
 import com.l2scoria.gameserver.model.L2World;
 import com.l2scoria.gameserver.model.actor.instance.L2ClassMasterInstance;
+import com.l2scoria.gameserver.model.actor.instance.L2EventNpcInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2NpcInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2SymbolMakerInstance;
@@ -232,26 +233,48 @@ public final class RequestBypassToServer extends L2GameClientPacket
                         else if(_command.startsWith("Customevent "))
                         {
                             String evName = _command.substring(12);
-                            if(evName != null)
+                            if(evName != null && evName.length() > 1)
                             {
                                 L2PcInstance player = getClient().getActiveChar();
-                                if(evName.equals("tvt"))
+                                if(evName.equals("tvtjoin"))
                                 {
                                     TvT.getInstance().register(player);
                                 }
-                                else if(evName.equals("lh"))
+                                else if(evName.equals("tvtinfo"))
+                                {
+                                    TvT.getInstance().showNpcInfo(player);
+                                }
+                                else if(evName.equals("lhjoin"))
                                 {
                                     LastHero.getInstance().register(player);
                                 }
-                                else if(evName.equals("dm"))
+                                else if(evName.equals("lhinfo"))
+                                {
+                                    LastHero.getInstance().showNpcInfo(player);
+                                }
+                                else if(evName.equals("dmjoin"))
                                 {
                                     DeathMatch.getInstance().register(player);
                                 }
-                                else if(evName.equals("ctf"))
+                                else if(evName.equals("dminfo"))
+                                {
+                                    DeathMatch.getInstance().showNpcInfo(player);
+                                }
+                                else if(evName.equals("ctfjoin"))
                                 {
                                     CTF.getInstance().register(player);
                                 }
-                                return;
+                                else if(evName.equals("ctfinfo"))
+                                {
+                                    CTF.getInstance().showNpcInfo(player);
+                                }
+                                else if(evName.equals("eventleave"))
+                                {
+                                    TvT.getInstance().doLeave(player);
+                                    CTF.getInstance().doLeave(player);
+                                    DeathMatch.getInstance().doLeave(player);
+                                    LastHero.getInstance().doLeave(player);
+                                }
                             }
                         }
 			else if (_command.startsWith("OlympiadArenaChange"))

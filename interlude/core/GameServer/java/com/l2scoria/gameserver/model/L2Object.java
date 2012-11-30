@@ -139,6 +139,7 @@ public abstract class L2Object
 		}
 		if (this instanceof L2SiegeGuardInstance)
 		{
+                        isAttackable = true;
 			isSiegeGuard = true;
 		}
 		if (this instanceof L2DoorInstance)
