@@ -107,6 +107,7 @@ public class CatsGuard {
 	private List<String> _bannedhwid;
 	private static boolean ENABLED = false;
 	private static int _SERVER_KEY;
+        private static boolean _FREE_LIB;
 	private int MAX_SESSIONS;
 	private int MAX_PREMIUM_SESSIONS;
 	private String LOG_OPTION;
@@ -119,11 +120,12 @@ public class CatsGuard {
 		Util.printSection("CatsGuard");
 		try {
 			L2Properties p = new L2Properties("./config/protected/catsguard.properties");
-			ENABLED = Boolean.parseBoolean(p.getProperty("Enabled","true"));
+			ENABLED = Boolean.parseBoolean(p.getProperty("Enabled","false"));
 			if(!ENABLED) {
 				_log.info("CatsGuard: disabled");
 				return;
 			}
+                        _FREE_LIB = Boolean.parseBoolean(p.getProperty("CryptForFree", "true"));
                         _SERVER_KEY = Integer.parseInt(p.getProperty("CryptKeyInt", "0"));
 			LOG_OPTION = p.getProperty("LogOption","NOSPS HACK");
 			MAX_SESSIONS = Integer.parseInt(p.getProperty("MaxSessionsFromHWID","-1"));
@@ -134,7 +136,7 @@ public class CatsGuard {
 			_connections = new FastMap<String, Integer>().setShared(true);
 			LOG_SESSIONS = Boolean.parseBoolean(p.getProperty("LogSessions","false"));
                         
-                        if(_SERVER_KEY == 0) {
+                        if(_SERVER_KEY == 0 && !_FREE_LIB) {
                             _log.error("CryptKeyInt is 0 on default inset");
                             return;
                         }
@@ -228,15 +230,17 @@ public class CatsGuard {
 		
 	}
 	public void initSession(L2GameClient cl) {
-		if(!ENABLED )
-			return;
+		if(!ENABLED ) {
+                    return;
+                }
 		cl.sendPacket(GameGuardQuery.STATIC_PACKET);
 		cl._reader = new CatsGuardReader(cl); 			
 	}
 	
 	public void doneSession(L2GameClient cl) {
-		if(!ENABLED)
-			return;
+		if(!ENABLED) {
+                     return;
+                }
 		if(cl.getHWId()!=null) {
 			_premium.remove(cl.getHWId());
 			if(_connections.containsKey(cl.getHWId())) {
@@ -252,10 +256,23 @@ public class CatsGuard {
 
 	public void initSession(L2GameClient cl, int [] data) {
 		if(!ENABLED)
+                {
 			return;
+                }
+                if(_FREE_LIB)
+                {
+                    _SERVER_KEY = 7958915;
+                }
 		if(data[0]!=_SERVER_KEY) {
-			if(LOG_OPTION.contains("NOPROTECT")) 
-				_log.info("CatsGuard: Client "+cl+" try to log with no CatsGuard. CryptKeyInt " +String.valueOf(data[0]));
+			if(LOG_OPTION.contains("NOPROTECT")) {
+                            if(data[0] == 7958915)
+                            {
+                                _log.info("CatsGuard: Client "+cl+" try to log with no CatsGuard. CryptKeyInt: SCORIA_FREE");
+                            } else 
+                            {
+                                _log.info("CatsGuard: Client "+cl+" try to log with no CatsGuard. CryptKeyInt " +data[0]);
+                            }
+                        }
 			cl.getActiveChar().logout();
 			return;
 		}

@@ -51,7 +51,7 @@ public class CatsAdmin extends AdminAbst {
 		return false;
 	}
         
-        if(activeChar.getHWid() == null)
+        if(!CatsGuard.getInstance().isEnabled())
         {
             return false;
         }

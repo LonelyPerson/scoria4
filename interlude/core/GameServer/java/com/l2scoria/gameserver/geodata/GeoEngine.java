@@ -1250,6 +1250,10 @@ public class GeoEngine
 
 	public static int NgetHeight(int geoX, int geoY, int z, boolean get_closest_layer, int geoIndex)
 	{
+                if(!Config.GEODATA)
+                {
+                    return z;
+                }
 		byte[] block = getGeoBlockFromGeoCoords(geoX, geoY, geoIndex);
 
 		if (block == null)
