@@ -20,6 +20,7 @@ package com.l2scoria.gameserver.handler.skills.impl;
 
 import com.l2scoria.gameserver.managers.CastleManager;
 import com.l2scoria.gameserver.managers.FortManager;
+import com.l2scoria.gameserver.managers.SiegeManager;
 import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.L2Object;
 import com.l2scoria.gameserver.model.L2Skill;
@@ -148,7 +149,7 @@ public class TakeCastle extends SkillAbst
 		{
 			sm.addString("You must be an attacker to use this skill");
 		}
-                else if(Util.HaveDiffZObject(player, player.getTarget(), 20))
+                else if(Util.HaveDiffZObject(player, player.getTarget(), 30))
                 {
                         sm.addString("You are not in range of the artifact.");
                 }

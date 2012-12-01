@@ -54,7 +54,7 @@ public class SiegeManager
 	{
 		if(_instance == null)
 		{
-			System.out.println("Initializing SiegeManager");
+			_log.info("Initializing SiegeManager");
 			_instance = new SiegeManager();
 			_instance.load();
 		}
@@ -78,8 +78,6 @@ public class SiegeManager
 	private int _flagMaxCount = 1; // Changeable in siege.config
 	private int _siegeClanMinLevel = 4; // Changeable in siege.config
 	private int _siegeLength = 120; // Time in minute. Changeable in siege.config
-        private int _castZdiff = 50; // different z offensive
-        private int _castRaduisdiff = 200; // different radius ofensive
         
         public int _gludiomerc = 100;
         public int _dionmerc = 150;
@@ -185,7 +183,7 @@ public class SiegeManager
 		}
 		catch(Exception e)
 		{
-			System.out.println("Exception: checkIsRegistered(): " + e.getMessage());
+			_log.info("Exception: checkIsRegistered(): " + e.getMessage());
 			e.printStackTrace();
 		}
 		finally
@@ -224,8 +222,6 @@ public class SiegeManager
 			_flagMaxCount = Integer.decode(siegeSettings.getProperty("MaxFlags", "1"));
 			_siegeClanMinLevel = Integer.decode(siegeSettings.getProperty("SiegeClanMinLevel", "4"));
 			_siegeLength = Integer.decode(siegeSettings.getProperty("SiegeLength", "120"));
-                        _castZdiff = Integer.decode(siegeSettings.getProperty("SiegeCastZdifferentMax", "40"));
-                        _castRaduisdiff = Integer.decode(siegeSettings.getProperty("SiegeCastRadiusDifferentMax", "200"));
                         
                         _gludiomerc = Integer.decode(siegeSettings.getProperty("GludioLimitMerc", "100"));
                         _dionmerc = Integer.decode(siegeSettings.getProperty("DionLimitMerc", "150"));
