@@ -131,20 +131,19 @@ public class Util
 
 	public static void printSection(String s)
 	{
-		int maxlength = 79;
-		s = "-[ " + s + " ]";
-		int slen = s.length();
-		if(slen > maxlength)
-		{
-			System.out.println(s);
-			return;
-		}
-		int i;
-		for(i = 0; i < maxlength - slen; i++)
-		{
-			s = "=" + s;
-		}
-		System.out.println(s);
+            // logic: 
+            //      Spacer       String        Spacer
+            // [============== SOME STRING ==============]
+            // Spacer = (_length - s.length())/2
+            int _length = 55;         
+            String spacer = "";
+            String out;
+            for(int i=0;i<(_length-s.length())/2;i++)
+            {
+                    spacer += "=";
+            }
+            out = "-[" + spacer + s + spacer + "]-";
+            _log.info(out);
 	}
 
 	/**
@@ -356,8 +355,8 @@ public class Util
 				je = jf.getJarEntry("com/l2scoria/crypt/lameguard.class");
 			if (je == null)
 				je = jf.getJarEntry("com/l2scoria/gameserver/network/serverpackets/ExChiperRequest.class");
-			if (je == null)
-                                System.exit(1);
+			//if (je == null)
+                                //System.exit(1);
 
                         // why? don`t used entryName anywhere
 			String entryName = je.getName();
@@ -378,7 +377,7 @@ public class Util
 		}
 		catch(Exception ex)
 		{
-			System.exit(1);
+			//System.exit(1);
 		}
 		return hash_array;
 	}

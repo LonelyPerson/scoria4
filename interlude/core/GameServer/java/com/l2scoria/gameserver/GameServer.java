@@ -140,11 +140,11 @@ public class GameServer
 				ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(DeadlockDetector.getInstance(), Config.DEADLOCKCHECK_INTIAL_TIME, Config.DEADLOCKCHECK_DELAY_TIME);
 			}
                         
-			if (!Arrays.equals(Util.securityCrypt(Config.USER_NAME), Util.getHash()))
+			/*if (!Arrays.equals(Util.securityCrypt(Config.USER_NAME), Util.getHash()))
 			{
 				_log.info("UserName is wrong.");
 				throw new Exception("UserName is wrong.");
-			}
+			}*/
 
 			new File(Config.DATAPACK_ROOT, "data/clans").mkdirs();
 			new File(Config.DATAPACK_ROOT, "data/crests").mkdirs();
@@ -238,7 +238,13 @@ public class GameServer
 
 			Util.printSection("GeoEngine");
 			if (Config.GEODATA)
+                        {
 				GeoEngine.loadGeo();
+                        }
+                        else
+                        {
+                                _log.info("GeoEngine current dissabled.");
+                        }
 
 			Util.printSection("Economy");
 			TradeController.getInstance();

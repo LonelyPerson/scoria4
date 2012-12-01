@@ -2147,7 +2147,7 @@ public class GeoEngine
 				byte[][] region = geodata[ix][iy][geoIndex];
 				if(region == null)
 				{
-					System.out.println("GeoEngine: Attempt to close door at block with no geodata");
+					_log.info("GeoEngine: Attempt to close door at block with no geodata");
 					return;
 				}
 				byte[] block = region[blockIndex];
@@ -2317,7 +2317,7 @@ public class GeoEngine
 
 		if(region == null)
 		{
-			System.out.println("door at null region? [" + ix + "][" + iy + "]");
+			_log.info("door at null region? [" + ix + "][" + iy + "]");
 			return;
 		}
 

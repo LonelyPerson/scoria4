@@ -321,7 +321,7 @@ public class SiegeManager
 		catch(Exception e)
 		{
 			//_initialized = false;
-			System.err.println("Error while loading siege data.");
+			_log.error("Error while loading siege data.");
 			e.printStackTrace();
 		}
 	}
@@ -331,9 +331,13 @@ public class SiegeManager
 	public final FastList<SiegeSpawn> getArtefactSpawnList(int _castleId)
 	{
 		if(_artefactSpawnList.containsKey(_castleId))
+                {
 			return _artefactSpawnList.get(_castleId);
+                }
 		else
-			return null;
+                {
+                 	return null;   
+                }
 	}
 
 	public final FastList<SiegeSpawn> getControlTowerSpawnList(int _castleId)

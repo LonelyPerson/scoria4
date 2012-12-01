@@ -56,8 +56,11 @@ import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import java.sql.Connection;
 import com.l2scoria.util.database.L2DatabaseFactory;
 
+import org.apache.log4j.Logger;
+
 public class Siege
 {
+        private final static Logger _log = Logger.getLogger(Siege.class.getName());
 	// ==========================================================================================
 	// Message to add/check
 	//  id=17  msg=[Castle siege has begun.] c3_attr1=[SystemMsg_k.17]
@@ -1052,7 +1055,7 @@ public class Siege
 	{
 		correctSiegeDateTime();
 
-		System.out.println("Siege of " + getCastle().getName() + ": " + getCastle().getSiegeDate().getTime());
+		_log.info("Siege of " + getCastle().getName() + ": " + getCastle().getSiegeDate().getTime());
 
 		loadSiegeClan();
 

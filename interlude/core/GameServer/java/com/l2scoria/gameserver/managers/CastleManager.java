@@ -32,9 +32,11 @@ import com.l2scoria.gameserver.model.entity.sevensigns.SevenSigns;
 import com.l2scoria.gameserver.model.entity.siege.Castle;
 import java.sql.Connection;
 import com.l2scoria.util.database.L2DatabaseFactory;
+import org.apache.log4j.Logger;
 
 public class CastleManager
 {
+        private final static Logger _log = Logger.getLogger(CastleManager.class.getName());
 	// =========================================================
 	private static CastleManager _instance;
 
@@ -42,7 +44,7 @@ public class CastleManager
 	{
 		if(_instance == null)
 		{
-			System.out.println("Initializing CastleManager");
+			_log.info("Initializing CastleManager");
 			_instance = new CastleManager();
 			_instance.load();
 		}
@@ -120,11 +122,11 @@ public class CastleManager
 
 			statement.close();
 
-			System.out.println("Loaded: " + getCastles().size() + " castles");
+			_log.info("Loaded: " + getCastles().size() + " castles");
 		}
 		catch(Exception e)
 		{
-			System.out.println("Exception: loadCastleData(): " + e.getMessage());
+			_log.error("Exception: loadCastleData(): " + e.getMessage());
 			e.printStackTrace();
 		}
 		finally
@@ -350,7 +352,7 @@ public class CastleManager
 			}
 			catch(Exception e)
 			{
-				System.out.println("Failed to remove castle circlets offline for player " + member.getName());
+				_log.info("Failed to remove castle circlets offline for player " + member.getName());
 				e.printStackTrace();
 			}
 			finally
