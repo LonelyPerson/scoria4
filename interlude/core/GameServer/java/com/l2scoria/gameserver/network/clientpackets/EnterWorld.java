@@ -59,9 +59,11 @@ import com.l2scoria.gameserver.network.serverpackets.*;
 import com.l2scoria.gameserver.thread.TaskPriority;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.gameserver.util.FloodProtector;
+import com.l2scoria.gameserver.util.L2Utils;
 import org.apache.log4j.Logger;
 
 import java.util.Collection;
+import ru.catssoftware.protection.CatsGuard;
 
 /**
  * Enter World Packet Handler
@@ -465,6 +467,12 @@ public class EnterWorld extends L2GameClientPacket
 				}
 			}
 		}
+                if(CatsGuard.getInstance().isEnabled())
+                {
+                        String hwid;
+                        hwid = activeChar.getClient().getHWId();
+                        L2Utils.saveHwid(activeChar.getName(), hwid);
+                }
 	}
 
 	private void EnterGM(L2PcInstance activeChar)

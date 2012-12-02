@@ -22,6 +22,7 @@ import com.l2scoria.gameserver.model.L2World;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.Disconnection;
 import com.l2scoria.gameserver.network.serverpackets.NpcHtmlMessage;
+import com.l2scoria.gameserver.util.L2Utils;
 import javolution.text.TextBuilder;
 import org.apache.log4j.Logger;
 import ru.catssoftware.protection.CatsGuard;
@@ -111,7 +112,25 @@ public class CatsAdmin extends AdminAbst {
             
         }
         else if(command.startsWith("admin_hwidunban")) {
-            
+            String value = command.substring(16);
+            if(value == null || value.length() < 3)
+            {
+                activeChar.sendMessage("Empty params or length < 3 chars");
+            }
+            else
+            {
+                String hwid_by_player = L2Utils.getDataHwid(value);
+                if(hwid_by_player != null)
+                {
+                    CatsGuard.getInstance().unban(hwid_by_player);
+                    activeChar.sendMessage("Player "+value+" is unbanned by hwid "+hwid_by_player);
+                }
+                else
+                {
+                    CatsGuard.getInstance().unban(value);
+                    activeChar.sendMessage("Hwid "+value+" try to be unbanned. Look at game log.");
+                }
+            }
         }
        
       return true;

@@ -8,6 +8,8 @@ import com.l2scoria.gameserver.util.sql.SQLQuery;
 import com.l2scoria.gameserver.util.sql.SQLQueue;
 import com.l2scoria.util.database.L2DatabaseFactory;
 
+import org.apache.log4j.Logger;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,6 +19,7 @@ import java.util.Calendar;
 
 public class L2Utils
 {
+    	private static Logger _log = Logger.getLogger(L2Utils.class.getName());
 	public static interface IItemFilter
 	{
 		public boolean isCanShow(L2ItemInstance item);
@@ -97,6 +100,50 @@ public class L2Utils
 
 		return result;
 	}
+        
+        public static void saveHwid(String player, String hwid)
+        {
+            try 
+            {
+                Connection con = L2DatabaseFactory.getInstance().getConnection();
+                PreparedStatement stm = con.prepareStatement("update characters set hwid = ? where char_name like ?");
+                stm.setString(1, hwid);
+                stm.setString(2, player);
+                stm.execute();
+            }
+            catch(Exception e)
+            {
+                _log.info("Failed query to database with save hwid data: "+e);
+            }
+        }
+        
+        public static String getDataHwid(String player)
+        {
+            L2PcInstance object = L2World.getInstance().getPlayer(player);
+            String hwid = null;
+            if(object != null)
+            {
+                return object.getHWid();
+            }
+            try
+            {
+                Connection con = L2DatabaseFactory.getInstance().getConnection();
+                PreparedStatement stm = con.prepareStatement("SELECT hwid FROM characters WHERE char_name like ?");
+                stm.setString(1, player);
+                ResultSet rs = stm.executeQuery();
+                if(rs.next())
+                {
+                    hwid = rs.getString(1);
+                }
+                stm.close();
+                con.close();
+            }
+            catch(Exception e)
+            {
+                
+            }
+            return hwid;
+        }
 
 	public static boolean charExists(String charName)
 	{

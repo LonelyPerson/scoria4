@@ -83,6 +83,7 @@ CREATE TABLE IF NOT EXISTS characters (
   banchat_time decimal(40,0) NOT NULL default 0,
   name_color varchar(8) NOT NULL DEFAULT 0x000000,
   title_color varchar(8) NOT NULL DEFAULT 0x000000,
+  hwid varchar(32) NOT NULL DEFAULT '0',
   PRIMARY KEY  (obj_Id),
   KEY `clanid` (`clanid`)
 ) ;

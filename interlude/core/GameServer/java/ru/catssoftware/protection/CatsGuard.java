@@ -196,7 +196,7 @@ public class CatsGuard {
         {
             L2PcInstance playerobject = cl.getActiveChar();
 		if(cl.getActiveChar()!=null && ANNOUNCE_HACK) 
-			Announcements.getInstance().announceToAll("Игрок "+playerobject.getName()+" использует недопустимое ПО!");
+			Announcements.getInstance().announceToAll("Player "+playerobject.getName()+" using cheats! Kicked.");
 		if(ON_HACK_ATTEMP.equals("hwidban") && cl.getHWId()!=null)
 			ban(cl.getHWId());
 		else if(ON_HACK_ATTEMP.equals("jail") && cl.getActiveChar()!=null)
@@ -273,14 +273,14 @@ public class CatsGuard {
                                 _log.info("CatsGuard: Client "+cl+" try to log with no CatsGuard. CryptKeyInt " +data[0]);
                             }
                         }
-			cl.getActiveChar().logout();
+                        cl.closeNow();
 			return;
 		}
 		String hwid = String.format("%x", data[3]);
 		if(cl._reader==null) {
 			if(LOG_OPTION.contains("HACK")) 
 				_log.info("CatsGuard: Client "+cl+" has no pre-authed state");
-			cl.getActiveChar().logout();
+			cl.closeNow();
 			return;
 		}
 		if(_bannedhwid.contains(hwid)) {
@@ -295,7 +295,7 @@ public class CatsGuard {
 		if(max > 0 && ++nwindow>max) {
 			if(LOG_OPTION.contains("SESSIONS"))
 				_log.info("CatsGuard: To many sessions from hwid "+hwid);
-			cl.getActiveChar().logout();
+			cl.closeNow();
 			return;
 		}
 		_connections.put(hwid, nwindow);
