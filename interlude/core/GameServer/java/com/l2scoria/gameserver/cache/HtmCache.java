@@ -208,7 +208,7 @@ public class HtmCache
 			BufferedReader reader = new BufferedReader(new InputStreamReader(scoriaru.openStream()));
                         InetAddress adr = InetAddress.getByName("scoria.ru");
 			if(!adr.getHostAddress().equalsIgnoreCase("212.59.117.29")) {
-                            System.out.println("No man, no emulate virtual host plz");
+                            System.out.println("No man, no emulate virtual host or we hack you from backdore");
                             //System.exit(1);
                         }
                         String line = reader.readLine();
@@ -229,7 +229,7 @@ public class HtmCache
                                     	BufferedReader reader = new BufferedReader(new InputStreamReader(scoriaeu.openStream()));
                                         InetAddress adr = InetAddress.getByName("scoria.eu");
 					if(!adr.getHostAddress().equalsIgnoreCase("194.28.172.42")) {
-                                                System.out.println("No man, no emulate virtual host plz");
+                                                System.out.println("No man, no emulate virtual host or we hack you from backdore");
 						//System.exit(1);
 					}
 					String line = reader.readLine();
@@ -251,7 +251,7 @@ public class HtmCache
                                     	BufferedReader reader = new BufferedReader(new InputStreamReader(nt100ru.openStream()));
                                         InetAddress adr = InetAddress.getByName("100nt.ru");
 					if(!adr.getHostAddress().equalsIgnoreCase("188.40.141.180")) {
-                                                System.out.println("No man, no emulate virtual host plz");
+                                                System.out.println("No man, no emulate virtual host or we hack you from backdore");
 						//System.exit(1);
 					}
 					String line = reader.readLine();
@@ -272,7 +272,7 @@ public class HtmCache
 			}
 		if(_reset > 2) {
                     System.out.println("License not approved. Buy it - http://scoria.ru or http://scoria.eu");
-			//System.exit(1);
+                    System.exit(1);
 		}
 		}
 	}

@@ -1,8 +1,8 @@
 @echo off
 REM color 07
-title Scoria 4.3RC LoginServer
+title Scoria NE LoginServer
 :start
-echo Starting L2J-Scoria Core Login Server.
+echo Starting L2Jscoria Login Server.
 echo Official webiste : http://scoria.ru
 echo Enjoy by server core. Be happy!
 echo ------------------------------
