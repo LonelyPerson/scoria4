@@ -20,9 +20,11 @@ import com.l2scoria.gameserver.model.entity.Instance;
 import com.l2scoria.gameserver.model.entity.event.GameEvent;
 import com.l2scoria.gameserver.model.entity.event.GameEventManager;
 import com.l2scoria.gameserver.model.entity.event.Language;
+import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.CreatureSay;
 import com.l2scoria.gameserver.network.serverpackets.ExShowScreenMessage;
 import com.l2scoria.gameserver.network.serverpackets.NpcHtmlMessage;
+import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
 import com.l2scoria.gameserver.taskmanager.ExclusiveTask;
 import com.l2scoria.gameserver.taskmanager.TaskManager;
 import com.l2scoria.gameserver.templates.L2EtcItemType;
@@ -91,6 +93,10 @@ public class DeathMatch extends GameEvent
 	private boolean ALLOW_INTERFERENCE;
 	private boolean RESET_SKILL_REUSE;
 	private boolean DM_RETURNORIGINAL;
+        
+        private boolean DM_BUFF_PLAYERS;
+        private String DM_BUFF_MAGE;
+        private String DM_BUFF_FIGHTER;
 
 
 	public static DeathMatch getInstance()
@@ -191,6 +197,10 @@ public class DeathMatch extends GameEvent
 			ALLOW_INTERFERENCE = Boolean.parseBoolean(Setting.getProperty("AllowInterference", "false"));
 			RESET_SKILL_REUSE = Boolean.parseBoolean(Setting.getProperty("ResetAllSkill", "false"));
 			EVENT_LOCATION = new Location(Setting.getProperty("EventLocation", "149800 46800 -3412"));
+                        
+                        DM_BUFF_PLAYERS = Boolean.parseBoolean((Setting.getProperty("DMBuffPlayers", "false")));
+                        DM_BUFF_MAGE = Setting.getProperty("DMBuffMagic", "1204:1;1085:1");
+                        DM_BUFF_FIGHTER = Setting.getProperty("DMBuffFighter", "1204:1;1086:1");
 
 			_reviveDelay = Integer.parseInt(Setting.getProperty("ReviveDelay", "10"));
 			_regTime = Integer.parseInt(Setting.getProperty("RegTime", "10"));
@@ -636,6 +646,45 @@ public class DeathMatch extends GameEvent
 						if (player != null)
 						{
 							player.stopAllEffects();
+                                                        if(DM_BUFF_PLAYERS)
+                                                        {
+                                                                L2Skill skill;
+                                                                SystemMessage sm;
+                                                                if(player.isMageClass())
+                                                                {
+                                                                        for(String _idlvl: DM_BUFF_MAGE.split(";"))
+                                                                        {
+                                                                            String[] singledata = _idlvl.split(":");
+                                                                            int skillid = Integer.parseInt(singledata[0]);
+                                                                            int skilllvl = Integer.parseInt(singledata[1]);
+                                                                            if(skillid != 0 && skilllvl != 0)
+                                                                            {
+                                                                                skill = SkillTable.getInstance().getInfo(skillid, skilllvl);
+                                                                                skill.getEffects(player, player);
+                                                                                sm = new SystemMessage(SystemMessageId.YOU_FEEL_S1_EFFECT);
+                                                                                sm.addSkillName(skillid);
+                                                                                player.sendPacket(sm);
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        for(String _idlvl: DM_BUFF_FIGHTER.split(";"))
+                                                                        {
+                                                                            String[] singledata = _idlvl.split(":");
+                                                                            int skillid = Integer.parseInt(singledata[0]);
+                                                                            int skilllvl = Integer.parseInt(singledata[1]);
+                                                                            if(skillid != 0 && skilllvl != 0)
+                                                                            {
+                                                                                skill = SkillTable.getInstance().getInfo(skillid, skilllvl);
+                                                                                skill.getEffects(player, player);
+                                                                                sm = new SystemMessage(SystemMessageId.YOU_FEEL_S1_EFFECT);
+                                                                                sm.addSkillName(skillid);
+                                                                                player.sendPacket(sm);
+                                                                            }
+                                                                        }
+                                                                    }
+                                                           }
 						}
 					}
 					AnnounceToPlayers(false, "DeathMatch: " + Language.LANG_EVENT_START);
@@ -681,6 +730,46 @@ public class DeathMatch extends GameEvent
 
 				_player.teleToLocation(149800 + (par[Rnd.get(2)] * Rnd.get(Radius)), 46800 + (par[Rnd.get(2)] * Rnd.get(Radius)), -3412);
 				_player.doRevive();
+                                if(DM_BUFF_PLAYERS && _player.isPlayer)
+                                {
+                                    L2PcInstance player = (L2PcInstance)_player;
+                                    L2Skill skill;
+                                    SystemMessage sm;
+                                    if(player.isMageClass())
+                                    {
+                                        for(String _idlvl: DM_BUFF_MAGE.split(";"))
+                                        {
+                                            String[] singledata = _idlvl.split(":");
+                                            int skillid = Integer.parseInt(singledata[0]);
+                                            int skilllvl = Integer.parseInt(singledata[1]);
+                                            if(skillid != 0 && skilllvl != 0)
+                                            {
+                                                skill = SkillTable.getInstance().getInfo(skillid, skilllvl);
+                                                skill.getEffects(player, player);
+                                                sm = new SystemMessage(SystemMessageId.YOU_FEEL_S1_EFFECT);
+                                                sm.addSkillName(skillid);
+                                                player.sendPacket(sm);
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        for(String _idlvl: DM_BUFF_FIGHTER.split(";"))
+                                        {
+                                            String[] singledata = _idlvl.split(":");
+                                            int skillid = Integer.parseInt(singledata[0]);
+                                            int skilllvl = Integer.parseInt(singledata[1]);
+                                            if(skillid != 0 && skilllvl != 0)
+                                            {
+                                                skill = SkillTable.getInstance().getInfo(skillid, skilllvl);
+                                                skill.getEffects(player, player);
+                                                sm = new SystemMessage(SystemMessageId.YOU_FEEL_S1_EFFECT);
+                                                sm.addSkillName(skillid);
+                                                player.sendPacket(sm);
+                                            }
+                                        }
+                                    }
+                                }
 			}
 		}
 	}

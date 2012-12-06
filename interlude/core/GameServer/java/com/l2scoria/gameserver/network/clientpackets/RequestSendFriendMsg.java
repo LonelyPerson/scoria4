@@ -68,14 +68,7 @@ public final class RequestSendFriendMsg extends L2GameClientPacket
 
 		if(Config.LOG_CHAT)
 		{
-			LogRecord record = new LogRecord(Level.INFO, _message);
-			record.setLoggerName("chat");
-			record.setParameters(new Object[]
-			{
-					"PRIV_MSG", "[" + activeChar.getName() + " to " + _reciever + "]"
-			});
-
-			_logChat.info(record);
+			_logChat.info("FRIEND_MSG: From: ["+activeChar.getName()+"] to ["+_reciever + "] msg: ["+_message+"]");
 		}
 
 		targetPlayer.sendPacket(new FriendRecvMsg(activeChar.getName(), _reciever, _message));

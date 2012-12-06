@@ -188,25 +188,16 @@ public final class Say2 extends L2GameClientPacket
 
 		if(Config.LOG_CHAT)
 		{
-			LogRecord record = new LogRecord(Level.INFO, _text);
-			record.setLoggerName("chat");
-
-			if(_type == TELL)
-			{
-				record.setParameters(new Object[]
-				{
-						CHAT_NAMES[_type], "[" + activeChar.getName() + " to " + _target + "]"
-				});
-			}
-			else
-			{
-				record.setParameters(new Object[]
-				{
-						CHAT_NAMES[_type], "[" + activeChar.getName() + "]"
-				});
-			}
-
-			_logChat.info(record);
+                        String sayTo;
+                        if(_target == null)
+                        {
+                            sayTo = "All";
+                        }
+                        else
+                        {
+                            sayTo = _target;
+                        }
+			_logChat.info("SAY2: From: ["+activeChar.getName()+"] say: ["+_text+"] type:["+_type+"] target: ["+sayTo+"]");
 		}
 
 		_text = _text.replaceAll("\\\\n", "");

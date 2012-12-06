@@ -4,6 +4,7 @@ import com.l2scoria.Config;
 import com.l2scoria.L2Properties;
 import com.l2scoria.gameserver.ai.CtrlIntention;
 import com.l2scoria.gameserver.cache.HtmCache;
+import com.l2scoria.gameserver.datatables.SkillTable;
 import com.l2scoria.gameserver.datatables.sql.DoorTable;
 import com.l2scoria.gameserver.datatables.sql.ItemTable;
 import com.l2scoria.gameserver.handler.VoicedCommandHandler;
@@ -20,8 +21,10 @@ import com.l2scoria.gameserver.model.entity.Instance;
 import com.l2scoria.gameserver.model.entity.event.GameEvent;
 import com.l2scoria.gameserver.model.entity.event.GameEventManager;
 import com.l2scoria.gameserver.model.entity.event.Language;
+import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.CreatureSay;
 import com.l2scoria.gameserver.network.serverpackets.NpcHtmlMessage;
+import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
 import com.l2scoria.gameserver.taskmanager.ExclusiveTask;
 import com.l2scoria.gameserver.taskmanager.TaskManager;
 import com.l2scoria.gameserver.templates.L2EtcItemType;
@@ -34,6 +37,7 @@ import gnu.trove.map.hash.TIntObjectHashMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class TvT extends GameEvent
@@ -87,6 +91,12 @@ public class TvT extends GameEvent
 	private boolean TVT_AURA;
 	private boolean TVT_ININSTANCE;
 	private boolean TVT_ORIGINALRETURN;
+        
+        private boolean TVT_BUFF_PLAYERS;
+        private String TVT_BUFF_MAGE;
+        private String TVT_BUFF_FIGHTER;
+        private Map<Integer, Integer> _magiclist = new HashMap<Integer, Integer>();
+        private Map<Integer, Integer> _fighterlist = new HashMap<Integer, Integer>();
         
 	public TvT()
 	{
@@ -617,6 +627,46 @@ public class TvT extends GameEvent
 			{
 				_victim.teleToLocation(getPlayerTeam(_victim).loc, false);
 				_victim.doRevive();
+                                if(TVT_BUFF_PLAYERS && _victim.isPlayer)
+                                {
+                                    L2PcInstance player = (L2PcInstance)_victim;
+                                    L2Skill skill;
+                                    SystemMessage sm;
+                                    if(player.isMageClass())
+                                    {
+                                        for(String _idlvl: TVT_BUFF_MAGE.split(";"))
+                                        {
+                                            String[] singledata = _idlvl.split(":");
+                                            int skillid = Integer.parseInt(singledata[0]);
+                                            int skilllvl = Integer.parseInt(singledata[1]);
+                                            if(skillid != 0 && skilllvl != 0)
+                                            {
+                                                skill = SkillTable.getInstance().getInfo(skillid, skilllvl);
+                                                skill.getEffects(player, player);
+                                                sm = new SystemMessage(SystemMessageId.YOU_FEEL_S1_EFFECT);
+                                                sm.addSkillName(skillid);
+                                                player.sendPacket(sm);
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        for(String _idlvl: TVT_BUFF_FIGHTER.split(";"))
+                                        {
+                                            String[] singledata = _idlvl.split(":");
+                                            int skillid = Integer.parseInt(singledata[0]);
+                                            int skilllvl = Integer.parseInt(singledata[1]);
+                                            if(skillid != 0 && skilllvl != 0)
+                                            {
+                                                skill = SkillTable.getInstance().getInfo(skillid, skilllvl);
+                                                skill.getEffects(player, player);
+                                                sm = new SystemMessage(SystemMessageId.YOU_FEEL_S1_EFFECT);
+                                                sm.addSkillName(skillid);
+                                                player.sendPacket(sm);
+                                            }
+                                        }
+                                    }
+                                }
 			}
 			else
 			{
@@ -783,8 +833,47 @@ public class TvT extends GameEvent
 							player = L2World.getInstance().getPlayer(playerId);
 							if (player != null)
 							{
+                                                            if(TVT_BUFF_PLAYERS)
+                                                            {
+                                                                L2Skill skill;
+                                                                SystemMessage sm;
+                                                                if(player.isMageClass())
+                                                                {
+                                                                        for(String _idlvl: TVT_BUFF_MAGE.split(";"))
+                                                                        {
+                                                                            String[] singledata = _idlvl.split(":");
+                                                                            int skillid = Integer.parseInt(singledata[0]);
+                                                                            int skilllvl = Integer.parseInt(singledata[1]);
+                                                                            if(skillid != 0 && skilllvl != 0)
+                                                                            {
+                                                                                skill = SkillTable.getInstance().getInfo(skillid, skilllvl);
+                                                                                skill.getEffects(player, player);
+                                                                                sm = new SystemMessage(SystemMessageId.YOU_FEEL_S1_EFFECT);
+                                                                                sm.addSkillName(skillid);
+                                                                                player.sendPacket(sm);
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        for(String _idlvl: TVT_BUFF_FIGHTER.split(";"))
+                                                                        {
+                                                                            String[] singledata = _idlvl.split(":");
+                                                                            int skillid = Integer.parseInt(singledata[0]);
+                                                                            int skilllvl = Integer.parseInt(singledata[1]);
+                                                                            if(skillid != 0 && skilllvl != 0)
+                                                                            {
+                                                                                skill = SkillTable.getInstance().getInfo(skillid, skilllvl);
+                                                                                skill.getEffects(player, player);
+                                                                                sm = new SystemMessage(SystemMessageId.YOU_FEEL_S1_EFFECT);
+                                                                                sm.addSkillName(skillid);
+                                                                                player.sendPacket(sm);
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
 								player.standUp();
-							}
+                                                            }
 						}
 					}
 					_elapsed = (_eventTime * 60000) / 2;
@@ -1008,6 +1097,10 @@ public class TvT extends GameEvent
 			TVT_ALLOW_TEAM_ATTACKING = Boolean.parseBoolean(Setting.getProperty("TvTAllowTeamAttacking", "false"));
 			TVT_PRICE_NO_KILLS = Boolean.parseBoolean(Setting.getProperty("TvTPriceNoKills", "false"));
 			TVT_ORIGINALRETURN = Boolean.parseBoolean(Setting.getProperty("TvTOriginalPosition", "false"));
+                        
+                        TVT_BUFF_PLAYERS = Boolean.parseBoolean(Setting.getProperty("TvTBuffPlayers", "false"));
+                        TVT_BUFF_MAGE = Setting.getProperty("TvTBuffMagic", "1204:1;1085:1");
+                        TVT_BUFF_FIGHTER = Setting.getProperty("TvTBuffFighter", "1204:1;1086:1");
 
 			_minlvl = Integer.parseInt(Setting.getProperty("TvTMinLevel", "1"));
 			_maxlvl = Integer.parseInt(Setting.getProperty("TvTMaxLevel", "85"));

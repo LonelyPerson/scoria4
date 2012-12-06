@@ -40,6 +40,8 @@ import org.apache.log4j.Logger;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -219,14 +221,15 @@ public final class L2ItemInstance extends L2Object
 		});
 		if(Config.LOG_ITEMS)
 		{
-			LogRecord record = new LogRecord(Level.INFO, "CHANGE:" + process);
-			record.setLoggerName("item");
-			record.setParameters(new Object[]
-			{
-					this, creator, reference
-			});
-			_logItems.info(record);
-			record = null;
+                    if(!Config.LOG_ITEMS_EXC_PROC.contains(process) && !Config.LOG_ITEMS_EXC_ITEM.contains(this.getItemType().toString()))
+                    {
+                        List<Object> param = new ArrayList<Object>();
+                        param.add("Process: "+process);
+                        param.add(this);
+                        param.add(creator);
+                        param.add(reference);
+                        _logItems.info(param);
+                    }
 		}
 	}
 
@@ -330,14 +333,15 @@ public final class L2ItemInstance extends L2Object
 
 		if(Config.LOG_ITEMS)
 		{
-			LogRecord record = new LogRecord(Level.INFO, "CHANGE:" + process);
-			record.setLoggerName("item");
-			record.setParameters(new Object[]
-			{
-					this, creator, reference
-			});
-			_logItems.info(record);
-			record = null;
+                    if(!Config.LOG_ITEMS_EXC_PROC.contains(process) && !Config.LOG_ITEMS_EXC_ITEM.contains(this.getItemType().toString()))
+                    {
+                        List<Object> param = new ArrayList<Object>();
+                        param.add("Process: "+process);
+                        param.add(this);
+                        param.add(creator);
+                        param.add(reference);
+                        _logItems.info(param);
+                    }
 		}
 	}
 
@@ -1342,13 +1346,7 @@ public final class L2ItemInstance extends L2Object
 		
 		if(dropper.isPlayer && ((L2PcInstance)dropper).isGM())
 		{
-			LogRecord record = new LogRecord(Level.INFO, "Drop item: " + getItemName() + "(" + getCount() + ")");
-			record.setLoggerName("gmaudit");
-			record.setParameters(new Object[]
-			{
-				"GM: " + dropper.getName(), " to target [null] "
-			});
-			_logAudit.info(record);
+                    _logAudit.info("Drop item: " + getItemName() + "(" + getCount() + ") GM:" + dropper.getName());
 		}
 	}
 

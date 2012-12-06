@@ -40,6 +40,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ScheduledFuture;
 import java.util.logging.Level;
@@ -832,14 +834,12 @@ public class ItemTable
 
 		if(Config.LOG_ITEMS)
 		{
-			LogRecord record = new LogRecord(Level.INFO, "CREATE:" + process);
-			record.setLoggerName("item");
-			record.setParameters(new Object[]
-			{
-					item, actor, reference
-			});
-			_logItems.info(record);
-			record = null;
+			List<Object> param = new ArrayList<Object>();
+			param.add("CREATE:" + process);
+			param.add(item);
+			param.add(actor);
+			param.add(reference);
+			_logItems.info(param);
 		}
 
 		return item;
@@ -913,16 +913,15 @@ public class ItemTable
 			L2World.getInstance().removeObject(item);
 			IdFactory.getInstance().releaseId(item.getObjectId());
 
-			if(Config.LOG_ITEMS)
-			{
-				LogRecord record = new LogRecord(Level.INFO, "DELETE:" + process);
-				record.setLoggerName("item");
-				record.setParameters(new Object[]
-				{
-						item, actor, reference
-				});
-				_logItems.info(record);
-			}
+                        if(Config.LOG_ITEMS)
+                        {
+                                List<Object> param = new ArrayList<Object>();
+                                param.add("DELETE: " + process);
+                                param.add(item);
+                                param.add(actor);
+                                param.add(reference);
+                                _logItems.info(param);
+                        }
 
 			// if it's a pet control item, delete the pet as well
 			if(L2PetDataTable.isPetItem(item.getItemId()))

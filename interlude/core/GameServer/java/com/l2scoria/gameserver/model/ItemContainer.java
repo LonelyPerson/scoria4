@@ -361,23 +361,11 @@ public abstract class ItemContainer
 		{
 			if (actor.isGM())
 			{
-				LogRecord record = new LogRecord(Level.INFO, process + " item: " + sourceitem.getItemName() + "(" + count + ")");
-				record.setLoggerName("gmaudit");
-				record.setParameters(new Object[]
-				{
-					"GM: " + actor.getName(), " to target [" + target.getOwner() + "] "
-				});
-				_logAudit.info(record);
+                            _logAudit.info(process + " item: " + sourceitem.getItemName() + "(" + count + ")" + " GM: "+actor.getName()+" to target ["+target.getOwner()+"]");
 			}
 			else if(target.getOwner().isPlayer && ((L2PcInstance)target.getOwner()).isGM())
 			{
-				LogRecord record = new LogRecord(Level.INFO, process + " item: " + sourceitem.getItemName() + "(" + count + ")");
-				record.setLoggerName("gmaudit");
-				record.setParameters(new Object[]
-				{
-					"GM: " + target.getOwner().getName(), " from target [" + actor + "] "
-				});
-				_logAudit.info(record);
+                            _logAudit.info(process + " item: " + sourceitem.getItemName() + "(" + count + ")" + " GM: "+target.getOwner().getName()+" from target ["+actor+"]");
 			}
 		}
 

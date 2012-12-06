@@ -989,7 +989,6 @@ public final class Config
 	public static boolean ALT_MOB_AGRO_IN_PEACEZONE;
 	public static boolean ALT_GAME_FREIGHTS;
 	public static int ALT_GAME_FREIGHT_PRICE;
-	public static float ALT_GAME_SKILL_HIT_RATE;
 	public static boolean ALT_GAME_DELEVEL;
 	public static boolean ALT_GAME_MAGICFAILURES;
 	public static boolean ALT_GAME_FREE_TELEPORT;
@@ -1657,6 +1656,7 @@ public final class Config
 	public static boolean DEBUG;
 	public static boolean ASSERT;
 	public static boolean DEVELOPER;
+        public static boolean DEVELOPER_SKILL_CHANCE;
 	public static boolean SERVER_LIST_TESTSERVER;
 	public static boolean SERVER_LIST_BRACKET;
 	public static boolean SERVER_LIST_CLOCK;
@@ -1712,6 +1712,7 @@ public final class Config
 			DEBUG = Boolean.parseBoolean(devSettings.getProperty("Debug", "false"));
 			ASSERT = Boolean.parseBoolean(devSettings.getProperty("Assert", "false"));
 			DEVELOPER = Boolean.parseBoolean(devSettings.getProperty("Developer", "false"));
+                        DEVELOPER_SKILL_CHANCE = Boolean.parseBoolean(devSettings.getProperty("DeveloperChanceSkills", "false"));
 			SERVER_LIST_TESTSERVER = Boolean.parseBoolean(devSettings.getProperty("TestServer", "false"));
 			SERVER_LIST_BRACKET = Boolean.valueOf(devSettings.getProperty("ServerListBrackets", "false"));
 			SERVER_LIST_CLOCK = Boolean.valueOf(devSettings.getProperty("ServerListClock", "false"));
@@ -1741,8 +1742,8 @@ public final class Config
 			GMAUDIT = Boolean.valueOf(devSettings.getProperty("GMAudit", "False"));
 			LOG_CHAT = Boolean.valueOf(devSettings.getProperty("LogChat", "false"));
 			LOG_ITEMS = Boolean.valueOf(devSettings.getProperty("LogItems", "false"));
-			LOG_ITEMS_EXC_PROC = devSettings.getProperty("LogItems", "Consume");
-			LOG_ITEMS_EXC_ITEM = devSettings.getProperty("LogItems", "Arrow;Shot;Herb");
+			LOG_ITEMS_EXC_PROC = devSettings.getProperty("LogItemsExcludeProcess", "Consume");
+			LOG_ITEMS_EXC_ITEM = devSettings.getProperty("LogItemsExcludeItem", "Arrow Shot Herb");
 			/////////////////////
 			GAMEGUARD_ENFORCE = Boolean.valueOf(devSettings.getProperty("GameGuardEnforce", "False"));
 			GAMEGUARD_PROHIBITACTION = Boolean.valueOf(devSettings.getProperty("GameGuardProhibitAction", "False"));

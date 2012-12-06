@@ -4,6 +4,7 @@ import com.l2scoria.Config;
 import com.l2scoria.L2Properties;
 import com.l2scoria.gameserver.ai.CtrlIntention;
 import com.l2scoria.gameserver.cache.HtmCache;
+import com.l2scoria.gameserver.datatables.SkillTable;
 import com.l2scoria.gameserver.datatables.sql.DoorTable;
 import com.l2scoria.gameserver.datatables.sql.ItemTable;
 import com.l2scoria.gameserver.datatables.sql.NpcTable;
@@ -19,12 +20,14 @@ import com.l2scoria.gameserver.model.entity.Instance;
 import com.l2scoria.gameserver.model.entity.event.GameEvent;
 import com.l2scoria.gameserver.model.entity.event.GameEventManager;
 import com.l2scoria.gameserver.model.entity.event.Language;
+import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.clientpackets.RequestActionUse;
 import com.l2scoria.gameserver.network.serverpackets.CreatureSay;
 import com.l2scoria.gameserver.network.serverpackets.ExShowScreenMessage;
 import com.l2scoria.gameserver.network.serverpackets.NpcHtmlMessage;
 import com.l2scoria.gameserver.network.serverpackets.RadarControl;
 import com.l2scoria.gameserver.network.serverpackets.SocialAction;
+import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
 import com.l2scoria.gameserver.taskmanager.ExclusiveTask;
 import com.l2scoria.gameserver.taskmanager.TaskManager;
 import com.l2scoria.gameserver.templates.L2EtcItemType;
@@ -63,6 +66,10 @@ public class CTF extends GameEvent
 	private boolean CTF_CLOSE_COLISEUM_DOORS;
 	private boolean CTF_ALLOW_TEAM_CASTING;
 	private boolean CTF_RETURNORIGINAL;
+        
+        private boolean CTF_BUFF_PLAYERS;
+        private String CTF_BUFF_MAGE;
+        private String CTF_BUFF_FIGHTER;
 
 	/* -------- ПАРАМЕТРЫ ЭВЕНТА -------- */
 	private int _minlvl;
@@ -938,6 +945,45 @@ public class CTF extends GameEvent
 					player = L2World.getInstance().getPlayer(playerId);
 					if (player != null)
 					{
+                                            if(CTF_BUFF_PLAYERS)
+                                            {
+                                                L2Skill skill;
+                                                SystemMessage sm;
+                                                if(player.isMageClass())
+                                                {
+                                                    for(String _idlvl: CTF_BUFF_MAGE.split(";"))
+                                                    {
+                                                        String[] singledata = _idlvl.split(":");
+                                                        int skillid = Integer.parseInt(singledata[0]);
+                                                        int skilllvl = Integer.parseInt(singledata[1]);
+                                                        if(skillid != 0 && skilllvl != 0)
+                                                        {
+                                                            skill = SkillTable.getInstance().getInfo(skillid, skilllvl);
+                                                            skill.getEffects(player, player);
+                                                            sm = new SystemMessage(SystemMessageId.YOU_FEEL_S1_EFFECT);
+                                                            sm.addSkillName(skillid);
+                                                            player.sendPacket(sm);
+                                                        }
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    for(String _idlvl: CTF_BUFF_FIGHTER.split(";"))
+                                                    {
+                                                        String[] singledata = _idlvl.split(":");
+                                                        int skillid = Integer.parseInt(singledata[0]);
+                                                        int skilllvl = Integer.parseInt(singledata[1]);
+                                                        if(skillid != 0 && skilllvl != 0)
+                                                        {
+                                                            skill = SkillTable.getInstance().getInfo(skillid, skilllvl);
+                                                            skill.getEffects(player, player);
+                                                            sm = new SystemMessage(SystemMessageId.YOU_FEEL_S1_EFFECT);
+                                                            sm.addSkillName(skillid);
+                                                            player.sendPacket(sm);
+                                                        }
+                                                    }
+                                                }
+                                            }
 						player.standUp();
 					}
 				}
@@ -1023,6 +1069,46 @@ public class CTF extends GameEvent
 				{
 					_player.teleToLocation(getPlayerTeam(_player).loc, false);
 					_player.doRevive();
+                                        if(CTF_BUFF_PLAYERS && _player.isPlayer)
+                                        {
+                                            L2Skill skill;
+                                            SystemMessage sm;
+                                            L2PcInstance player = (L2PcInstance)_player;
+                                            if(player.isMageClass())
+                                            {
+                                                for(String _idlvl: CTF_BUFF_MAGE.split(";"))
+                                                {
+                                                    String[] singledata = _idlvl.split(":");
+                                                    int skillid = Integer.parseInt(singledata[0]);
+                                                    int skilllvl = Integer.parseInt(singledata[1]);
+                                                    if(skillid != 0 && skilllvl != 0)
+                                                    {
+                                                        skill = SkillTable.getInstance().getInfo(skillid, skilllvl);
+                                                        skill.getEffects(player, player);
+                                                        sm = new SystemMessage(SystemMessageId.YOU_FEEL_S1_EFFECT);
+                                                        sm.addSkillName(skillid);
+                                                        player.sendPacket(sm);
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                for(String _idlvl: CTF_BUFF_FIGHTER.split(";"))
+                                                {
+                                                    String[] singledata = _idlvl.split(":");
+                                                    int skillid = Integer.parseInt(singledata[0]);
+                                                    int skilllvl = Integer.parseInt(singledata[1]);
+                                                    if(skillid != 0 && skilllvl != 0)
+                                                    {
+                                                        skill = SkillTable.getInstance().getInfo(skillid, skilllvl);
+                                                        skill.getEffects(player, player);
+                                                        sm = new SystemMessage(SystemMessageId.YOU_FEEL_S1_EFFECT);
+                                                        sm.addSkillName(skillid);
+                                                        player.sendPacket(sm);
+                                                    }
+                                                }
+                                            }
+                                        }
 				}
 				else
 				{
@@ -1097,6 +1183,11 @@ public class CTF extends GameEvent
 			CTF_CLOSE_COLISEUM_DOORS = Boolean.parseBoolean(Setting.getProperty("CTFCloseColiseumDoors", "true"));
 			CTF_ALLOW_TEAM_CASTING = Boolean.parseBoolean(Setting.getProperty("CTFAllowTeamCasting", "false"));
 			CTF_RETURNORIGINAL = Boolean.parseBoolean(Setting.getProperty("CTFOriginalPosition", "false"));
+                        
+                        CTF_BUFF_PLAYERS = Boolean.parseBoolean(Setting.getProperty("CTFBuffPlayers", "false"));
+                        CTF_BUFF_MAGE = Setting.getProperty("CTFBuffMagic", "1204:1;1085:1");
+                        CTF_BUFF_FIGHTER = Setting.getProperty("CTFBuffFighter", "1204:1;1086:1");
+                        
 			_minlvl = Integer.parseInt(Setting.getProperty("CTFMinLevel", "1"));
 			_maxlvl = Integer.parseInt(Setting.getProperty("CTFMaxLevel", "85"));
 			_rewardId = null;

@@ -2205,6 +2205,13 @@ public final class Formulas
 		}
 
 		rate *= resmodifier;
+                if(Config.DEVELOPER_SKILL_CHANCE)
+                {
+                    if(attacker.isPlayer)
+                    {
+                       attacker.sendPacket(SystemMessage.sendString(skill.getName()+": "+rate+"%"));
+                    }
+                }
 		if(Config.DEVELOPER)
 		{
 			System.out.println(skill.getName() + ": " + value + ", " + statmodifier + ", " + lvlmodifier + ", " + resmodifier + ", " + ((int) (Math.pow((double) attacker.getMAtk(target, skill) / target.getMDef(attacker, skill), 0.2) * 100) - 100) + ", " + ssmodifier + " ==> " + rate);

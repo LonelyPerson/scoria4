@@ -37,6 +37,7 @@ import org.apache.log4j.Logger;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -261,14 +262,7 @@ public class RegionBBSManager extends BaseBBSManager
 
 				if(Config.LOG_CHAT)
 				{
-					LogRecord record = new LogRecord(Level.INFO, ar3);
-					record.setLoggerName("chat");
-					record.setParameters(new Object[]
-					{
-							"TELL ", "[" + activeChar.getName() + " to " + receiver.getName() + "]"
-					});
-					_logChat.info(record);
-					record = null;
+                                        _logChat.info("REGION: From: ["+activeChar.getName() + "] to [" + receiver.getName() + "] text: "+ar3);
 				}
 
 				ar3 = ar3.replaceAll("\\\\n", "");
