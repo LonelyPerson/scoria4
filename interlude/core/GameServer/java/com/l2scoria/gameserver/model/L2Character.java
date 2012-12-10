@@ -811,6 +811,12 @@ public abstract class L2Character extends L2Object
 		{
 			_log.info(getName() + " doAttack: target=" + target);
 		}
+                
+                if(isAttackingNow())
+                {
+                    sendPacket(ActionFailed.STATIC_PACKET);
+                    return;
+                }
 
 		if(target == null)
 			return;
