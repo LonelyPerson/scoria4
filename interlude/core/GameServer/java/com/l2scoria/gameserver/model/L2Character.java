@@ -1054,7 +1054,7 @@ public abstract class L2Character extends L2Object
 		}
 
 		// Get the Attack Speed of the L2Character (delay (in milliseconds) before next attack)
-		int timeAtk = calculateTimeBetweenAttacks(target, weaponItem);
+		int timeAtk = Math.max(calculateTimeBetweenAttacks(target, weaponItem), 1);                
 		// the hit is calculated to happen halfway to the animation - might need further tuning e.g. in bow case
 		int timeToHit = timeAtk / 2;
 		_attackEndTime = GameTimeController.getGameTicks();
