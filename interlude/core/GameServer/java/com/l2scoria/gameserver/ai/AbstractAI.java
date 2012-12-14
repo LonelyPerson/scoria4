@@ -579,12 +579,8 @@ abstract class AbstractAI implements Ctrl
 	 */
 	protected void moveTo(int x, int y, int z)
 	{
-                if(_actor.isPlayer && _actor.isAttackingNow())
-                {
-                        return;
-                }
 		// Chek if actor can move
-		if(!_actor.isMovementDisabled())
+		if(!_actor.isMovementDisabled() && !_actor.isAttackingNow())
 		{
 			// Set AI movement data
 			_clientMoving = true;

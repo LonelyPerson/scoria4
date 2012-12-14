@@ -2158,7 +2158,7 @@ public abstract class L2Character extends L2Object
 	/** Return True if the L2Character can't attack (stun, sleep, attackEndTime, fakeDeath, paralyse). */
 	public boolean isAttackingDisabled()
 	{
-		return isImmobileUntilAttacked() || isStunned() || isSleeping() || isFallsdown() || _attackEndTime > GameTimeController.getGameTicks() || isFakeDeath() || isParalyzed() || isFlying();
+		return isImmobileUntilAttacked() || isStunned() || isSleeping() || isFallsdown() || _attackEndTime >= GameTimeController.getGameTicks() || isFakeDeath() || isParalyzed() || isFlying();
 	}
 
 	public final Calculator[] getCalculators()
@@ -4857,7 +4857,7 @@ public abstract class L2Character extends L2Object
 	 */
 	public final boolean isAttackingNow()
 	{
-		return _attackEndTime > GameTimeController.getGameTicks();
+		return _attackEndTime >= GameTimeController.getGameTicks();
 	}
 
 	/**
