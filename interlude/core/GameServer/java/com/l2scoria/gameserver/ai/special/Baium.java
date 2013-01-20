@@ -19,6 +19,7 @@
 package com.l2scoria.gameserver.ai.special;
 
 import com.l2scoria.Config;
+import com.l2scoria.gameserver.ai.CtrlIntention;
 import com.l2scoria.gameserver.datatables.SkillTable;
 import com.l2scoria.gameserver.geodata.GeoEngine;
 import com.l2scoria.gameserver.managers.GrandBossManager;
@@ -46,6 +47,7 @@ import java.util.List;
 
 import static com.l2scoria.gameserver.ai.CtrlIntention.AI_INTENTION_FOLLOW;
 import static com.l2scoria.gameserver.ai.CtrlIntention.AI_INTENTION_IDLE;
+import com.l2scoria.gameserver.model.actor.position.L2CharPosition;
 
 
 public class Baium extends Quest
@@ -240,7 +242,7 @@ public class Baium extends Quest
 				npc.deleteMe();
 				L2GrandBossInstance baium = (L2GrandBossInstance) addSpawn(LIVE_BAIUM, npc);
 				GrandBossManager.getInstance().addBoss(baium);
-				baium.setRunning();
+				//baium.setRunning();
 				baium.broadcastPacket(new SocialAction(baium.getObjectId(), 2));
 				startQuestTimer("baium_wakeup", 15000, baium, null);
 
@@ -274,7 +276,9 @@ public class Baium extends Quest
 				{
 					player.reduceCurrentHp(player.getCurrentHp(), player);
 				}
-
+                                baium.setWalking();
+				baium.getAI().setIntention(CtrlIntention.AI_INTENTION_MOVE_TO, new L2CharPosition(115182, 16616, 10077, 0));
+                                baium.setRunning();
 
 				//player.broadcastPacket(new ValidateLocation(player));
 			}
