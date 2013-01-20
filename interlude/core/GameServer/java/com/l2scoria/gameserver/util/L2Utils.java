@@ -123,7 +123,7 @@ public class L2Utils
             String hwid = null;
             if(object != null)
             {
-                return object.getHWid();
+                return object.gethwid();
             }
             try
             {

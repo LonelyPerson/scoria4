@@ -319,13 +319,13 @@ public class LastHero extends GameEvent
 			return false;
 		}
 
-		if (!Config.Allow_Same_HWID_On_Events && player.getClient().getHWId() != null && player.getClient().getHWId().length() != 0)
+		if (!Config.Allow_Same_HWID_On_Events && player.gethwid() != null && player.gethwid().length() != 0)
 		{
 			L2PcInstance pc = null;
 			for (int charId : _players.toArray())
 			{
 				pc = L2World.getInstance().getPlayer(charId);
-				if (pc != null && player.getClient().getHWId().equals(pc.getClient().getHWId()))
+				if (pc != null && player.gethwid().equals(pc.gethwid()))
 				{
                                         if(!noMessage) {
                                             player.sendMessage(Language.LANG_DUPLICATE_HWID);

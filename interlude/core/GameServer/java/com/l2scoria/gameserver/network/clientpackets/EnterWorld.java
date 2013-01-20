@@ -447,13 +447,7 @@ public class EnterWorld extends L2GameClientPacket
 		if (Config.ALLOW_BIND_HWID)
 		{
 			String _storeHwid = activeChar.loadHwid();
-                        String hwid = null;
-                        if(Config.SERVER_PROTECTION_TYPE.equals("CATS")) {
-                            hwid = activeChar.getClient().getHWId();
-                        }
-                        if(Config.SERVER_PROTECTION_TYPE.equals("LAME")) {
-                            hwid = activeChar.getClient().getHWID();
-                        }
+                        String hwid = activeChar.gethwid();
 
 			if(_storeHwid != null && hwid != null && hwid.length() > 0)
 			{
@@ -467,11 +461,9 @@ public class EnterWorld extends L2GameClientPacket
 				}
 			}
 		}
-                if(CatsGuard.getInstance().isEnabled())
+                if(activeChar.gethwid() != null)
                 {
-                        String hwid;
-                        hwid = activeChar.getClient().getHWId();
-                        L2Utils.saveHwid(activeChar.getName(), hwid);
+                        L2Utils.saveHwid(activeChar.getName(), activeChar.gethwid());
                 }
 	}
 

@@ -1997,6 +1997,29 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		return _hwid;
 	}
         
+        /**
+        * This is a multitype HWID function
+        * it worked with lameguard, catsguard 
+        * and used in all scoria pack.
+        * You can add some here - simple
+        */
+        public String gethwid()
+        {
+            // cats reflect method
+            if(this.getClient().getHWId() != null)
+            {
+                return this.getClient().getHWId();
+            }
+            else if(this.getClient().getHWID() != null)
+            {
+                 return this.getClient().getHWID();
+            }
+            else
+            {
+                return null;
+            }
+        }
+        
         public String getHWid() {
             return this.getClient().getHWId();
         }

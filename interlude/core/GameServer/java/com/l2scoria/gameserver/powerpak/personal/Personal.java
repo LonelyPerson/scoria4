@@ -244,12 +244,7 @@ public class Personal implements ICustomByPassHandler
             String hwid = null;
             String _storedHwid = player.loadHwid();
             if(_storedHwid == null || _storedHwid.equals("*") || _storedHwid.length() < 4) {
-            if(Config.SERVER_PROTECTION_TYPE.equals("CATS")) {
-                hwid = player.getClient().getHWId();
-            }
-            if(Config.SERVER_PROTECTION_TYPE.equals("LAME")) {
-                hwid = player.getClient().getHWID();
-            }
+            hwid = player.gethwid();
             // processing save HWID to database
             if(hwid != null && hwid.length() > 0) {
                 try {
