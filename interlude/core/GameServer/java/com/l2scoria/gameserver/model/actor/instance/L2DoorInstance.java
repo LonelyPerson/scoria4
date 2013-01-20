@@ -76,7 +76,7 @@ public class L2DoorInstance extends L2Character implements GeoCollision
 	public long _lastOpen;
 
 	public boolean _geoOpen;
-	public boolean _open = true;
+	public boolean _open = false;
 	private boolean _geodata = true;
 	private TLongByteHashMap geoAround;
 
@@ -708,7 +708,6 @@ public class L2DoorInstance extends L2Character implements GeoCollision
 			setOpen(true);
 			_lastOpen = System.currentTimeMillis();
 		}
-
 		setGeoOpen(true);
 		broadcastStatusUpdate();
 	}
