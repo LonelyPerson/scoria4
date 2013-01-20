@@ -5771,7 +5771,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		//IP check
 		if(targetPlayer.getClient()!=null)
 		{
-			if(targetPlayer.getClient().getConnection().getInetAddress() != getClient().getConnection().getInetAddress())
+			if(IpHwidCheck(this, targetPlayer))
 			{
 				if(targetPlayer.getKarma() > 0 || targetPlayer.getPvpFlag() > 0)
 				{
@@ -5816,6 +5816,33 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			}
 		}
 	}
+        
+        /**
+         * Check ip and hwid players of be unique. Return true if data is unique. False - if hem is same.
+         * @param player1
+         * @param player2 
+         */
+        public boolean IpHwidCheck(L2PcInstance player1, L2PcInstance player2)
+        {
+            if(player1.getClient() == null || player2.getClient() == null)
+            {
+                return false;
+            }
+            if(Config.REWARD_IP_CHECK && player1.getClient().getConnection().getInetAddress().equals(player2.getClient().getConnection().getInetAddress()))
+            {
+                return false;
+            }
+
+            if(Config.REWARD_HWID_CHECK && player1.gethwid() == null || player2.gethwid() == null)
+            {
+                return false;
+            }
+            if(Config.REWARD_HWID_CHECK && player1.gethwid().equals(player2.gethwid()))
+            {
+                return false;
+            }
+            return true;
+        }
 
 	/**
 	 * Increase the pvp kills count and send the info to the player
