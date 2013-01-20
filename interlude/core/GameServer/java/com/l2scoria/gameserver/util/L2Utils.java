@@ -117,6 +117,25 @@ public class L2Utils
             }
         }
         
+        /**
+         * Find contains in world users with same hwid
+         * loaded before this. Used on PcBang add check.
+         */
+        public static boolean hwidAlwaysInWorld(L2PcInstance activeChar)
+        {
+            for(L2PcInstance WorldChar : L2World.getInstance().getAllPlayers())
+            {
+                if(activeChar.gethwid() != null && WorldChar.gethwid() != null)
+                {
+                    if(activeChar.gethwid().equals(WorldChar.gethwid()))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        
         public static String getDataHwid(String player)
         {
             L2PcInstance object = L2World.getInstance().getPlayer(player);

@@ -611,6 +611,7 @@ public class TradeList
 			if(item == null || titem.getCount() < 1)
 			{
 				_log.warn(_owner.getName() + ": Invalid Item in TradeList");
+                                _owner.cancelActiveTrade();
 				return false;
 			}
 

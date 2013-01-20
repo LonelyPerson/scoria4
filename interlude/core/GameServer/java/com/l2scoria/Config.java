@@ -1603,12 +1603,13 @@ public final class Config
 	public static boolean PCB_ENABLE;
         public static boolean PCB_WINDOW_ONLINE;
 	public static int PCB_MIN_LEVEL;
+        public static boolean PCB_CHECK_HWID;
 	public static int PCB_POINT_MIN;
 	public static int PCB_POINT_MAX;
 	public static int PCB_CHANCE_DUAL_POINT;
 	public static int PCB_INTERVAL;
-    public static int PCB_LIKE_WINDOW_ONLINE_RATE;
-    public static int PCB_LIKE_WINDOW_INCREASE_RATE; 
+        public static int PCB_LIKE_WINDOW_ONLINE_RATE;
+        public static int PCB_LIKE_WINDOW_INCREASE_RATE; 
     
 	//============================================================
 	public static void loadPCBPointConfig()
@@ -1625,6 +1626,7 @@ public final class Config
 
 			PCB_ENABLE = Boolean.parseBoolean(pcbpSettings.getProperty("PcBangPointEnable", "true"));
 			PCB_MIN_LEVEL = Integer.parseInt(pcbpSettings.getProperty("PcBangPointMinLevel", "20"));
+                        PCB_CHECK_HWID = Boolean.parseBoolean(pcbpSettings.getProperty("PcBangCheckHWID", "true"));
 			PCB_POINT_MIN = Integer.parseInt(pcbpSettings.getProperty("PcBangPointMinCount", "20"));
 			PCB_POINT_MAX = Integer.parseInt(pcbpSettings.getProperty("PcBangPointMaxCount", "1000000"));
 
@@ -3306,7 +3308,6 @@ public final class Config
 	public static boolean CHAR_MOVE;
 	public static boolean ALLOW_SCRIPT;
         public static boolean ALLOW_BIND_HWID;
-        public static String SERVER_PROTECTION_TYPE;
         public static int WRONG_HWID_DISSCONNECT_TIME;
 	public static String PERSONAL_SCRIPTS;
 	public static FastList<Integer> PERSONAL_SCRIPTS_ID;
@@ -3348,14 +3349,7 @@ public final class Config
 			ALLOW_SCRIPT = Boolean.parseBoolean(PersonalSettings.getProperty("AllowScripts", "false"));
 
 			ALLOW_BIND_HWID = Boolean.parseBoolean(PersonalSettings.getProperty("AllowHwidBind", "false"));
-			SERVER_PROTECTION_TYPE = PersonalSettings.getProperty("ProtectionTypeHwidBind", null);
                         WRONG_HWID_DISSCONNECT_TIME = Integer.parseInt(PersonalSettings.getProperty("WrongHwidDisconnect", "2000"));
-
-			if(SERVER_PROTECTION_TYPE.equals(""))
-			{
-				SERVER_PROTECTION_TYPE = null;
-			}
-
 
 			if(ALLOW_SCRIPT)
 			{

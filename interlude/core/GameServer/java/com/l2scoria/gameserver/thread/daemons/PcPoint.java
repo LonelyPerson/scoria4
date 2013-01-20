@@ -5,6 +5,7 @@ import com.l2scoria.gameserver.model.L2World;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
+import com.l2scoria.gameserver.util.L2Utils;
 import com.l2scoria.util.random.Rnd;
 import org.apache.log4j.Logger;
 
@@ -38,8 +39,8 @@ public class PcPoint implements Runnable
 		int score = 0;
 		for(L2PcInstance activeChar: L2World.getInstance().getAllPlayers())
 		{
-
-			if(activeChar.getLevel() >= Config.PCB_MIN_LEVEL && !activeChar.isOfflineTrade() && !activeChar.isInStoreMode() && !activeChar.isInCraftMode())
+                    
+			if(this.CheckPcTakeConditions(activeChar))
 			{
 				score = Rnd.get(Config.PCB_POINT_MIN, Config.PCB_POINT_MAX);
 
@@ -72,4 +73,24 @@ public class PcPoint implements Runnable
 			activeChar = null;
 		} 
 	}
+        
+        private boolean CheckPcTakeConditions(L2PcInstance activeChar)
+        {
+            boolean result = false;
+            if(activeChar.getLevel() >= Config.PCB_MIN_LEVEL && !activeChar.isOfflineTrade() && !activeChar.isInStoreMode() && !activeChar.isInCraftMode())
+            {
+                if(Config.PCB_CHECK_HWID)
+                {
+                    if(!L2Utils.hwidAlwaysInWorld(activeChar))
+                    {
+                        result = true;
+                    }
+                }
+                else
+                {
+                    result = true;
+                }
+            }
+            return result;
+        }
 }
