@@ -88,6 +88,16 @@ public class SiegeManager
         public int _goddardmerc = 400;
         public int _runemerc = 400;
         public int _schuttgartmerc = 400;
+        
+        public int _gludiotakecastlez = 30;
+        public int _diontakecastlez = 30;
+        public int _girantakecastlez = 30;
+        public int _orentakecastlez = 50;
+        public int _adentakecastlez = 30;
+        public int _innadriltakecastlez = 50;
+        public int _goddardtakecastlez = 30;
+        public int _runetakecastlez = 50;
+        public int _schutgardtakecastlez = 30;
 
 	//private List<Siege> _sieges;
 
@@ -199,6 +209,35 @@ public class SiegeManager
 		character.removeSkill(SkillTable.getInstance().getInfo(246, 1));
 		character.removeSkill(SkillTable.getInstance().getInfo(247, 1));
 	}
+        
+        public int getCastleMonumentZmaxdiff(Castle castle)
+        {
+            if(castle == null)
+                return 0;
+           switch(castle.getCastleId())
+           {
+               case 1:
+                   return _gludiotakecastlez;
+               case 2:
+                   return _diontakecastlez;
+               case 3:
+                   return _girantakecastlez;
+               case 4:
+                   return _orentakecastlez;
+               case 5:
+                   return _adentakecastlez;
+               case 6:
+                   return _innadriltakecastlez;
+               case 7:
+                   return _goddardtakecastlez;
+               case 8:
+                   return _runetakecastlez;
+               case 9:
+                   return _schutgardtakecastlez;
+               default:
+                   return 0;    
+           }
+        }
 
 	// =========================================================
 	// Method - Private
@@ -232,7 +271,17 @@ public class SiegeManager
                         _goddardmerc = Integer.decode(siegeSettings.getProperty("GoddardLimitMerc", "400"));
                         _runemerc = Integer.decode(siegeSettings.getProperty("RuneLimitMerc", "400"));
                         _schuttgartmerc = Integer.decode(siegeSettings.getProperty("SchuttgartLimitMerc", "400"));
-
+                        
+                        _gludiotakecastlez = Integer.decode(siegeSettings.getProperty("GludioTakeCastleZdiff", "30"));
+                        _diontakecastlez = Integer.decode(siegeSettings.getProperty("DionTakeCastleZdiff", "30"));
+                        _girantakecastlez = Integer.decode(siegeSettings.getProperty("GiranTakeCastleZdiff", "30"));
+                        _orentakecastlez = Integer.decode(siegeSettings.getProperty("OrenTakeCastleZdiff", "50"));
+                        _adentakecastlez = Integer.decode(siegeSettings.getProperty("AdenTakeCastleZdiff", "30"));
+                        _innadriltakecastlez = Integer.decode(siegeSettings.getProperty("InnadrilTakeCastleZdiff", "50"));
+                        _goddardtakecastlez = Integer.decode(siegeSettings.getProperty("GoddardTakeCastleZdiff", "30"));
+                        _runetakecastlez = Integer.decode(siegeSettings.getProperty("RuneTakeCastleZdiff", "50"));
+                        _schutgardtakecastlez = Integer.decode(siegeSettings.getProperty("SchuttgartTakeCastleZdiff", "30"));
+                        
 			// Siege spawns settings
 			_controlTowerSpawnList = new FastMap<Integer, FastList<SiegeSpawn>>();
 			_artefactSpawnList = new FastMap<Integer, FastList<SiegeSpawn>>();
