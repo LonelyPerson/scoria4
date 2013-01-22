@@ -225,7 +225,7 @@ public final class L2ItemInstance extends L2Object
                     {
                         List<Object> param = new ArrayList<Object>();
                         param.add("Process: "+process);
-                        param.add(this);
+                        param.add(this+"("+this.getObjectId()+")");
                         param.add(creator);
                         param.add(reference);
                         _logItems.info(param);
@@ -337,7 +337,7 @@ public final class L2ItemInstance extends L2Object
                     {
                         List<Object> param = new ArrayList<Object>();
                         param.add("Process: "+process);
-                        param.add(this);
+                        param.add(this+"("+this.getObjectId()+")");
                         param.add(creator);
                         param.add(reference);
                         _logItems.info(param);

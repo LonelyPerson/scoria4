@@ -36,6 +36,7 @@ import org.apache.log4j.Logger;
 public final class RequestEnchantItem extends L2GameClientPacket
 {
 	protected static final Logger _log = Logger.getLogger(Inventory.class.getName());
+        protected static final Logger _enchantLog = Logger.getLogger("enchantlog");
 	private static final String _C__58_REQUESTENCHANTITEM = "[C] 58 RequestEnchantItem";
 	private static final int[] CRYSTAL_SCROLLS =
 	{
@@ -514,9 +515,14 @@ public final class RequestEnchantItem extends L2GameClientPacket
 					sm.addItemName(item.getItemId());
 					activeChar.sendPacket(sm);
 				}
-
-				item.setEnchantLevel(item.getEnchantLevel() + Config.CUSTOM_ENCHANT_VALUE);
+                                int successLevel = item.getEnchantLevel() + Config.CUSTOM_ENCHANT_VALUE;
+				item.setEnchantLevel(successLevel);
 				item.updateDatabase();
+                                // item enchanted successful log here
+                                if(Config.LOG_ENCHANTS)
+                                {
+                                    _enchantLog.info(activeChar+" enchant "+item+"("+item.getObjectId()+") to +"+successLevel);
+                                }
 			}
 			else
 			{
@@ -632,6 +638,10 @@ public final class RequestEnchantItem extends L2GameClientPacket
 					item.setEnchantLevel(Config.BREAK_ENCHANT);
 					item.updateDatabase();
 				}
+                             if(Config.LOG_ENCHANTS)
+                             {
+                                _enchantLog.info(activeChar+" fail enchant "+item+"("+item.getObjectId()+")");
+                             }
 			}
 		}
 		sm = null;
