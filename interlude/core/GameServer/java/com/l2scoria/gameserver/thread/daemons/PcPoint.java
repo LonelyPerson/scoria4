@@ -8,6 +8,7 @@ import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
 import com.l2scoria.gameserver.util.L2Utils;
 import com.l2scoria.util.random.Rnd;
 import org.apache.log4j.Logger;
+import javolution.util.FastList;
 
 /**
  * @author ProGramMoS
@@ -17,6 +18,7 @@ public class PcPoint implements Runnable
 {
 	Logger _log = Logger.getLogger(PcPoint.class.getName());
 	private static PcPoint _instance;
+        private FastList<String> _hwidWorked = new FastList<String>();
 
 	public static PcPoint getInstance()
 	{
@@ -43,7 +45,10 @@ public class PcPoint implements Runnable
 			if(this.CheckPcTakeConditions(activeChar))
 			{
 				score = Rnd.get(Config.PCB_POINT_MIN, Config.PCB_POINT_MAX);
-
+                                if(Config.PCB_CHECK_HWID)
+                                {
+                                    _hwidWorked.add(activeChar.gethwid());
+                                }
 				if(Rnd.get(100) <= Config.PCB_CHANCE_DUAL_POINT)
 				{
 					score *= 2;
@@ -71,7 +76,11 @@ public class PcPoint implements Runnable
 			}
 
 			activeChar = null;
-		} 
+		}
+                if(Config.PCB_CHECK_HWID)
+                {
+                    _hwidWorked.clear();
+                }
 	}
         
         private boolean CheckPcTakeConditions(L2PcInstance activeChar)
@@ -81,7 +90,7 @@ public class PcPoint implements Runnable
             {
                 if(Config.PCB_CHECK_HWID)
                 {
-                    if(!L2Utils.hwidAlwaysInWorld(activeChar))
+                    if(!_hwidWorked.contains(activeChar.gethwid()))
                     {
                         result = true;
                     }

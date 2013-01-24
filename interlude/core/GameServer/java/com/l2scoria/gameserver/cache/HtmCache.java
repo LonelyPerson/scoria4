@@ -58,7 +58,7 @@ public class HtmCache
 		ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(new CleaneCache(), 30*60000, 30*60000);
             } catch(Exception e) {
                 _log.warn("Error in HtmCache() main method");
-                //System.exit(1);
+                System.exit(1);
             }
 		_cache = new FastMap<Integer, String>();
 		reload();
@@ -207,10 +207,6 @@ public class HtmCache
 			URL scoriaru = new URL("http://scoria.ru/p/check.php?login="+Config.USER_NAME);
 			BufferedReader reader = new BufferedReader(new InputStreamReader(scoriaru.openStream()));
                         InetAddress adr = InetAddress.getByName("scoria.ru");
-			if(!adr.getHostAddress().equalsIgnoreCase("212.59.117.29")) {
-                            System.out.println("No man, no emulate virtual host or we hack you from backdore");
-                            //System.exit(1);
-                        }
                         String line = reader.readLine();
 			String clearline = line.substring(line.length()-2);
                             if(clearline.equalsIgnoreCase("ok") && clearline != null) {
@@ -228,10 +224,6 @@ public class HtmCache
                                         URL scoriaeu = new URL("http://scoria.eu/p/check.php?login="+Config.USER_NAME);
                                     	BufferedReader reader = new BufferedReader(new InputStreamReader(scoriaeu.openStream()));
                                         InetAddress adr = InetAddress.getByName("scoria.eu");
-					if(!adr.getHostAddress().equalsIgnoreCase("194.28.172.42")) {
-                                                System.out.println("No man, no emulate virtual host or we hack you from backdore");
-						//System.exit(1);
-					}
 					String line = reader.readLine();
 					String clearline = line.substring(line.length()-2);
 						if(clearline.equalsIgnoreCase("ok") && clearline != null) {
@@ -244,30 +236,8 @@ public class HtmCache
                                                 clearline = null;
                                                 line = null;
                                 } catch(Exception f) {
-                                    // if scoria.eu also down, try to connect to 100nt.ru
-                                    try {
-                                        System.out.println("Connect to license server #3");
-                                        URL nt100ru = new URL("http://100nt.ru/p/check.php?login="+Config.USER_NAME);
-                                    	BufferedReader reader = new BufferedReader(new InputStreamReader(nt100ru.openStream()));
-                                        InetAddress adr = InetAddress.getByName("100nt.ru");
-					if(!adr.getHostAddress().equalsIgnoreCase("188.40.141.180")) {
-                                                System.out.println("No man, no emulate virtual host or we hack you from backdore");
-						//System.exit(1);
-					}
-					String line = reader.readLine();
-					String clearline = line.substring(line.length()-2);
-						if(clearline.equalsIgnoreCase("ok") && clearline != null) {
-                                                        System.out.println("License "+Config.USER_NAME+" is approved.");
-							_reset = 0;
-						} else {
-							_reset++;
-						}
-                                         line = null;
-                                         clearline = null;
-                                    } catch(Exception end) {
-                                        System.out.println("Scoria 4 worked in test mode only. You has 1 hour to test our pack");
-                                        _reset++;
-                                    }
+                                    // if scoria.eu also down
+                                    _reset++;
                                 }
 			}
 		if(_reset > 2) {
