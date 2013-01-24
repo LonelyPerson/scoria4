@@ -46,7 +46,7 @@
 		<spawn X='11129' Y='15760' Z='-4611'/>
 		<spawn X='7528' Y='17727' Z='-4377'/>
 	</zone>
-	<zone id='11022' type='Town' shape='Cuboid' minZ='-3800' maxZ='-3700'>
+	<zone id='11022' type='Town' shape='NPoly' minZ='-3800' maxZ='-3700'>
 		<stat name='name' val='Talking Island'/>
 		<stat name='townId' val='2'/>
 		<stat name='taxById' val='1'/>
@@ -98,7 +98,7 @@
 		<spawn X='116668' Y='-179523' Z='-1127'/>
 		<spawn X='115221' Y='-177206' Z='-909'/>
 	</zone>
-	<zone id='11027' type='Town' shape='Cuboid' minZ='-3200' maxZ='-2900'>
+	<zone id='11027' type='Town' shape='NPoly' minZ='-3200' maxZ='-2900'>
 		<stat name='name' val='Gludio Castle Town'/>
 		<stat name='townId' val='7'/>
 		<stat name='redirectTownId' val='5'/>
@@ -109,7 +109,7 @@
 		<spawn X='-12403' Y='123607' Z='-3107'/>
 		<spawn X='-12243' Y='121804' Z='-3015'/>
 	</zone>
-	<zone id='11028' type='Town' shape='Cuboid' minZ='-3250' maxZ='-2600'>
+	<zone id='11028' type='Town' shape='NPoly' minZ='-3250' maxZ='-2600'>
 		<stat name='name' val='Dion Castle Town'/>
 		<stat name='townId' val='8'/>
 		<stat name='redirectTownId' val='7'/>
@@ -121,7 +121,7 @@
 		<spawn X='19074' Y='142911' Z='-3054'/>
 		<spawn X='18835' Y='144837' Z='-3145'/>
 	</zone>
-	<zone id='11029' type='Town' shape='Cuboid' minZ='-2250' maxZ='-1400'>
+	<zone id='11029' type='Town' shape='NPoly' minZ='-2250' maxZ='-1400'>
 		<stat name='name' val='Town of Oren'/>
 		<stat name='townId' val='10'/>
 		<stat name='redirectTownId' val='11'/>
@@ -144,7 +144,7 @@
 		<spawn X='118270' Y='74494' Z='-2502'/>
 		<spawn X='115663' Y='74995' Z='-2625'/>
 	</zone>
-	<zone id='11031' type='Town' shape='Cuboid' minZ='-2700' maxZ='-1900'>
+	<zone id='11031' type='Town' shape='NPoly' minZ='-2700' maxZ='-1900'>
 		<stat name='name' val='Town of Aden'/>
 		<stat name='townId' val='12'/>
 		<stat name='redirectTownId' val='10'/>
@@ -160,7 +160,7 @@
 		<spawn X='148583' Y='25778' Z='-2039'/>
 		<spawn X='146368' Y='25214' Z='-2039'/>
 	</zone>
-	<zone id='11032' type='Town' shape='Cuboid' minZ='-3550' maxZ='-2600'>
+	<zone id='11032' type='Town' shape='NPoly' minZ='-3550' maxZ='-2600'>
 		<stat name='name' val='Goddard'/>
 		<stat name='townId' val='13'/>
 		<stat name='redirectTownId' val='14'/>
