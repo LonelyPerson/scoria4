@@ -18,6 +18,8 @@
 package com.l2scoria.gameserver.handler.items.impl;
 
 import com.l2scoria.gameserver.datatables.SkillTable;
+import com.l2scoria.gameserver.model.L2Effect;
+import com.l2scoria.gameserver.model.L2Object;
 import com.l2scoria.gameserver.model.L2Skill;
 import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
@@ -80,7 +82,8 @@ public class Scrolls extends ItemAbst
 				}
 				player.broadcastPacket(new MagicSkillUser(playable, playable, 2286, 1, 1, 0));
 				player.reduceDeathPenaltyBuffLevel();
-				useScroll(player, 2286, itemId - 8593);
+                                UseNotifyMessage(player, item);
+				//useScroll(player, 2286, itemId - 8593);
 				return true;
 			}
 
@@ -240,8 +243,7 @@ public class Scrolls extends ItemAbst
 				player.getStat().addSp(100000);
 				break;
 			case 6037: // Scroll of Waking XML:2170
-				player.broadcastPacket(new MagicSkillUser(playable, playable, 2170, 1, 1, 0));
-				useScroll(player, 2170, 1);
+				useWakingScroll(playable, item);
 				break;
 			case 9146: // Scroll of Guidance - For Event XML:2050
 				player.broadcastPacket(new MagicSkillUser(playable, player, 2050, 1, 1, 0));
@@ -298,4 +300,56 @@ public class Scrolls extends ItemAbst
 			activeChar.doCast(skill);
 		}
 	}
+        
+        private void UseNotifyMessage(L2PcInstance effecter, L2ItemInstance item)
+        {
+            SystemMessage itemuse = new SystemMessage(SystemMessageId.USE_S1);
+            itemuse.addString(item.getItemName());
+            effecter.sendPacket(itemuse);
+            
+            SystemMessage msg = new SystemMessage(SystemMessageId.YOU_FEEL_S1_EFFECT);
+            msg.addString(item.getItemName());
+            effecter.sendPacket(msg);
+        }
+        
+        private void useWakingScroll(L2PlayableInstance playable, L2ItemInstance item)
+        {
+            L2PcInstance caster = playable.getPlayer();
+            L2Object target = caster.getTarget();
+            L2PlayableInstance effected = null;
+            if(target == null)
+            {
+                effected = playable;
+            }
+            else
+            {
+                if(target.isPlayer)
+                {
+                    effected = target.getPlayer();
+                }
+            }
+            if(effected == null)
+            {
+                return;
+            }
+            L2Effect[] effects = effected.getAllEffects();
+            for(L2Effect e : effects)
+            {
+                if(e.getSkill().getSkillType() == L2Skill.SkillType.SLEEP)
+		{
+                    e.exit();
+                    break;
+		}
+	    }
+            
+            SystemMessage itemuse = new SystemMessage(SystemMessageId.USE_S1);
+            itemuse.addString(item.getItemName());
+            caster.sendPacket(itemuse);
+            
+            SystemMessage msg = new SystemMessage(SystemMessageId.YOU_FEEL_S1_EFFECT);
+            msg.addString(item.getItemName());
+            effected.sendPacket(msg);
+
+            effected.broadcastPacket(new MagicSkillUser(playable, effected, 2170, 1, 0, 0));
+        }
 }
