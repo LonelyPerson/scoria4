@@ -404,6 +404,7 @@ public abstract class L2Skill
 	private final SkillOpType _operateType;
 	private final boolean _magic;
 	private final boolean _staticReuse;
+        private final int _customOlystaticReuse;
 	private final boolean _staticHitTime;
 	private final boolean _ignoreShld;
 	private final int _mpConsume;
@@ -435,6 +436,7 @@ public abstract class L2Skill
 	//private final int _skillInterruptTime;
 	private final int _coolTime;
 	private final int _reuseDelay;
+        private final int _olyCustomReuseDelay;
 	private final int _buffDuration;
 
 	/**
@@ -528,6 +530,7 @@ public abstract class L2Skill
 		_magic = set.getBool("isMagic", false);
 		_ignoreShld = set.getBool("ignoreShld", false);
 		_staticReuse = set.getBool("staticReuse", false);
+                _customOlystaticReuse = set.getInteger("olyCustomStaticReuse", 2);
 		_staticHitTime = set.getBool("staticHitTime", false);
 		_ispotion = set.getBool("isPotion", false);
 		_mpConsume = set.getInteger("mpConsume", 0);
@@ -550,6 +553,7 @@ public abstract class L2Skill
 		_coolTime = set.getInteger("coolTime", 0);
 		//_skillInterruptTime = set.getInteger("hitTime", _hitTime / 2);
 		_reuseDelay = set.getInteger("reuseDelay", 0);
+                _olyCustomReuseDelay = set.getInteger("olyCustomReuseDelay", 0);
 		_buffDuration = set.getInteger("buffDuration", 0);
 
 		_skillRadius = set.getInteger("skillRadius", 80);
@@ -805,6 +809,23 @@ public abstract class L2Skill
 	{
 		return _staticReuse;
 	}
+        
+        public final boolean isOlyCustomStaticReuse()
+        {
+            // 2 is a unseted state
+            if(_customOlystaticReuse == 1)
+            {
+                return true;
+            }
+            else if(_customOlystaticReuse == 0)
+            {
+                return false;
+            }
+            else
+            {
+                return isStaticReuse();
+            }
+        }
 
 	/**
 	 * @return Returns true to set static hittime.
@@ -1051,6 +1072,18 @@ public abstract class L2Skill
 	{
 		return _reuseDelay;
 	}
+        
+        /**
+         * @return custom modificator of skill reulse in olympiad mode 
+         */
+        public final int getCustomOlyReuseDelay()
+        {
+                if(_olyCustomReuseDelay < 1)
+                {
+                    return getReuseDelay();
+                }
+            return _olyCustomReuseDelay;
+        }
 
 	@Deprecated
 	public final int getSkillTime()

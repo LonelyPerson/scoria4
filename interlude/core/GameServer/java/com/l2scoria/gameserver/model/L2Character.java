@@ -1696,28 +1696,57 @@ public abstract class L2Character extends L2Object
 		//int reuseDelay = (int)(skill.getReuseDelay() * getStat().getMReuseRate(skill));
 		//reuseDelay *= 333.0 / (skill.isMagic() ? getMAtkSpd() : getPAtkSpd());
 		int reuseDelay = skill.getReuseDelay();
+                
+                // custom reuseDelay on olympiad
+                if(this.isPlayer)
+                {
+                    // if player in olympiad mode
+                    if(this.getPlayer().isOlympiadStart() && this.getPlayer().isInOlympiadMode())
+                    {
+                        reuseDelay = skill.getCustomOlyReuseDelay();
+                    }
+                }
 
-		if (this.isPlayer && Formulas.getInstance().calcSkillMastery(this))
-		{
-			reuseDelay = 0;
-			SystemMessage sm = new SystemMessage(SystemMessageId.S1_PREPARED_FOR_REUSE);
-			sm.addSkillName(skill);
-			sendPacket(sm);
-			sm = null;
-		}
-		else if(!skill.isStaticReuse())
-		{
-			if(skill.isMagic())
-			{
-				reuseDelay *= getStat().getMReuseRate(skill);
-			}
-			else
-			{
-				reuseDelay *= getStat().getPReuseRate(skill);
-			}
+                if(this.isPlayer)
+                {
+                    if (Formulas.getInstance().calcSkillMastery(this))
+                    {
+                            reuseDelay = 0;
+                            SystemMessage sm = new SystemMessage(SystemMessageId.S1_PREPARED_FOR_REUSE);
+                            sm.addSkillName(skill);
+                            sendPacket(sm);
+                            sm = null;
+                    }
+                    else if(this.getPlayer().isInOlympiadMode() && this.getPlayer().isOlympiadStart())
+                    {
+                        if(!skill.isOlyCustomStaticReuse())
+                        {
+                            if(skill.isMagic())
+                            {
+                                    reuseDelay *= getStat().getMReuseRate(skill);
+                            }
+                            else
+                            {
+                                    reuseDelay *= getStat().getPReuseRate(skill);
+                            }
 
-			reuseDelay *= 333.0 / (skill.isMagic() ? getMAtkSpd() : getPAtkSpd());
-		}
+                            reuseDelay *= 333.0 / (skill.isMagic() ? getMAtkSpd() : getPAtkSpd());
+                        }
+                    }
+                    else if(!skill.isStaticReuse())
+                    {
+                            if(skill.isMagic())
+                            {
+                                    reuseDelay *= getStat().getMReuseRate(skill);
+                            }
+                            else
+                            {
+                                    reuseDelay *= getStat().getPReuseRate(skill);
+                            }
+
+                            reuseDelay *= 333.0 / (skill.isMagic() ? getMAtkSpd() : getPAtkSpd());
+                    }
+                }
 
 		// Send a Server->Client packet MagicSkillUser with target, displayId, level, skillTime, reuseDelay
 		// to the L2Character AND to all L2PcInstance in the _KnownPlayers of the L2Character
