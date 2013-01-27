@@ -1926,6 +1926,145 @@ public final class Config
 		}
 
 	}
+        
+        // =================SERVICE MANAGER NPC=======================
+        public static int SM_NPC_ENABLED;
+        public static int SM_ITEM_ID;
+        public static int SM_NAME_COLOR;
+        public static int SM_TITLE_COLOR;
+        public static int SM_NAME_CHANGE;
+        public static int SM_NULL_PK;
+        public static int SM_NOBLESSE;
+        public static int SM_CHANGE_SEX;
+        public static Map<Integer, Integer> SM_HERO;
+        public static Map<Integer, Integer> SM_PREMIUM;
+        public static int SM_CLAN_SKILLS;
+        public static int SM_LVL8_CLAN;
+        public static int SM_10K_CRP;
+        // language configurations
+        public static String SM_LANG_SEX_CHANGED_OK;
+        public static String SM_LANG_NAME_COLOR_CHANGE_OK;
+        public static String SM_LANG_TITLE_COLOR_CHANGE_OK;
+        public static String SM_LANG_NAME_FAIL_IS_INCORRENT;
+        public static String SM_LANG_NAME_FAIL_IS_CLAN_OWNER;
+        public static String SM_LANG_NAME_FAIL_IS_EXISTS;
+        public static String SM_LANG_NAME_SUCCESS_RESULT;
+        public static String SM_LANG_NOOBLES_FAIL_ALWAYS;
+        public static String SM_LANG_PKCLEAR_FAIL_NO;
+        public static String SM_LANG_PKCLEAR_SUCCESS;
+        public static String SM_LANG_CLAN_NOT_FOUND_OR_LVL;
+        public static String SM_LANG_CLAN_ALWAYS_HAVE_LVL;
+        public static String SM_LANG_CLAN_LEVEL_TAKE_SUCCESS;
+        public static String SM_LANG_CLAN_TAKE_ALL_SKILLS;
+        public static String SM_LANG_HERO_ALWAYS_HAVE;
+        public static String SM_LANG_UNKNOWN_EXCEPTION_HAPPEND;
+        public static String SM_LANG_HERO_TAKED_DAYS;
+        public static String SM_LANG_PREMIUM_ALWAYS_HAVE;
+        public static String SM_LANG_PREMIUM_TAKED_DAYS;
+        
+        public static void loadServiceManagerNpc()
+        {
+            final String SM = FService.SERVICE_MANAGER_NPC;
+            _log.info("Loading: "+SM+".");
+            try
+            {
+                Properties SERVICEMANAGER = new Properties();
+                InputStream is = new FileInputStream(new File(SM));
+                SERVICEMANAGER.load(is);
+                is.close();
+                SM_ITEM_ID = Integer.parseInt(SERVICEMANAGER.getProperty("SmItemId", "4037"));
+                SM_NAME_COLOR = Integer.parseInt(SERVICEMANAGER.getProperty("SmNameColorPrice", "4037"));
+                SM_TITLE_COLOR = Integer.parseInt(SERVICEMANAGER.getProperty("SmTitleColorPrice", "4037"));
+                SM_NAME_CHANGE = Integer.parseInt(SERVICEMANAGER.getProperty("SmNameChangePrice", "4037"));
+                SM_NULL_PK = Integer.parseInt(SERVICEMANAGER.getProperty("SmNullPkPrice", "4037"));
+                SM_NOBLESSE = Integer.parseInt(SERVICEMANAGER.getProperty("SmNoblessePrice", "4037"));
+                SM_CHANGE_SEX = Integer.parseInt(SERVICEMANAGER.getProperty("SmChangeSexPrice", "4037"));
+
+                SM_CLAN_SKILLS = Integer.parseInt(SERVICEMANAGER.getProperty("SmClanSkillsPrice", "4037"));
+                SM_LVL8_CLAN = Integer.parseInt(SERVICEMANAGER.getProperty("SmClanLvl8Price", "4037"));
+                SM_10K_CRP = Integer.parseInt(SERVICEMANAGER.getProperty("Sm10kCRPPrice", "4037"));
+                SM_HERO = new HashMap();
+
+                String[] propertySplit = SERVICEMANAGER.getProperty("SmHeroPrice", "").split(";");
+
+                for (String data : propertySplit)
+                {
+                  String[] dataSplit = data.split(",");
+                  if (dataSplit.length != 2)
+                  {
+                    _log.error("[SmHeroPrice]: invalid config property -> SmHeroPrice \"" + data + "\"");
+                  }
+                  else
+                  {
+                    try
+                    {
+                      SM_HERO.put(Integer.valueOf(Integer.parseInt(dataSplit[0])), Integer.valueOf(Integer.parseInt(dataSplit[1])));
+                    }
+                    catch (NumberFormatException nfe)
+                    {
+                      if (!data.equals(""))
+                      {
+                        _log.error("[SmHeroPrice]: invalid config property -> PriceList \"" + dataSplit[0] + "\"" + dataSplit[1]);
+                      }
+                    }
+
+                  }
+
+                }
+
+                SM_PREMIUM = new HashMap();
+
+                propertySplit = SERVICEMANAGER.getProperty("SmPremiumPrice", "").split(";");
+
+                for (String data : propertySplit)
+                {
+                  String[] dataSplit = data.split(",");
+                  if (dataSplit.length != 2)
+                  {
+                    _log.error("[SmPremiumPrice]: invalid config property -> SmPremiumPrice \"" + data + "\"");
+                  }
+                  else
+                  {
+                    try
+                    {
+                      SM_PREMIUM.put(Integer.parseInt(dataSplit[0]), Integer.parseInt(dataSplit[1]));
+                    }
+                    catch (NumberFormatException nfe)
+                    {
+                      if (!data.equals(""))
+                      {
+                        _log.error("[SmPremiumPrice]: invalid config property -> SmPremiumPrice \"" + dataSplit[0] + "\"" + dataSplit[1]);
+                      }
+                    }
+                  }
+
+                }
+                SM_LANG_SEX_CHANGED_OK = SERVICEMANAGER.getProperty("LANG_SEX_CHANGED_OK", "You must relogin to sow changes your sex");
+                SM_LANG_NAME_COLOR_CHANGE_OK = SERVICEMANAGER.getProperty("LANG_NAME_COLOR_CHANGE_OK", "You successly change you name color");
+                SM_LANG_TITLE_COLOR_CHANGE_OK = SERVICEMANAGER.getProperty("LANG_TITLE_COLOR_CHANGE_OK", "You successly change you title color");
+                SM_LANG_NAME_FAIL_IS_INCORRENT = SERVICEMANAGER.getProperty("LANG_NAME_FAIL_IS_INCORRENT", "Name cant contains ? or ; or , or /, or ®, or © and must be more then 3 or lower that 16 symbols");
+                SM_LANG_NAME_FAIL_IS_CLAN_OWNER = SERVICEMANAGER.getProperty("LANG_NAME_FAIL_IS_CLAN_OWNER", "Name cant be changed - you are a clan leader, transfer clan to someone and change name");
+                SM_LANG_NAME_FAIL_IS_EXISTS = SERVICEMANAGER.getProperty("LANG_NAME_FAIL_IS_EXISTS", "Name alrady exists");
+                SM_LANG_NAME_SUCCESS_RESULT = SERVICEMANAGER.getProperty("LANG_NAME_SUCCESS_RESULT", "You name succesly changed to %name%");
+                SM_LANG_NOOBLES_FAIL_ALWAYS = SERVICEMANAGER.getProperty("LANG_NOOBLES_FAIL_ALWAYS", "You are always nobless");
+                SM_LANG_PKCLEAR_FAIL_NO = SERVICEMANAGER.getProperty("LANG_PKCLEAR_FAIL_NO", "You didnt have pk kills");
+                SM_LANG_PKCLEAR_SUCCESS = SERVICEMANAGER.getProperty("LANG_PKCLEAR_SUCCESS", "Pk and karma are removed");
+                SM_LANG_CLAN_NOT_FOUND_OR_LVL = SERVICEMANAGER.getProperty("LANG_CLAN_NOT_FOUND_OR_LVL", "Your clan must have 5 lvl or more");
+                SM_LANG_CLAN_ALWAYS_HAVE_LVL = SERVICEMANAGER.getProperty("LANG_CLAN_ALWAYS_HAVE_LVL", "Your clan have 8 lvl always");
+                SM_LANG_CLAN_LEVEL_TAKE_SUCCESS = SERVICEMANAGER.getProperty("LANG_CLAN_LEVEL_TAKE_SUCCESS", "Your clan obtain 8 lvl");
+                SM_LANG_CLAN_TAKE_ALL_SKILLS = SERVICEMANAGER.getProperty("LANG_CLAN_TAKE_ALL_SKILLS", "Your clan obtain all skills now");
+                SM_LANG_HERO_ALWAYS_HAVE = SERVICEMANAGER.getProperty("LANG_HERO_ALWAYS_HAVE", "You are always have hero status");
+                SM_LANG_UNKNOWN_EXCEPTION_HAPPEND = SERVICEMANAGER.getProperty("LANG_UNKNOWN_EXCEPTION_HAPPEND", "Unknown error");
+                SM_LANG_HERO_TAKED_DAYS = SERVICEMANAGER.getProperty("LANG_HERO_TAKED_DAYS", "You have obtained hero for %days% day");
+                SM_LANG_PREMIUM_ALWAYS_HAVE = SERVICEMANAGER.getProperty("LANG_PREMIUM_ALWAYS_HAVE", "You always have premium status");
+                SM_LANG_PREMIUM_TAKED_DAYS = SERVICEMANAGER.getProperty("LANG_PREMIUM_TAKED_DAYS", "You have obtain premium for %days% day");
+            }
+            catch(Exception e)
+            {
+                e.printStackTrace();
+                throw new Error("Error in file: "+SM);
+            }
+        }
 
 	//============================================================
 	public static boolean ONLINE_PLAYERS_ON_LOGIN;
@@ -4062,6 +4201,7 @@ public final class Config
 			loadPCBPointConfig();
 			loadOfflineConfig();
 			loadFunEvents();
+                        loadServiceManagerNpc();
 
 			//other
 			loadTellConfig();

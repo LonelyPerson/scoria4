@@ -388,7 +388,13 @@ public class Personal implements ICustomByPassHandler
 		activeChar.sendMessage("Unknown problem... 0_o");
 		return;
 	}
-
+        
+        /**
+         * 
+         * @param activeChar l2pcinstance character active
+         * @param params i think is deprecated
+         * @param isSM if used the ServiceManager
+         */
 	public void premium(L2PcInstance activeChar, String params)
 	{
 		if(activeChar==null)
@@ -419,7 +425,7 @@ public class Personal implements ICustomByPassHandler
 				return;
 			}
 		}
-		long premiumTime = Config.PERSONAL_PREMIUM_TIME * 24L * 60L * 60L * 1000L;
+                long premiumTime = Config.PERSONAL_PREMIUM_TIME * 24L * 60L * 60L * 1000L;
 
 		activeChar.setDonator(true);
 		activeChar.updateNameTitleColor();

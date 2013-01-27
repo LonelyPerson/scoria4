@@ -18,12 +18,14 @@
  */
 package com.l2scoria.gameserver.handler.admin.impl;
 
+import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.GmListTable;
 import com.l2scoria.gameserver.model.L2Object;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.entity.Announcements;
 import com.l2scoria.gameserver.network.serverpackets.SocialAction;
 import com.l2scoria.util.database.L2DatabaseFactory;
+import com.l2scoria.util.database.LoginRemoteDbFactory;
 import org.apache.log4j.Logger;
 
 import java.sql.Connection;
@@ -152,7 +154,14 @@ public class Donator extends AdminAbst
 			if(player == null)
 				return;
 
-			con = L2DatabaseFactory.getInstance().getConnection();
+			if(Config.USE_RL_DATABSE)
+                        {
+                            con = LoginRemoteDbFactory.getInstance().getConnection();
+                        }
+                        else
+                        {
+                            con = L2DatabaseFactory.getInstance().getConnection();
+                        }
 			PreparedStatement statement = con.prepareStatement("SELECT * FROM accounts WHERE login=?");
 			statement.setString(1, player.getAccountName());
 			ResultSet result = statement.executeQuery();

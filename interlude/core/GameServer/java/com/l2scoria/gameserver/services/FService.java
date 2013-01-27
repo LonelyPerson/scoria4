@@ -79,6 +79,7 @@ public class FService
 	public static final String EVENT_WEDDING_FILE = "./config/fun/wedding.properties";
 	public static final String EVENT_PC_BANG_POINT_FILE = "./config/fun/pcBang.properties";
 	public static final String OFFLINE_FILE = "./config/fun/offline.properties";
+        public static final String SERVICE_MANAGER_NPC = "./config/fun/servicemanager.properties";
 
 	public static final String EVENTS = "./config/events/events.properties";
 
