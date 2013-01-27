@@ -143,7 +143,7 @@ public class GameServer
 			if (!Arrays.equals(Util.securityCrypt(Config.USER_NAME), Util.getHash()))
 			{
 				_log.info("UserName is wrong.");
-				//throw new Exception("UserName is wrong.");
+				throw new Exception("UserName is wrong.");
                         }
 
 			new File(Config.DATAPACK_ROOT, "data/clans").mkdirs();
