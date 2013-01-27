@@ -372,6 +372,25 @@ public class L2SMInstance extends L2FolkInstance {
         }
     }
 
+    private void updateDatabasePremium(L2PcInstance player, long premiumTime) {
+        Connection con = null;
+        try {
+            if (Config.USE_RL_DATABSE) {
+                con = LoginRemoteDbFactory.getInstance().getConnection();
+            } else {
+                con = L2DatabaseFactory.getInstance().getConnection();
+            }
+            premiumTime += System.currentTimeMillis();
+            PreparedStatement stmt = con.prepareStatement("UPDATE accounts SET premium = ? WHERE login = ?");
+            stmt.setLong(1, premiumTime);
+            stmt.setString(2, player.getAccountName());
+            stmt.execute();
+            stmt.close();
+            stmt = null;
+        } catch (Exception e) {
+        }
+    }
+
     private void updateDatabaseHero(L2PcInstance player, boolean newHero, long heroTime) {
         Connection con = null;
         try {
