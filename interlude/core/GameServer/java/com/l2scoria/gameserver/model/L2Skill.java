@@ -406,6 +406,7 @@ public abstract class L2Skill
 	private final boolean _staticReuse;
         private final int _customOlystaticReuse;
 	private final boolean _staticHitTime;
+        private final int _olyCustomStaticHitTime;
 	private final boolean _ignoreShld;
 	private final int _mpConsume;
 	private final int _mpInitialConsume;
@@ -433,6 +434,7 @@ public abstract class L2Skill
 
 	// all times in milliseconds
 	private final int _hitTime;
+        private final int _olyCustomHitTime;
 	//private final int _skillInterruptTime;
 	private final int _coolTime;
 	private final int _reuseDelay;
@@ -532,6 +534,7 @@ public abstract class L2Skill
 		_staticReuse = set.getBool("staticReuse", false);
                 _customOlystaticReuse = set.getInteger("olyCustomStaticReuse", 2);
 		_staticHitTime = set.getBool("staticHitTime", false);
+                _olyCustomStaticHitTime = set.getInteger("olyCustomStaticHitTime", 2);
 		_ispotion = set.getBool("isPotion", false);
 		_mpConsume = set.getInteger("mpConsume", 0);
 		_mpInitialConsume = set.getInteger("mpInitialConsume", 0);
@@ -550,6 +553,7 @@ public abstract class L2Skill
 		_effectRange = set.getInteger("effectRange", -1);
 
 		_hitTime = set.getInteger("hitTime", 0);
+                _olyCustomHitTime = set.getInteger("olyCustomHitTime", 0);
 		_coolTime = set.getInteger("coolTime", 0);
 		//_skillInterruptTime = set.getInteger("hitTime", _hitTime / 2);
 		_reuseDelay = set.getInteger("reuseDelay", 0);
@@ -834,6 +838,41 @@ public abstract class L2Skill
 	{
 		return _staticHitTime;
 	}
+        
+        /**
+         * 
+         * @return Return skill state static in oly or defaults
+         */
+        public final boolean isOlyCustomStaticHitTime()
+        {
+            if(_olyCustomStaticHitTime == 0)
+            {
+                return false;
+            }
+            else if(_olyCustomStaticHitTime == 1)
+            {
+                return true;
+            }
+            else
+            {
+                return isStaticHitTime();
+            }
+        }
+        
+        /**
+         * @return Return skills is static hittime or no. New mechanism, must be used if skill can be changed on custom oly headers
+         */
+        public final boolean isModedStaticHitTime(L2PcInstance player)
+        {
+            if(player.isOlympiadStart() && player.isInOlympiadMode())
+            {
+                return isOlyCustomStaticHitTime();
+            }
+            else
+            {
+                return isStaticHitTime();
+            }
+        }
 
 	public final int getLevelDepend()
 	{
@@ -1095,6 +1134,18 @@ public abstract class L2Skill
 	{
 		return _hitTime;
 	}
+        
+        /*
+         * return custom HitTime inclued olympiad modificators
+         */
+        public final int getCustomHitTime()
+        {
+            if(_olyCustomHitTime == 0)
+            {
+                return getHitTime();
+            }
+            return _olyCustomHitTime;
+        }
 
 	/**
 	 * @return Returns the coolTime.

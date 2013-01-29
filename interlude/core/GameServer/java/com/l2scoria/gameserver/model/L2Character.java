@@ -1645,7 +1645,15 @@ public abstract class L2Character extends L2Object
 		}
 
 		// Get the casting time of the skill (base)
-		int hitTime = skill.getHitTime();
+                int hitTime;
+                if(this.getPlayer().isOlympiadStart() && this.getPlayer().isInOlympiadMode())
+                {
+                    hitTime = skill.getCustomHitTime();
+                }
+		else
+                {
+                    hitTime = skill.getHitTime();
+                }
 		int coolTime = skill.getCoolTime();
 		final boolean effectWhileCasting = skill.hasEffectWhileCasting();
 
@@ -1653,7 +1661,7 @@ public abstract class L2Character extends L2Object
 
 		// Calculate the casting time of the skill (base + modifier of MAtkSpd)
 		// Don't modify the skill time for FORCE_BUFF skills. The skill time for those skills represent the buff time.
-		if(!effectWhileCasting && !forceBuff && !skill.isStaticHitTime())
+		if(!effectWhileCasting && !forceBuff && !skill.isModedStaticHitTime(getPlayer()))
 		{
 			hitTime = Formulas.getInstance().calcMAtkSpd(this, skill, hitTime);
 
@@ -1666,7 +1674,7 @@ public abstract class L2Character extends L2Object
 		// Calculate altered Cast Speed due to BSpS/SpS
 		L2ItemInstance weaponInst = getActiveWeaponInstance();
 
-		if(weaponInst != null && skill.isMagic() && !forceBuff && skill.getTargetType() != SkillTargetType.TARGET_SELF && !skill.isStaticHitTime())
+		if(weaponInst != null && skill.isMagic() && !forceBuff && skill.getTargetType() != SkillTargetType.TARGET_SELF && !skill.isModedStaticHitTime(getPlayer()))
 		{
 			if(weaponInst.getChargedSpiritshot() == L2ItemInstance.CHARGED_BLESSED_SPIRITSHOT || weaponInst.getChargedSpiritshot() == L2ItemInstance.CHARGED_SPIRITSHOT)
 			{
