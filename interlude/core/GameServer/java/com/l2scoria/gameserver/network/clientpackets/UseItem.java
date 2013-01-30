@@ -416,9 +416,16 @@ public final class UseItem extends L2GameClientPacket
 
 			if (activeChar.isAttackingNow())
 			{
-                                activeChar.abortAttack();
-				//ThreadPoolManager.getInstance().scheduleGeneral( new WeaponEquipTask(item,activeChar), (activeChar.getAttackEndTime()-GameTimeController.getGameTicks())*GameTimeController.MILLIS_IN_TICK);
-				//return;
+                                if(activeChar.isPlayer)
+                                {
+                                    activeChar.abortAttack();
+                                    //return;
+                                }
+                                else
+                                {
+                                    ThreadPoolManager.getInstance().scheduleGeneral( new WeaponEquipTask(item,activeChar), (activeChar.getAttackEndTime()-GameTimeController.getGameTicks())*GameTimeController.MILLIS_IN_TICK);
+                                    return;
+                                }
 			}
 
 			activeChar.useEquippableItem(item, true);

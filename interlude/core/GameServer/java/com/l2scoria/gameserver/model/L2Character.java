@@ -1661,7 +1661,7 @@ public abstract class L2Character extends L2Object
 
 		// Calculate the casting time of the skill (base + modifier of MAtkSpd)
 		// Don't modify the skill time for FORCE_BUFF skills. The skill time for those skills represent the buff time.
-		if(!effectWhileCasting && !forceBuff && !skill.isModedStaticHitTime(getPlayer()))
+		if(!effectWhileCasting && !forceBuff && !skill.isModedStaticHitTime(this))
 		{
 			hitTime = Formulas.getInstance().calcMAtkSpd(this, skill, hitTime);
 
@@ -1674,7 +1674,7 @@ public abstract class L2Character extends L2Object
 		// Calculate altered Cast Speed due to BSpS/SpS
 		L2ItemInstance weaponInst = getActiveWeaponInstance();
 
-		if(weaponInst != null && skill.isMagic() && !forceBuff && skill.getTargetType() != SkillTargetType.TARGET_SELF && !skill.isModedStaticHitTime(getPlayer()))
+		if(weaponInst != null && skill.isMagic() && !forceBuff && skill.getTargetType() != SkillTargetType.TARGET_SELF && !skill.isModedStaticHitTime(this))
 		{
 			if(weaponInst.getChargedSpiritshot() == L2ItemInstance.CHARGED_BLESSED_SPIRITSHOT || weaponInst.getChargedSpiritshot() == L2ItemInstance.CHARGED_SPIRITSHOT)
 			{

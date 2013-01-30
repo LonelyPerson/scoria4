@@ -862,8 +862,13 @@ public abstract class L2Skill
         /**
          * @return Return skills is static hittime or no. New mechanism, must be used if skill can be changed on custom oly headers
          */
-        public final boolean isModedStaticHitTime(L2PcInstance player)
+        public final boolean isModedStaticHitTime(L2Character object)
         {
+            if(!object.isPlayer)
+            {
+                return isStaticHitTime(); 
+            }
+            L2PcInstance player = object.getPlayer();
             if(player.isOlympiadStart() && player.isInOlympiadMode())
             {
                 return isOlyCustomStaticHitTime();
