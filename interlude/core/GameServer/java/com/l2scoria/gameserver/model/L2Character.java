@@ -1646,7 +1646,7 @@ public abstract class L2Character extends L2Object
 
 		// Get the casting time of the skill (base)
                 int hitTime;
-                if(this.getPlayer().isOlympiadStart() && this.getPlayer().isInOlympiadMode())
+                if(this.isPlayer && this.getPlayer().isOlympiadStart() && this.getPlayer().isInOlympiadMode())
                 {
                     hitTime = skill.getCustomHitTime();
                 }
