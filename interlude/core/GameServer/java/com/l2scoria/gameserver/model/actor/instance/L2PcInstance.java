@@ -13583,8 +13583,8 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
         {
             long donatorTime = 0;
             String charLogin = this.getAccountName();
+            Connection con = null;
             try {
-                Connection con;
                 if(Config.USE_RL_DATABSE)
                 {
                     con = LoginRemoteDbFactory.getInstance().getConnection();
@@ -13610,11 +13610,14 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
                         sendMessage("Premium end on: "+dateform);
                     }
                 }
-                try { con.close(); } catch(Exception i) {}
             } catch(Exception e) {
                 e.printStackTrace();
             }
-            
+            finally
+            {
+		try { con.close(); } catch(Exception e) { }
+		con = null;
+            }
             
         }
 
