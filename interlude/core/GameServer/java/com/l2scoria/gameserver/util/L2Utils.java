@@ -103,9 +103,10 @@ public class L2Utils
         
         public static void saveHwid(String player, String hwid)
         {
+            Connection con = null;
             try 
             {
-                Connection con = L2DatabaseFactory.getInstance().getConnection();
+                con = L2DatabaseFactory.getInstance().getConnection();
                 PreparedStatement stm = con.prepareStatement("update characters set hwid = ? where char_name like ?");
                 stm.setString(1, hwid);
                 stm.setString(2, player);
@@ -114,6 +115,10 @@ public class L2Utils
             catch(Exception e)
             {
                 _log.info("Failed query to database with save hwid data: "+e);
+            }
+            finally
+            {
+                try{con.close();} catch(Exception s) {}
             }
         }
         
