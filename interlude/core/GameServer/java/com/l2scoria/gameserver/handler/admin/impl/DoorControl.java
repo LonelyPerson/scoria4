@@ -155,13 +155,13 @@ public class DoorControl extends AdminAbst
 					door.closeMe();
 				}
 
-				for(Castle castle : CastleManager.getInstance().getCastles())
+				/*for(Castle castle : CastleManager.getInstance().getCastles())
 				{
 					for(L2DoorInstance door : castle.getDoors())
 					{
 						door.closeMe();
 					}
-				}
+				} */
 			}
 			catch(Exception e)
 			{
@@ -180,13 +180,13 @@ public class DoorControl extends AdminAbst
 					door.openMe();
 				}
 
-				for(Castle castle : CastleManager.getInstance().getCastles())
+				/*for(Castle castle : CastleManager.getInstance().getCastles())
 				{
 					for(L2DoorInstance door : castle.getDoors())
 					{
 						door.openMe();
 					}
-				}
+				}*/
 			}
 			catch(Exception e)
 			{

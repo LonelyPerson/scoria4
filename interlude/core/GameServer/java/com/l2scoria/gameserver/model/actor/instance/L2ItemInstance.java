@@ -224,8 +224,9 @@ public final class L2ItemInstance extends L2Object
                     if(!Config.LOG_ITEMS_EXC_PROC.contains(process) && !Config.LOG_ITEMS_EXC_ITEM.contains(this.getItemType().toString()))
                     {
                         List<Object> param = new ArrayList<Object>();
-                        param.add("Process: "+process);
+                        param.add("SO Process: "+process);
                         param.add(this+"("+this.getObjectId()+")");
+						param.add("Count total:"+_count);
                         param.add(creator);
                         param.add(reference);
                         _logItems.info(param);
@@ -338,6 +339,7 @@ public final class L2ItemInstance extends L2Object
                         List<Object> param = new ArrayList<Object>();
                         param.add("Process: "+process);
                         param.add(this+"("+this.getObjectId()+")");
+						param.add("Count total:"+_count+" passed:"+count);
                         param.add(creator);
                         param.add(reference);
                         _logItems.info(param);

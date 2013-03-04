@@ -174,6 +174,9 @@ public class DoorTable
 			shape.setZmax(zmax);
 			door.setShape(shape);*/
 			L2Territory pos = new L2Territory();
+            //if (id == 21240006)
+           // _log.info("Coords installed "+DoorData.getInt("bx")+":"+DoorData.getInt("by")+", "+DoorData.getInt("dx")+":"+DoorData.getInt("dy"));
+
 			pos.add(DoorData.getInt("ax"), DoorData.getInt("ay"), zmin, zmax, 0);
 			pos.add(DoorData.getInt("bx"), DoorData.getInt("by"), zmin, zmax, 0);
 			pos.add(DoorData.getInt("cx"), DoorData.getInt("cy"), zmin, zmax, 0);

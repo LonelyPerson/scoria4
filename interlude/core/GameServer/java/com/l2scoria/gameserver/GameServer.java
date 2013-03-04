@@ -238,13 +238,13 @@ public class GameServer
 
 			Util.printSection("GeoEngine");
 			if (Config.GEODATA)
-                        {
+            {
 				GeoEngine.loadGeo();
-                        }
-                        else
-                        {
-                                _log.info("GeoEngine current dissabled.");
-                        }
+            }
+            else
+            {
+                 _log.info("GeoEngine current dissabled.");
+            }
 
 			Util.printSection("Economy");
 			TradeController.getInstance();

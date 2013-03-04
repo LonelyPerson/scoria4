@@ -1891,6 +1891,8 @@ public class GeoEngine
 	{
 		geoX = (geoX << 4) + L2World.MAP_MIN_X + 8;
 		geoY = (geoY << 4) + L2World.MAP_MIN_Y + 8;
+       // _log.info("coords in check_cell passed: X"+geoX+", Y:"+geoY);
+
 		for (int ax = geoX; ax < geoX + 16; ax++)
 		{
 			for (int ay = geoY; ay < geoY + 16; ay++)
@@ -1923,15 +1925,15 @@ public class GeoEngine
 
 		synchronized (around)
 		{
-			//_log.info("===========================================");
+		//	_log.info("===========================================");
 
 			for(long geoXY : around.keys())
 			{
-				//_log.info("geoXY: " + geoXY);
+
 
 				int geoX = (int) geoXY;
 				int geoY = (int) (geoXY >> 32);
-
+             //   _log.info("geoXY: " + geoX+" : "+geoY);
 				// Получение мировых координат
 				int ix = geoX >> 11;
 				int iy = geoY >> 11;
@@ -1973,7 +1975,7 @@ public class GeoEngine
 						height &= 0xfff0;
 						height |= old_nswe;
 
-						//_log.info(" - hiegh bef.: " + height);
+					//	_log.info("C - hiegh bef.: " + height);
 
 						if (control.isGeoCloser())
 						{
@@ -1984,7 +1986,7 @@ public class GeoEngine
 							height &= ~around.get(geoXY);
 						}
 
-						//_log.info(" - hiegh aft.: " + height);
+					//	_log.info("C - hiegh aft.: " + height);
 
 						// Записываем высоту в массив
 						block[index + 1] = (byte) (height >> 8);
@@ -2032,7 +2034,7 @@ public class GeoEngine
 						temph &= 0xfff0;
 						temph |= old_nswe;
 
-						//_log.info(" - hiegh bef.: " + temph);
+					//	_log.info("M - hiegh bef.: " + temph);
 
 						if (control.isGeoCloser())
 						{
@@ -2043,7 +2045,7 @@ public class GeoEngine
 							temph &= ~around.get(geoXY);
 						}
 
-						//_log.info(" - hiegh aft.: " + temph);
+					//	_log.info("M - hiegh aft.: " + temph);
 
 						// записываем высоту
 						block[neededIndex + 1] = (byte) (temph >> 8);
@@ -2062,6 +2064,7 @@ public class GeoEngine
 
 		boolean first_time = around == null;
 
+
 		if(around == null)
 		{
 			around = new TLongByteHashMap();
@@ -2070,6 +2073,9 @@ public class GeoEngine
 			int maxX = pos.getXmax() - L2World.MAP_MIN_X >> 4;
 			int minY = pos.getYmin() - L2World.MAP_MIN_Y >> 4;
 			int maxY = pos.getYmax() - L2World.MAP_MIN_Y >> 4;
+         //   if (control.getDoorId() == 21240006 || control.getDoorId() == 24180001)
+         //   _log.info(control.getDoorId()+", Collision Geo: minX "+minX+", maxX "+maxX+", minY "+minY+", maxY "+maxY);
+
 			for (int geoX = minX; geoX <= maxX; geoX++)
 			{
 				for (int geoY = minY; geoY <= maxY; geoY++)
@@ -2085,6 +2091,9 @@ public class GeoEngine
 			{
 				int geoX = (int) geoXY;
 				int geoY = (int) (geoXY >> 32);
+
+              // _log.info(control.getDoorId()+", Added blocks : X:"+geoX+", Y:"+geoY);
+
 				long aroundN_geoXY = makeLong(geoX, geoY - 1); // close S
 				long aroundS_geoXY = makeLong(geoX, geoY + 1); // close N
 				long aroundW_geoXY = makeLong(geoX - 1, geoY); // close E

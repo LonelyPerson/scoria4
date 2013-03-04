@@ -63,6 +63,7 @@ public final class AuthLogin extends L2GameClientPacket
 		{
 			_log.info("user:" + _loginName);
 			_log.info("key:" + key);
+            _log.info("We have account name. Add to game server:" + _loginName);
 		}
 
 		L2GameClient client = getClient();

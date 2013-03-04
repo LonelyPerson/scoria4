@@ -175,7 +175,7 @@ class L2OlympiadGame extends Olympiad
 				if(Config.ALT_OLY_RESET_SKILL_REUSE)
                                 {
 					player.resetSkillTime(true);
-                                }
+                }
 
 				//Remove Hero Skills
 				if(player.isHero())

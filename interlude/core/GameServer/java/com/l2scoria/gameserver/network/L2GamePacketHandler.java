@@ -45,17 +45,34 @@ import java.util.concurrent.RejectedExecutionException;
 public final class L2GamePacketHandler implements IPacketHandler<L2GameClient>, IClientFactory<L2GameClient>, IMMOExecutor<L2GameClient>
 {
 	private static final Logger _log = Logger.getLogger(L2GamePacketHandler.class.getName());
+    private static final Logger _logPacket = Logger.getLogger("packetlog");
 
 	// implementation
 	public ReceivablePacket<L2GameClient> handlePacket(ByteBuffer buf, L2GameClient client)
 	{
 		int opcode = 0;
+
 		if(client._reader!=null)
 			opcode = client._reader.read(buf);
 		else
 			opcode = buf.get() & 0xff;
 		ReceivablePacket<L2GameClient> msg = null;
 		GameClientState state = client.getState();
+
+        //logging hackers ips
+        if (client.getAccountName()!=null)  {
+            String UserAccount = client.getAccountName().toLowerCase()+";" ;
+
+            if (Config.LOG_PACKETS && Config.LOG_PACKETS_ACCOUNTS.contains(UserAccount)){
+                String data = "";
+                int cPos = buf.position();
+                while (buf.hasRemaining()){
+                    data = data +"|"+ Integer.toHexString(buf.get() & 0xff);
+                }
+                buf.position(cPos);
+                _logPacket.info("Account: "+client.getAccountName()+", State:"+state+", OPCODE:"+Integer.toHexString(opcode)+", Data: "+data);
+            }
+        }
 
 		switch(state)
 		{
@@ -68,8 +85,8 @@ public final class L2GamePacketHandler implements IPacketHandler<L2GameClient>, 
 				{
 					msg = new AuthLogin();
 				}
-                                else if(opcode == 0xCA)
-                                {
+                else if(opcode == 0xCA)
+                {
 					msg = new GameGuardReply();
                                 }
 				else
@@ -101,7 +118,7 @@ public final class L2GamePacketHandler implements IPacketHandler<L2GameClient>, 
 					case 0x68:
 						msg = new RequestPledgeCrest();
 						break;
-                                        case 0xCA:
+                    case 0xCA:
 						msg = new GameGuardReply();
 						break;
 

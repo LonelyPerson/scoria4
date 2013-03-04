@@ -21,6 +21,7 @@ package com.l2scoria.gameserver.model.entity.siege;
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.sql.ClanTable;
 import com.l2scoria.gameserver.datatables.sql.DoorTable;
+import com.l2scoria.gameserver.geodata.GeoEngine;
 import com.l2scoria.gameserver.managers.CastleManager;
 import com.l2scoria.gameserver.managers.CastleManorManager;
 import com.l2scoria.gameserver.managers.CastleManorManager.CropProcure;
@@ -77,7 +78,7 @@ public class Castle
 	// =========================================================
 	// Data Field
 	private int _castleId = 0;
-	private List<L2DoorInstance> _doors = new FastList<L2DoorInstance>();
+	//private List<L2DoorInstance> _doors = new FastList<L2DoorInstance>();
 	private List<String> _doorDefault = new FastList<String>();
 	private String _name = "";
 	private int _ownerId = 0;
@@ -312,6 +313,9 @@ public class Castle
 			return;
 
 		L2DoorInstance door = getDoor(doorId);
+		
+		///_log.info("HP "+door.getCurrentHp()+", ACTION: "+open+", ID: "+doorId);
+		
 		if(door != null)
 		{
 			if(open)
@@ -323,8 +327,6 @@ public class Castle
 				door.closeMe();
 			}
 		}
-
-		door = null;
 	}
 
 	// This method is used to begin removing all castle upgrades
@@ -467,19 +469,21 @@ public class Castle
 	 */
 	public void spawnDoor(boolean isDoorWeak)
 	{
-		for (int i = 0; i < getDoors().size(); i++)
+        L2DoorInstance[] doors = DoorTable.getInstance().getDoors();
+		for (int i = 0; i < doors.length; i++)
 		{
-			L2DoorInstance door = getDoors().get(i);
+			L2DoorInstance door = doors[i];
 			if (door.getCurrentHp() <= 0)
 			{
 				door.decayMe();	// Kill current if not killed already
 				door.setCurrentHp(isDoorWeak ? door.getMaxHp() / 2 : door.getMaxHp());
 				door.spawnMe(door.getX(), door.getY(),door.getZ());
 			}
-			else if (!door.getOpen())
+			else if (door.getOpen())
 			{
 				door.closeMe();
 			}
+            DoorTable.getInstance().putDoor(door);
 		}
 		loadDoorUpgrade(); // Check for any upgrade the doors may have
 	}
@@ -498,8 +502,6 @@ public class Castle
 			saveDoorUpgrade(doorId, hp, pDef, mDef);
 			return;
 		}
-
-		door = null;
 	}
 
 	// =========================================================
@@ -586,6 +588,7 @@ public class Castle
 	private void loadDoor()
 	{
 		Connection con = null;
+		
 		try
 		{
 			con = L2DatabaseFactory.getInstance().getConnection();
@@ -600,10 +603,10 @@ public class Castle
 
 				L2DoorInstance door = DoorTable.getInstance().getDoor(rs.getInt("id"));
 				door.spawnMe(door.getX(), door.getY(), door.getZ());
-				_doors.add(door);
+                //close door in siege
+			//	_doors.add(door);
 				DoorTable.getInstance().putDoor(door);
 
-				door = null;
 			}
 
 			rs.close();
@@ -773,7 +776,13 @@ public class Castle
 		if(doorId <= 0)
 			return null;
 
-		for(int i = 0; i < getDoors().size(); i++)
+        L2DoorInstance door = DoorTable.getInstance().getDoor(doorId);
+        if(door.getDoorId() == doorId)
+            return door;
+        else
+            return null;
+
+		/*for(int i = 0; i < getDoors().size(); i++)
 		{
 			L2DoorInstance door = getDoors().get(i);
 
@@ -782,13 +791,13 @@ public class Castle
 
 			door = null;
 		}
-		return null;
+		return null;*/
 	}
 
-	public final List<L2DoorInstance> getDoors()
+	/*public final List<L2DoorInstance> getDoors()
 	{
 		return _doors;
-	}
+	} */
 
 	public final String getName()
 	{

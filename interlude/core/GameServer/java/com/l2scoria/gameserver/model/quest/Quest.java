@@ -1557,6 +1557,7 @@ public class Quest extends ManagedScript
 
 		if(content == null)
 		{
+            _log.info("Cache[HTML]: Loading quest id"+questId+", filename "+fileName);
 			content = HtmCache.getInstance().getHtmForce("data/scripts/quests/" + questId + "/" + fileName);
 		}
 

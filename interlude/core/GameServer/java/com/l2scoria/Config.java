@@ -1675,7 +1675,9 @@ public final class Config
 	public static boolean GMAUDIT;
 	public static boolean LOG_CHAT;
 	public static boolean LOG_ITEMS;
-        public static boolean LOG_ENCHANTS;
+    public static boolean LOG_ENCHANTS;
+    public static boolean LOG_PACKETS;
+    public static String LOG_PACKETS_ACCOUNTS;
 	public static String LOG_ITEMS_EXC_PROC;
 	public static String LOG_ITEMS_EXC_ITEM;
 	public static boolean GAMEGUARD_ENFORCE;
@@ -1745,7 +1747,11 @@ public final class Config
 			GMAUDIT = Boolean.valueOf(devSettings.getProperty("GMAudit", "False"));
 			LOG_CHAT = Boolean.valueOf(devSettings.getProperty("LogChat", "false"));
 			LOG_ITEMS = Boolean.valueOf(devSettings.getProperty("LogItems", "false"));
-                        LOG_ENCHANTS = Boolean.valueOf(devSettings.getProperty("LogEnchants", "false"));
+            LOG_ENCHANTS = Boolean.valueOf(devSettings.getProperty("LogEnchants", "false"));
+
+            LOG_PACKETS = Boolean.valueOf(devSettings.getProperty("LogPackets", "false"));
+            LOG_PACKETS_ACCOUNTS = devSettings.getProperty("LogPacketsAccounts", "");
+
 			LOG_ITEMS_EXC_PROC = devSettings.getProperty("LogItemsExcludeProcess", "Consume");
 			LOG_ITEMS_EXC_ITEM = devSettings.getProperty("LogItemsExcludeItem", "Arrow Shot Herb");
 			/////////////////////

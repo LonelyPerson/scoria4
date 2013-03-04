@@ -47,6 +47,8 @@ import org.apache.log4j.Logger;
 import java.util.Collection;
 import java.util.concurrent.ScheduledFuture;
 
+import java.io.*;
+
 /**
  * This class ...
  *
@@ -76,8 +78,9 @@ public class L2DoorInstance extends L2Character implements GeoCollision
 	public long _lastOpen;
 
 	public boolean _geoOpen;
-	public boolean _open = false;
+	public boolean _open = true;        // should be open, when engine starts it will close all doors
 	private boolean _geodata = true;
+	private boolean _doorDead = false;
 	private TLongByteHashMap geoAround;
 
 	private ClanHall _clanHall;
@@ -202,7 +205,8 @@ public class L2DoorInstance extends L2Character implements GeoCollision
                 _attackable = attackable;
 		_unlockable = unlockable;
 		_isHPVisible = showHp;
-		_geoOpen = true;
+		_geoOpen = true; // should be open, otherwise will throw an error during setup, when engine starts it close all doors automate
+		
 	}
 
 	@Override
@@ -266,6 +270,14 @@ public class L2DoorInstance extends L2Character implements GeoCollision
 	{
 		return _isHPVisible;
 	}
+	
+	/**
+	 * @return Returns the door status, dead or alive.
+	 */
+	public boolean isDoorDead()
+	{
+		return _doorDead;
+	}
 
 	/**
 	 * @return Returns the open.
@@ -298,6 +310,7 @@ public class L2DoorInstance extends L2Character implements GeoCollision
 			return;
 
 		if(val)
+           // GeoEngine.applyGeoCollision(this, getInstanceId());
 			GeoEngine.removeGeoCollision(this, getInstanceId());
 		else
 			GeoEngine.applyGeoCollision(this, getInstanceId());
@@ -680,8 +693,19 @@ public class L2DoorInstance extends L2Character implements GeoCollision
 		closeMe();
 	}
 
+    public static String getStackTrace(Throwable throwable) {
+        Writer writer = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(writer);
+        throwable.printStackTrace(printWriter);
+        return writer.toString();
+    }
+
 	public final void closeMe()
 	{
+		//log.info("Close, Status: "+isDoorDead()+", open = "+_open+", door ID: "+_doorId);
+
+		if (isDoorDead()) return;
+		
 		synchronized (this)
 		{
 			if (!_open)
@@ -692,12 +716,16 @@ public class L2DoorInstance extends L2Character implements GeoCollision
 			setOpen(false);
 		}
 
+
 		setGeoOpen(false);
 		broadcastStatusUpdate();
 	}
 
 	public final void openMe()
 	{
+		//log.info("Open, Status: "+isDoorDead()+", open = "+_open+", door ID: "+_doorId);
+		if (isDoorDead()) return;
+		
 		synchronized (this)
 		{
 			if (_open)
@@ -708,6 +736,7 @@ public class L2DoorInstance extends L2Character implements GeoCollision
 			setOpen(true);
 			_lastOpen = System.currentTimeMillis();
 		}
+      //  if (_doorId != 21240006)     check Zaken door
 		setGeoOpen(true);
 		broadcastStatusUpdate();
 	}
@@ -806,15 +835,17 @@ public class L2DoorInstance extends L2Character implements GeoCollision
 		return _pos;
 	}
 
-	/*@Override
+	@Override
 	public void onSpawn()
 	{
 		super.onSpawn();
-		if(!getOpen() && _geoOpen)
-			setGeoOpen(false);
 
-		closeMe();
-	}*/
+        if (_doorDead) {
+            _doorDead = false;
+            closeMe();
+
+        }
+	}
 
 	@Override
 	public boolean doDie(L2Character killer)
@@ -823,8 +854,11 @@ public class L2DoorInstance extends L2Character implements GeoCollision
 		{
 			return false;
 		}
-
+		_doorDead = true;
+		//log.info("Door dead: "+_doorDead+ ", door ID:"+_doorId);
 		setGeoOpen(true);
+		broadcastStatusUpdate();
+		
 		return true;
 	}
 }

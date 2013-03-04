@@ -57,8 +57,8 @@ public class L2Utils
 			{
 				PreparedStatement stm = con.prepareStatement("insert into delay_item (`char_name`, `item_id`, `count`) VALUES (?,?,?)");
 				stm.setString(1, _charName);
-                                stm.setInt(2, _item[0]);
-                                stm.setInt(3, _item[1]);
+                stm.setInt(2, _item[0]);
+                stm.setInt(3, _item[1]);
 				stm.execute();
 				stm.close();
 			} catch (SQLException e)

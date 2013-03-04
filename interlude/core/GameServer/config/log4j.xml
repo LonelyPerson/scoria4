@@ -22,11 +22,11 @@
 <log4j:configuration>
 
     <!-- This appender prints information to console -->
-    	<appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
-        	<layout class="org.apache.log4j.EnhancedPatternLayout">
-            		<param name="ConversionPattern" value="[%p %d{HH:mm:ss}]: %m%n"/>
-        	</layout>
-    	</appender>
+    <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+        <layout class="org.apache.log4j.EnhancedPatternLayout">
+                <param name="ConversionPattern" value="[%p %d{HH:mm:ss}]: %m%n"/>
+        </layout>
+    </appender>
 	<appender name="CHAT" class="org.apache.log4j.RollingFileAppender">
 		<param name="File" value="log/chat/chat.log"/>
 		<param name="Append" value="true"/>
@@ -61,11 +61,26 @@
 		<param name="BufferSize" value="256"/>
 		<appender-ref ref="LOGFILE"/>
 	</appender>
+	<appender name="LOGPACKETSASYNC" class="org.apache.log4j.AsyncAppender">
+		<param name="Blocking" value="false"/>
+		<param name="BufferSize" value="512"/>
+		<appender-ref ref="LOGPACKETS"/>
+	</appender>
 	<appender name="LOGFILE" class="org.apache.log4j.RollingFileAppender">
 		<param name="File" value="log/game.log"/>
 		<param name="Append" value="true"/>
 		<param name="maxBackupIndex" value="50" />
 		<param name="MaxFileSize" value="100MB"/>
+		<layout class="org.apache.log4j.EnhancedPatternLayout">
+			<param name="ConversionPattern" value="[%d{dd.MM.yy HH:mm:ss}] %m%n" />
+		</layout>
+	</appender>
+	
+	<appender name="LOGPACKETS" class="org.apache.log4j.RollingFileAppender">
+		<param name="File" value="log/packets.log"/>
+		<param name="Append" value="true"/>
+		<param name="maxBackupIndex" value="50" />
+		<param name="MaxFileSize" value="200MB"/>
 		<layout class="org.apache.log4j.EnhancedPatternLayout">
 			<param name="ConversionPattern" value="[%d{dd.MM.yy HH:mm:ss}] %m%n" />
 		</layout>
@@ -113,12 +128,16 @@
 	<logger name="BOSSTATE" additivity="false">
 	  <appender-ref ref="BOSSTATE" />
 	</logger>
+	
+	<logger name="packetlog" additivity="false">
+	  <appender-ref ref="LOGPACKETSASYNC" />
+	</logger>
 
     <!-- Root Logger -->
     <root>
         <priority value="info"/>
         <appender-ref ref="CONSOLE"/>
-	<appender-ref ref="LOGFILEASYNC"/>
+	    <appender-ref ref="LOGFILEASYNC"/>
     </root>
 
 </log4j:configuration>
