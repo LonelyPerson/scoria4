@@ -85,5 +85,6 @@ CREATE TABLE IF NOT EXISTS characters (
   title_color varchar(8) NOT NULL DEFAULT 0x000000,
   hwid varchar(32) NOT NULL DEFAULT '0',
   PRIMARY KEY  (obj_Id),
-  KEY `clanid` (`clanid`)
+  KEY `clanid` (`clanid`),
+  KEY `char_name` (`char_name`)
 ) ;
