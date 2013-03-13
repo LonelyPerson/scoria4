@@ -63,7 +63,6 @@ import com.l2scoria.gameserver.util.L2Utils;
 import org.apache.log4j.Logger;
 
 import java.util.Collection;
-import ru.catssoftware.protection.CatsGuard;
 
 /**
  * Enter World Packet Handler
@@ -209,7 +208,7 @@ public class EnterWorld extends L2GameClientPacket
 
 		sendPacket(new ClientSetTime()); // SetClientTime
 
-		sendPacket(new UserInfo(activeChar, true));
+		// просто заебись, шлем инфу о клане до того как получили его данные :D Как это работало я хуй знает
 
 		sendPacket(new HennaInfo(activeChar));
 
@@ -390,6 +389,7 @@ public class EnterWorld extends L2GameClientPacket
 
 		RegionBBSManager.getInstance().changeCommunityBoard();
 		CustomWorldHandler.getInstance().enterWorld(activeChar);
+                sendPacket(new UserInfo(activeChar, true));
 
 		if (Config.ALLOW_REMOTE_CLASS_MASTERS)
 		{
@@ -465,6 +465,7 @@ public class EnterWorld extends L2GameClientPacket
                 {
                         L2Utils.saveHwid(activeChar.getName(), activeChar.gethwid());
                 }
+                //ThreadPoolManager.getInstance().scheduleGeneral(new UserInfo(activeChar), 20000);
 	}
 
 	private void EnterGM(L2PcInstance activeChar)
