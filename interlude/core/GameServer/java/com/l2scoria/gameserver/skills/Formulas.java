@@ -2183,7 +2183,7 @@ public final class Formulas
 			rate = (int) (rate * Math.pow((double) attacker.getMAtk(target, skill) / target.getMDef(attacker, skill), 0.2));
 		}
 
-		if(ssmodifier != 100)
+		if(!Config.SS_ANTI_CRY_STUN && ssmodifier != 100)
 		{
 			if(rate > 10000 / (100 + ssmodifier))
 			{
