@@ -21,63 +21,56 @@ import java.nio.BufferUnderflowException;
 
 import javolution.text.TextBuilder;
 
-public abstract class ReceivablePacket<T extends MMOClient> extends AbstractPacket<T> implements Runnable
-{
-    protected ReceivablePacket()
-    {}
+public abstract class ReceivablePacket<T extends MMOClient> extends AbstractPacket<T> implements Runnable {
 
-    protected int getAvaliableBytes()
-    {
+    protected ReceivablePacket() {
+    }
+
+    protected int getAvaliableBytes() {
         return getByteBuffer().remaining();
     }
-    
+
     protected abstract boolean read();
-    
+
     public abstract void run();
-    
-    protected void readB(byte[] dst)
-    {
+
+    protected void readB(byte[] dst) {
         getByteBuffer().get(dst);
     }
-    
-    protected void readB(byte[] dst, int offset, int len)
-    {
+
+    protected void readB(byte[] dst, int offset, int len) {
         getByteBuffer().get(dst, offset, len);
     }
-    protected int readC()
-    {
+
+    protected int readC() {
         return getByteBuffer().get() & 0xFF;
     }
 
-    protected int readH()
-    {
+    protected int readH() {
         return getByteBuffer().getShort() & 0xFFFF;
     }
 
-    protected int readD()
-    {
+    protected int readD() {
         return getByteBuffer().getInt();
     }
 
-    protected long readQ()
-    {
+    protected long readQ() {
         return getByteBuffer().getLong();
     }
 
-    protected double readF()
-    {
+    protected double readF() {
         return getByteBuffer().getDouble();
     }
 
-	protected String readS()
-    {
+    protected String readS() {
         TextBuilder tb = TextBuilder.newInstance();
         char ch;
 
-        while((ch = getByteBuffer().getChar()) != 0)
+        while ((ch = getByteBuffer().getChar()) != 0) {
             tb.append(ch);
+        }
 
-        String str = tb.stringValue();
+        String str = tb.toString();
         TextBuilder.recycle(tb);
         return str;
     }
