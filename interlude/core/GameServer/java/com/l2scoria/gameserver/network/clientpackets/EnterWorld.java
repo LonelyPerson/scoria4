@@ -152,6 +152,16 @@ public class EnterWorld extends L2GameClientPacket
 			activeChar.restoreHpMpOnLoad();
 		}
 
+                /**
+                 * Хуй знает как это исправить, что удалось установить:
+                 * - на уровне сервера нет ограничения, привелегии верно выгружаются
+                 * - при эмуляции пакета смены титула через клан менюшку на уровне сервера
+                 * изменилось успешно(при неактивной менюшке) однако в клиенте - вовсе не менялось
+                 * и по всей видимости, данные в клиенте почему то на данном этапе находятся "OnlyRead" формате
+                 * - После эквипа любого предмета - все становиться хорошо. Однако эмуляция InventoryUpdate отсюда с пустым содержимым
+                 * ничем не помогла. Х/з. 
+                 */
+                activeChar.sendPacket(new UserInfo(activeChar, true));
 		activeChar.sendPacket(new EtcStatusUpdate(activeChar));
 
 		if (activeChar.getAllEffects() != null)
@@ -389,7 +399,6 @@ public class EnterWorld extends L2GameClientPacket
 
 		RegionBBSManager.getInstance().changeCommunityBoard();
 		CustomWorldHandler.getInstance().enterWorld(activeChar);
-                sendPacket(new UserInfo(activeChar, true));
 
 		if (Config.ALLOW_REMOTE_CLASS_MASTERS)
 		{

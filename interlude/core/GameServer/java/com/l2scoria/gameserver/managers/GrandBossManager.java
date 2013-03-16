@@ -286,7 +286,7 @@ public class GrandBossManager
 	public int getBossStatus(int bossId)
 	{
             
-		return _bossStatus.get(bossId);
+		return _bossStatus.get(bossId) == null ? 0 : _bossStatus.get(bossId);
 	}
 
 	public void setBossStatus(int bossId, int status)
