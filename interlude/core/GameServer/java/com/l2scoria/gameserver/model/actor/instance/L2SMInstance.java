@@ -24,6 +24,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 public class L2SMInstance extends L2FolkInstance {
 
@@ -83,7 +86,7 @@ public class L2SMInstance extends L2FolkInstance {
                 }
 
                 String nick = cmd[1];
-                if ((nick.length() < 3) || (nick.length() > 16) || (nick.contains("?")) || (nick.contains("/")) || (nick.contains(";")) || (nick.contains(" ")) || (nick.contains("®")) || (nick.contains("©")) || (nick.contains(","))) {
+                if ((nick.length() < 3) || (nick.length() > 16) || !isValidNick(nick)) {
                     player.sendMessage(Config.SM_LANG_NAME_FAIL_IS_INCORRENT);
                     return;
                 }
@@ -281,6 +284,26 @@ public class L2SMInstance extends L2FolkInstance {
                 return;
             }
         }
+    }
+    
+    public boolean isValidNick(String name)
+    {
+        boolean result = true;
+	Pattern pattern;
+	try
+	{
+            pattern = Pattern.compile(Config.SM_NAME_PATTERN);
+	}
+	catch(PatternSyntaxException e)
+	{
+		pattern = Pattern.compile(".*");
+	}
+        Matcher regexp = pattern.matcher(name);
+	if(!regexp.matches())
+	{
+		result = false;
+	}
+	return result;
     }
 
     public void showMain(L2PcInstance activeChar) {

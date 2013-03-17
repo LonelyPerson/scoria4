@@ -1801,6 +1801,7 @@ public final class Config {
     public static int SM_NAME_COLOR;
     public static int SM_TITLE_COLOR;
     public static int SM_NAME_CHANGE;
+    public static String SM_NAME_PATTERN;
     public static int SM_NULL_PK;
     public static int SM_NOBLESSE;
     public static int SM_CHANGE_SEX;
@@ -1842,6 +1843,7 @@ public final class Config {
             SM_NAME_COLOR = Integer.parseInt(SERVICEMANAGER.getProperty("SmNameColorPrice", "4037"));
             SM_TITLE_COLOR = Integer.parseInt(SERVICEMANAGER.getProperty("SmTitleColorPrice", "4037"));
             SM_NAME_CHANGE = Integer.parseInt(SERVICEMANAGER.getProperty("SmNameChangePrice", "4037"));
+            SM_NAME_PATTERN = SERVICEMANAGER.getProperty("SmNamePattern", ".*");
             SM_NULL_PK = Integer.parseInt(SERVICEMANAGER.getProperty("SmNullPkPrice", "4037"));
             SM_NOBLESSE = Integer.parseInt(SERVICEMANAGER.getProperty("SmNoblessePrice", "4037"));
             SM_CHANGE_SEX = Integer.parseInt(SERVICEMANAGER.getProperty("SmChangeSexPrice", "4037"));

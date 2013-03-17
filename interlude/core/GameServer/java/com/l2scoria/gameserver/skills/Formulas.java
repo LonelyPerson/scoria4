@@ -2194,17 +2194,19 @@ public final class Formulas
 				rate = rate * ssmodifier / 100;
 			}
 		}
-
-		if(rate > 99)
+                
+                rate *= resmodifier;
+                // В Interlude, максимальный шанс успешности прохождения - 95%, минимальный не ограничен
+                // В грациях - минимальный 10%, максимальный - 90%
+		if(rate > 95)
 		{
-			rate = 99;
+			rate = 95;
 		}
 		else if(rate < 1)
 		{
 			rate = 1;
 		}
 
-		rate *= resmodifier;
                 if(Config.DEVELOPER_SKILL_CHANCE)
                 {
                     if(attacker.isPlayer)

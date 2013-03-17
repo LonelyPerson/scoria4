@@ -208,7 +208,7 @@ public class HtmCache {
             }
             if (_reset > 2) {
                 System.out.println("License not approved. Buy it - http://scoria.ru or http://scoria.eu");
-                //System.exit(1);
+                System.exit(1);
             }
         }
     }
