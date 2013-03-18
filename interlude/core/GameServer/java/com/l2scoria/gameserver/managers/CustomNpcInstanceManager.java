@@ -87,15 +87,12 @@ public final class CustomNpcInstanceManager
 	/**
 	 * Just load the data for mysql...
 	 */
-	private final void load()
+	private void load()
 	{
 		if(templates == null)
 		{
 			templates = new FastMap<Integer, customInfo>();
 		}
-
-		String SQL_ITEM_SELECTS = "SELECT template,name,title,class_id,female,hair_style,hair_color,face,name_color,title_color,noble,hero,pvp,karma,wpn_enchant,right_hand,left_hand,gloves,chest,legs,feet,hair,hair2," + 
-			" pledge,cw_level,clan_id,ally_id,clan_crest,ally_crest,rnd_class,rnd_appearance,max_rnd_enchant FROM npc_to_pc_polymorph";
 
 		Connection con = null;
 		try
@@ -103,7 +100,8 @@ public final class CustomNpcInstanceManager
 			int count = 0;
 			con = L2DatabaseFactory.getInstance().getConnection();
 
-			PreparedStatement statement = con.prepareStatement(SQL_ITEM_SELECTS);
+			PreparedStatement statement = con.prepareStatement("SELECT template,name,title,class_id,female,hair_style,hair_color,face,name_color,title_color,noble,hero,pvp,karma,wpn_enchant,right_hand,left_hand,gloves,chest,legs,feet,hair,hair2," + 
+			" pledge,cw_level,clan_id,ally_id,clan_crest,ally_crest,rnd_class,rnd_appearance,max_rnd_enchant FROM npc_to_pc_polymorph");
 			ResultSet rset = statement.executeQuery();
 
 			while(rset.next())
@@ -169,12 +167,11 @@ public final class CustomNpcInstanceManager
 					_log.warn("Failed to load Npc Morph data for Id: " + ci.integerData[25]);
 				}
 				ci = null;
-
-				statement.close();
-				statement = null;
-				rset.close();
-				rset = null;
 			}
+                        statement.close();
+			statement = null;
+			rset.close();
+			rset = null;
 			_log.info("CustomNpcInstanceManager: loaded " + count + " NPC to PC polymorphs.");
 		}
 		catch(Exception e)
@@ -257,18 +254,14 @@ public final class CustomNpcInstanceManager
 			PreparedStatement statement = con.prepareStatement(Query);
 			ResultSet rset = statement.executeQuery();
 
-			statement.close();
-			statement = null;
-
 			while(rset.next())
 			{
 				customInfo ci = new customInfo();
 				ci.integerData[25] = rset.getInt("template");
 			}
 
+                        statement.close();
 			rset.close();
-			rset = null;
-			Query = null;
 		}
 		catch(Throwable t)
 		{
