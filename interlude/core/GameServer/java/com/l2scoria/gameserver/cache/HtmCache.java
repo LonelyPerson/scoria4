@@ -227,8 +227,10 @@ public class HtmCache {
     public String getHtm(String path) {
         try {
             String content = _cache.get(path.hashCode());
-            _log.info("Cache[HTML]: Loaded "+path);
-
+            if(Config.DEVELOPER)
+            {
+                _log.info("Cache[HTML]: Loaded "+path);
+            }
             if (Config.LAZY_CACHE && content == null) {
                 content = loadFile(new File(Config.DATAPACK_ROOT, path));
             }

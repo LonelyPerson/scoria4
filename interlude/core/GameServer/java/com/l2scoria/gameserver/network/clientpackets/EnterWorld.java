@@ -161,7 +161,6 @@ public class EnterWorld extends L2GameClientPacket
                  * - После эквипа любого предмета - все становиться хорошо. Однако эмуляция InventoryUpdate отсюда с пустым содержимым
                  * ничем не помогла. Х/з. 
                  */
-                activeChar.sendPacket(new UserInfo(activeChar, true));
 		activeChar.sendPacket(new EtcStatusUpdate(activeChar));
 
 		if (activeChar.getAllEffects() != null)
@@ -218,8 +217,6 @@ public class EnterWorld extends L2GameClientPacket
 
 		sendPacket(new ClientSetTime()); // SetClientTime
 
-		// просто заебись, шлем инфу о клане до того как получили его данные :D Как это работало я хуй знает
-
 		sendPacket(new HennaInfo(activeChar));
 
 		sendPacket(new FriendList(activeChar));
@@ -229,6 +226,8 @@ public class EnterWorld extends L2GameClientPacket
 		sendPacket(new ShortCutInit(activeChar));
 
 		sendPacket(new SkillCoolTime());
+                
+                sendPacket(new UserInfo(activeChar, true));
 
 		for (L2ItemInstance i : activeChar.getInventory().getItems())
 		{

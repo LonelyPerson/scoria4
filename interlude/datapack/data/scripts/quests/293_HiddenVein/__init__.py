@@ -1,4 +1,4 @@
-# Made by Mr. - Version 0.3 by DrLecter
+# Made by StiV
 import sys
 from com.l2scoria.gameserver.model.quest import State
 from com.l2scoria.gameserver.model.quest import QuestState
@@ -10,16 +10,30 @@ CHRYSOLITE_ORE = 1488
 TORN_MAP_FRAGMENT = 1489
 HIDDEN_VEIN_MAP = 1490
 ADENA = 57
+NEWBIE_REWARD = 4
+SOULSHOT_FOR_BEGINNERS = 5789
+
+def newbie_rewards(st) :
+  # check the player state against this quest newbie rewarding mark.
+  player=st.getPlayer()
+  newbie = player.getNewbie()
+  if newbie | NEWBIE_REWARD != newbie :
+     st.checkNewbieQuests()
+     player.setNewbie(newbie|NEWBIE_REWARD)
+     st.giveItems(SOULSHOT_FOR_BEGINNERS,6000)
+     st.playTutorialVoice("tutorial_voice_026")
 
 class Quest (JQuest) :
 
- def __init__(self,id,name,descr): JQuest.__init__(self,id,name,descr)
+ def __init__(self,id,name,descr):
+     JQuest.__init__(self,id,name,descr)
+     self.questItemIds = [HIDDEN_VEIN_MAP, CHRYSOLITE_ORE, TORN_MAP_FRAGMENT]
 
  def onEvent (self,event,st) :
     htmltext = event
     if event == "30535-03.htm" :
       st.set("cond","1")
-      st.setState(STARTED)
+      st.setState(State.STARTED)
       st.playSound("ItemSound.quest_accept")
     elif event == "30535-06.htm" :
       st.takeItems(TORN_MAP_FRAGMENT,-1)
@@ -33,15 +47,15 @@ class Quest (JQuest) :
     return htmltext
 
  def onTalk (self,npc,player):
-   htmltext = "<html><body>You are either not carrying out your quest or don't meet the criteria.</body></html>"
+   htmltext = "<html><body>You are either not on a quest that involves this NPC, or you don't meet this NPC's minimum quest requirements.</body></html>"
    st = player.getQuestState(qn)
    if not st : return htmltext
 
    npcId = npc.getNpcId()
    id = st.getState()
-   if npcId != 30535 and id != STARTED : return htmltext
+   if npcId != 30535 and id != State.STARTED : return htmltext
    
-   if id == CREATED :
+   if id == State.CREATED :
      st.set("cond","0")
    if npcId == 30535 :
      if st.getInt("cond")==0 :
@@ -59,17 +73,20 @@ class Quest (JQuest) :
          if st.getQuestItemsCount(HIDDEN_VEIN_MAP)==0 :
            htmltext = "30535-04.htm"
          else :
+           newbie_rewards(st)
            htmltext = "30535-08.htm"
-           st.giveItems(ADENA,st.getQuestItemsCount(HIDDEN_VEIN_MAP)*1000)
+           st.rewardItems(ADENA,st.getQuestItemsCount(HIDDEN_VEIN_MAP)*1000)
            st.takeItems(HIDDEN_VEIN_MAP,-1)
        else :
          if st.getQuestItemsCount(HIDDEN_VEIN_MAP)==0 :
+           newbie_rewards(st)
            htmltext = "30535-05.htm"
-           st.giveItems(ADENA,st.getQuestItemsCount(CHRYSOLITE_ORE)*10)
+           st.rewardItems(ADENA,st.getQuestItemsCount(CHRYSOLITE_ORE)*10)
            st.takeItems(CHRYSOLITE_ORE,-1)
          else :
+           newbie_rewards(st)
            htmltext = "30535-09.htm"
-           st.giveItems(ADENA,st.getQuestItemsCount(CHRYSOLITE_ORE)*10+st.getQuestItemsCount(HIDDEN_VEIN_MAP)*1000)
+           st.rewardItems(ADENA,st.getQuestItemsCount(CHRYSOLITE_ORE)*10+st.getQuestItemsCount(HIDDEN_VEIN_MAP)*1000)
            st.takeItems(HIDDEN_VEIN_MAP,-1)
            st.takeItems(CHRYSOLITE_ORE,-1)
    elif npcId == 30539 :
@@ -79,7 +96,7 @@ class Quest (JQuest) :
  def onKill(self,npc,player,isPet):
    st = player.getQuestState(qn)
    if not st : return 
-   if st.getState() != STARTED : return 
+   if st.getState() != State.STARTED : return 
    
    n = st.getRandom(100)
    if n > 50 :
@@ -90,23 +107,13 @@ class Quest (JQuest) :
      st.playSound("ItemSound.quest_itemget")
    return
 
-QUEST       = Quest(293,qn,"Hidden Vein")
-CREATED     = State('Start', QUEST)
-STARTING     = State('Starting', QUEST)
-STARTED     = State('Started', QUEST)
-COMPLETED   = State('Completed', QUEST)
+QUEST       = Quest(293,qn,"The Hidden Veins")
 
-QUEST.setInitialState(CREATED)
 QUEST.addStartNpc(30535)
 
 QUEST.addTalkId(30535)
-
 QUEST.addTalkId(30539)
 
 QUEST.addKillId(20446)
 QUEST.addKillId(20447)
 QUEST.addKillId(20448)
-
-STARTED.addQuestDrop(30539,HIDDEN_VEIN_MAP,1)
-STARTED.addQuestDrop(20446,CHRYSOLITE_ORE,1)
-STARTED.addQuestDrop(20447,TORN_MAP_FRAGMENT,1)

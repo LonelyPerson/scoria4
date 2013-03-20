@@ -1,4 +1,4 @@
-# Made by Mr. Have fun! - Version 0.3 by DrLecter
+# Made by StiV
 import sys
 from com.l2scoria.gameserver.model.quest import State
 from com.l2scoria.gameserver.model.quest import QuestState
@@ -11,16 +11,21 @@ ORC_AMULET = 752
 ORC_NECKLACE = 1085
 WEREWOLF_FANG = 1086
 ADENA = 57
+NEWBIE_REWARD = 4
+SPIRITSHOT_FOR_BEGINNERS = 5790
+SOULSHOT_FOR_BEGINNERS = 5789
 
 class Quest (JQuest) :
 
- def __init__(self,id,name,descr): JQuest.__init__(self,id,name,descr)
+ def __init__(self,id,name,descr):
+     JQuest.__init__(self,id,name,descr)
+     self.questItemIds = [ORC_AMULET, ORC_NECKLACE, WEREWOLF_FANG, GLUDIO_LORDS_MARK]
 
  def onEvent (self,event,st) :
     htmltext = event
     if event == "30039-03.htm" :
       st.set("cond","1")
-      st.setState(STARTED)
+      st.setState(State.STARTED)
       st.playSound("ItemSound.quest_accept")
       st.giveItems(GLUDIO_LORDS_MARK,1)
     elif event == "30039-05.htm" :
@@ -30,13 +35,13 @@ class Quest (JQuest) :
     return htmltext
 
  def onTalk (self,npc,player):
-   htmltext = "<html><body>You are either not carrying out your quest or don't meet the criteria.</body></html>"
+   htmltext = "<html><body>You are either not on a quest that involves this NPC, or you don't meet this NPC's minimum quest requirements.</body></html>"
    st = player.getQuestState(qn)
    if not st : return htmltext
 
    npcId = npc.getNpcId()
    id = st.getState()
-   if id == CREATED :
+   if id == State.CREATED :
      st.set("cond","0")
    if st.getInt("cond")==0 :
      if player.getLevel() >= 6 :
@@ -51,7 +56,19 @@ class Quest (JQuest) :
      if orc_a==orc_n==wer_f==0 :
        htmltext = "30039-04.htm"
      else :
-       st.giveItems(ADENA,5*orc_a+15*orc_n+10*wer_f)
+       # check the player state against this quest newbie rewarding mark.
+       newbie = player.getNewbie()
+       if newbie | NEWBIE_REWARD != newbie :
+          player.setNewbie(newbie|NEWBIE_REWARD)
+          st.checkNewbieQuests()
+          st.showQuestionMark(26)
+          if player.getClassId().isMage() :
+             st.playTutorialVoice("tutorial_voice_027")
+             st.giveItems(SPIRITSHOT_FOR_BEGINNERS,3000)
+          else :
+             st.playTutorialVoice("tutorial_voice_026")
+             st.giveItems(SOULSHOT_FOR_BEGINNERS,6000)
+       st.rewardItems(ADENA,5*orc_a+15*orc_n+10*wer_f)
        st.takeItems(ORC_AMULET,-1)
        st.takeItems(ORC_NECKLACE,-1)
        st.takeItems(WEREWOLF_FANG,-1)
@@ -61,7 +78,7 @@ class Quest (JQuest) :
  def onKill(self,npc,player,isPet):
    st = player.getQuestState(qn)
    if not st : return 
-   if st.getState() != STARTED : return 
+   if st.getState() != State.STARTED : return 
    
    npcId = npc.getNpcId()
    chance=5
@@ -80,12 +97,7 @@ class Quest (JQuest) :
    return
 
 QUEST       = Quest(257,qn,"Guard Is Busy1")
-CREATED     = State('Start', QUEST)
-STARTING    = State('Starting', QUEST)
-STARTED     = State('Started', QUEST)
-COMPLETED   = State('Completed', QUEST)
 
-QUEST.setInitialState(CREATED)
 QUEST.addStartNpc(30039)
 
 QUEST.addTalkId(30039)
@@ -99,8 +111,3 @@ QUEST.addKillId(20006)
 QUEST.addKillId(20093)
 QUEST.addKillId(20096)
 QUEST.addKillId(20098)
-
-STARTED.addQuestDrop(20130,ORC_AMULET,1)
-STARTED.addQuestDrop(20093,ORC_NECKLACE,1)
-STARTED.addQuestDrop(20132,WEREWOLF_FANG,1)
-STARTED.addQuestDrop(30039,GLUDIO_LORDS_MARK,1)
