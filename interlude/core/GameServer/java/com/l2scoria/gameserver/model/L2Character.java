@@ -18,6 +18,7 @@
  */
 package com.l2scoria.gameserver.model;
 
+
 import com.l2scoria.Config;
 import com.l2scoria.gameserver.GameTimeController;
 import com.l2scoria.gameserver.ai.*;
@@ -67,7 +68,7 @@ import javolution.util.FastTable;
 import org.apache.log4j.Logger;
 
 import java.util.*;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 import static com.l2scoria.gameserver.ai.CtrlIntention.AI_INTENTION_ATTACK;
 import static com.l2scoria.gameserver.ai.CtrlIntention.AI_INTENTION_FOLLOW;
@@ -4243,7 +4244,8 @@ public abstract class L2Character extends L2Object
 	public final ArrayList<Location> geoPath = new ArrayList<Location>();
 
 	/** Table containing all skillId that are disabled */
-	protected List<Integer> _disabledSkills;
+	protected Map<Integer,ScheduledFuture> _disabledSkills;
+
 	private boolean _allSkillsDisabled;
 
 	//	private int _flyingRunSpeed;
@@ -7475,8 +7477,9 @@ public abstract class L2Character extends L2Object
 	{
 		if(_disabledSkills == null)
 			return;
+        if (_disabledSkills.get(skillId)!=null)  _disabledSkills.get(skillId).cancel(true); //stop cooldown thread
 
-		_disabledSkills.remove(new Integer(skillId));
+		_disabledSkills.remove(skillId);
 
 		if(this.isPlayer)
 		{
@@ -7494,14 +7497,14 @@ public abstract class L2Character extends L2Object
 	 * 
 	 * @param skillId The identifier of the L2Skill to disable
 	 */
-	public void disableSkill(int skillId)
+	public void disableSkill(int skillId, ScheduledFuture scheduleAi)
 	{
 		if(_disabledSkills == null)
 		{
-			_disabledSkills = Collections.synchronizedList(new FastList<Integer>());
+			_disabledSkills = new FastMap<Integer,ScheduledFuture>().setShared(true);
 		}
 
-		_disabledSkills.add(skillId);
+		_disabledSkills.put(skillId,scheduleAi);
 	}
 
 	/**
@@ -7512,12 +7515,13 @@ public abstract class L2Character extends L2Object
 	 */
 	public void disableSkill(int skillId, long delay)
 	{
-		disableSkill(skillId);
 
 		if(delay > 10)
 		{
-			ThreadPoolManager.getInstance().scheduleAi(new EnableSkill(skillId), delay);
-		}
+            disableSkill(skillId,ThreadPoolManager.getInstance().scheduleAi(new EnableSkill(skillId), delay));
+		} else {
+            disableSkill(skillId,null);
+        }
 	}
 
 	/**
@@ -7538,7 +7542,7 @@ public abstract class L2Character extends L2Object
 		if(_disabledSkills == null)
 			return false;
 
-		return _disabledSkills.contains(skillId);
+		return _disabledSkills.containsKey(skillId);
 	}
 
 	public boolean isSomeSkillDisabled(int skillId)
@@ -7546,7 +7550,7 @@ public abstract class L2Character extends L2Object
 		if(_disabledSkills == null)
 			return false;
 
-		return _disabledSkills.contains(skillId);
+		return _disabledSkills.containsKey(skillId);
 	}
 
 	/**

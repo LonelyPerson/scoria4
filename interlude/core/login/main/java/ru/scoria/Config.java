@@ -144,6 +144,7 @@ public class Config extends L2Config
 	public static boolean		DDOS_PROTECTION_ENABLED;
 	public static long			SESSION_TTL;
 	public static int			MAX_SESSIONS;
+    public static int			FAKE_ONLINE;
 	public static OnSuccessLoginAction ON_SUCCESS_LOGIN_ACTION;
 	public static String		ON_SUCCESS_LOGIN_COMMAND;
 	public static String		BRUTE_ACCOUNT_NAME;
@@ -165,6 +166,7 @@ public class Config extends L2Config
 			DDOS_PROTECTION_ENABLED = Boolean.parseBoolean(serverSettings.getProperty("DDoSProtection","true"));
 			SESSION_TTL = Long.parseLong(serverSettings.getProperty("SessionTTL", "10"))*1000;
 			MAX_SESSIONS = Integer.parseInt(serverSettings.getProperty("MaxSessions", "100"));
+            FAKE_ONLINE = Integer.parseInt(serverSettings.getProperty("FakeOnline", "100"));
 			ON_SUCCESS_LOGIN_ACTION = OnSuccessLoginAction.valueOf(serverSettings.getProperty("OnSelectServer","NOTIFY").toUpperCase());
 			ON_SUCCESS_LOGIN_COMMAND = serverSettings.getProperty("OnSelectServerCommand","");
 			BRUTE_ACCOUNT_NAME=serverSettings.getProperty("BruteAccountName","");

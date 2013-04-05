@@ -30,6 +30,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import ru.scoria.Config;
 import ru.scoria.loginserver.network.gameserverpackets.ServerStatus;
 import ru.scoria.loginserver.thread.GameServerThread;
 import ru.scoria.tools.util.HexUtil;
@@ -127,7 +128,7 @@ public class GameServerInfo
 	{
 		if (_gst == null)
 			return 0;
-		return _gst.getPlayerCount();
+		return (_gst.getPlayerCount() * Config.FAKE_ONLINE)/100;
 	}
 
 	public void setIp(String ip)

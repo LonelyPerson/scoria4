@@ -9189,7 +9189,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			return;
 		}
 
-		if(_disabledSkills != null && _disabledSkills.contains(skill.getId()))
+		if(_disabledSkills != null && _disabledSkills.containsKey(skill.getId()))
 		{
 			SystemMessage sm = new SystemMessage(SystemMessageId.S1_PREPARED_FOR_REUSE);
 			sm.addSkillName(skill.getId(), skill.getLevel());
@@ -14355,9 +14355,9 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		return getAccessLevel().SeeAllChat();
 	}
         
-        public boolean FullClassMaster() {
-                return getAccessLevel().FullClassMaster();
-        }
+    public boolean FullClassMaster() {
+            return getAccessLevel().FullClassMaster();
+    }
 
 	/*public void checkPlayerSkills()
 	{

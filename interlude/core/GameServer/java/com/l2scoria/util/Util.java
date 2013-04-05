@@ -355,7 +355,7 @@ public class Util
 				je = jf.getJarEntry("com/l2scoria/crypt/lameguard.class");
 			if (je == null)
 				je = jf.getJarEntry("com/l2scoria/gameserver/network/serverpackets/ExChiperRequest.class");
-			if (je == null)
+            if (je == null)
                                 System.exit(1);
 
                         // why? don`t used entryName anywhere
@@ -377,7 +377,7 @@ public class Util
 		}
 		catch(Exception ex)
 		{
-			System.exit(1);
+			//System.exit(1);
 		}
 		return hash_array;
 	}
