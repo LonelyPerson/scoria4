@@ -216,6 +216,8 @@ public class EnterWorld extends L2GameClientPacket
 		activeChar.getMacroses().sendUpdate();
 
 		sendPacket(new ClientSetTime()); // SetClientTime
+                
+                sendPacket(new UserInfo(activeChar, true));
 
 		sendPacket(new HennaInfo(activeChar));
 
@@ -226,8 +228,6 @@ public class EnterWorld extends L2GameClientPacket
 		sendPacket(new ShortCutInit(activeChar));
 
 		sendPacket(new SkillCoolTime());
-                
-                sendPacket(new UserInfo(activeChar, true));
 
 		for (L2ItemInstance i : activeChar.getInventory().getItems())
 		{
