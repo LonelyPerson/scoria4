@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS npcskills (
   skillid smallint(5) unsigned NOT NULL default '0',
   `level` tinyint(2) unsigned NOT NULL default '0',
   PRIMARY KEY  (npcid,skillid,`level`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 INSERT INTO npcskills VALUES
 -- Gremlin

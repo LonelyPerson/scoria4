@@ -11,7 +11,7 @@ CREATE TABLE custom_teleport (
   price decimal(6,0) default NULL,
   fornoble int(1) NOT NULL default '0',
   PRIMARY KEY  (id)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
 
 INSERT INTO `custom_teleport` VALUES ('Dark Elven Village', '50001', '9745', '15606', '-4574', '15000', '0');
 INSERT INTO `custom_teleport` VALUES ('Dwarven Village', '50002', '115113', '-178212', '-901', '15000', '0');

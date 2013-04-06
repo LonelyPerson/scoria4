@@ -87,4 +87,4 @@ CREATE TABLE IF NOT EXISTS characters (
   PRIMARY KEY  (obj_Id),
   KEY `clanid` (`clanid`),
   KEY `char_name` (`char_name`)
-) ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
