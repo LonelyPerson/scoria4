@@ -29,7 +29,6 @@ public class FService
 	public static final String SCRIPT_FILE = "./config/script.properties";
 	public static final String DAEMONS_FILE = "./config/daemons.properties";
 
-	public static final String BANNED_IP = "./banned_ip.cfg";
 	public static final String HEXID_FILE = "./config/hexid.txt";
 	public static final String FILTER_FILE = "./config/chatfilter.txt";
 	public static final String QUESTION_FILE = "./config/questionwords.txt";

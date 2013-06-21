@@ -331,7 +331,11 @@ public final class Config {
     public static boolean LAME;
     public static String USER_NAME;
     public static String ON_SUCCESS_LOGIN_COMMAND_GS;
-
+    public static int GAME_SERVER_LOGIN_PORT;
+    public static String GAME_SERVER_LOGIN_HOST;
+    public static String INTERNAL_HOSTNAME;
+    public static String EXTERNAL_HOSTNAME;
+    public static File DATAPACK_ROOT;
     //============================================================
     public static void loadServerConfig() {
         final String GAMESERVER = FService.CONFIGURATION_FILE;
@@ -570,7 +574,7 @@ public final class Config {
     public static boolean MOUNT_PROHIBIT;
     public static int CHRISTMAS_TREE_PRESENTS_TIME;
     public static TIntIntHashMap CHRISTMAS_PRESENTS_LIST;
-
+    public static boolean STORE_SKILL_COOLTIME;
     //============================================================
     public static void loadOtherConfig() {
         final String OTHER = FService.OTHER_CONFIG_FILE;
@@ -3618,164 +3622,6 @@ public final class Config {
         }
 
     }
-
-    //============================================================
-    public static enum OnSuccessLoginAction {
-
-        COMMAND, NOTIFY
-    };
-    public static int PORT_LOGIN;
-    public static String LOGIN_BIND_ADDRESS;
-    public static int LOGIN_TRY_BEFORE_BAN;
-    public static int LOGIN_BLOCK_AFTER_BAN;
-    public static File DATAPACK_ROOT;
-    public static int GAME_SERVER_LOGIN_PORT;
-    public static String GAME_SERVER_LOGIN_HOST;
-    public static String INTERNAL_HOSTNAME;
-    public static String EXTERNAL_HOSTNAME;
-    public static int IP_UPDATE_TIME;
-    public static boolean STORE_SKILL_COOLTIME;
-    public static boolean SHOW_LICENCE;
-    public static boolean ANTI_BRUT_PROTECTION;
-    public static boolean USE_ACTIVATOR_PROTECTION;
-    public static boolean USE_AUTO_REBOOT;
-    public static int AUTO_REBOOT_TIMER_TASK;
-    public static boolean FORCE_GGAUTH;
-    public static boolean FLOOD_PROTECTION;
-    public static int FAST_CONNECTION_LIMIT;
-    public static int NORMAL_CONNECTION_TIME;
-    public static int FAST_CONNECTION_TIME;
-    public static int MAX_CONNECTION_PER_IP;
-    public static boolean ACCEPT_NEW_GAMESERVER;
-    public static boolean AUTO_CREATE_ACCOUNTS;
-    public static String NETWORK_IP_LIST;
-    public static long SESSION_TTL;
-    public static int MAX_LOGINSESSIONS;
-    public static int MIN_MEMORY_LEES;
-    public static boolean DDOS_PROTECTION_ENABLED;
-    public static OnSuccessLoginAction ON_SUCCESS_LOGIN_ACTION;
-    public static String ON_SUCCESS_LOGIN_COMMAND_LS;
-    public static boolean FAKE_SERVER_LIST;
-    public static String FAKE_SERVER_LIST_TYPE;
-    public static double FAKE_SERVER_LIST_PARAM1;
-    public static int FAKE_SERVER_LIST_PARAM2;
-
-    //============================================================
-    public static void loadLoginStartConfig() {
-        final String LOGIN = FService.LOGIN_CONFIGURATION_FILE;
-
-        _log.info("Loading: " + LOGIN + ".");
-        try {
-            Properties serverSettings = new Properties();
-            Instruments iset = new Instruments();
-            InputStream is = new FileInputStream(new File(LOGIN));
-            serverSettings.load(is);
-            iset.load(is);
-            is.close();
-
-            GAME_SERVER_LOGIN_HOST = serverSettings.getProperty("LoginHostname", "*");
-            GAME_SERVER_LOGIN_PORT = Integer.parseInt(serverSettings.getProperty("LoginPort", "9013"));
-
-            LOGIN_BIND_ADDRESS = serverSettings.getProperty("LoginserverHostname", "*");
-            PORT_LOGIN = Integer.parseInt(serverSettings.getProperty("LoginserverPort", "2106"));
-
-            ACCEPT_NEW_GAMESERVER = Boolean.parseBoolean(serverSettings.getProperty("AcceptNewGameServer", "True"));
-
-            LOGIN_TRY_BEFORE_BAN = Integer.parseInt(serverSettings.getProperty("LoginTryBeforeBan", "10"));
-            LOGIN_BLOCK_AFTER_BAN = Integer.parseInt(serverSettings.getProperty("LoginBlockAfterBan", "600"));
-
-            DATAPACK_ROOT = new File(serverSettings.getProperty("DatapackRoot", ".")).getCanonicalFile();
-
-            INTERNAL_HOSTNAME = serverSettings.getProperty("InternalHostname", "localhost");
-            EXTERNAL_HOSTNAME = serverSettings.getProperty("ExternalHostname", "localhost");
-
-            DATABASE_DRIVER = serverSettings.getProperty("Driver", "com.mysql.jdbc.Driver");
-            DATABASE_URL = serverSettings.getProperty("URL", "jdbc:mysql://localhost/l2jdb");
-            DATABASE_LOGIN = serverSettings.getProperty("Login", "root");
-            DATABASE_PASSWORD = serverSettings.getProperty("Password", "");
-            DATABASE_MAX_CONNECTIONS = Integer.parseInt(serverSettings.getProperty("MaximumDbConnections", "10"));
-
-            DDOS_PROTECTION_ENABLED = Boolean.parseBoolean(serverSettings.getProperty("DDoSProtection", "true"));
-            ON_SUCCESS_LOGIN_ACTION = OnSuccessLoginAction.valueOf(serverSettings.getProperty("OnSelectServer", "NOTIFY").toUpperCase());
-            ON_SUCCESS_LOGIN_COMMAND_LS = serverSettings.getProperty("OnSelectServerCommandLS", "");
-
-            DATABASE_TIMEOUT = Integer.parseInt(serverSettings.getProperty("TimeOutConDb", "0"));
-            DATABASE_STATEMENT = Integer.parseInt(serverSettings.getProperty("MaximumDbStatement", "100"));
-
-            SHOW_LICENCE = Boolean.parseBoolean(serverSettings.getProperty("ShowLicence", "false"));
-            IP_UPDATE_TIME = Integer.parseInt(serverSettings.getProperty("IpUpdateTime", "15"));
-            FORCE_GGAUTH = Boolean.parseBoolean(serverSettings.getProperty("ForceGGAuth", "false"));
-            ANTI_BRUT_PROTECTION = Boolean.parseBoolean(serverSettings.getProperty("AntiBrut", "False"));
-            USE_ACTIVATOR_PROTECTION = Boolean.parseBoolean(serverSettings.getProperty("UseActivatorProtection", "False"));
-            USE_AUTO_REBOOT = Boolean.parseBoolean(serverSettings.getProperty("EnableAutoRebootLogin", "False"));
-            AUTO_REBOOT_TIMER_TASK = Integer.parseInt(serverSettings.getProperty("AutoRebootLoginTimer", "60"));
-
-            FAKE_SERVER_LIST = Boolean.parseBoolean(serverSettings.getProperty("FakeServerList", "False"));
-            FAKE_SERVER_LIST_TYPE = serverSettings.getProperty("FakeServerListType", "STATIC");
-            FAKE_SERVER_LIST_PARAM1 = Double.parseDouble(serverSettings.getProperty("FakeServerListParam1", "2000"));
-            FAKE_SERVER_LIST_PARAM2 = Integer.parseInt(serverSettings.getProperty("FakeServerListParam2", "5000"));
-
-            AUTO_CREATE_ACCOUNTS = Boolean.parseBoolean(serverSettings.getProperty("AutoCreateAccounts", "True"));
-
-            FLOOD_PROTECTION = Boolean.parseBoolean(serverSettings.getProperty("EnableFloodProtection", "True"));
-            FAST_CONNECTION_LIMIT = Integer.parseInt(serverSettings.getProperty("FastConnectionLimit", "15"));
-            NORMAL_CONNECTION_TIME = Integer.parseInt(serverSettings.getProperty("NormalConnectionTime", "700"));
-            FAST_CONNECTION_TIME = Integer.parseInt(serverSettings.getProperty("FastConnectionTime", "350"));
-            MAX_CONNECTION_PER_IP = Integer.parseInt(serverSettings.getProperty("MaxConnectionPerIP", "50"));
-            DEBUG = Boolean.parseBoolean(serverSettings.getProperty("Debug", "false"));
-            DEVELOPER = Boolean.parseBoolean(serverSettings.getProperty("Developer", "false"));
-
-            NETWORK_IP_LIST = serverSettings.getProperty("NetworkList", "");
-            SESSION_TTL = Long.parseLong(serverSettings.getProperty("SessionTTL", "25000"));
-            MAX_LOGINSESSIONS = Integer.parseInt(serverSettings.getProperty("MaxSessions", "200"));
-            MIN_MEMORY_LEES = Integer.parseInt(serverSettings.getProperty("MinMemoryFreeUnderCleanup", "100"));
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new Error("Failed to Load " + LOGIN + " File.");
-        }
-
-    }
-    //============================================================
-    public static List<String> BANS = new FastList<String>();
-
-    //============================================================
-    public static void loadBanIPConfig() {
-        final String BAN_IP_FILE = FService.BANNED_IP;
-
-        _log.info("Loading: " + BAN_IP_FILE + ".");
-        try {
-            Instruments banSettings = new Instruments();
-            InputStream is = new FileInputStream(new File(BAN_IP_FILE));
-            banSettings.load(is);
-            is.close();
-
-            BANS = banSettings.getStringList("IP", "", ",");
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new Error("Failed to Load " + BAN_IP_FILE + " File.");
-        }
-
-    }
-
-    //============================================================
-    public static void loadTellLoginConfig() {
-        final String TELNET_FILE = FService.TELNET_FILE;
-
-        _log.info("Loading: " + TELNET_FILE + ".");
-        try {
-            Properties telnetSettings = new Properties();
-            InputStream is = new FileInputStream(new File(TELNET_FILE));
-            telnetSettings.load(is);
-            is.close();
-
-            IS_TELNET_ENABLED = Boolean.valueOf(telnetSettings.getProperty("EnableTelnet", "false"));
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new Error("Failed to Load " + TELNET_FILE + " File.");
-        }
-
-    }
-
     // Enums
     /**
      * Enumeration for type of ID Factory
@@ -3876,12 +3722,7 @@ public final class Config {
             if (Config.BOT_PROTECTOR) {
                 loadQuestion();
             }
-        } else if (ServerType.serverMode == ServerType.MODE_LOGINSERVER) {
-            _log.info("Loading Login Server config");
-            loadLoginStartConfig();
-            loadBanIPConfig();
-            loadTellLoginConfig();
-        } else {
+        }else {
             _log.error("Could not Load Config: server mode was not set");
         }
     }

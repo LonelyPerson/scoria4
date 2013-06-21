@@ -43,7 +43,6 @@ public class Status extends Thread
 	private int _statusPort;
 	private String _statusPw;
 	private int _mode;
-	private List<LoginTelnetThread> _loginStatus;
 	private boolean _superPass;
 	private int _lengthPass;
 
@@ -59,17 +58,6 @@ public class Status extends Thread
 				if(_mode == ServerType.MODE_GAMESERVER)
 				{
 					new GameTelnetThread(connection, _uptime, _statusPw);
-				}
-				else if(_mode == ServerType.MODE_LOGINSERVER)
-				{
-					LoginTelnetThread lst = new LoginTelnetThread(connection, _uptime);
-
-					if(lst.isAlive())
-					{
-						_loginStatus.add(lst);
-					}
-
-					lst = null;
 				}
 				if(isInterrupted())
 				{
@@ -140,7 +128,6 @@ public class Status extends Thread
 		_superPass = Boolean.parseBoolean(telnetSettings.getProperty("SuperPassword", "False"));
 
 		_uptime = (int) System.currentTimeMillis();
-		_loginStatus = new FastList<LoginTelnetThread>();
 	}
 
 	private String rndPW(int length)
@@ -190,22 +177,4 @@ public class Status extends Thread
 		return password.toString();
 	}
 
-	public void sendMessageToTelnets(String msg)
-	{
-		List<LoginTelnetThread> lsToRemove = new FastList<LoginTelnetThread>();
-
-		for(LoginTelnetThread ls : _loginStatus)
-		{
-			if(ls.isInterrupted())
-			{
-				lsToRemove.add(ls);
-			}
-			else
-			{
-				ls.printToTelnet(msg);
-			}
-		}
-
-		lsToRemove = null;
-	}
 }
