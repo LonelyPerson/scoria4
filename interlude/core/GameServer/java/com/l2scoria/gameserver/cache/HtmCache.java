@@ -50,12 +50,12 @@ public class HtmCache {
     }
 
     public HtmCache() {
-        try {
+       /* try {
             ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(new CleaneCache(), 30 * 60000, 30 * 60000);
         } catch (Exception e) {
             _log.warn("Error in HtmCache() main method");
             System.exit(1);
-        }
+        }*/
         _cache = new FastMap<Integer, String>().setShared(true);
         reload();
     }

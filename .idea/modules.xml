@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/interlude/core/GameServer/GameServer.iml" filepath="$PROJECT_DIR$/interlude/core/GameServer/GameServer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/interlude/core/initial/accmanager/accmanager.iml" filepath="$PROJECT_DIR$/interlude/core/initial/accmanager/accmanager.iml" />
+      <module fileurl="file://$PROJECT_DIR$/interlude/core/core.iml" filepath="$PROJECT_DIR$/interlude/core/core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/interlude/core/login/main/main.iml" filepath="$PROJECT_DIR$/interlude/core/login/main/main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/interlude/core/login/commons/src/main/main1.iml" filepath="$PROJECT_DIR$/interlude/core/login/commons/src/main/main1.iml" />
+    </modules>
+  </component>
+</project>
+

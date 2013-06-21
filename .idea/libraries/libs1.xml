@@ -1,0 +1,25 @@
+<component name="libraryTable">
+  <library name="libs1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/interlude/core/login/build/login/libs/ext-commons.jar!/" />
+      <root url="jar://$PROJECT_DIR$/interlude/core/login/build/login/libs/junit-3.8.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/interlude/core/login/build/login/libs/java-engine-1.0.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/interlude/core/login/build/login/libs/lameguard-1.9.5.jar!/" />
+      <root url="jar://$PROJECT_DIR$/interlude/core/login/build/login/libs/jta-1.0.1B.jar!/" />
+      <root url="jar://$PROJECT_DIR$/interlude/core/login/build/login/libs/commons-dbcp-1.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/interlude/core/login/build/login/libs/jython-engine-1.0.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/interlude/core/login/build/login/libs/trove-2.1.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/interlude/core/login/build/login/libs/core-3.3.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/interlude/core/login/build/login/libs/javolution-5.2.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/interlude/core/login/build/login/libs/jython-2.2.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/interlude/core/login/build/login/libs/commons-lang-2.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/interlude/core/login/build/login/libs/commons-io-1.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/interlude/core/login/build/login/libs/commons-pool-1.5.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/interlude/core/login/build/login/libs/log4j-1.2.16.jar!/" />
+      <root url="jar://$PROJECT_DIR$/interlude/core/login/build/login/libs/commons-logging-1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/interlude/core/login/build/login/libs/mysql-connector-java-5.1.11.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

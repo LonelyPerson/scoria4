@@ -28,25 +28,4 @@ public class L2Scoria
 		_log.info("      |                       Recreate by scoria.ru                      ");
 		_log.info("       \\)                     Copyright 2008-2012                       ");
 	}
-
-	public static void infoLS()
-	{
-		_log.info("  ____________________________________________________________________________ ");
-		_log.info(" |                                                                            |");
-		_log.info(" |                                                                            |");
-		_log.info(" |            @@@@@                                                           |");
-		_log.info(" |           @@   @@                                                          |");
-		_log.info(" |          @@     @@    @@@@      @@@      @@@@      @@@@@     @@            |");
-		_log.info(" |           @@         @    @    @   @     @   @       @      @  @           |");
-		_log.info(" |            @@@@@     @        @     @    @   @       @     @    @          |");
-		_log.info(" |                @@    @        @     @    @@@@        @     @    @          |");
-		_log.info(" |          @@     @@   @        @     @    @   @       @     @@@@@@          |");
-		_log.info(" |           @@   @@    @    @    @   @     @    @      @     @    @          |");
-		_log.info(" |            @@@@@      @@@@      @@@      @     @   @@@@@   @    @          |");
-		_log.info(" |                                                                            |");
-		_log.info(" |                            Recreate by scoria.ru                           |");
-		_log.info(" |                             Copyright 2008-2012                            |");
-		_log.info(" |____________________________________________________________________________|");
-	}
-
 }

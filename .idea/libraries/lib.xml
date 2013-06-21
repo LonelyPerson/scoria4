@@ -1,0 +1,29 @@
+<component name="libraryTable">
+  <library name="lib">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/interlude/core/GameServer/lib/mysql-connector-java-5.1.8-bin.jar!/" />
+      <root url="jar://$PROJECT_DIR$/interlude/core/GameServer/lib/trove-3.0.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/interlude/core/GameServer/lib/ws-commons-util-1.0.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/interlude/core/GameServer/lib/lameguard-1.9.5.jar!/" />
+      <root url="jar://$PROJECT_DIR$/interlude/core/GameServer/lib/commons-lang-2.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/interlude/core/GameServer/lib/l2scoria-mmocore-2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/interlude/core/GameServer/lib/bsh-engine.jar!/" />
+      <root url="jar://$PROJECT_DIR$/interlude/core/GameServer/lib/xmlrpc-common-3.1.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/interlude/core/GameServer/lib/jython.jar!/" />
+      <root url="jar://$PROJECT_DIR$/interlude/core/GameServer/lib/javolution.jar!/" />
+      <root url="jar://$PROJECT_DIR$/interlude/core/GameServer/lib/bsh-2.0b5.jar!/" />
+      <root url="jar://$PROJECT_DIR$/interlude/core/GameServer/lib/jython-engine.jar!/" />
+      <root url="jar://$PROJECT_DIR$/interlude/core/GameServer/lib/ExtAPI.jar!/" />
+      <root url="jar://$PROJECT_DIR$/interlude/core/GameServer/lib/bcprov-jdk16-144.jar!/" />
+      <root url="jar://$PROJECT_DIR$/interlude/core/GameServer/lib/log4j-1.2.17.jar!/" />
+      <root url="jar://$PROJECT_DIR$/interlude/core/GameServer/lib/core-3.3.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/interlude/core/GameServer/lib/xmlrpc-server-3.1.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/interlude/core/GameServer/lib/akumu.geoengine.1.2.0.7.jar!/" />
+      <root url="jar://$PROJECT_DIR$/interlude/core/GameServer/lib/java-engine-1.0.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/interlude/core/GameServer/lib/c3p0-0.9.1.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/interlude/core/GameServer/lib/commons-logging-1.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="lib2">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/interlude/core/GameServer/register/lib/l2scoria-register-0.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/interlude/core/GameServer/register/lib/c3p0-0.9.1.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/interlude/core/GameServer/register/lib/mysql-connector-java-5.0.7-bin.jar!/" />
+      <root url="jar://$PROJECT_DIR$/interlude/core/GameServer/register/lib/javolution.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -6914,6 +6914,15 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		return getAccessLevel().isGm();
 	}
 
+    /**
+     * Return true если игрок ГМ и access_level allow_fixed_res 1.
+     *
+     */
+    public boolean allowFixedRes()
+    {
+        return getAccessLevel().allowFixedRes();
+    }
+
 	/**
 	 * Return true if the L2PcInstance is a Administrator.<BR>
 	 * <BR>
@@ -8013,7 +8022,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 					if(ReuseTimeStamps.containsKey(skillId))
 					{
 						TimeStamp t = ReuseTimeStamps.get(skillId);
-						statement.setLong(6, t.hasNotPassed() ? t.getReuse() : 0);
+						statement.setLong(6, t.hasNotPassed() ? t.getRemaining() : 0);
 					}
 					else
 					{
@@ -8048,7 +8057,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 					statement.setInt(3, -1);
 					statement.setInt(4, -1);
 					statement.setInt(5, -1);
-					statement.setLong(6, t.getReuse());
+					statement.setLong(6, t.getRemaining());
 					statement.setInt(7, 1);
 					statement.setInt(8, getClassIndex());
 					statement.setInt(9, buff_index);
@@ -8535,7 +8544,6 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			rset.close();
 			statement.close();
 			rset = null;
-
 			statement = con.prepareStatement(DELETE_SKILL_SAVE);
 			statement.setInt(1, getObjectId());
 			statement.setInt(2, getClassIndex());
@@ -9191,7 +9199,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 
 		if(_disabledSkills != null && _disabledSkills.containsKey(skill.getId()))
 		{
-			SystemMessage sm = new SystemMessage(SystemMessageId.S1_PREPARED_FOR_REUSE);
+            SystemMessage sm = new SystemMessage(SystemMessageId.S1_PREPARED_FOR_REUSE);
 			sm.addSkillName(skill.getId(), skill.getLevel());
 			sendPacket(sm);
 			sm = null;
@@ -13705,7 +13713,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 	{
 		return ReuseTimeStamps;
 	}
-	
+
 	/**
 	 * Simple class containing all neccessary information to maintain valid timestamps and reuse for skills upon relog.
 	 * Filter this carefully as it becomes redundant to store reuse for small delays.

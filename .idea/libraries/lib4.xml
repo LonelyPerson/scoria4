@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="lib4">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/interlude/core/initial/accmanager/lib/mysql-connector-java-5.0.7-bin.jar!/" />
+      <root url="jar://$PROJECT_DIR$/interlude/core/initial/accmanager/lib/c3p0-0.9.1.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
