@@ -49,10 +49,12 @@ public class DoorTable
 	private static DoorTable _instance;
 
 	public static TIntArrayList INITIALLY_OPENED_DOORS = new TIntArrayList();
+    public static TIntArrayList TOI_DOORS = new TIntArrayList();
 	static
 	{
-		INITIALLY_OPENED_DOORS.add(new int[]{24190001, 24190002, 24190003, 24190004, 23180001, 23180002, 23180003, 23180004, 23180005, 23180006});
-	}
+		INITIALLY_OPENED_DOORS.add(new int[]{24190001, 24190002, 24190003, 24190004});
+	    TOI_DOORS.add(new int[]{23180001,23180002,23180003,23180004,23180005,23180006});
+    }
 
 	public static DoorTable getInstance()
 	{
@@ -259,6 +261,10 @@ public class DoorTable
 			{
 				door.closeMe();
 			}
+            if(TOI_DOORS.contains(door.getDoorId()))
+            {
+                door.setAutoActionDelay(120000);
+            }
 
 			if (door.getDoorName().startsWith("goe"))
 			{
