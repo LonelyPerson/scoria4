@@ -416,7 +416,7 @@ public final class L2World
                 }
                 FastList<L2Object> visibles = getVisibleObjects(object, radiusVisibleObject);
                 
-		if(Config.SPAWN_LOG)
+		if(Config.DEBUG)
 		{
 			_log.info("objects in range:" + visibles.size());
 		}

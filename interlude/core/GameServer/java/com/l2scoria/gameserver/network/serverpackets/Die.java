@@ -66,7 +66,7 @@ public class Die extends L2GameServerPacket
 				_inFunEvent = true;
 			if (player._event!=null)
 				_inFunEvent = !player._event.canTeleportOnDie(player);
-			_fixedres = player.allowFixedRes()?1:0;
+			_fixedres = player.isGM()?1:0;
 		}
 
 		_charObjId = cha.getObjectId();

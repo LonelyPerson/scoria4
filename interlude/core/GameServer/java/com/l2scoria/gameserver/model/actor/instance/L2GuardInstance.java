@@ -118,7 +118,7 @@ public final class L2GuardInstance extends L2Attackable
 		_homeY = getY();
 		_homeZ = getZ();
 
-		if(Config.SPAWN_LOG)
+		if(Config.DEBUG)
 		{
 			_log.info(getObjectId() + ": Home location set to" + " X:" + _homeX + " Y:" + _homeY + " Z:" + _homeZ);
 		}
@@ -160,7 +160,7 @@ public final class L2GuardInstance extends L2Attackable
 		_homeY = getY();
 		_homeZ = getZ();
 
-		if(Config.SPAWN_LOG)
+		if(Config.DEBUG)
 		{
 			_log.info(getObjectId() + ": Home location set to" + " X:" + _homeX + " Y:" + _homeY + " Z:" + _homeZ);
 		}

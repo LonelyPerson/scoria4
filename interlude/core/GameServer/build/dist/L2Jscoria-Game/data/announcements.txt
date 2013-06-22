@@ -1,4 +1,0 @@
-### www.scoria.ru ###
-Welcome to scoria interlude emulator
-Change it: /game/data/announcements.txt
-Rus: спасибо за использование!

@@ -1545,7 +1545,6 @@ public final class Config {
     public static boolean ALT_DEV_NO_AI;
     public static boolean DEBUG;
     public static boolean ASSERT;
-    public static boolean SPAWN_LOG;
     public static boolean DEVELOPER;
     public static boolean DEVELOPER_SKILL_CHANCE;
     public static boolean SERVER_LIST_TESTSERVER;
@@ -1603,7 +1602,6 @@ public final class Config {
 
             DEBUG = Boolean.parseBoolean(devSettings.getProperty("Debug", "false"));
             ASSERT = Boolean.parseBoolean(devSettings.getProperty("Assert", "false"));
-            SPAWN_LOG = Boolean.parseBoolean(devSettings.getProperty("SpawnLog", "false"));
             DEVELOPER = Boolean.parseBoolean(devSettings.getProperty("Developer", "false"));
             DEVELOPER_SKILL_CHANCE = Boolean.parseBoolean(devSettings.getProperty("DeveloperChanceSkills", "false"));
             SERVER_LIST_TESTSERVER = Boolean.parseBoolean(devSettings.getProperty("TestServer", "false"));
