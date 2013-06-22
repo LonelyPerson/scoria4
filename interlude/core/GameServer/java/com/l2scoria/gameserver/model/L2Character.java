@@ -2292,10 +2292,18 @@ public abstract class L2Character extends L2Object
 		_isPsychicalMuted = value;
 	}
 
-	/** Return True if the L2Character can't move (stun, root, sleep, overload, paralyzed). */
+    public boolean isPrivateStory()
+    {
+        L2PcInstance player = (L2PcInstance) this;
+        if(player.getPrivateStoreType() > 0)
+            return true;
+        return false;
+    }
+
+    /** Return True if the L2Character can't move (stun, root, sleep, overload, paralyzed, private story manager). */
 	public boolean isMovementDisabled()
 	{
-		return isStunned() || isRooted() || isSleeping() || isOverloaded() || isParalyzed() || isImobilised() || isFakeDeath() || isFallsdown();
+        return isStunned() || isRooted() || isSleeping() || isOverloaded() || isParalyzed() || isImobilised() || isFakeDeath() || isFallsdown() || isPrivateStory();
 	}
 
 	/** Return True if the L2Character can be controlled by the player (confused, afraid). */

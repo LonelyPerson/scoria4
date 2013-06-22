@@ -72,6 +72,11 @@ public final class RequestPrivateStoreManageBuy extends L2GameClientPacket
 				player.standUp();
 			}
 
+            if(player.isMoving())
+            {
+                player.stopMove(null);
+            }
+
 			player.setPrivateStoreType(L2PcInstance.STORE_PRIVATE_BUY + 1);
 			player.sendPacket(new PrivateStoreManageListBuy(player));
 		}
