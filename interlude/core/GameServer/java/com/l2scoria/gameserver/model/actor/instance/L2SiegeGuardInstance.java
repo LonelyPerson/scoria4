@@ -103,7 +103,7 @@ public class L2SiegeGuardInstance extends L2Attackable
 		_homeY = getY();
 		_homeZ = getZ();
 
-		if(Config.DEBUG)
+		if(Config.SPAWN_LOG)
 		{
 			_log.info(getObjectId() + ": Home location set to" + " X:" + _homeX + " Y:" + _homeY + " Z:" + _homeZ);
 		}

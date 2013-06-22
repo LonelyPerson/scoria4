@@ -6914,6 +6914,11 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		return getAccessLevel().isGm();
 	}
 
+
+    public boolean allowFixRes()
+    {
+        return getAccessLevel().allowFixedRes();
+    }
 	/**
 	 * Return true if the L2PcInstance is a Administrator.<BR>
 	 * <BR>
@@ -8013,7 +8018,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 					if(ReuseTimeStamps.containsKey(skillId))
 					{
 						TimeStamp t = ReuseTimeStamps.get(skillId);
-						statement.setLong(6, t.hasNotPassed() ? t.getReuse() : 0);
+						statement.setLong(6, t.hasNotPassed() ? t.getRemaining() : 0);
 					}
 					else
 					{
@@ -8048,7 +8053,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 					statement.setInt(3, -1);
 					statement.setInt(4, -1);
 					statement.setInt(5, -1);
-					statement.setLong(6, t.getReuse());
+					statement.setLong(6, t.getRemaining());
 					statement.setInt(7, 1);
 					statement.setInt(8, getClassIndex());
 					statement.setInt(9, buff_index);

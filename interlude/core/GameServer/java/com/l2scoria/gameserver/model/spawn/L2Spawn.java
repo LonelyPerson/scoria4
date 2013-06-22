@@ -621,7 +621,7 @@ public class L2Spawn
 
 		_lastSpawn = mob;
 
-		if (Config.DEBUG)
+		if (Config.SPAWN_LOG)
 		{
 			_log.info("spawned Mob ID: " + _template.npcId + " ,at: " + mob.getX() + " x, " + mob.getY() + " y, " + mob.getZ() + " z");
 		}
