@@ -72,7 +72,12 @@ public final class RequestPrivateStoreManageSell extends L2GameClientPacket
 				player.standUp();
 			}
 
-			player.setPrivateStoreType(L2PcInstance.STORE_PRIVATE_SELL + 1);
+            if(player.isMoving())
+            {
+                player.stopMove(null);
+            }
+
+            player.setPrivateStoreType(L2PcInstance.STORE_PRIVATE_SELL + 1);
 			player.sendPacket(new PrivateStoreManageListSell(player));
 		}
 	}
