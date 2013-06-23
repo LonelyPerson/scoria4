@@ -1587,7 +1587,7 @@ public abstract class L2Character extends L2Object
 		}
 		else
 		{
-			target = (L2Character) getTarget();
+            target = (L2Character) getTarget();
 		}
 
 		if(target == null)
@@ -2294,9 +2294,13 @@ public abstract class L2Character extends L2Object
 
     public boolean isPrivateStory()
     {
-        L2PcInstance player = (L2PcInstance) this;
-        if(player.getPrivateStoreType() > 0)
-            return true;
+        L2PcInstance player = null;
+        if(this.isPlayer)
+        {
+            player = ((L2PcInstance)this);
+            if(player.getPrivateStoreType() > 0)
+                return true;
+        }
         return false;
     }
 
