@@ -197,7 +197,7 @@ public class OfflineTradersTable
 						case L2PcInstance.STORE_PRIVATE_BUY:
 							while (items.next())
 							{
-								player.getBuyList().addItemByItemId(items.getInt(2), items.getInt(3), items.getInt(4));
+								player.getBuyList().addItemByItemId(items.getInt(2), items.getInt(3), items.getInt(4), items.getInt(5));
 							}
 							player.getBuyList().setTitle(rs.getString("title"));
 							break;

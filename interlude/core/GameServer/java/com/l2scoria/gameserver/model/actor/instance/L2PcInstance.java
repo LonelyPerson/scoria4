@@ -9033,7 +9033,11 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 
 		// Check if the attacker is not in the same clan
 		if(getClan() != null && getClan().isMember(attacker.getObjectId()))
-			return false;
+            return false;
+
+        // Проверка на соали
+        if(getAllyId() == ((L2PcInstance)attacker).getAllyId())
+            return false;
 
 		if(attacker.isPlayable && isInsideZone(ZONE_PEACE))
 			return false;
@@ -9307,6 +9311,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
+
 		// Check if this skill is enabled (ex : reuse time)
 		if(isSkillDisabled(skill.getId()))
 		{
@@ -9501,7 +9506,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			if(!target.isAutoAttackable(this) && !forceUse && sklTargetType != SkillTargetType.TARGET_AURA && sklTargetType != SkillTargetType.TARGET_FRONT_AURA && sklTargetType != SkillTargetType.TARGET_BEHIND_AURA && sklTargetType != SkillTargetType.TARGET_CLAN && sklTargetType != SkillTargetType.TARGET_ALLY && sklTargetType != SkillTargetType.TARGET_CORPSE_ALLY && sklTargetType != SkillTargetType.TARGET_PARTY && sklTargetType != SkillTargetType.TARGET_SELF && sklTargetType != SkillTargetType.TARGET_GROUND)
 			{
 				// Send a Server->Client packet ActionFailed to the L2PcInstance
-				sendPacket(ActionFailed.STATIC_PACKET);
+                sendPacket(ActionFailed.STATIC_PACKET);
 				return;
 			}
 
