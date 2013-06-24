@@ -422,47 +422,39 @@ class L2OlympiadGame extends Olympiad
 
     private void removePassive()
     {
-        L2Skill[] onePlayerSkill = _playerOne.getAllSkills();
-        L2Skill[] twoPlayerSkill = _playerTwo.getAllSkills();
-
-        for(int i = 0; i<onePlayerSkill.length;i++)
+        for(L2Skill skill : _playerOne.getAllSkills())
         {
-            if(onePlayerSkill[i].isPassive() && Config.LIST_OLY_RESTRICTED_SKILLS.contains(onePlayerSkill[i].getId()))
+            if(skill.isPassive() && Config.LIST_OLY_RESTRICTED_SKILLS.contains(skill.getId()))
             {
-                _playerOne.removeSkill(onePlayerSkill[i].getId());
-                _playerOneSkillDelete.add(onePlayerSkill[i]);
+                _playerOne.removeSkill(skill.getId());
+                _playerOneSkillDelete.add(skill);
             }
         }
-        for(int m = 0; m<twoPlayerSkill.length;m++)
+        for(L2Skill skill : _playerTwo.getAllSkills())
         {
-            if(twoPlayerSkill[m].isPassive() && Config.LIST_OLY_RESTRICTED_SKILLS.contains(twoPlayerSkill[m].getId()))
+            if(skill.isPassive() && Config.LIST_OLY_RESTRICTED_SKILLS.contains(skill.getId()))
             {
-                _playerTwo.removeSkill(twoPlayerSkill[m].getId());
-                _playerTwoSkillDelete.add(onePlayerSkill[m]);
+                _playerTwo.removeSkill(skill.getId());
+                _playerTwoSkillDelete.add(skill);
             }
         }
     }
 
     private void restorePassiveOnePlayer()
     {
-        _log.info("oneplayer " + _playerOneSkillDelete.size());
-        for(int i = 0; i<_playerOneSkillDelete.size();i++)
+        for(L2Skill skill : _playerOneSkillDelete)
         {
-            _playerOne.addSkill(_playerOneSkillDelete.get(i));
+            _playerOne.addSkill(skill, false);
         }
-        _playerOne.sendSkillList();
         _playerOneSkillDelete.clear();
     }
 
     private void restorePassiveTwoPlayer()
     {
-        _log.info("twoplayer " + _playerTwoSkillDelete.size());
-        for(int m = 0; m<_playerTwoSkillDelete.size();m++)
+        for(L2Skill skill : _playerTwoSkillDelete)
         {
-            _playerTwo.addSkill(_playerTwoSkillDelete.get(m));
-
+            _playerTwo.addSkill(skill, false);
         }
-        _playerTwo.sendSkillList();
         _playerTwoSkillDelete.clear();
     }
 
@@ -497,7 +489,6 @@ class L2OlympiadGame extends Olympiad
 		{
 			if(x1 != 0 && y1 != 0 && z1 != 0)
 			{
-				restorePassiveOnePlayer();
                 _playerOne.teleToLocation(x1, y1, z1, true);
 			}
 		}
@@ -510,7 +501,6 @@ class L2OlympiadGame extends Olympiad
 		{
 			if(x2 != 0 && y2 != 0 && z2 != 0)
 			{
-                restorePassiveTwoPlayer();
                 _playerTwo.teleToLocation(x2, y2, z2, true);
 			}
 		}
@@ -801,7 +791,8 @@ class L2OlympiadGame extends Olympiad
 
 		playerOneStat.set(COMP_DONE, playerOnePlayed + 1);
 		playerTwoStat.set(COMP_DONE, playerTwoPlayed + 1);
-
+        restorePassiveOnePlayer();
+        restorePassiveTwoPlayer();
 		_nobles.remove(_playerOneID);
 		_nobles.remove(_playerTwoID);
 
