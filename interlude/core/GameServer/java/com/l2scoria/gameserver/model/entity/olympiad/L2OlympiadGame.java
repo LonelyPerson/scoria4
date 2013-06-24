@@ -32,7 +32,6 @@ import com.l2scoria.gameserver.model.L2World;
 import com.l2scoria.gameserver.model.actor.instance.L2CubicInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
-import com.l2scoria.gameserver.model.actor.instance.L2PetInstance;
 import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.ExAutoSoulShot;
 import com.l2scoria.gameserver.network.serverpackets.ExOlympiadMode;
@@ -42,6 +41,7 @@ import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
 import com.l2scoria.gameserver.templates.StatsSet;
 import com.l2scoria.gameserver.util.Broadcast;
 import com.l2scoria.util.L2FastList;
+import javolution.util.FastList;
 
 class L2OlympiadGame extends Olympiad
 {
@@ -57,7 +57,9 @@ class L2OlympiadGame extends Olympiad
 
 	public L2PcInstance _playerOne;
 	public L2PcInstance _playerTwo;
-	//public L2Spawn _spawnOne;
+    FastList<L2Skill> _playerOneSkillDelete = new FastList<L2Skill>();
+    FastList<L2Skill> _playerTwoSkillDelete = new FastList<L2Skill>();
+    //public L2Spawn _spawnOne;
 	//public L2Spawn _spawnTwo;
 	private L2FastList<L2PcInstance> _players;
 	private int[] _stadiumPort;
@@ -408,7 +410,7 @@ class L2OlympiadGame extends Olympiad
 			_playerTwo.setIsInOlympiadMode(true);
 			_playerTwo.setIsOlympiadStart(false);
 			_playerTwo.setOlympiadSide(2);
-
+            removePassive();
 			_gamestarted = true;
 		}
 		catch(NullPointerException e)
@@ -417,6 +419,52 @@ class L2OlympiadGame extends Olympiad
 		}
 		return true;
 	}
+
+    private void removePassive()
+    {
+        L2Skill[] onePlayerSkill = _playerOne.getAllSkills();
+        L2Skill[] twoPlayerSkill = _playerTwo.getAllSkills();
+
+        for(int i = 0; i<onePlayerSkill.length;i++)
+        {
+            if(onePlayerSkill[i].isPassive() && Config.LIST_OLY_RESTRICTED_SKILLS.contains(onePlayerSkill[i].getId()))
+            {
+                _playerOne.removeSkill(onePlayerSkill[i].getId());
+                _playerOneSkillDelete.add(onePlayerSkill[i]);
+            }
+        }
+        for(int m = 0; m<twoPlayerSkill.length;m++)
+        {
+            if(twoPlayerSkill[m].isPassive() && Config.LIST_OLY_RESTRICTED_SKILLS.contains(twoPlayerSkill[m].getId()))
+            {
+                _playerTwo.removeSkill(twoPlayerSkill[m].getId());
+                _playerTwoSkillDelete.add(onePlayerSkill[m]);
+            }
+        }
+    }
+
+    private void restorePassiveOnePlayer()
+    {
+        _log.info("oneplayer " + _playerOneSkillDelete.size());
+        for(int i = 0; i<_playerOneSkillDelete.size();i++)
+        {
+            _playerOne.addSkill(_playerOneSkillDelete.get(i));
+        }
+        _playerOne.sendSkillList();
+        _playerOneSkillDelete.clear();
+    }
+
+    private void restorePassiveTwoPlayer()
+    {
+        _log.info("twoplayer " + _playerTwoSkillDelete.size());
+        for(int m = 0; m<_playerTwoSkillDelete.size();m++)
+        {
+            _playerTwo.addSkill(_playerTwoSkillDelete.get(m));
+
+        }
+        _playerTwo.sendSkillList();
+        _playerTwoSkillDelete.clear();
+    }
 
 	protected void sendMessageToPlayers(boolean toBattleBegin, int nsecond)
 	{
@@ -449,7 +497,8 @@ class L2OlympiadGame extends Olympiad
 		{
 			if(x1 != 0 && y1 != 0 && z1 != 0)
 			{
-				_playerOne.teleToLocation(x1, y1, z1, true);
+				restorePassiveOnePlayer();
+                _playerOne.teleToLocation(x1, y1, z1, true);
 			}
 		}
 		else
@@ -461,14 +510,15 @@ class L2OlympiadGame extends Olympiad
 		{
 			if(x2 != 0 && y2 != 0 && z2 != 0)
 			{
-				_playerTwo.teleToLocation(x2, y2, z2, true);
+                restorePassiveTwoPlayer();
+                _playerTwo.teleToLocation(x2, y2, z2, true);
 			}
 		}
 		else
 		{
 			_log.info("OlympiadPlayersBack: _playerTwo is null!!!");
 		}
-	}
+    }
 
 	protected void PlayersStatusBack()
 	{
@@ -513,7 +563,7 @@ class L2OlympiadGame extends Olympiad
 				//null
 			}
 		}
-	}
+    }
 
 	protected boolean haveWinner()
 	{

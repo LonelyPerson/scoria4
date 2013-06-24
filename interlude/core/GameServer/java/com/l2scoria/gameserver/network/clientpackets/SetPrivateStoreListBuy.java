@@ -56,7 +56,7 @@ public final class SetPrivateStoreListBuy extends L2GameClientPacket
 		{
 			int itemId = readD();
 
-			readD();//TODO analyse this
+			int enchant = readD();
 
 			int cnt = readD();
 			int price = readD();
@@ -67,7 +67,7 @@ public final class SetPrivateStoreListBuy extends L2GameClientPacket
 				return;
 			}
 
-			_items[i] = new Item(itemId, cnt, price);
+			_items[i] = new Item(itemId, cnt, price, enchant);
 		}
 	}
 
@@ -201,12 +201,13 @@ public final class SetPrivateStoreListBuy extends L2GameClientPacket
 		private final int _itemId;
 		private final int _count;
 		private final int _price;
-		
-		public Item(int id, int num, int pri)
+		private final int _enchant;
+		public Item(int id, int num, int pri, int enchant)
 		{
 			_itemId = id;
 			_count = num;
 			_price = pri;
+            _enchant = enchant;
 		}
 		
 		public boolean addToTradeList(TradeList list)
@@ -214,7 +215,7 @@ public final class SetPrivateStoreListBuy extends L2GameClientPacket
 			if ((Integer.MAX_VALUE / _count) < _price)
 				return false;
 			
-			list.addItemByItemId(_itemId, _count, _price);
+			list.addItemByItemId(_itemId, _count, _price, _enchant);
 			return true;
 		}
 		
