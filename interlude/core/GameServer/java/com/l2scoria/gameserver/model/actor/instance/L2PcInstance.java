@@ -80,6 +80,7 @@ import com.l2scoria.gameserver.util.Broadcast;
 import com.l2scoria.gameserver.util.FloodProtector;
 import com.l2scoria.gameserver.util.IllegalPlayerAction;
 import com.l2scoria.gameserver.util.Util;
+import com.l2scoria.util.L2FastMap;
 import com.l2scoria.util.Point3D;
 import com.l2scoria.util.database.L2DatabaseFactory;
 import com.l2scoria.util.database.LoginRemoteDbFactory;
@@ -8924,9 +8925,13 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 	{
 		if(slot < 1 || slot > 3)
 			return null;
-
 		return _henna[slot - 1];
 	}
+
+    public L2HennaInstance[] getDye()
+    {
+        return _henna;
+    }
 
 	/**
 	 * Return the INT Henna modifier of this L2PcInstance.<BR>

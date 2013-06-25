@@ -2554,6 +2554,8 @@ public final class Config {
     public static List<Integer> LIST_OLY_RESTRICTED_ITEMS = new FastList<Integer>();
     public static String ALT_OLY_RESTRICTED_SKILLS;
     public static List<Integer> LIST_OLY_RESTRICTED_SKILLS = new FastList<Integer>();
+    public static String ALT_OLY_RESTRICTED_DYE;
+    public static List<Integer> LIST_OLY_RESTRICTED_DYE = new FastList<Integer>();
 
     //============================================================
     public static void loadOlympConfig() {
@@ -2601,6 +2603,11 @@ public final class Config {
             LIST_OLY_RESTRICTED_SKILLS = new FastList<Integer>();
             for (String id : ALT_OLY_RESTRICTED_SKILLS.split(",")) {
                 LIST_OLY_RESTRICTED_SKILLS.add(Integer.parseInt(id));
+            }
+            ALT_OLY_RESTRICTED_DYE = OLYMPSetting.getProperty("AltOlyRestrictedDye", "0");
+            LIST_OLY_RESTRICTED_DYE = new FastList<Integer>();
+            for (String id : ALT_OLY_RESTRICTED_DYE.split(",")) {
+                LIST_OLY_RESTRICTED_DYE.add(Integer.parseInt(id));
             }
         } catch (Exception e) {
             e.printStackTrace();

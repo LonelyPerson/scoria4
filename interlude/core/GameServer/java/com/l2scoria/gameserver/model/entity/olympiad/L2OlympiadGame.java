@@ -24,12 +24,9 @@ import com.l2scoria.Config;
 import com.l2scoria.gameserver.datatables.HeroSkillTable;
 import com.l2scoria.gameserver.datatables.SkillTable;
 import com.l2scoria.gameserver.managers.OlympiadStadiaManager;
-import com.l2scoria.gameserver.model.Inventory;
-import com.l2scoria.gameserver.model.L2Party;
-import com.l2scoria.gameserver.model.L2Skill;
-import com.l2scoria.gameserver.model.L2Summon;
-import com.l2scoria.gameserver.model.L2World;
+import com.l2scoria.gameserver.model.*;
 import com.l2scoria.gameserver.model.actor.instance.L2CubicInstance;
+import com.l2scoria.gameserver.model.actor.instance.L2HennaInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.SystemMessageId;
@@ -59,6 +56,8 @@ class L2OlympiadGame extends Olympiad
 	public L2PcInstance _playerTwo;
     FastList<L2Skill> _playerOneSkillDelete = new FastList<L2Skill>();
     FastList<L2Skill> _playerTwoSkillDelete = new FastList<L2Skill>();
+    FastList<L2HennaInstance> _playerOneDye = new FastList<L2HennaInstance>();
+    FastList<L2HennaInstance> _playerTwoDye = new FastList<L2HennaInstance>();
     //public L2Spawn _spawnOne;
 	//public L2Spawn _spawnTwo;
 	private L2FastList<L2PcInstance> _players;
@@ -411,6 +410,7 @@ class L2OlympiadGame extends Olympiad
 			_playerTwo.setIsOlympiadStart(false);
 			_playerTwo.setOlympiadSide(2);
             removePassive();
+            removeDye();
 			_gamestarted = true;
 		}
 		catch(NullPointerException e)
@@ -438,6 +438,42 @@ class L2OlympiadGame extends Olympiad
                 _playerTwoSkillDelete.add(skill);
             }
         }
+    }
+
+    private void removeDye()
+    {
+        L2HennaInstance[] _dyeOnePlayer = _playerOne.getDye();
+        L2HennaInstance[] _dyeTwoPlayer = _playerTwo.getDye();
+        for(int i =0; i<_dyeOnePlayer.length;i++)
+        {
+            if(Config.LIST_OLY_RESTRICTED_DYE.contains(_dyeOnePlayer[i]));
+            {
+                _playerOne.removeHenna(i);
+                _playerOneDye.add(_dyeOnePlayer[i]);
+            }
+        }
+        for(int m =0; m<_dyeTwoPlayer.length;m++)
+        {
+            if(Config.LIST_OLY_RESTRICTED_DYE.contains(_dyeTwoPlayer[m]))
+            {
+                _playerTwo.removeHenna(m);
+                _playerTwoDye.add(_dyeTwoPlayer[m]);
+            }
+        }
+    }
+
+    private void restoreDyeOnePlayer()
+    {
+        for(L2HennaInstance _dye : _playerOneDye)
+            _playerOne.addHenna(_dye);
+        _playerOneDye.clear();
+    }
+
+    private void restoreDyeTwoPlayer()
+    {
+        for(L2HennaInstance _dye : _playerTwoDye)
+            _playerTwo.addHenna(_dye);
+        _playerTwoDye.clear();
     }
 
     private void restorePassiveOnePlayer()
@@ -793,6 +829,8 @@ class L2OlympiadGame extends Olympiad
 		playerTwoStat.set(COMP_DONE, playerTwoPlayed + 1);
         restorePassiveOnePlayer();
         restorePassiveTwoPlayer();
+        restoreDyeOnePlayer();
+        restoreDyeTwoPlayer();
 		_nobles.remove(_playerOneID);
 		_nobles.remove(_playerTwoID);
 
