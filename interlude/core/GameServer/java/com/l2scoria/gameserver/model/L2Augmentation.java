@@ -208,7 +208,8 @@ public final class L2Augmentation
 	public void applyBoni(L2PcInstance player)
 	{
 		_boni.applyBoni(player);
-
+        if(player.isInOlympiadMode() && Config.ALT_OLY_DENY_LS_SKILLS)
+            return;
 		// add the skill if any
 		if(_skill != null)
 		{

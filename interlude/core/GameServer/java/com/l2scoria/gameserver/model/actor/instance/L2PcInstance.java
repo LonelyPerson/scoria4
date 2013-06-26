@@ -8734,7 +8734,6 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			return false;
 
 		slot--;
-
 		if(_henna[slot] == null)
 			return false;
 
@@ -8772,14 +8771,16 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 
 		// Send Server->Client UserInfo packet to this L2PcInstance
 		sendPacket(new UserInfo(this));
+        if(!isInOlympiadMode())
+        {
+            // Add the recovered dyes to the player's inventory and notify them.
+            getInventory().addItem("Henna", henna.getItemIdDye(), henna.getAmountDyeRequire() / 2, this, null);
 
-		// Add the recovered dyes to the player's inventory and notify them.
-		getInventory().addItem("Henna", henna.getItemIdDye(), henna.getAmountDyeRequire() / 2, this, null);
-
-		SystemMessage sm = new SystemMessage(SystemMessageId.EARNED_S2_S1_S);
-		sm.addItemName(henna.getItemIdDye());
-		sm.addNumber(henna.getAmountDyeRequire() / 2);
-		sendPacket(sm);
+            SystemMessage sm = new SystemMessage(SystemMessageId.EARNED_S2_S1_S);
+            sm.addItemName(henna.getItemIdDye());
+            sm.addNumber(henna.getAmountDyeRequire() / 2);
+            sendPacket(sm);
+        }
 		//sm = null;
 		//henna = null;
 
@@ -8928,9 +8929,20 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		return _henna[slot - 1];
 	}
 
-    public L2HennaInstance[] getDye()
+    public FastList<L2HennaInstance> removeDyeOly()
     {
-        return _henna;
+        FastList<L2HennaInstance> _hennaOly = new FastList<L2HennaInstance>();
+        for(int i =0; i<3;i++)
+        {
+            int slot = i+1;
+            L2HennaInstance _dye = _henna[i];
+            if(_dye != null && Config.LIST_OLY_RESTRICTED_DYE.contains(_dye.getItemIdDye()));
+            {
+                removeHenna(slot);
+                _hennaOly.add(_dye);
+            }
+        }
+        return _hennaOly;
     }
 
 	/**

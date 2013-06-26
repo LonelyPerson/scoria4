@@ -405,12 +405,15 @@ class L2OlympiadGame extends Olympiad
 			_playerOne.setIsInOlympiadMode(true);
 			_playerOne.setIsOlympiadStart(false);
 			_playerOne.setOlympiadSide(1);
+            _playerOneDye = _playerOne.removeDyeOly();
 
-			_playerTwo.setIsInOlympiadMode(true);
+            _playerTwo.setIsInOlympiadMode(true);
 			_playerTwo.setIsOlympiadStart(false);
 			_playerTwo.setOlympiadSide(2);
+            _playerTwoDye = _playerTwo.removeDyeOly();
+
             removePassive();
-            removeDye();
+            removeAugmentation();
 			_gamestarted = true;
 		}
 		catch(NullPointerException e)
@@ -419,6 +422,21 @@ class L2OlympiadGame extends Olympiad
 		}
 		return true;
 	}
+
+    private void removeAugmentation()
+    {
+        if(Config.ALT_OLY_DENY_LS_SKILLS)
+        {
+            for(L2PcInstance _player : _players)
+            {
+                for(L2Skill skill : _player.getAllSkills())
+                {
+                    if(skill.isLifeStoneSkill())
+                        _player.removeSkill(skill.getId());
+                }
+            }
+        }
+    }
 
     private void removePassive()
     {
@@ -436,28 +454,6 @@ class L2OlympiadGame extends Olympiad
             {
                 _playerTwo.removeSkill(skill.getId());
                 _playerTwoSkillDelete.add(skill);
-            }
-        }
-    }
-
-    private void removeDye()
-    {
-        L2HennaInstance[] _dyeOnePlayer = _playerOne.getDye();
-        L2HennaInstance[] _dyeTwoPlayer = _playerTwo.getDye();
-        for(int i =0; i<_dyeOnePlayer.length;i++)
-        {
-            if(Config.LIST_OLY_RESTRICTED_DYE.contains(_dyeOnePlayer[i]));
-            {
-                _playerOne.removeHenna(i);
-                _playerOneDye.add(_dyeOnePlayer[i]);
-            }
-        }
-        for(int m =0; m<_dyeTwoPlayer.length;m++)
-        {
-            if(Config.LIST_OLY_RESTRICTED_DYE.contains(_dyeTwoPlayer[m]))
-            {
-                _playerTwo.removeHenna(m);
-                _playerTwoDye.add(_dyeTwoPlayer[m]);
             }
         }
     }
@@ -561,6 +557,12 @@ class L2OlympiadGame extends Olympiad
 				player.setCurrentCp(player.getMaxCp());
 				player.setCurrentHp(player.getMaxHp());
 				player.setCurrentMp(player.getMaxMp());
+
+                //Add Augmentation
+                if(Config.ALT_OLY_DENY_LS_SKILLS)
+                {
+                    player.getActiveWeaponInstance().getAugmentation().applyBoni(player);
+                }
 
 				//Add Clan Skills
 				if(player.getClan() != null)
