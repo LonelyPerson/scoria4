@@ -299,6 +299,6 @@ public class ScrollOfEscape extends ItemAbst
 
 	protected boolean checkConditions(L2PcInstance actor)
 	{
-		return actor.isFakeDeath() || actor.isTeleporting() || actor.isMuted() || actor.isAlikeDead();
+		return actor.isFakeDeath() || actor.isTeleporting() || actor.isAlikeDead();
 	}
 }
