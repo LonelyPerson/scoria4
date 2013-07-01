@@ -2195,9 +2195,9 @@ public final class Formulas
 			}
 		}
                 
-                rate *= resmodifier;
-                // В Interlude, максимальный шанс успешности прохождения - 95%, минимальный не ограничен
-                // В грациях - минимальный 10%, максимальный - 90%
+        rate *= resmodifier;
+        // В Interlude, максимальный шанс успешности прохождения - 95%, минимальный не ограничен
+        // В грациях - минимальный 10%, максимальный - 90%
 		if(rate > 95)
 		{
 			rate = 95;
@@ -2207,13 +2207,13 @@ public final class Formulas
 			rate = 1;
 		}
 
-                if(Config.DEVELOPER_SKILL_CHANCE)
-                {
-                    if(attacker.isPlayer)
-                    {
-                       attacker.sendPacket(SystemMessage.sendString(skill.getName()+": "+rate+"%"));
-                    }
-                }
+        if(Config.DEVELOPER_SKILL_CHANCE)
+        {
+            if(attacker.isPlayer)
+             {
+                 attacker.sendPacket(SystemMessage.sendString(skill.getName()+": "+rate+"%"));
+             }
+        }
 		if(Config.DEVELOPER)
 		{
 			System.out.println(skill.getName() + ": " + value + ", " + statmodifier + ", " + lvlmodifier + ", " + resmodifier + ", " + ((int) (Math.pow((double) attacker.getMAtk(target, skill) / target.getMDef(attacker, skill), 0.2) * 100) - 100) + ", " + ssmodifier + " ==> " + rate);

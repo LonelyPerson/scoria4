@@ -1085,6 +1085,22 @@ public abstract class L2Skill
 		return _magic;
 	}
 
+    /**
+     * Skills what required ss use(like body to mind, recharge) and decrease coolTime/hitTime (interlude official)
+     * @return
+     */
+    public final boolean isRequiredSS()
+    {
+        switch(this.getId())
+        {
+            case 1157:
+            case 1013:
+                return true;
+            default:
+                return false;
+        }
+    }
+
 	/**
 	 * @return Returns the mpConsume.
 	 */
@@ -1120,14 +1136,14 @@ public abstract class L2Skill
         /**
          * @return custom modificator of skill reulse in olympiad mode 
          */
-        public final int getCustomOlyReuseDelay()
+    public final int getCustomOlyReuseDelay()
+    {
+        if(_olyCustomReuseDelay < 1)
         {
-                if(_olyCustomReuseDelay < 1)
-                {
-                    return getReuseDelay();
-                }
-            return _olyCustomReuseDelay;
+            return getReuseDelay();
         }
+        return _olyCustomReuseDelay;
+    }
 
 	@Deprecated
 	public final int getSkillTime()

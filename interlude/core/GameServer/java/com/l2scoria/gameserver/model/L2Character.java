@@ -1675,7 +1675,7 @@ public abstract class L2Character extends L2Object
 		// Calculate altered Cast Speed due to BSpS/SpS
 		L2ItemInstance weaponInst = getActiveWeaponInstance();
 
-		if(weaponInst != null && skill.isMagic() && !forceBuff && skill.getTargetType() != SkillTargetType.TARGET_SELF && !skill.isModedStaticHitTime(this))
+		if(weaponInst != null && skill.isMagic() && !forceBuff && (skill.getTargetType() != SkillTargetType.TARGET_SELF || skill.isRequiredSS()) && !skill.isModedStaticHitTime(this))
 		{
 			if(weaponInst.getChargedSpiritshot() == L2ItemInstance.CHARGED_BLESSED_SPIRITSHOT || weaponInst.getChargedSpiritshot() == L2ItemInstance.CHARGED_SPIRITSHOT)
 			{
@@ -7874,7 +7874,7 @@ public abstract class L2Character extends L2Object
 							activeChar = ((L2Summon) this).getOwner();
 						}
 
-						if(activeChar.isPlayer)
+						if(activeChar != null && activeChar.isPlayer)
 						{
 							activeChar.updatePvPStatus(activeChar);
 						}
@@ -8581,5 +8581,5 @@ public abstract class L2Character extends L2Object
 	public void setMeditated(boolean meditated)
 	{
 		_meditated = meditated;
-	}
+    }
 }

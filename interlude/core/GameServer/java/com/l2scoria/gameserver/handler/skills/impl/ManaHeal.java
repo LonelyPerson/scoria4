@@ -22,6 +22,8 @@ import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.L2Object;
 import com.l2scoria.gameserver.model.L2Skill;
 import com.l2scoria.gameserver.model.L2Skill.SkillType;
+import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
+import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.SystemMessageId;
 import com.l2scoria.gameserver.network.serverpackets.StatusUpdate;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
@@ -59,6 +61,27 @@ public class ManaHeal extends SkillAbst
 			{
 				mp = (skill.getSkillType() == SkillType.MANARECHARGE) ? target.calcStat(Stats.RECHARGE_MP_RATE, mp, null, null) : mp;
 			}
+
+
+            L2PcInstance player = activeChar.getPlayer();
+            if (player != null)
+            {
+                L2ItemInstance weaponInst = activeChar.getActiveWeaponInstance();
+                if (weaponInst != null)
+                {
+                    if (skill.isMagic())
+                    {
+                        if (weaponInst.getChargedSpiritshot() == L2ItemInstance.CHARGED_BLESSED_SPIRITSHOT)
+                        {
+                            weaponInst.setChargedSpiritshot(L2ItemInstance.CHARGED_NONE);
+                        }
+                        else if (weaponInst.getChargedSpiritshot() == L2ItemInstance.CHARGED_SPIRITSHOT)
+                        {
+                            weaponInst.setChargedSpiritshot(L2ItemInstance.CHARGED_NONE);
+                        }
+                    }
+                }
+            }
 
 			target.setLastHealAmount((int) mp);
 			target.setCurrentMp(mp + target.getCurrentMp());

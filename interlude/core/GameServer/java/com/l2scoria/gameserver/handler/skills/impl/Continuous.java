@@ -57,7 +57,6 @@ public class Continuous extends SkillAbst
 		{
 			return false;
 		}
-
 		L2Character target;
 		L2PcInstance player = activeChar.getPlayer();
 
@@ -152,7 +151,6 @@ public class Continuous extends SkillAbst
 					}
 				}
 			}
-
 			if (skill.isOffensive() || skill.isDebuff())
 			{
 				boolean ss = false;

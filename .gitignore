@@ -1,2 +1,4 @@
 interlude/core/GameServer/build/*
 interlude/datapack/build/*
+interlude/core/.idea/*
+interlude/datapack/.idea/*
