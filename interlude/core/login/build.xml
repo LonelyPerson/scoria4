@@ -88,6 +88,6 @@
 	   <delete dir="${dist}/classes" />
 	</target>
         
-        <target name="dist" depends="login" />
+        <target name="dist" depends="clean,login" />
 
 </project>

@@ -70,15 +70,6 @@ public class L2LoginServer
 		DOMConfigurator.configure("./config/log4j.xml");
 
 		/**
-		 * Обновление версии и описания ревизии сервера
-		 * Если файл отсутствует, то создаем новый
-		 **/
-		File versionFile = new File("./config/versionning/build-time.properties");
-		if (versionFile.exists())
-			versionFile.delete();
-		versionFile.createNewFile();
-
-		/**
 		 * Время начала загрузки сервера
 		 **/
 		_intialTime = System.currentTimeMillis();

@@ -144,7 +144,7 @@
 		<spawn X='118270' Y='74494' Z='-2502'/>
 		<spawn X='115663' Y='74995' Z='-2625'/>
 	</zone>
-	<zone id='11031' type='Town' shape='NPoly' minZ='-2700' maxZ='-1900'>
+	<zone id='11031' type='Town' shape='NPoly' minZ='-2700' maxZ='-1200'>
 		<stat name='name' val='Town of Aden'/>
 		<stat name='townId' val='12'/>
 		<stat name='redirectTownId' val='10'/>

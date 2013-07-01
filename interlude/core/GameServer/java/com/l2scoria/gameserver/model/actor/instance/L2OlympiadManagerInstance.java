@@ -150,11 +150,6 @@ public class L2OlympiadManagerInstance extends L2FolkInstance
 		}
 		else if(command.startsWith("Olympiad"))
 		{
-			if(player._event!=null) {
-				player.sendMessage("Вы не можете наблюдать, если зарегистрированы на эвент");
-				return;
-			}
-
 			int val = Integer.parseInt(command.substring(9, 10));
 
 			NpcHtmlMessage reply = new NpcHtmlMessage(getObjectId());
@@ -168,6 +163,15 @@ public class L2OlympiadManagerInstance extends L2FolkInstance
 						player.sendPacket(new SystemMessage(SystemMessageId.THE_OLYMPIAD_GAME_IS_NOT_CURRENTLY_IN_PROGRESS));
 						break;
 					}
+                    if(player.isFlying() || player.isMounted())
+                    {
+                        player.sendMessage("You cannot observe olympiad games when you on pet");
+                        break;
+                    }
+                    if(player._event != null) {
+                        player.sendMessage("You cannot observe olympiad games when you registered on event");
+                        break;
+                    }
 
 					FastMap<Integer, String> matches = Olympiad.getInstance().getMatchList();
 
