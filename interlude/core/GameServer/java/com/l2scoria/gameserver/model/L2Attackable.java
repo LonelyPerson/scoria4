@@ -2584,6 +2584,7 @@ public class L2Attackable extends L2NpcInstance
 		int crystalLVL = 0;
 		int crystalOLD = 0;
 		int crystalNEW = 0;
+        boolean haveCrystal = false;
 
 		// ********
 		// Now we have four choices:
@@ -2628,6 +2629,7 @@ public class L2Attackable extends L2NpcInstance
 					// Find any of the 39 possible crystals.
 					if(id == itemId)
 					{
+                        haveCrystal = true;
 						crystalQTY++;
 						// Keep count but make sure the player has no more than 1 crystal
 						if(crystalQTY > 1)
@@ -2726,7 +2728,7 @@ public class L2Attackable extends L2NpcInstance
 					player.sendPacket(new SystemMessage(SystemMessageId.SOUL_CRYSTAL_ABSORBING_FAILED_RESONATION));
 				}
 				// The soul crystal stage of the player is way too high
-				else if(!doLevelup)
+				else if(!doLevelup && haveCrystal)
 				{
 					player.sendPacket(new SystemMessage(SystemMessageId.SOUL_CRYSTAL_ABSORBING_REFUSED));
 				}

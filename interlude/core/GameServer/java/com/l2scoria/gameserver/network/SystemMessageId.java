@@ -2659,7 +2659,7 @@ public enum SystemMessageId
 
 	/**
 	 * ID: 978<br>
-	 * Message: The soul crystal is refusing to absorb a soul.
+	 * Message: The soul crystal is refusing to absorb a soul
 	 */
 	SOUL_CRYSTAL_ABSORBING_REFUSED(978),
 
