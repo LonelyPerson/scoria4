@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project default="dist" basedir=".">
     <description>
-        This script will build the L2scoria_DataPack.
+        This script will build the L2scoria login server.
         
         $Author: L2scoria $
         $Date: 2007-11-19 16:57:12 -0300 (mo, 19 nov 2007) $
@@ -48,8 +48,8 @@
 	   <mkdir dir="${dist}/classes" />
            <javac destdir="${dist}/classes" 
 		  optimize="off" debug="on"
-        	  source="1.5"
-        	  target="1.5"
+        	  source="1.6"
+        	  target="1.6"
  	   	  encoding="utf-8" >
 		
 		<src path="${commons}"/>
@@ -69,8 +69,8 @@
 	   <mkdir dir="${dist}/classes" />
            <javac destdir="${dist}/classes" 
 		  optimize="off" debug="on"
-        	  source="1.5"
-        	  target="1.5"
+        	  source="1.6"
+        	  target="1.6"
  	   	  encoding="utf-8" >
 		<src path="main/java"/>
 		<classpath>

@@ -61,8 +61,8 @@
         <javac destdir="${build.mmo}"
                optimize="on"
                debug="on"
-               source="1.5"
-               target="1.5"
+               source="1.6"
+               target="1.6"
                encoding="utf-8"
                nowarn="off"
                includeantruntime="false">
@@ -82,8 +82,8 @@
         <javac destdir="${build.classes}"
                optimize="on"
                debug="on"
-               source="1.5"
-               target="1.5"
+               source="1.6"
+               target="1.6"
                encoding="utf-8"
                nowarn="off"
                includeantruntime="false">
