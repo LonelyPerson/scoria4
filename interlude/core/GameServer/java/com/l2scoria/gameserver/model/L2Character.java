@@ -1537,6 +1537,12 @@ public abstract class L2Character extends L2Object
 			return;
 		}
 
+        if(Config.DISABLE_SKILLS_ON_LEVEL_LOST && this.isPlayer && skill.getMagicLevel() - ((L2PcInstance)this).getLevel() >= Config.DISABLE_SKILLS_LEVEL_DIF)
+        {
+            getAI().notifyEvent(CtrlEvent.EVT_CANCEL);
+            return;
+        }
+
 		// Check if the skill is a magic spell and if the L2Character is not muted
 		if(skill.isMagic() && isMuted() && !skill.isPotion())
 		{

@@ -20,6 +20,7 @@ package com.l2scoria.gameserver.managers;
 import com.l2scoria.gameserver.datatables.sql.NpcTable;
 import com.l2scoria.gameserver.idfactory.IdFactory;
 import com.l2scoria.gameserver.model.AutoChatHandler;
+import com.l2scoria.gameserver.model.L2Character;
 import com.l2scoria.gameserver.model.L2World;
 import com.l2scoria.gameserver.model.actor.instance.L2ItemInstance;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
@@ -105,15 +106,15 @@ public class MercTicketManager
 	};
 	private static final int[] MERCS_MAX_PER_CASTLE =
 	{
-                        SiegeManager.getInstance()._gludiomerc,
-                        SiegeManager.getInstance()._dionmerc,
-                        SiegeManager.getInstance()._giranmerc,
-                        SiegeManager.getInstance()._orenmerc,
-                        SiegeManager.getInstance()._adenmerc,
-                        SiegeManager.getInstance()._innadrilmerc,
-                        SiegeManager.getInstance()._goddardmerc,
-                        SiegeManager.getInstance()._runemerc,
-                        SiegeManager.getInstance()._schuttgartmerc
+        SiegeManager.getInstance()._gludiomerc,
+        SiegeManager.getInstance()._dionmerc,
+        SiegeManager.getInstance()._giranmerc,
+        SiegeManager.getInstance()._orenmerc,
+        SiegeManager.getInstance()._adenmerc,
+        SiegeManager.getInstance()._innadrilmerc,
+        SiegeManager.getInstance()._goddardmerc,
+        SiegeManager.getInstance()._runemerc,
+        SiegeManager.getInstance()._schuttgartmerc
                         /*
 			100, // Gludio
 			150, // Dion
@@ -363,9 +364,11 @@ public class MercTicketManager
 				count++;
 			}
 		}
-		ticket = null;
+
 		if(count >= limit)
+        {
 			return true;
+        }
 
 		return false;
 	}
@@ -413,7 +416,7 @@ public class MercTicketManager
 				// create the ticket in the gameworld
 				L2ItemInstance dropticket = new L2ItemInstance(IdFactory.getInstance().getNextId(), itemId);
 				dropticket.setLocation(L2ItemInstance.ItemLocation.VOID);
-				dropticket.dropMe(null, x, y, z);
+				dropticket.dropMe((L2Character)activeChar, x, y, z);
 				dropticket.setDropTime(0); //avoids it from beeing removed by the auto item destroyer
 				L2World.storeObject(dropticket); //add to the world
 				// and keep track of this ticket in the list
