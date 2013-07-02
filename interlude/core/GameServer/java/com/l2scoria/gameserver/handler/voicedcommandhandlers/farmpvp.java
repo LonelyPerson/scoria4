@@ -117,7 +117,7 @@ public class farmpvp implements IVoicedCommandHandler
 
 		activeChar.getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE);
 		activeChar.setTarget(activeChar);
-		activeChar.setIsImobilised(true);
+        activeChar.disableAllSkills();
 		
 		MagicSkillUser msk = new MagicSkillUser(activeChar, 1050, 1, 15000, 0);
 		Broadcast.toSelfAndKnownPlayersInRadius(activeChar, msk, 810000/*900*/);
@@ -163,7 +163,7 @@ public class farmpvp implements IVoicedCommandHandler
 			{
 				_activeChar.teleToLocation(_x, _y, _z);
 				_activeChar.sendMessage(_message);
-				_activeChar.setIsImobilised(false);
+                _activeChar.enableAllSkills();
 			}
 			catch(Throwable e)
 			{
