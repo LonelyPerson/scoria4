@@ -6050,6 +6050,12 @@ public abstract class L2Character extends L2Object
 
 				sm = null;
 			}
+            if(this.isPlayer)
+            {
+                SystemMessage sm = new SystemMessage(SystemMessageId.MISSED_TARGET);
+                this.getPlayer().sendPacket(sm);
+                sm = null;
+            }
 		}
 
 		// If attack isn't aborted, send a message system (critical hit, missed...) to attacker/target if they are L2PcInstance
