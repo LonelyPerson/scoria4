@@ -42,6 +42,7 @@ import com.l2scoria.gameserver.templates.L2PcTemplate.PcTemplateItem;
 import com.l2scoria.gameserver.util.Util;
 import org.apache.log4j.Logger;
 
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -212,6 +213,13 @@ public final class CharacterCreate extends L2GameClientPacket
 		{
 			newChar.setXYZInvisible(Config.SPAWN_X, Config.SPAWN_Y, Config.SPAWN_Z);
 		}
+        else if(Config.RandomSpawn > 0)
+        {
+            Random randomSpawn = new Random();
+            int randomX = randomSpawn.nextInt(100);
+            int randomY = randomSpawn.nextInt(100);
+            newChar.setXYZInvisible(template.spawnX + randomX, template.spawnY +randomY, template.spawnZ);
+        }
 		else
 		{
 			newChar.setXYZInvisible(template.spawnX, template.spawnY, template.spawnZ);

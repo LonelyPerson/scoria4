@@ -1989,6 +1989,7 @@ public final class Config {
      * Z Coordinate of the SPAWN_CHAR setting.
      */
     public static int SPAWN_Z;
+    public static int RandomSpawn;
     public static boolean ALLOW_HERO_SUBSKILL;
     public static int HERO_COUNT;
     public static int CRUMA_TOWER_LEVEL_RESTRICT;
@@ -2133,6 +2134,7 @@ public final class Config {
             SPAWN_X = Integer.parseInt(L2ScoriaSettings.getProperty("SpawnX", ""));
             SPAWN_Y = Integer.parseInt(L2ScoriaSettings.getProperty("SpawnY", ""));
             SPAWN_Z = Integer.parseInt(L2ScoriaSettings.getProperty("SpawnZ", ""));
+            RandomSpawn = Integer.parseInt(L2ScoriaSettings.getProperty("RandomSpawn","0"));
             ALLOW_LOW_LEVEL_TRADE = Boolean.parseBoolean(L2ScoriaSettings.getProperty("AllowLowLevelTrade", "True"));
             ALLOW_HERO_SUBSKILL = Boolean.parseBoolean(L2ScoriaSettings.getProperty("CustomHeroSubSkill", "False"));
             HERO_COUNT = Integer.parseInt(L2ScoriaSettings.getProperty("HeroCount", "1"));
@@ -2630,6 +2632,7 @@ public final class Config {
     public static int ENCHANT_WEAPON_MAX;
     public static int ENCHANT_ARMOR_MAX;
     public static int ENCHANT_JEWELRY_MAX;
+    public static boolean NO_ENCHANT_CHANGE_ZERO;
     //dwarf bonus
     public static boolean ENABLE_DWARF_ENCHANT_BONUS;
     public static int DWARF_ENCHANT_MIN_LEVEL;
@@ -2819,6 +2822,7 @@ public final class Config {
                 }
             }
 
+            NO_ENCHANT_CHANGE_ZERO = Boolean.parseBoolean(ENCHANTSetting.getProperty("NoEnchantChangeZero", "false"));
             /**
              * limit of safe enchant normal *
              */
