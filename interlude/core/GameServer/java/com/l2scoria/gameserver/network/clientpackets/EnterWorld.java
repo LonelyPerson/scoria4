@@ -162,7 +162,7 @@ public class EnterWorld extends L2GameClientPacket
                  * ничем не помогла. Х/з. 
                  */
 		activeChar.sendPacket(new EtcStatusUpdate(activeChar));
-
+        activeChar.sendPacket(new InventoryUpdate());
 		if (activeChar.getAllEffects() != null)
 		{
 			for (L2Effect e : activeChar.getAllEffects())
