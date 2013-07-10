@@ -253,9 +253,17 @@ public final class RequestRefine extends L2GameClientPacket
 				break;
 		}
 
-		// consume the life stone
-		if(!player.destroyItem("RequestRefine", refinerItem, null, false))
-			return false;
+        // consume the life stone
+        if(Config.STACABLE_LIFE_STONE)
+        {
+            if(!player.destroyItem("RequestRefine",refinerItem.getObjectId(),1,null,false))
+                return false;
+        }
+        else
+        {
+		    if(!player.destroyItem("RequestRefine", refinerItem, null, false))
+			    return false;
+        }
 
 		// consume the gemstones
 		player.destroyItem("RequestRefine", _gemstoneItemObjId, modifyGemstoneCount, null, false);

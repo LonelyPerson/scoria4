@@ -461,14 +461,22 @@ class L2OlympiadGame extends Olympiad
     private void restoreDyeOnePlayer()
     {
         for(L2HennaInstance _dye : _playerOneDye)
+        {
+            if(_dye == null)
+                continue;
             _playerOne.addHenna(_dye);
+        }
         _playerOneDye.clear();
     }
 
     private void restoreDyeTwoPlayer()
     {
         for(L2HennaInstance _dye : _playerTwoDye)
+        {
+            if(_dye == null)
+                continue;
             _playerTwo.addHenna(_dye);
+        }
         _playerTwoDye.clear();
     }
 
