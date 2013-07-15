@@ -1011,6 +1011,7 @@ public final class Config {
     public static boolean ALT_ALLOW_ATTACK_NPC;
     public static boolean ALT_CAN_TRADE_AUGMENT, ALT_CAN_DROP_AUGMENT;
     public static boolean GOE_Door_Close;
+    public static boolean FREE_AUGMENTATION;
     //============================================================
     public static void loadAltConfig() {
         final String ALT = FService.ALT_SETTINGS_FILE;
@@ -1140,6 +1141,7 @@ public final class Config {
             ALT_CAN_TRADE_AUGMENT = Boolean.parseBoolean(altSettings.getProperty("AltCanTradeAugment", "false"));
             ALT_CAN_DROP_AUGMENT = Boolean.parseBoolean(altSettings.getProperty("AltCanDropAugment", "false"));
             GOE_Door_Close = Boolean.parseBoolean(altSettings.getProperty("GOEDoorClose","false"));
+            FREE_AUGMENTATION = Boolean.parseBoolean(altSettings.getProperty("FreeAugmentation","false"));
         } catch (Exception e) {
             e.printStackTrace();
             throw new Error("Failed to Load " + ALT + " File.");

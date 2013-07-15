@@ -9492,7 +9492,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 		// Check if this is offensive magic skill
 		if(skill.isOffensive())
 		{
-			if(!target.isMonster || isInsidePeaceZone(this, target) || isInsidePeaceZone(this))
+			if(isInsidePeaceZone(this, target) || isInsidePeaceZone(this) && !target.isMonster)
 			{
 				sendPacket(new SystemMessage(SystemMessageId.TARGET_IN_PEACEZONE));
 				sendPacket(ActionFailed.STATIC_PACKET);
