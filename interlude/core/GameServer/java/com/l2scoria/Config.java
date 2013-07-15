@@ -2655,6 +2655,10 @@ public final class Config {
     public static int ENCHANT_ARMOR_MAX;
     public static int ENCHANT_JEWELRY_MAX;
     public static boolean NO_ENCHANT_CHANGE_ZERO;
+    //Стековый Enchant Skill
+    public static boolean STACABLE_ENCHANTS_SKILL;
+    //Стековые Life Stone
+    public static boolean STACABLE_LIFE_STONE;
     //dwarf bonus
     public static boolean ENABLE_DWARF_ENCHANT_BONUS;
     public static int DWARF_ENCHANT_MIN_LEVEL;
@@ -2905,6 +2909,8 @@ public final class Config {
             ALT_OLY_ENCHANT_LIMIT = Integer.parseInt(ENCHANTSetting.getProperty("AltOlyMaxEnchant", "-1"));
             BREAK_ENCHANT = Integer.valueOf(ENCHANTSetting.getProperty("BreakEnchant", "0"));
             STACKABLE_ENCHANTS = Boolean.parseBoolean(ENCHANTSetting.getProperty("StackableEnchantment", "False"));
+            STACABLE_ENCHANTS_SKILL = Boolean.parseBoolean(ENCHANTSetting.getProperty("StackableEnchantSkill", "False"));
+            STACABLE_LIFE_STONE = Boolean.parseBoolean(ENCHANTSetting.getProperty("StackableLifeStone","False"));
         } catch (Exception e) {
             e.printStackTrace();
             throw new Error("Failed to Load " + ENCHANTC + " File.");
