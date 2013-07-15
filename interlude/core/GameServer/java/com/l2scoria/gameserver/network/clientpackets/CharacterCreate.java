@@ -33,6 +33,7 @@ import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.model.base.Experience;
 import com.l2scoria.gameserver.model.quest.Quest;
 import com.l2scoria.gameserver.model.quest.QuestState;
+import com.l2scoria.gameserver.model.spawn.RandomSpawn;
 import com.l2scoria.gameserver.network.L2GameClient;
 import com.l2scoria.gameserver.network.serverpackets.CharCreateFail;
 import com.l2scoria.gameserver.network.serverpackets.CharCreateOk;
@@ -40,6 +41,7 @@ import com.l2scoria.gameserver.network.serverpackets.CharSelectInfo;
 import com.l2scoria.gameserver.templates.L2PcTemplate;
 import com.l2scoria.gameserver.templates.L2PcTemplate.PcTemplateItem;
 import com.l2scoria.gameserver.util.Util;
+import javolution.util.FastList;
 import org.apache.log4j.Logger;
 
 import java.util.Random;
@@ -213,12 +215,12 @@ public final class CharacterCreate extends L2GameClientPacket
 		{
 			newChar.setXYZInvisible(Config.SPAWN_X, Config.SPAWN_Y, Config.SPAWN_Z);
 		}
-        else if(Config.RandomSpawn > 0)
+        else if(Config.RandomSpawn)
         {
             Random randomSpawn = new Random();
-            int randomX = randomSpawn.nextInt(100);
-            int randomY = randomSpawn.nextInt(100);
-            newChar.setXYZInvisible(template.spawnX + randomX, template.spawnY +randomY, template.spawnZ);
+            int randomIndex = randomSpawn.nextInt(Config.RandomSpawnLocation.size());
+            RandomSpawn _randomSpawn = Config.RandomSpawnLocation.get(randomIndex);
+            newChar.setXYZInvisible(_randomSpawn.getX(),_randomSpawn.getY(),_randomSpawn.getZ());
         }
 		else
 		{

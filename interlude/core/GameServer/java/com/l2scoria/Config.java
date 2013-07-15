@@ -18,7 +18,10 @@
  */
 package com.l2scoria;
 
+import com.l2scoria.gameserver.model.spawn.RandomSpawn;
 import com.l2scoria.gameserver.services.FService;
+import com.l2scoria.gameserver.services.Instruments;
+import com.l2scoria.gameserver.model.spawn.RandomSpawn;
 import gnu.trove.map.hash.TIntIntHashMap;
 import javolution.util.FastList;
 import javolution.util.FastMap;
@@ -1007,7 +1010,7 @@ public final class Config {
     public static int DISABLE_SKILLS_LEVEL_DIF;
     public static boolean ALT_ALLOW_ATTACK_NPC;
     public static boolean ALT_CAN_TRADE_AUGMENT, ALT_CAN_DROP_AUGMENT;
-
+    public static boolean GOE_Door_Close;
     //============================================================
     public static void loadAltConfig() {
         final String ALT = FService.ALT_SETTINGS_FILE;
@@ -1136,6 +1139,7 @@ public final class Config {
             ALT_ALLOW_ATTACK_NPC = Boolean.parseBoolean(altSettings.getProperty("AltAllowAttackNPC", "true"));
             ALT_CAN_TRADE_AUGMENT = Boolean.parseBoolean(altSettings.getProperty("AltCanTradeAugment", "false"));
             ALT_CAN_DROP_AUGMENT = Boolean.parseBoolean(altSettings.getProperty("AltCanDropAugment", "false"));
+            GOE_Door_Close = Boolean.parseBoolean(altSettings.getProperty("GOEDoorClose","false"));
         } catch (Exception e) {
             e.printStackTrace();
             throw new Error("Failed to Load " + ALT + " File.");
@@ -1988,7 +1992,11 @@ public final class Config {
      * Z Coordinate of the SPAWN_CHAR setting.
      */
     public static int SPAWN_Z;
-    public static int RandomSpawn;
+    public static boolean RandomSpawn;
+    public static String RandomSpawnX;
+    public static String RandomSpawnY;
+    public static String RandomSpawnZ;
+    public static FastList<RandomSpawn> RandomSpawnLocation;
     public static boolean ALLOW_HERO_SUBSKILL;
     public static int HERO_COUNT;
     public static int CRUMA_TOWER_LEVEL_RESTRICT;
@@ -2133,7 +2141,22 @@ public final class Config {
             SPAWN_X = Integer.parseInt(L2ScoriaSettings.getProperty("SpawnX", ""));
             SPAWN_Y = Integer.parseInt(L2ScoriaSettings.getProperty("SpawnY", ""));
             SPAWN_Z = Integer.parseInt(L2ScoriaSettings.getProperty("SpawnZ", ""));
-            RandomSpawn = Integer.parseInt(L2ScoriaSettings.getProperty("RandomSpawn","0"));
+
+            //RANDOM SPAWN
+            RandomSpawn = Boolean.parseBoolean(L2ScoriaSettings.getProperty("RandomSpawn","false"));
+            RandomSpawnX = L2ScoriaSettings.getProperty("RandomSpawnX", "");
+            RandomSpawnY = L2ScoriaSettings.getProperty("RandomSpawnY", "");
+            RandomSpawnZ = L2ScoriaSettings.getProperty("RandomSpawnZ", "");
+            String[] _randomSpawnX = RandomSpawnX.split(";");
+            String[] _randomSpawnY = RandomSpawnY.split(";");
+            String[] _randomSpawnZ = RandomSpawnZ.split(";");
+            RandomSpawnLocation = new FastList<RandomSpawn>();
+            for(int i=0; i<_randomSpawnX.length;i++)
+            {
+                RandomSpawnLocation.add(new RandomSpawn(Integer.valueOf(_randomSpawnX[i]),Integer.valueOf(_randomSpawnY[i]),
+                        Integer.valueOf(_randomSpawnZ[i])));
+            }
+
             ALLOW_LOW_LEVEL_TRADE = Boolean.parseBoolean(L2ScoriaSettings.getProperty("AllowLowLevelTrade", "True"));
             ALLOW_HERO_SUBSKILL = Boolean.parseBoolean(L2ScoriaSettings.getProperty("CustomHeroSubSkill", "False"));
             HERO_COUNT = Integer.parseInt(L2ScoriaSettings.getProperty("HeroCount", "1"));
@@ -2655,10 +2678,6 @@ public final class Config {
     public static int SOUL_CRYSTAL_MAX_LEVEL;
     //count enchant
     public static int CUSTOM_ENCHANT_VALUE;
-    //Стековый Enchant Skill
-    public static boolean STACABLE_ENCHANTS_SKILL;
-    //Стековые Life Stone
-    public static boolean STACABLE_LIFE_STONE;
     /**
      * Olympiad max enchant limitation
      */
@@ -2886,8 +2905,6 @@ public final class Config {
             ALT_OLY_ENCHANT_LIMIT = Integer.parseInt(ENCHANTSetting.getProperty("AltOlyMaxEnchant", "-1"));
             BREAK_ENCHANT = Integer.valueOf(ENCHANTSetting.getProperty("BreakEnchant", "0"));
             STACKABLE_ENCHANTS = Boolean.parseBoolean(ENCHANTSetting.getProperty("StackableEnchantment", "False"));
-            STACABLE_ENCHANTS_SKILL = Boolean.parseBoolean(ENCHANTSetting.getProperty("StackableEnchantSkill", "False"));
-            STACABLE_LIFE_STONE = Boolean.parseBoolean(ENCHANTSetting.getProperty("StackableLifeStone","False"));
         } catch (Exception e) {
             e.printStackTrace();
             throw new Error("Failed to Load " + ENCHANTC + " File.");

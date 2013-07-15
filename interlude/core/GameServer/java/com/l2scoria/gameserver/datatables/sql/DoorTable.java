@@ -266,7 +266,7 @@ public class DoorTable
                 door.setAutoActionDelay(120000);
             }
 
-			if (door.getDoorName().startsWith("goe"))
+			if (door.getDoorName().startsWith("goe") && !Config.GOE_Door_Close)
 			{
 				door.setAutoActionDelay(420000);
 			}
