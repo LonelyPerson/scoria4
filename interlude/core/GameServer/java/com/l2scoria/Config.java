@@ -19,7 +19,6 @@
 package com.l2scoria;
 
 import com.l2scoria.gameserver.services.FService;
-import com.l2scoria.gameserver.services.Instruments;
 import gnu.trove.map.hash.TIntIntHashMap;
 import javolution.util.FastList;
 import javolution.util.FastMap;
@@ -2656,6 +2655,10 @@ public final class Config {
     public static int SOUL_CRYSTAL_MAX_LEVEL;
     //count enchant
     public static int CUSTOM_ENCHANT_VALUE;
+    //Стековый Enchant Skill
+    public static boolean STACABLE_ENCHANTS_SKILL;
+    //Стековые Life Stone
+    public static boolean STACABLE_LIFE_STONE;
     /**
      * Olympiad max enchant limitation
      */
@@ -2883,6 +2886,8 @@ public final class Config {
             ALT_OLY_ENCHANT_LIMIT = Integer.parseInt(ENCHANTSetting.getProperty("AltOlyMaxEnchant", "-1"));
             BREAK_ENCHANT = Integer.valueOf(ENCHANTSetting.getProperty("BreakEnchant", "0"));
             STACKABLE_ENCHANTS = Boolean.parseBoolean(ENCHANTSetting.getProperty("StackableEnchantment", "False"));
+            STACABLE_ENCHANTS_SKILL = Boolean.parseBoolean(ENCHANTSetting.getProperty("StackableEnchantSkill", "False"));
+            STACABLE_LIFE_STONE = Boolean.parseBoolean(ENCHANTSetting.getProperty("StackableLifeStone","False"));
         } catch (Exception e) {
             e.printStackTrace();
             throw new Error("Failed to Load " + ENCHANTC + " File.");
