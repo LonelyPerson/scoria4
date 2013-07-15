@@ -2342,15 +2342,19 @@ public class L2Clan
 		}
 
 		boolean increaseClanLevel = false;
-
+        int price = 0;
 		switch(getLevel())
 		{
 			case 0:
 			{
 				// upgrade to 1
-				if(player.getSp() >= 30000 && player.getAdena() >= 650000)
+                if(Config.CLAN_LEVEL_FREE_UP)
+                    price = 0;
+                else
+                    price = 650000;
+				if(player.getSp() >= 30000 && player.getAdena() >= price)
 				{
-					if(player.reduceAdena("ClanLvl", 650000, player.getTarget(), true))
+					if(player.reduceAdena("ClanLvl", price, player.getTarget(), true))
 					{
 						player.setSp(player.getSp() - 30000);
 						SystemMessage sp = new SystemMessage(SystemMessageId.SP_DECREASED_S1);
@@ -2365,9 +2369,13 @@ public class L2Clan
 			case 1:
 			{
 				// upgrade to 2
-				if(player.getSp() >= 150000 && player.getAdena() >= 2500000)
+                if(Config.CLAN_LEVEL_FREE_UP)
+                    price = 0;
+                else
+                    price = 2500000;
+				if(player.getSp() >= 150000 && player.getAdena() >= price)
 				{
-					if(player.reduceAdena("ClanLvl", 2500000, player.getTarget(), true))
+					if(player.reduceAdena("ClanLvl", price, player.getTarget(), true))
 					{
 						player.setSp(player.getSp() - 150000);
 						SystemMessage sp = new SystemMessage(SystemMessageId.SP_DECREASED_S1);
@@ -2383,7 +2391,7 @@ public class L2Clan
 			case 2:
 			{
 				// upgrade to 3
-				if(player.getSp() >= 500000 && player.getInventory().getItemByItemId(1419) != null)
+                if(player.getSp() >= 500000 && player.getInventory().getItemByItemId(1419) != null)
 				{
 					// itemid 1419 == proof of blood
 					if(player.destroyItemByItemId("ClanLvl", 1419, 1, player.getTarget(), false))

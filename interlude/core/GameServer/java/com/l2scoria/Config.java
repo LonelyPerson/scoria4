@@ -926,6 +926,7 @@ public final class Config {
     public static boolean ALT_GAME_VIEWNPC;
     public static int ALT_CLAN_MEMBERS_FOR_WAR;
     public static int ALT_CLAN_JOIN_DAYS;
+    public static boolean CLAN_LEVEL_FREE_UP;
     public static int ALT_CLAN_CREATE_DAYS;
     public static int ALT_CLAN_DISSOLVE_DAYS;
     public static int ALT_ALLY_JOIN_DAYS_WHEN_LEAVED;
@@ -1071,6 +1072,7 @@ public final class Config {
 
             ALT_CLAN_MEMBERS_FOR_WAR = Integer.parseInt(altSettings.getProperty("AltClanMembersForWar", "15"));
             ALT_CLAN_JOIN_DAYS = Integer.parseInt(altSettings.getProperty("DaysBeforeJoinAClan", "5"));
+            CLAN_LEVEL_FREE_UP = Boolean.parseBoolean(altSettings.getProperty("ClanLevelFreeUp","false"));
             ALT_CLAN_CREATE_DAYS = Integer.parseInt(altSettings.getProperty("DaysBeforeCreateAClan", "10"));
             ALT_CLAN_DISSOLVE_DAYS = Integer.parseInt(altSettings.getProperty("DaysToPassToDissolveAClan", "7"));
             ALT_ALLY_JOIN_DAYS_WHEN_LEAVED = Integer.parseInt(altSettings.getProperty("DaysBeforeJoinAllyWhenLeaved", "1"));
