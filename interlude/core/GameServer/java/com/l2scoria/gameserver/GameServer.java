@@ -33,6 +33,7 @@ import com.l2scoria.gameserver.datatables.csv.*;
 import com.l2scoria.gameserver.datatables.sql.*;
 import com.l2scoria.gameserver.datatables.xml.AugmentationData;
 import com.l2scoria.gameserver.datatables.xml.ZoneData;
+import com.l2scoria.gameserver.extend.Extend;
 import com.l2scoria.gameserver.geodata.GeoEngine;
 import com.l2scoria.gameserver.handler.*;
 import com.l2scoria.gameserver.idfactory.IdFactory;
@@ -502,6 +503,7 @@ public class GameServer
 			}
 
 			PowerPak.getInstance();
+            Extend.getInstance();
 			System.gc();
 
 		}

@@ -27,6 +27,9 @@ import com.l2scoria.gameserver.communitybbs.Manager.RegionBBSManager;
 import com.l2scoria.gameserver.datatables.GmListTable;
 import com.l2scoria.gameserver.datatables.csv.MapRegionTable;
 import com.l2scoria.gameserver.datatables.sql.AdminCommandAccessRights;
+import com.l2scoria.gameserver.extend.Clan.ClanMessage;
+import com.l2scoria.gameserver.extend.Clan.ClanMessageData;
+import com.l2scoria.gameserver.extend.ExtendConfig;
 import com.l2scoria.gameserver.handler.custom.CustomWorldHandler;
 import com.l2scoria.gameserver.instancemanager.InstanceManager;
 import com.l2scoria.gameserver.managers.*;
@@ -60,6 +63,7 @@ import com.l2scoria.gameserver.thread.TaskPriority;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.gameserver.util.FloodProtector;
 import com.l2scoria.gameserver.util.L2Utils;
+import javolution.util.FastList;
 import org.apache.log4j.Logger;
 
 import java.util.Collection;
@@ -474,6 +478,16 @@ public class EnterWorld extends L2GameClientPacket
                         L2Utils.saveHwid(activeChar.getName(), activeChar.gethwid());
                 }
                 //ThreadPoolManager.getInstance().scheduleGeneral(new UserInfo(activeChar), 20000);
+        if(ExtendConfig.EnableExtend && ExtendConfig.EnableClanMessage)
+        {
+            FastList<ClanMessageData> ClanMessages = ClanMessage.getClanMsg(activeChar);
+            CreatureSay cs;
+            for(ClanMessageData Data : ClanMessages)
+            {
+                cs = new CreatureSay(0, Say2.CLAN,  Data.getChar_Name(), Data.getMsg());
+                activeChar.sendPacket(cs);
+            }
+        }
 	}
 
 	private void EnterGM(L2PcInstance activeChar)
