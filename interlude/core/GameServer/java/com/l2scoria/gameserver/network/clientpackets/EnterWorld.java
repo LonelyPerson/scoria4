@@ -859,4 +859,9 @@ public class EnterWorld extends L2GameClientPacket
 
 		activeChar.setPledgeClass(pledgeClass);
 	}
+
+    private void ExtendPasswrod()
+    {
+
+    }
 }

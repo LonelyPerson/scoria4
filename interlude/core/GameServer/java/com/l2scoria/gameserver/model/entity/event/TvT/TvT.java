@@ -91,6 +91,8 @@ public class TvT extends GameEvent
 	private boolean TVT_AURA;
 	private boolean TVT_ININSTANCE;
 	private boolean TVT_ORIGINALRETURN;
+    public boolean TVT_CLAN_REP_ENABLE;
+    public int TVT_CLAN_REP_AMOUNT;
         
         private boolean TVT_BUFF_PLAYERS;
         private String TVT_BUFF_MAGE;
@@ -951,6 +953,11 @@ public class TvT extends GameEvent
 						if (TVT_PRICE_NO_KILLS || winner.players.get(playerId) > 0)
 						{
 							player.addItem("TvT reward", _rewardId, _rewardAmount, null, true);
+                            if(player.getClanId() > 0 && TVT_CLAN_REP_ENABLE)
+                            {
+                                int reput = player.getClan().getReputationScore();
+                                player.getClan().setReputationScore(reput + TVT_CLAN_REP_AMOUNT, true);
+                            }
 						}
 					}
 				}
@@ -1115,6 +1122,8 @@ public class TvT extends GameEvent
 				_rewardAmount = ArrayUtils.add(_rewardAmount, Integer.parseInt(s));
 			}
 
+            TVT_CLAN_REP_ENABLE = Boolean.parseBoolean(Setting.getProperty("TvtClanRepEnable","false"));
+            TVT_CLAN_REP_AMOUNT = Integer.parseInt(Setting.getProperty("TvtClanRepAmount","1000"));
 			_regTime = Integer.parseInt(Setting.getProperty("TvTJoinTime", "5"));
 			_eventTime = Integer.parseInt(Setting.getProperty("TvTEventTime", "15"));
 			_minPlayers = Integer.parseInt(Setting.getProperty("TvTMinPlayers", "8"));

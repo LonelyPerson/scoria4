@@ -1,6 +1,7 @@
 package com.l2scoria.gameserver.extend;
 
 import com.l2scoria.gameserver.extend.Clan.ClanMessage;
+import com.l2scoria.gameserver.extend.Password.Password;
 import com.l2scoria.gameserver.handler.VoicedCommandHandler;
 import com.l2scoria.gameserver.handler.custom.CustomBypassHandler;
 import com.l2scoria.util.Util;
@@ -25,19 +26,34 @@ public class Extend {
     private Extend()
     {
         //Конфиги
-        ExtendConfig.load();
-        Util.printSection("Extend");
-        if(ExtendConfig.EnableClanMessage)
+        if(ExtendConfig.EnableExtend)
         {
-            System.out.println("Extend Clan:");
-            ClanMessage.getInstance();
-            ClanMessage handler = new ClanMessage();
-            if(ExtendConfig.ClanMessageVoiceComand != null && ExtendConfig.ClanMessageVoiceComand.length() > 0)
+            ExtendConfig.load();
+            Util.printSection("Extend");
+            if(ExtendConfig.EnableClanMessage)
             {
-                VoicedCommandHandler.getInstance().registerVoicedCommandHandler(handler);
+                System.out.println("Extend Clan:");
+                ClanMessage.getInstance();
+                ClanMessage handlerClan = new ClanMessage();
+                if(ExtendConfig.ClanMessageVoiceComand != null && ExtendConfig.ClanMessageVoiceComand.length() > 0)
+                {
+                    VoicedCommandHandler.getInstance().registerVoicedCommandHandler(handlerClan);
+                }
+                CustomBypassHandler.getInstance().registerCustomBypassHandler(handlerClan);
+
             }
-            CustomBypassHandler.getInstance().registerCustomBypassHandler(handler);
-            System.out.println("Enabled Extend Clan");
+            if(ExtendConfig.EnableExtendPassword)
+            {
+                System.out.println("Enabled Extend Clan");
+                System.out.print("Extend Password:");
+                Password.getInstance();
+                Password handlerPassword = new Password();
+                if(ExtendConfig.ExtendPasswordVoiceComand != null && ExtendConfig.ExtendPasswordVoiceComand.length() >0)
+                {
+                    VoicedCommandHandler.getInstance().registerVoicedCommandHandler(handlerPassword);
+                }
+                CustomBypassHandler.getInstance().registerCustomBypassHandler(handlerPassword);
+            }
         }
     }
 }

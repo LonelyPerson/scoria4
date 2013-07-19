@@ -205,17 +205,15 @@ public class ClanMessage implements IVoicedCommandHandler, ICustomByPassHandler 
         if(activeChar == null)
             return false;
 
-        if(ExtendConfig.EnableExtend)
+        if(ExtendConfig.ClanMessageOnlyCL && activeChar.isClanLeader())
         {
-            if(ExtendConfig.ClanMessageOnlyCL && activeChar.isClanLeader())
-            {
-                getMainHtm(activeChar);
-            }
-            else if(!ExtendConfig.ClanMessageOnlyCL)
-            {
-                getMainHtm(activeChar);
-            }
+            getMainHtm(activeChar);
         }
+        else if(!ExtendConfig.ClanMessageOnlyCL)
+        {
+            getMainHtm(activeChar);
+        }
+
         return false;
     }
 
