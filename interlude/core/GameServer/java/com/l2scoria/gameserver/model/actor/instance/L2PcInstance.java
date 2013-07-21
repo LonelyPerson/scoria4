@@ -9053,7 +9053,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
             return false;
 
         // Проверка на соали
-        if(getAllyId() == ((L2PcInstance)attacker).getAllyId())
+        if(getAllyId() != 0 && getAllyId() == ((L2PcInstance)attacker).getAllyId())
             return false;
 
 		if(attacker.isPlayable && isInsideZone(ZONE_PEACE))
