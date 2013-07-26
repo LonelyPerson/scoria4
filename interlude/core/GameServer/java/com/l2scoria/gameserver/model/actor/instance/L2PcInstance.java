@@ -8936,7 +8936,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
         {
             int slot = i+1;
             L2HennaInstance _dye = _henna[i];
-            if(_dye != null && Config.LIST_OLY_RESTRICTED_DYE.contains(_dye.getItemIdDye()));
+            if(_dye != null && Config.LIST_OLY_RESTRICTED_DYE.equals(_dye.getItemIdDye()));
             {
                 removeHenna(slot);
                 _hennaOly.add(_dye);

@@ -25,11 +25,10 @@ public class Extend {
 
     private Extend()
     {
-        //Конфиги
+        ExtendConfig.load();
+        Util.printSection("Extend");
         if(ExtendConfig.EnableExtend)
         {
-            ExtendConfig.load();
-            Util.printSection("Extend");
             if(ExtendConfig.EnableClanMessage)
             {
                 System.out.println("Extend Clan:");

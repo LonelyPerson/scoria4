@@ -206,6 +206,7 @@
         <mkdir dir="${build.dist.game}/config/network" />
         <mkdir dir="${build.dist.game}/config/fun" />
         <mkdir dir="${build.dist.game}/config/daemons" />
+        <mkdir dir="${build.dist.game}/config/extend" />
 
         <mkdir dir="${build.dist.game}/config_en/protected" />
         <mkdir dir="${build.dist.game}/config_en/head" />
@@ -331,6 +332,13 @@
         <copy todir="${build.dist.game}/config_en/network">
             <fileset dir="config_en/network">
                 <include name="gameserver.properties"/>
+            </fileset>
+        </copy>
+
+        <!-- extend -->
+        <copy todir="${build.dist.game}/config/extend">
+            <fileset dir="config/extend">
+                <include name="*.properties"/>
             </fileset>
         </copy>
 

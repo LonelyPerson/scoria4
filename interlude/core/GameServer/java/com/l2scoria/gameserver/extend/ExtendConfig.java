@@ -28,6 +28,13 @@ public class ExtendConfig {
     //Password
     public static boolean EnableExtendPassword;
     public static String ExtendPasswordVoiceComand;
+    public static String MsgIsPassword;
+    public static String MsgNoPassword;
+    public static String MsgErrorEnterPassword;
+    public static String MsgAddPassword;
+    public static String MsgIncorrectPassword;
+    public static String MsgNoRepwd;
+    public static String MsgDeletePwd;
 
     public static void load()
     {
@@ -47,6 +54,13 @@ public class ExtendConfig {
             //PASSWORD
             EnableExtendPassword = Boolean.parseBoolean(extendProperties.getProperty("EnableExtendPassword","false"));
             ExtendPasswordVoiceComand = extendProperties.getProperty("ExtendPasswordVoiceComand","password");
+            MsgIsPassword = extendProperties.getProperty("MsgIsPassword");
+            MsgNoPassword = extendProperties.getProperty("MsgNoPassword");
+            MsgErrorEnterPassword = extendProperties.getProperty("MsgErrorEnterPassword");
+            MsgAddPassword = extendProperties.getProperty("MsgAddPassword");
+            MsgIncorrectPassword = extendProperties.getProperty("MsgIncorrectPassword");
+            MsgNoRepwd = extendProperties.getProperty("MsgNoRepwd");
+            MsgDeletePwd = extendProperties.getProperty("MsgDeletePwd");
         }
         catch (Exception ex)
         {
