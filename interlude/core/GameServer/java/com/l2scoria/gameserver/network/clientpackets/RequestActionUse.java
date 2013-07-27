@@ -99,6 +99,9 @@ public final class RequestActionUse extends L2GameClientPacket
 			_log.info("Requested Action ID: " + String.valueOf(_actionId));
 		}
 
+        if(activeChar._noAction)
+            return;
+
 		switch(_actionId)
 		{
 			case 0:

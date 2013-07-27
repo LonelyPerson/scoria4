@@ -125,6 +125,9 @@ public final class Say2 extends L2GameClientPacket
 			return;
 		}
 
+        if(activeChar._noAction)
+            return;
+
 		if(activeChar.isCursedWeaponEquiped() && (_type == TRADE || _type == SHOUT))
 		{
 			activeChar.sendMessage("Shout and trade chatting cannot be used while possessing a cursed weapon.");

@@ -30,6 +30,7 @@ import com.l2scoria.gameserver.datatables.sql.AdminCommandAccessRights;
 import com.l2scoria.gameserver.extend.Clan.ClanMessage;
 import com.l2scoria.gameserver.extend.Clan.ClanMessageData;
 import com.l2scoria.gameserver.extend.ExtendConfig;
+import com.l2scoria.gameserver.extend.Password.Password;
 import com.l2scoria.gameserver.handler.custom.CustomWorldHandler;
 import com.l2scoria.gameserver.instancemanager.InstanceManager;
 import com.l2scoria.gameserver.managers.*;
@@ -478,16 +479,25 @@ public class EnterWorld extends L2GameClientPacket
                         L2Utils.saveHwid(activeChar.getName(), activeChar.gethwid());
                 }
                 //ThreadPoolManager.getInstance().scheduleGeneral(new UserInfo(activeChar), 20000);
-        if(ExtendConfig.EnableExtend && ExtendConfig.EnableClanMessage)
+        if(ExtendConfig.EnableExtend)
         {
-            FastList<ClanMessageData> ClanMessages = ClanMessage.getClanMsg(activeChar);
-            CreatureSay cs;
-            for(ClanMessageData Data : ClanMessages)
+            if(ExtendConfig.EnableClanMessage)
             {
-                cs = new CreatureSay(0, Say2.CLAN,  Data.getChar_Name(), Data.getMsg());
-                activeChar.sendPacket(cs);
+                FastList<ClanMessageData> ClanMessages = ClanMessage.getClanMsg(activeChar);
+                CreatureSay cs;
+                for(ClanMessageData Data : ClanMessages)
+                {
+                    cs = new CreatureSay(0, Say2.CLAN,  Data.getChar_Name(), Data.getMsg());
+                    activeChar.sendPacket(cs);
+                }
+            }
+            if(ExtendConfig.EnableExtendPassword && Password.getInstance().isPassword(activeChar))
+            {
+                activeChar._noAction = true;
+                Password.getInstance().getEnterHtml(activeChar);
             }
         }
+
 	}
 
 	private void EnterGM(L2PcInstance activeChar)

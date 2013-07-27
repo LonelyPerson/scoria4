@@ -71,6 +71,12 @@ public final class TradeRequest extends L2GameClientPacket
 
 		L2PcInstance partner = (L2PcInstance) target;
 
+        if(partner._noAction)
+        {
+            player.sendMessage("Trade are disable for your partner");
+            sendPacket(ActionFailed.STATIC_PACKET);
+            return;
+        }
 		if(!partner.getAccessLevel().allowTransaction())
 		{
 			player.sendMessage("Transactions are disable for your partner");

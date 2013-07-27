@@ -62,10 +62,14 @@ public final class Action extends L2GameClientPacket
 		// Get the current L2PcInstance of the player
 		L2PcInstance activeChar = getClient().getActiveChar();
 
+
 		if(activeChar == null)
 			return;
 
-		L2Object obj;
+        if(activeChar._noAction)
+            return;
+
+        L2Object obj;
 
 		if(activeChar.getTargetId() == _objectId)
 		{
@@ -73,7 +77,7 @@ public final class Action extends L2GameClientPacket
 		}
 		else
 		{
-			obj = L2World.getInstance().findObject(_objectId);
+            obj = L2World.getInstance().findObject(_objectId);
 		}
 
 		// If object requested does not exist, add warn msg into logs

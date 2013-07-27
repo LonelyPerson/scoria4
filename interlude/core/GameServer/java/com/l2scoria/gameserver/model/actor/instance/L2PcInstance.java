@@ -211,6 +211,7 @@ public final class L2PcInstance extends L2PlayableInstance implements scoria.Ext
 			5, 20, 28, 36, 43, 49, 55, 62
 	};
 
+
 	private boolean _sitdowntask;
     public boolean _WrongHwid = false;
 

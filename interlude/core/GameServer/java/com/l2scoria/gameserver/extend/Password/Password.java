@@ -33,6 +33,7 @@ public class Password implements IVoicedCommandHandler, ICustomByPassHandler {
     private static final String add_html = "data/html/extend/password/add.htm";
     private static final String delete_html = "data/html/extend/password/delete.htm";
     private static final String enter_html = "data/html/extend/password/enter.htm";
+    private static final String enter_successfully = "data/html/extend/password/sucfl.htm";
 
     //Message
     private static final String isPassword = ExtendConfig.MsgIsPassword;
@@ -202,6 +203,20 @@ public class Password implements IVoicedCommandHandler, ICustomByPassHandler {
         }
     }
 
+    public void getEnterHtml(L2PcInstance activeChar)
+    {
+        NpcHtmlMessage enter = new NpcHtmlMessage(5);
+        enter.setFile(enter_html);
+        activeChar.sendPacket(enter);
+    }
+
+    private void getSuccessfullHtml(L2PcInstance activeChar)
+    {
+        NpcHtmlMessage scfl = new NpcHtmlMessage(5);
+        scfl.setFile(enter_successfully);
+        activeChar.sendPacket(scfl);
+    }
+
     @Override
     public String[] getByPassCommands() {
         return _BYPASPASS;
@@ -301,7 +316,6 @@ public class Password implements IVoicedCommandHandler, ICustomByPassHandler {
             if(matcher.matches())
             {
                 String pwd = matcher.group(1).trim();
-                _log.info(pwd);
                 if(checkPassword(player,pwd))
                 {
                     deletePassword(player);
@@ -320,9 +334,32 @@ public class Password implements IVoicedCommandHandler, ICustomByPassHandler {
                 getMainHtml(player);
             }
         }
+        if(parameters.startsWith("WorldEnter"))
+        {
+            String param = parameters.substring(11);
+            Pattern pattern = Pattern.compile("pwd: ([a-zA-Z0-9]+)");
+            Matcher matcher = pattern.matcher(param);
 
-
-
+            if(matcher.matches())
+            {
+                String pwd = matcher.group(1).trim();
+                if(checkPassword(player,pwd))
+                {
+                    player._noAction = false;
+                    getSuccessfullHtml(player);
+                }
+                else
+                {
+                    player.sendMessage(errorEnterPassword);
+                    getEnterHtml(player);
+                }
+            }
+            else
+            {
+                player.sendMessage(incorrectPassword);
+                getEnterHtml(player);
+            }
+        }
     }
 
     @Override

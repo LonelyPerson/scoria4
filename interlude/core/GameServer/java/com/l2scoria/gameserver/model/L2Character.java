@@ -105,7 +105,8 @@ public abstract class L2Character extends L2Object
 	private boolean _isFakeDeath = false; // Fake death
 	private boolean _isFlying = false; // Is flying Wyvern?
 	private boolean _isFallsdown = false; // Falls down
-	private final int[] lastPosition =
+    public boolean _noAction = false; //No action, запрещает любые действия.
+    private final int[] lastPosition =
 	{
 			0, 0, 0
 	};
@@ -1518,7 +1519,10 @@ public abstract class L2Character extends L2Object
 	 */
 	public void doCast(L2Skill skill)
 	{
-		if(skill == null)
+		if(_noAction)
+            return;
+
+        if(skill == null)
 		{
 			getAI().notifyEvent(CtrlEvent.EVT_CANCEL);
 			return;
@@ -2313,7 +2317,7 @@ public abstract class L2Character extends L2Object
     /** Return True if the L2Character can't move (stun, root, sleep, overload, paralyzed, private story manager). */
 	public boolean isMovementDisabled()
 	{
-        return isStunned() || isRooted() || isSleeping() || isOverloaded() || isParalyzed() || isImobilised() || isFakeDeath() || isFallsdown() || isPrivateStory();
+        return isStunned() || isRooted() || isSleeping() || isOverloaded() || isParalyzed() || isImobilised() || isFakeDeath() || isFallsdown() || isPrivateStory() || _noAction;
 	}
 
 	/** Return True if the L2Character can be controlled by the player (confused, afraid). */
