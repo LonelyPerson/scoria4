@@ -14,6 +14,6 @@ do
         mv ./log/java0.log.0 "./log/`date +%Y-%m-%d_%H-%M-%S`_java.log"
         mv ./log/stdout.log "./log/`date +%Y-%m-%d_%H-%M-%S`_stdout.log"
       #if need - uncoment#  #mv ./log/chat.log "./log/`date +%Y-%m-%d_%H:%M:%S`-chat.log"#
-        java -Xbootclasspath/p:./lib/jsr167.jar -Dfile.encoding=UTF-8 -Xms1024m -Xmx1256m -XX:+UseParallelGC -XX:+AggressiveOpts -cp ./lib/*: com.l2scoria.gameserver.GameServer > ./log/stdout.log 2>&1
+        java -Dfile.encoding=UTF-8 -Xms1024m -Xmx1256m -XX:+UseParallelGC -XX:+AggressiveOpts -cp ./lib/*: com.l2scoria.gameserver.GameServer > ./log/stdout.log 2>&1
         sleep 10;
 done
