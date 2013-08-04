@@ -47,6 +47,12 @@ public final class RequestPrivateStoreManageBuy extends L2GameClientPacket
         if(player._noAction)
             return;
 
+        if(player.getPet() != null)
+        {
+            player.sendMessage("Remove pet");
+            return;
+        }
+
 		// Player shouldn't be able to set stores if he/she is alike dead (dead or fake death)
 		if(player.isAlikeDead())
 		{
