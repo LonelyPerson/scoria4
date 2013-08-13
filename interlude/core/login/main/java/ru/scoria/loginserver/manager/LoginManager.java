@@ -578,7 +578,7 @@ public class LoginManager
 				if (_registredAccounts.containsKey(address.getHostAddress()))
 					numTryes = _registredAccounts.get(address.getHostAddress());
 				numTryes++;
-				if(numTryes>Config.LOGIN_MAX_ACC_REG) {
+				if(Config.LOGIN_MAX_ACC_REG > 0 && numTryes>Config.LOGIN_MAX_ACC_REG) {
 					_logLogin.info("Address "+address.getHostAddress()+" banned");
 					BanManager.getInstance().addBanForAddress(address, Config.LOGIN_BLOCK_AFTER_BAN * 1000);
 					return false;
