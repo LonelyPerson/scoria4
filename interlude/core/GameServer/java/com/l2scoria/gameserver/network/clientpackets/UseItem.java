@@ -296,13 +296,22 @@ public final class UseItem extends L2GameClientPacket
 			sm = null;
 			return;
 		}
-		if(activeChar.isMounted() && !Config.MOUNT_PROHIBIT) 
+		if(activeChar.isMounted())
 		{
-			SystemMessage sm = new SystemMessage(SystemMessageId.S1_CANNOT_BE_USED);
-			sm.addItemName(itemId);
-			getClient().getActiveChar().sendPacket(sm);
-			sm = null;
-			return;
+            boolean canEquipIt = true;
+            if(Config.MOUNT_PROHIBIT) {
+                if(!item.getItem().isConsumable())
+                    canEquipIt = false;
+            } else {
+                canEquipIt = false;
+            }
+            if(!canEquipIt) {
+                SystemMessage sm = new SystemMessage(SystemMessageId.S1_CANNOT_BE_USED);
+                sm.addItemName(itemId);
+                getClient().getActiveChar().sendPacket(sm);
+                sm = null;
+                return;
+            }
 		}
 
 		// Char cannot use pet items
