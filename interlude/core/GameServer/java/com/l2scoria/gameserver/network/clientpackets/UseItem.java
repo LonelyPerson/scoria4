@@ -32,10 +32,7 @@ import com.l2scoria.gameserver.network.serverpackets.ActionFailed;
 import com.l2scoria.gameserver.network.serverpackets.ItemList;
 import com.l2scoria.gameserver.network.serverpackets.ShowCalculator;
 import com.l2scoria.gameserver.network.serverpackets.SystemMessage;
-import com.l2scoria.gameserver.templates.L2ArmorType;
-import com.l2scoria.gameserver.templates.L2Item;
-import com.l2scoria.gameserver.templates.L2Weapon;
-import com.l2scoria.gameserver.templates.L2WeaponType;
+import com.l2scoria.gameserver.templates.*;
 import com.l2scoria.gameserver.thread.ThreadPoolManager;
 import com.l2scoria.gameserver.util.FloodProtector;
 import com.l2scoria.gameserver.util.Util;
@@ -298,12 +295,9 @@ public final class UseItem extends L2GameClientPacket
 		}
 		if(activeChar.isMounted())
 		{
-            boolean canEquipIt = true;
-            if(Config.MOUNT_PROHIBIT) {
-                if(!item.getItem().isConsumable())
-                    canEquipIt = false;
-            } else {
-                canEquipIt = false;
+            boolean canEquipIt = false;
+            if(Config.MOUNT_PROHIBIT && (item.getItem().isConsumable() || item.getItemType() == L2EtcItemType.SCROLL)) {
+                    canEquipIt = true;
             }
             if(!canEquipIt) {
                 SystemMessage sm = new SystemMessage(SystemMessageId.S1_CANNOT_BE_USED);

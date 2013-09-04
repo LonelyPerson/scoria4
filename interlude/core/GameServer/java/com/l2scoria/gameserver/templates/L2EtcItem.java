@@ -56,7 +56,7 @@ public final class L2EtcItem extends L2Item
 	@Override
 	public final boolean isConsumable()
 	{
-		return getItemType() == L2EtcItemType.SHOT || getItemType() == L2EtcItemType.POTION || getItemType() == L2EtcItemType.SCROLL;
+		return getItemType() == L2EtcItemType.SHOT || getItemType() == L2EtcItemType.POTION;
 	}
 
 	/**
