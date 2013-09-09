@@ -6,7 +6,6 @@ import com.l2scoria.gameserver.handler.ICustomByPassHandler;
 import com.l2scoria.gameserver.handler.IVoicedCommandHandler;
 import com.l2scoria.gameserver.model.actor.instance.L2PcInstance;
 import com.l2scoria.gameserver.network.serverpackets.NpcHtmlMessage;
-
 import com.l2scoria.util.database.L2DatabaseFactory;
 import javolution.text.TextBuilder;
 import javolution.util.FastList;
@@ -15,9 +14,6 @@ import org.apache.log4j.Logger;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.StringTokenizer;
 
 
 /**
@@ -180,25 +176,9 @@ public class ClanMessage implements IVoicedCommandHandler, ICustomByPassHandler 
         ClanMessageData = getClanMsg(MessageId);
         NpcHtmlMessage edithtml = new NpcHtmlMessage(5);
         edithtml.setFile(edit_html);
-        edithtml.replace("%text%", ClanMessageData.getMsg());
+        edithtml.replace("%message%", ClanMessageData.getMsg());
         activeChar.sendPacket(edithtml);
     }
-
-    private String getMessage(String params)
-    {
-        //Возвращяет нам сообщение.
-        String _msg = "";
-        StringTokenizer st = new StringTokenizer(params, " ");
-        try
-        {
-            if(st.hasMoreTokens())
-            {
-                _msg = st.nextToken();
-            }
-        }catch (Exception ex){_log.info(_clanMessage + " " + ex);}
-        return _msg;
-    }
-
 
     @Override
     public boolean useVoicedCommand(String command, L2PcInstance activeChar, String target) {
@@ -231,8 +211,8 @@ public class ClanMessage implements IVoicedCommandHandler, ICustomByPassHandler 
     public void handleCommand(String command, L2PcInstance player, String parameters) {
         if(parameters.startsWith("addMessage"))
         {
-            String msg = getMessage(parameters.substring(10).trim());
-            if(msg != "Html" && msg != "")
+            String msg = parameters.substring(10);
+            if(!msg.equals("Html") && !msg.isEmpty())
             {
                 addMessage(msg, player);
                 getMainHtm(player);
@@ -242,16 +222,16 @@ public class ClanMessage implements IVoicedCommandHandler, ICustomByPassHandler 
                 player.sendMessage(empty_message);
             }
         }
-        if(parameters.startsWith("MessageAddHtml"))
+        else if(parameters.equals("MessageAddHtml"))
         {
             getAddHtml(player);
         }
-        if(parameters.startsWith("Message"))
+        else if(parameters.startsWith("Message"))
         {
             int id = Integer.valueOf(parameters.substring(8));
             getEditHtml(player,id);
         }
-        if(parameters.startsWith("deleteMessage"))
+        else if(parameters.startsWith("deleteMessage"))
         {
             if(ClanMessageData != null)
             {
@@ -263,7 +243,7 @@ public class ClanMessage implements IVoicedCommandHandler, ICustomByPassHandler 
                 getMainHtm(player);
             }
         }
-        if(parameters.startsWith("main"))
+        else if(parameters.startsWith("main"))
         {
             getMainHtm(player);
         }
