@@ -15,16 +15,6 @@ public class ExtendConfig {
 
     public static boolean EnableExtend;
 
-
-    //Clan
-    public static boolean EnableClanMessage;
-    public static boolean ClanMessageOnlyCL;
-    public static String ClanMessageVoiceComand;
-    public static String LongMessage;
-    public static String EmptyMessage;
-    public static String DeleteMessageSuccessful;
-    public static String DeleteMessageError;
-
     //Password
     public static boolean EnableExtendPassword;
     public static String ExtendPasswordVoiceComand;
@@ -41,15 +31,6 @@ public class ExtendConfig {
         try
         {
             L2Properties extendProperties = new L2Properties(EXTEND_CONFIG_FILE);
-            //CLAN
-            EnableExtend = Boolean.parseBoolean(extendProperties.getProperty("EnableExtend", "false"));
-            EnableClanMessage = Boolean.parseBoolean(extendProperties.getProperty("EnableClanMessage", "false"));
-            ClanMessageOnlyCL = Boolean.parseBoolean(extendProperties.getProperty("ClanMessgaeOnlyCL","true"));
-            ClanMessageVoiceComand = extendProperties.getProperty("ClanMessageVoice","clanmsg");
-            LongMessage = extendProperties.getProperty("LongMessage","");
-            EmptyMessage = extendProperties.getProperty("EmptyMessage","");
-            DeleteMessageSuccessful = extendProperties.getProperty("DeleteMessageSuccessful","");
-            DeleteMessageError = extendProperties.getProperty("DeleteMessageError","");
 
             //PASSWORD
             EnableExtendPassword = Boolean.parseBoolean(extendProperties.getProperty("EnableExtendPassword","false"));

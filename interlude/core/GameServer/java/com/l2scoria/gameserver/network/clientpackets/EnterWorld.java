@@ -27,8 +27,6 @@ import com.l2scoria.gameserver.communitybbs.Manager.RegionBBSManager;
 import com.l2scoria.gameserver.datatables.GmListTable;
 import com.l2scoria.gameserver.datatables.csv.MapRegionTable;
 import com.l2scoria.gameserver.datatables.sql.AdminCommandAccessRights;
-import com.l2scoria.gameserver.extend.Clan.ClanMessage;
-import com.l2scoria.gameserver.extend.Clan.ClanMessageData;
 import com.l2scoria.gameserver.extend.ExtendConfig;
 import com.l2scoria.gameserver.extend.Password.Password;
 import com.l2scoria.gameserver.handler.custom.CustomWorldHandler;
@@ -481,16 +479,6 @@ public class EnterWorld extends L2GameClientPacket
                 //ThreadPoolManager.getInstance().scheduleGeneral(new UserInfo(activeChar), 20000);
         if(ExtendConfig.EnableExtend)
         {
-            if(ExtendConfig.EnableClanMessage)
-            {
-                FastList<ClanMessageData> ClanMessages = ClanMessage.getClanMsg(activeChar);
-                CreatureSay cs;
-                for(ClanMessageData Data : ClanMessages)
-                {
-                    cs = new CreatureSay(0, Say2.CLAN,  Data.getChar_Name(), Data.getMsg());
-                    activeChar.sendPacket(cs);
-                }
-            }
             if(ExtendConfig.EnableExtendPassword && Password.getInstance().isPassword(activeChar))
             {
                 activeChar._noAction = true;

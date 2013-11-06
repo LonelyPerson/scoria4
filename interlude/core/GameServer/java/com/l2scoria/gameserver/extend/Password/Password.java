@@ -1,6 +1,5 @@
 package com.l2scoria.gameserver.extend.Password;
 
-import com.l2scoria.gameserver.extend.Clan.ClanMessageData;
 import com.l2scoria.gameserver.extend.ExtendConfig;
 import com.l2scoria.gameserver.handler.ICustomByPassHandler;
 import com.l2scoria.gameserver.handler.IVoicedCommandHandler;
