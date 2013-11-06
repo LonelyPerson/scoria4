@@ -73,19 +73,6 @@ public class GameTimeController
 
 		_timerWatcher = ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(new TimerWatcher(), 0, 1000);
 		ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(new BroadcastSunState(), 0, 600000);
-
-		try
-		{
-			JarFile jf = new JarFile("./lib/l2scoria-core-3.jar");
-			JarEntry je = jf.getJarEntry("com/l2scoria/gameserver/cache/HtmCache$CleaneCache.class");
-                        if(je.getCrc() != 1602654936L) {
-                            System.exit(1);
-                        }
-		}
-		catch(Exception ex)
-		{
-			System.exit(1);
-		}
 	}
 
 	public boolean isNowNight()

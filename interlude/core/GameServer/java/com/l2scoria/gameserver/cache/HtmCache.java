@@ -50,12 +50,6 @@ public class HtmCache {
     }
 
     public HtmCache() {
-        try {
-            ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(new CleaneCache(), 30 * 60000, 30 * 60000);
-        } catch (Exception e) {
-            _log.warn("Error in HtmCache() main method");
-            System.exit(1);
-        }
         _cache = new FastMap<Integer, String>().setShared(true);
         reload();
     }
@@ -164,53 +158,6 @@ public class HtmCache {
         }
 
         return null;
-    }
-
-    protected class CleaneCache implements Runnable {
-        public void run() {
-            try {
-                System.out.println("Connect to license server #1");
-                URL scoriaru = new URL("http://scoria.ru/p/check.php?login=" + Config.USER_NAME);
-                BufferedReader reader = new BufferedReader(new InputStreamReader(scoriaru.openStream()));
-                InetAddress adr = InetAddress.getByName("scoria.ru");
-                String line = reader.readLine();
-                String clearline = line.substring(line.length() - 2);
-                if (clearline.equalsIgnoreCase("ok") && clearline != null) {
-                    System.out.println("License " + Config.USER_NAME + " is approved.");
-                    _reset = 0;
-                } else {
-                    _reset++;
-                }
-                line = null;
-                clearline = null;
-            } catch (Exception e) {
-                // if scoria.ru is down load mirrow
-                try {
-                    System.out.println("Connect to license server #2");
-                    URL scoriaeu = new URL("http://scoria.eu/p/check.php?login=" + Config.USER_NAME);
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(scoriaeu.openStream()));
-                    InetAddress adr = InetAddress.getByName("scoria.eu");
-                    String line = reader.readLine();
-                    String clearline = line.substring(line.length() - 2);
-                    if (clearline.equalsIgnoreCase("ok") && clearline != null) {
-                        System.out.println("License " + Config.USER_NAME + " is approved.");
-                        _reset = 0;
-                    } else {
-                        System.out.println("Some misstake in line: " + clearline);
-                        _reset++;
-                    }
-                    clearline = null;
-                    line = null;
-                } catch (Exception f) {
-                    // if scoria.eu also down
-                    _reset++;
-                }
-            }
-            if (_reset > 2) {
-                System.out.println("License not approved. Buy it - http://scoria.ru or http://scoria.eu");
-                System.exit(1);
-            }
-        }
     }
 
     public String getHtmForce(String path) {
